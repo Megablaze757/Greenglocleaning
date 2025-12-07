@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Work Gallery | GreenGlow Cleaners</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Match main site variables */
+        :root {
+            --primary-green: #2E8B57;
+            --secondary-green: #3CB371;
+            --light-green: #F0FFF0;
+            --accent-green: #228B22;
+            --dark-green: #006400;
+            --highlight-green: #98FB98;
+            --text-dark: #333333;
+            --text-light: #ffffff;
+            --gray-bg: #f8f9fa;
+            --shadow: 0 5px 15px rgba(46, 139, 87, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #fff;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation - Same as main site */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: var(--primary-green);
+            margin: 0;
+        }
+
+        .logo span {
+            color: var(--accent-green);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 32px;
+            color: var(--secondary-green);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-green);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-green);
+        }
+
+        /* Gallery Hero */
+        .gallery-hero {
+            background: linear-gradient(rgba(46, 139, 87, 0.9), rgba(46, 139, 87, 0.8)), url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 150px 0 80px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .gallery-hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .gallery-hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+
+        /* Gallery Section */
+        .gallery-section {
+            padding: 80px 0;
+            background-color: var(--light-green);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 70px;
+            height: 4px;
+            background-color: var(--accent-green);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: #666;
+        }
+
+        /* Simple Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(46, 139, 87, 0.2);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-info {
+            padding: 20px;
+        }
+
+        .gallery-info h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--dark-green);
+        }
+
+        .gallery-info p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .gallery-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Image Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 70vh;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .modal-info {
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+            max-width: 600px;
+        }
+
+        /* Categories */
+        .gallery-categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 10px 25px;
+            background: white;
+            border: 2px solid var(--secondary-green);
+            border-radius: 50px;
+            color: var(--secondary-green);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--secondary-green);
+            color: white;
+        }
+
+        /* Footer - Same as main site */
+        footer {
+            background-color: var(--dark-green);
+            color: white;
+            padding: 70px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-col h3 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary-green);
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: #ddd;
+            margin-bottom: 15px;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-col a:hover {
+            color: var(--highlight-green);
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .gallery-hero h1 {
+                font-size: 36px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px 0;
+            }
+
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 0;
+                text-align: center;
+                padding: 15px 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .gallery-hero {
+                padding: 120px 0 60px;
+                margin-top: 60px;
+            }
+
+            .gallery-hero h1 {
+                font-size: 32px;
+            }
+
+            .gallery-hero p {
+                font-size: 18px;
+            }
+
+            .section-padding {
+                padding: 60px 0;
+            }
+
+            .section-title h2 {
+                font-size: 30px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .gallery-categories {
+                gap: 10px;
+            }
+
+            .category-btn {
+                padding: 8px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <h1>Green<span>Glow</span> Cleaners</h1>
+            </div>
+
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#services">Services</a></li>
+                    <li><a href="index.html#prices">Prices</a></li>
+                    <li><a href="gallery.html" class="active">Our Work</a></li>
+                    <li><a href="index.html#club">GreenGlow Club</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Gallery Hero Section -->
+    <section class="gallery-hero">
+        <div class="container">
+            <h1>Our Cleaning Work Gallery</h1>
+            <p>See the quality and transformation of our professional cleaning services through real customer photos.
+            </p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Before & After Gallery</h2>
+                <p>Real results from our professional cleaning services in London</p>
+            </div>
+
+            <div class="gallery-categories">
+                <button class="category-btn active" onclick="filterGallery('all')">All Projects</button>
+                <button class="category-btn" onclick="filterGallery('before')">Before</button>
+                <button class="category-btn" onclick="filterGallery('after')">After</button>
+                <button class="category-btn" onclick="filterGallery('office')">Office Cleaning</button>
+                <button class="category-btn" onclick="filterGallery('home')">Home Cleaning</button>
+            </div>
+
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Images will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="modalImage" class="modal-image" alt="">
+            <div class="modal-info">
+                <h3 id="modalTitle"></h3>
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>GreenGlow Cleaners</h3>
+                    <p>Professional eco-friendly cleaning services for homes and offices. We're committed to providing
+                        sparkling clean spaces using sustainable practices.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#services">Services</a>
+                    <a href="index.html#prices">Prices</a>
+                    <a href="gallery.html">Our Work</a>
+                    <a href="index.html#contact">Contact</a>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <a href="index.html#services">Apartment Cleaning</a>
+                    <a href="index.html#services">Move-in/Move-out</a>
+                    <a href="index.html#services">After Renovation</a>
+                    <a href="index.html#services">Office Cleaning</a>
+                    <a href="index.html#services">Regular Maintenance</a>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i>123 Green Street, Eco City, EC
+                        10101</p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i>(555) 123-GLOW (4569)</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i>hello@greenglowcleaners.com</p>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2023 GreenGlow Cleaners. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sample gallery data - You can replace these with your actual images
+        const galleryImages = [
+            {
+                id: 1,
+                image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Living Room Transformation',
+                description: 'Complete living room cleaning and organization',
+                category: 'after',
+                type: 'home',
+                date: 'Jan 15, 2024'
+            },
+            {
+                id: 2,
+                image: 'https://images.unsplash.com/photo-1564078516393-cf04bd966897?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Office Space Cleaning',
+                description: 'Deep cleaning of corporate office space',
+                category: 'after',
+                type: 'office',
+                date: 'Jan 10, 2024'
+            },
+            {
+                id: 3,
+                image: 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Kitchen Before Cleaning',
+                description: 'Kitchen area before our professional service',
+                category: 'before',
+                type: 'home',
+                date: 'Jan 5, 2024'
+            },
+            {
+                id: 4,
+                image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Conference Room',
+                description: 'Office conference room after cleaning',
+                category: 'after',
+                type: 'office',
+                date: 'Jan 3, 2024'
+            },
+            {
+                id: 5,
+                image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Bathroom Makeover',
+                description: 'Complete bathroom cleaning and sanitization',
+                category: 'after',
+                type: 'home',
+                date: 'Dec 28, 2023'
+            },
+            {
+                id: 6,
+                image: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Window Cleaning',
+                description: 'Professional window and glass cleaning',
+                category: 'after',
+                type: 'home',
+                date: 'Dec 20, 2023'
+            },
+            {
+                id: 7,
+                image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Carpet Cleaning',
+                description: 'Deep carpet cleaning and stain removal',
+                category: 'after',
+                type: 'home',
+                date: 'Dec 15, 2023'
+            },
+            {
+                id: 8,
+                image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'Office Reception Area',
+                description: 'Corporate reception area cleaning',
+                category: 'after',
+                type: 'office',
+                date: 'Dec 10, 2023'
+            },
+            {
+                id: 9,
+                image: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                title: 'End of Tenancy Clean',
+                description: 'Complete apartment cleaning for move-out',
+                category: 'after',
+                type: 'home',
+                date: 'Dec 5, 2023'
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        // Initialize gallery
+        function initGallery() {
+            loadGallery();
+            setupNavigation();
+        }
+
+        // Load gallery images
+        function loadGallery() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            galleryGrid.innerHTML = '';
+
+            const filteredImages = filterImages();
+
+            if (filteredImages.length === 0) {
+                galleryGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-images" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                        <h3>No images found</h3>
+                        <p>Check back soon for more cleaning projects!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredImages.forEach(image => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.innerHTML = `
+                    <img src="${image.image}" alt="${image.title}" class="gallery-image" onclick="viewImage('${image.image}', '${image.title}', '${image.description}')">
+                    <div class="gallery-info">
+                        <h3>${image.title}</h3>
+                        <p>${image.description}</p>
+                        <div class="gallery-date">${image.date}</div>
+                    </div>
+                `;
+                galleryGrid.appendChild(galleryItem);
+            });
+        }
+
+        // Filter images based on category
+        function filterImages() {
+            if (currentFilter === 'all') {
+                return galleryImages;
+            } else if (currentFilter === 'before' || currentFilter === 'after') {
+                return galleryImages.filter(img => img.category === currentFilter);
+            } else if (currentFilter === 'office' || currentFilter === 'home') {
+                return galleryImages.filter(img => img.type === currentFilter);
+            }
+            return galleryImages;
+        }
+
+        // Change filter
+        function filterGallery(filter) {
+            currentFilter = filter;
+
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            loadGallery();
+        }
+
+        // View image in modal
+        function viewImage(imageSrc, title, description) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+
+            modalImage.src = imageSrc;
+            modalTitle.textContent = title;
+            modalDescription.textContent = description;
+
+            modal.style.display = 'flex';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // Setup navigation
+        function setupNavigation() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navMenu = document.getElementById('navMenu');
+
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+                mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+            });
+
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+                    mobileMenuBtn.querySelector('i').classList.remove('fa-times');
+                });
+            });
+        }
+
+        // Close modal when clicking outside image
+        document.addEventListener('click', function (e) {
+            const modal = document.getElementById('imageModal');
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize gallery when page loads
+        document.addEventListener('DOMContentLoaded', initGallery);
+    </script>
+</body>
+
+</html>

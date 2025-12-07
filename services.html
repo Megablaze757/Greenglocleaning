@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Services | GreenGlow Cleaners</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2E8B57;
+            --secondary-green: #32CD32;
+            --light-green: #E8F5E9;
+            --accent-green: #228B22;
+            --dark-green: #1A5D1A;
+            --highlight-green: #90EE90;
+            --text-dark: #2C3E50;
+            --text-light: #ffffff;
+            --shadow: 0 10px 30px rgba(46, 139, 87, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #fff;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--dark-green);
+            line-height: 1.2;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--secondary-green), var(--primary-green));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.2);
+            gap: 10px;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            transition: width 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn:hover:before {
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(46, 139, 87, 0.3);
+        }
+
+        /* Header - Same as index.html but simplified */
+        header {
+            background-color: white;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            transform: rotate(15deg);
+        }
+
+        .logo-text h1 {
+            font-size: 28px;
+            background: linear-gradient(to right, var(--primary-green), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-btn {
+            display: none;
+            width: 50px;
+            height: 50px;
+            background: var(--light-green);
+            border-radius: 10px;
+            border: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn span {
+            width: 24px;
+            height: 2px;
+            background: var(--primary-green);
+            margin: 3px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Desktop Navigation */
+        nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-menu li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--secondary-green), var(--primary-green));
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-menu li a:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-menu li a:hover:after {
+            width: 100%;
+        }
+
+        .nav-menu li .nav-btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        /* Mobile Menu */
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-nav-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-nav-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 320px;
+            height: 100%;
+            background: white;
+            padding: 100px 30px 30px;
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.77, 0, 0.18, 1);
+            overflow-y: auto;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-nav-menu.active {
+            right: 0;
+        }
+
+        .mobile-nav-menu ul {
+            list-style: none;
+        }
+
+        .mobile-nav-menu ul li {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(46, 139, 87, 0.1);
+        }
+
+        .mobile-nav-menu ul li:last-child {
+            border-bottom: none;
+            margin-top: 30px;
+        }
+
+        .mobile-nav-menu ul li a {
+            display: block;
+            padding: 15px 0;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .mobile-nav-menu ul li a:hover {
+            color: var(--primary-green);
+            padding-left: 10px;
+        }
+
+        .mobile-nav-menu .nav-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Gallery Hero */
+        .gallery-hero {
+            background: linear-gradient(135deg, rgba(232, 245, 233, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
+            padding: 150px 0 60px;
+            text-align: center;
+        }
+
+        .gallery-hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--dark-green), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gallery-hero p {
+            font-size: 20px;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        /* Service Categories */
+        .categories {
+            padding: 40px 0;
+            background: var(--light-green);
+        }
+
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .category-btn {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid var(--primary-green);
+            border-radius: 50px;
+            color: var(--primary-green);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--primary-green);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(46, 139, 87, 0.2);
+        }
+
+        /* Services Grid */
+        .services-gallery {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(46, 139, 87, 0.1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(46, 139, 87, 0.2);
+        }
+
+        .service-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .service-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 25px;
+        }
+
+        .service-overlay h3 {
+            color: white;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .service-content {
+            padding: 30px;
+        }
+
+        .service-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .price-tag {
+            background: var(--light-green);
+            color: var(--primary-green);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .service-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            color: #666;
+        }
+
+        .service-features li:last-child {
+            border-bottom: none;
+        }
+
+        .service-features li i {
+            color: var(--secondary-green);
+            margin-right: 10px;
+            font-size: 14px;
+            min-width: 20px;
+        }
+
+        .service-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--light-green);
+        }
+
+        .service-duration {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        /* Gallery CTA */
+        .gallery-cta {
+            background: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .gallery-cta h2 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 42px;
+        }
+
+        .gallery-cta p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-green);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-col h3 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--secondary-green);
+        }
+
+        .footer-col p,
+        .footer-col a {
+            color: #ddd;
+            margin-bottom: 15px;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-col a:hover {
+            color: var(--highlight-green);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--secondary-green);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .gallery-hero {
+                padding: 120px 0 40px;
+            }
+
+            .gallery-hero h1 {
+                font-size: 36px;
+            }
+
+            .gallery-hero p {
+                font-size: 18px;
+            }
+
+            .category-filters {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 10px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-cta h2 {
+                font-size: 32px;
+            }
+
+            .logo-text h1 {
+                font-size: 22px;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-hero h1 {
+                font-size: 28px;
+            }
+
+            .service-card {
+                margin-bottom: 30px;
+            }
+
+            .service-content {
+                padding: 20px;
+            }
+
+            .gallery-cta h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>GreenGlow Cleaners</h1>
+                </div>
+            </a>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="index.html#prices">Prices</a></li>
+                    <li><a href="index.html#more">More</a></li>
+                    <li><a href="index.html#club">GreenGlow Club</a></li>
+                    <li><a href="index.html#sustainability">Sustainability</a></li>
+                    <li><a class="btn nav-btn open-calendly-btn" href="#">Book Now</a></li>
+                </ul>
+            </nav>
+
+            <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+            <div class="mobile-nav-menu" id="mobileNavMenu">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="index.html#prices">Prices</a></li>
+                    <li><a href="index.html#more">More</a></li>
+                    <li><a href="index.html#club">GreenGlow Club</a></li>
+                    <li><a href="index.html#sustainability">Sustainability</a></li>
+                    <li><a class="btn nav-btn open-calendly-btn" href="#">Book Now</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Gallery Hero -->
+    <section class="gallery-hero">
+        <div class="container">
+            <h1>Our Complete Cleaning Services</h1>
+            <p>Explore our comprehensive range of professional cleaning services, all using eco-friendly products and
+                performed by our vetted, background-checked professionals.</p>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
+                <a class="btn open-calendly-btn" href="#">
+                    <i class="fas fa-calendar-check"></i>
+                    Book a Service
+                </a>
+                <a class="btn" href="index.html"
+                    style="background: white; color: var(--primary-green); border: 2px solid var(--primary-green);">
+                    <i class="fas fa-home"></i>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Categories -->
+    <section class="categories">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 30px; font-size: 36px;">Browse by Category</h2>
+            <div class="category-filters">
+                <button class="category-btn active" data-category="all">All Services</button>
+                <button class="category-btn" data-category="domestic">Domestic Cleaning</button>
+                <button class="category-btn" data-category="commercial">Commercial Cleaning</button>
+                <button class="category-btn" data-category="deep">Deep Cleaning</button>
+                <button class="category-btn" data-category="specialized">Specialized Services</button>
+                <button class="category-btn" data-category="maintenance">Maintenance</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Gallery -->
+    <section class="services-gallery">
+        <div class="container">
+            <div class="gallery-grid" id="servicesGrid">
+                <!-- Service cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery CTA -->
+    <section class="gallery-cta">
+        <div class="container">
+            <h2>Need Help Choosing the Right Service?</h2>
+            <p>Our cleaning experts are ready to help you select the perfect service for your needs. Get a personalized
+                quote or book a consultation today.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 40px; flex-wrap: wrap;">
+                <a class="btn open-calendly-btn" href="#"
+                    style="background: white; color: var(--primary-green); padding: 18px 40px;">
+                    <i class="fas fa-calendar-alt"></i>
+                    Book Free Consultation
+                </a>
+                <a class="btn" href="tel:+441234567890"
+                    style="background: transparent; border: 2px solid white; padding: 18px 40px;">
+                    <i class="fas fa-phone"></i>
+                    Call: 01234 567 890
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>GreenGlow Cleaners</h3>
+                    <p>Professional eco-friendly cleaning services for homes and offices across London and surrounding
+                        areas.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <a href="index.html">Home</a>
+                    <a href="services.html">All Services</a>
+                    <a href="index.html#prices">Prices</a>
+                    <a href="index.html#club">GreenGlow Club</a>
+                    <a href="index.html#sustainability">Sustainability</a>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 123 Green Street, London EC1
+                    </p>
+                    <p><i class="fas fa-phone" style="margin-right: 10px;"></i> 01234 567 890</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 10px;"></i> hello@greenglowcleaners.com</p>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2025 GreenGlow Cleaners. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+    <script>
+        // Services Data
+        const servicesData = [
+            {
+                id: 1,
+                title: "Domestic Cleaning",
+                category: "domestic",
+                price: "From £18/hour",
+                description: "Regular home cleaning services tailored to your specific needs and schedule. Perfect for maintaining a clean and healthy living environment.",
+                features: [
+                    "Dusting & vacuuming all areas",
+                    "Kitchen and bathroom cleaning",
+                    "Floor mopping and polishing",
+                    "Surface wiping and sanitizing"
+                ],
+                duration: "2-4 hours",
+                image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 2,
+                title: "One-off Cleaning",
+                category: "domestic",
+                price: "From £75",
+                description: "Perfect for special occasions, post-party cleaning, or when you need a deep clean without commitment to a regular schedule.",
+                features: [
+                    "Comprehensive whole-house clean",
+                    "Special event preparation",
+                    "Post-party cleanup",
+                    "Spring cleaning service"
+                ],
+                duration: "3-6 hours",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 3,
+                title: "End of Tenancy Cleaning",
+                category: "deep",
+                price: "From £150",
+                description: "Comprehensive cleaning to ensure you get your full deposit back when moving out. Meets all landlord and agency requirements.",
+                features: [
+                    "Professional inventory standard clean",
+                    "Inside cabinets and appliances",
+                    "Window washing",
+                    "Carpet and upholstery cleaning"
+                ],
+                duration: "4-8 hours",
+                image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 4,
+                title: "Carpet Cleaning",
+                category: "deep",
+                price: "From £12/m²",
+                description: "Professional carpet cleaning to remove stains, dirt, and allergens from your floors. Using eco-friendly steam cleaning methods.",
+                features: [
+                    "Steam cleaning & stain removal",
+                    "Allergen and dust mite removal",
+                    "Odor elimination",
+                    "Quick drying technology"
+                ],
+                duration: "1-3 hours",
+                image: "https://images.unsplash.com/photo-1583845112207-92e238c13b56?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 5,
+                title: "Oven Cleaning",
+                category: "specialized",
+                price: "From £65",
+                description: "Deep cleaning of ovens, hobs, and extractor fans to remove built-up grease and burnt-on food. Restores appliances to like-new condition.",
+                features: [
+                    "Complete oven interior and exterior",
+                    "Hob and control panel cleaning",
+                    "Rack and tray cleaning",
+                    "Extractor fan degreasing"
+                ],
+                duration: "1-2 hours",
+                image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 6,
+                title: "Office Cleaning",
+                category: "commercial",
+                price: "Custom Quote",
+                description: "Commercial cleaning services to keep your workplace clean, healthy, and productive. Customized plans for businesses of all sizes.",
+                features: [
+                    "Desk and surface sanitization",
+                    "Restroom and kitchen cleaning",
+                    "Floor care and vacuuming",
+                    "Waste removal and recycling"
+                ],
+                duration: "Flexible hours",
+                image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 7,
+                title: "Window Cleaning",
+                category: "maintenance",
+                price: "From £3/window",
+                description: "Professional window cleaning for crystal clear views. Interior and exterior cleaning for residential and commercial properties.",
+                features: [
+                    "Interior and exterior windows",
+                    "Frame and sill cleaning",
+                    "Squeegee technique for streak-free finish",
+                    "High reach windows (up to 3 floors)"
+                ],
+                duration: "1-4 hours",
+                image: "https://images.unsplash.com/photo-1583845189280-7c059fe8e9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 8,
+                title: "After Builders Cleaning",
+                category: "deep",
+                price: "From £200",
+                description: "Post-construction cleanup to remove dust, debris, and construction residue. Preparing your space for immediate use after renovations.",
+                features: [
+                    "Construction dust removal",
+                    "Debris and waste cleanup",
+                    "Surface deep cleaning",
+                    "Final touch-ups and polish"
+                ],
+                duration: "4-10 hours",
+                image: "https://images.unsplash.com/photo-1543699539-33a389c5dcfe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 9,
+                title: "Antiviral Sanitisation",
+                category: "specialized",
+                price: "From £120",
+                description: "Advanced cleaning and disinfection services to protect your home and family. Hospital-grade sanitization for complete peace of mind.",
+                features: [
+                    "Hospital-grade disinfectants",
+                    "Fogging/misting treatment",
+                    "High-touch surface sanitization",
+                    "Air purification options"
+                ],
+                duration: "2-5 hours",
+                image: "https://images.unsplash.com/photo-1583339793403-3d9b001b6008?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                id: 10,
+                title: "Upholstery Cleaning",
+                category: "deep",
+                price: "From £25/item",
+                description: "Professional cleaning for sofas, chairs, and other upholstered furniture. Restores fabrics and removes stains, odors, and allergens.",
+                features: [
+                    "Sofa and chair cleaning",
+                    "Stain and odor removal",
+                    "Fabric protection treatment",
+                    "Quick drying process"
+                ],
+                duration: "1-3 hours",
+                image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            }
+        ];
+
+        // Mobile Navigation
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+        const mobileNavMenu = document.getElementById('mobileNavMenu');
+        const body = document.body;
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            mobileNavOverlay.classList.toggle('active');
+            mobileNavMenu.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        });
+
+        mobileNavOverlay.addEventListener('click', () => {
+            mobileMenuBtn.classList.remove('active');
+            mobileNavOverlay.classList.remove('active');
+            mobileNavMenu.classList.remove('active');
+            body.classList.remove('menu-open');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenuBtn.classList.remove('active');
+                mobileNavOverlay.classList.remove('active');
+                mobileNavMenu.classList.remove('active');
+                body.classList.remove('menu-open');
+            });
+        });
+
+        // Render Services
+        const servicesGrid = document.getElementById('servicesGrid');
+
+        function renderServices(category = 'all') {
+            servicesGrid.innerHTML = '';
+
+            const filteredServices = category === 'all'
+                ? servicesData
+                : servicesData.filter(service => service.category === category);
+
+            filteredServices.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card';
+                serviceCard.setAttribute('data-category', service.category);
+
+                serviceCard.innerHTML = `
+                    <div class="service-image" style="background-image: url('${service.image}');">
+                        <div class="service-overlay">
+                            <h3>${service.title}</h3>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-price">
+                            <span class="price-tag">${service.price}</span>
+                            <span style="color: #666; font-size: 14px;">${service.price.includes('hour') ? 'or fixed price' : service.title.includes('Office') ? 'based on size' : 'per session'}</span>
+                        </div>
+                        <p>${service.description}</p>
+                        <ul class="service-features">
+                            ${service.features.map(feature => `
+                                <li><i class="fas fa-check"></i>${feature}</li>
+                            `).join('')}
+                        </ul>
+                        <div class="service-meta">
+                            <div class="service-duration">
+                                <i class="far fa-clock"></i>
+                                <span>${service.duration}</span>
+                            </div>
+                            <a class="btn open-calendly-btn" href="#" style="padding: 10px 25px;">
+                                <i class="fas fa-calendar"></i>
+                                Book Now
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                servicesGrid.appendChild(serviceCard);
+            });
+
+            // Re-attach Calendly event listeners to new buttons
+            attachCalendlyListeners();
+        }
+
+        // Category filtering
+        const categoryButtons = document.querySelectorAll('.category-btn');
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+
+                const category = button.getAttribute('data-category');
+                renderServices(category);
+            });
+        });
+
+        // Calendly Integration
+        function attachCalendlyListeners() {
+            const calendlyButtons = document.querySelectorAll('.open-calendly-btn');
+
+            calendlyButtons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Replace with your actual Calendly URL
+                    Calendly.initPopupWidget({
+                        url: 'https://calendly.com/greenglowcleaners'
+                    });
+
+                    // Close mobile menu if open
+                    if (mobileNavMenu.classList.contains('active')) {
+                        mobileMenuBtn.classList.remove('active');
+                        mobileNavOverlay.classList.remove('active');
+                        mobileNavMenu.classList.remove('active');
+                        body.classList.remove('menu-open');
+                    }
+                });
+            });
+        }
+
+        // Initial render
+        renderServices();
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href').startsWith('#') && this.getAttribute('href') !== '#') {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
