@@ -5,11 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>GreenGlo Cleaners | Premium Eco-Friendly Cleaning Services London</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <!-- Apple Touch Icon for iOS devices -->
+    <link rel="apple-touch-icon" href="logo.png">
+    <!-- For IE and older browsers -->
+    <link rel="shortcut icon" type="image/x-icon" href="logo.png">
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
     <style>
         /* ===== CSS Reset & Variables ===== */
         :root {
@@ -148,6 +155,19 @@
             padding: 1.25rem 3rem;
             font-size: 1.125rem;
             min-height: 64px;
+        }
+
+        /* ===== WhatsApp Button Icon Fix ===== */
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        .btn-whatsapp::before {
+            background: linear-gradient(135deg, #128C7E, #0D8A71);
+        }
+
+        .btn-whatsapp:hover {
+            box-shadow: 0 25px 50px rgba(37, 211, 102, 0.2);
         }
 
         /* ===== Premium Navigation Bar ===== */
@@ -1118,425 +1138,6 @@
 </head>
 
 <body>
-            <!-- Floating WhatsApp Button for Green Glo Cleaning Co -->
-        <style>
-            /* WhatsApp Button Core Styles */
-            .whatsapp-float {
-                position: fixed;
-                bottom: 30px;
-                right: 30px;
-                z-index: 9999;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            }
-
-            .whatsapp-button {
-                width: 60px;
-                height: 60px;
-                background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
-                cursor: pointer;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                border: none;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .whatsapp-button:hover {
-                transform: scale(1.1);
-                box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
-            }
-
-            .whatsapp-button:active {
-                transform: scale(0.95);
-            }
-
-            /* Improved WhatsApp Logo */
-            .whatsapp-icon-container {
-                position: relative;
-                width: 30px;
-                height: 30px;
-            }
-
-            .whatsapp-icon {
-                width: 100%;
-                height: 100%;
-                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-                transition: all 0.3s ease;
-            }
-
-            .whatsapp-button:hover .whatsapp-icon {
-                transform: translateY(-2px);
-            }
-
-            /* Notification Badge */
-            .whatsapp-notification {
-                position: absolute;
-                top: -5px;
-                right: -5px;
-                background: linear-gradient(135deg, #FF5252 0%, #FF1744 100%);
-                color: white;
-                font-size: 12px;
-                font-weight: 700;
-                width: 22px;
-                height: 22px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                animation: notificationPulse 2s infinite;
-                border: 2px solid white;
-                box-shadow: 0 2px 8px rgba(255, 23, 68, 0.4);
-                z-index: 1;
-            }
-
-            @keyframes notificationPulse {
-                0% {
-                    transform: scale(1);
-                    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
-                }
-
-                70% {
-                    transform: scale(1.05);
-                    box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
-                }
-
-                100% {
-                    transform: scale(1);
-                    box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
-                }
-            }
-
-            /* Message Bubble */
-            .whatsapp-message-bubble {
-                position: absolute;
-                bottom: 75px;
-                right: 0;
-                background: white;
-                border-radius: 18px 18px 0 18px;
-                padding: 15px;
-                width: 280px;
-                box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-                opacity: 0;
-                visibility: hidden;
-                transform: translateY(10px);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                z-index: -1;
-            }
-
-            .whatsapp-message-bubble.active {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-            .message-header {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-bottom: 10px;
-            }
-
-            .message-avatar {
-                width: 40px;
-                height: 40px;
-                background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: white;
-                font-weight: bold;
-                font-size: 16px;
-            }
-
-            .message-info h4 {
-                margin: 0;
-                font-size: 14px;
-                font-weight: 600;
-                color: #333;
-            }
-
-            .message-info p {
-                margin: 2px 0 0;
-                font-size: 12px;
-                color: #25D366;
-                font-weight: 500;
-            }
-
-            .message-content {
-                font-size: 13px;
-                color: #555;
-                line-height: 1.4;
-                margin-bottom: 15px;
-            }
-
-            .message-input {
-                width: 100%;
-                padding: 10px 15px;
-                border: 1px solid #ddd;
-                border-radius: 25px;
-                font-size: 13px;
-                margin-bottom: 10px;
-                outline: none;
-                transition: border-color 0.3s ease;
-            }
-
-            .message-input:focus {
-                border-color: #25D366;
-            }
-
-            .send-button {
-                width: 100%;
-                background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-                color: white;
-                border: none;
-                padding: 10px;
-                border-radius: 25px;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-            }
-
-            .send-button:hover {
-                background: linear-gradient(135deg, #22c55e 0%, #0d8a71 100%);
-            }
-
-            .close-bubble {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                background: none;
-                border: none;
-                color: #999;
-                font-size: 20px;
-                cursor: pointer;
-                line-height: 1;
-                padding: 0;
-                width: 24px;
-                height: 24px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                transition: all 0.3s ease;
-            }
-
-            .close-bubble:hover {
-                background: #f5f5f5;
-                color: #333;
-            }
-
-            /* Tooltip */
-            .whatsapp-tooltip {
-                position: absolute;
-                right: 75px;
-                top: 50%;
-                transform: translateY(-50%);
-                background: white;
-                color: #333;
-                padding: 10px 15px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 500;
-                white-space: nowrap;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.3s ease;
-                z-index: -1;
-            }
-
-            .whatsapp-button:hover+.whatsapp-tooltip {
-                opacity: 1;
-                visibility: visible;
-                right: 70px;
-            }
-
-            /* Mobile Responsive */
-            @media (max-width: 768px) {
-                .whatsapp-float {
-                    bottom: 20px;
-                    right: 20px;
-                }
-
-                .whatsapp-button {
-                    width: 56px;
-                    height: 56px;
-                }
-
-                .whatsapp-message-bubble {
-                    width: calc(100vw - 40px);
-                    max-width: 320px;
-                    right: 0;
-                }
-
-                .whatsapp-tooltip {
-                    display: none;
-                }
-            }
-        </style>
-
-        <div class="whatsapp-float">
-            <div class="whatsapp-message-bubble" id="whatsappBubble">
-                <button class="close-bubble" onclick="closeBubble()">×</button>
-                <div class="message-header">
-                    <div class="message-avatar">GG</div>
-                    <div class="message-info">
-                        <h4>Green Glo Cleaning Co</h4>
-                        <p id="statusText">Typically replies in 24 hours</p>
-                    </div>
-                </div>
-                <div class="message-content">
-                    Hello! 👋 Need a professional clean? Message us for a free quote or to book a service. We're here to
-                    help!
-                </div>
-                <input type="text" class="message-input" id="whatsappMessage" placeholder="Type your message here..."
-                    maxlength="200">
-                <button class="send-button" onclick="sendWhatsAppMessage()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18"
-                        fill="currentColor">
-                        <path
-                            d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z" />
-                    </svg>
-                    Send to WhatsApp
-                </button>
-            </div>
-
-            <button class="whatsapp-button" id="whatsappButton" onclick="toggleBubble()">
-                <div class="whatsapp-notification" id="whatsappNotification">1</div>
-                <div class="whatsapp-icon-container">
-                    <!-- Optimized WhatsApp Logo -->
-                    <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
-                        <path
-                            d="M12 0a12 12 0 1 0 12 12A12 12 0 0 0 12 0Zm6.49 15.387l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0-8.858-.416l-1.21 1.21a6.9 6.9 0 0 0-.416 8.858l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0 .416-8.858l1.21-1.21a6.9 6.9 0 0 0 8.858-.416l1.745-1.745a.374.374 0 0 1 .531 0l1.93 1.93a.374.374 0 0 1 0 .53l-1.745 1.745a6.9 6.9 0 0 0 .416 8.858Z" />
-                    </svg>
-                </div>
-            </button>
-            <span class="whatsapp-tooltip">Chat with Green Glo Cleaning</span>
-        </div>
-
-        <script>
-            // Configuration for Green Glo Cleaning Co
-            const whatsappConfig = {
-                phoneNumber: "447827784204", // Your WhatsApp number from the link
-                companyName: "Green Glo Cleaning Co",
-                defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
-            };
-
-            // DOM Elements
-            const whatsappButton = document.getElementById('whatsappButton');
-            const whatsappBubble = document.getElementById('whatsappBubble');
-            const whatsappNotification = document.getElementById('whatsappNotification');
-            const whatsappMessageInput = document.getElementById('whatsappMessage');
-            const statusText = document.getElementById('statusText');
-
-            // Toggle message bubble
-            function toggleBubble() {
-                whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
-            }
-
-            function openBubble() {
-                whatsappBubble.classList.add('active');
-                whatsappMessageInput.focus();
-                whatsappNotification.style.display = 'none';
-                localStorage.setItem('whatsappNotificationRead', 'true');
-            }
-
-            function closeBubble() {
-                whatsappBubble.classList.remove('active');
-            }
-
-            // Send WhatsApp message using your specific link format
-            function sendWhatsAppMessage() {
-                let message = whatsappMessageInput.value.trim();
-                if (!message) message = whatsappConfig.defaultMessage;
-
-                // Encode the message for URL
-                const encodedMessage = encodeURIComponent(message);
-
-                // Construct the URL using your exact WhatsApp API link format
-                const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-
-                // Open the chat in a new tab
-                window.open(whatsappUrl, 'https://api.whatsapp.com/send?phone=447827784204&text=');
-
-                // Close bubble and reset
-                closeBubble();
-                whatsappMessageInput.value = '';
-
-                // Optional: Track the event (for analytics)
-                console.log('WhatsApp message initiated for:', whatsappConfig.companyName);
-            }
-
-            // Manage notifications
-            function checkNotificationStatus() {
-                const notificationRead = localStorage.getItem('whatsappNotificationRead');
-                const lastVisit = localStorage.getItem('lastWhatsAppVisit');
-                const now = new Date().getTime();
-
-                if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
-                    whatsappNotification.style.display = 'flex';
-                } else {
-                    whatsappNotification.style.display = 'none';
-                }
-                localStorage.setItem('lastWhatsAppVisit', now.toString());
-            }
-
-            // Update status based on working hours
-            function updateWorkingStatus() {
-                const now = new Date();
-                const day = now.getDay(); // 0 = Sunday
-                const hour = now.getHours();
-
-                // Set working hours: Mon-Fri 8am-8pm, Sat 9am-6pm
-                const isWorkingHours = (
-                    (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
-                    (day === 6 && hour >= 9 && hour < 18)
-                );
-
-                if (statusText) {
-                    statusText.textContent = isWorkingHours
-                        ? "Typically replies instantly"
-                        : "Will reply during working hours";
-                    statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
-                }
-            }
-
-            // Close bubble when clicking outside
-            document.addEventListener('click', function (event) {
-                if (!whatsappButton.contains(event.target) &&
-                    !whatsappBubble.contains(event.target) &&
-                    whatsappBubble.classList.contains('active')) {
-                    closeBubble();
-                }
-            });
-
-            // Send message on Enter key
-            whatsappMessageInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendWhatsAppMessage();
-                }
-            });
-
-            // Initialize on page load
-            document.addEventListener('DOMContentLoaded', function () {
-                checkNotificationStatus();
-                updateWorkingStatus();
-
-                // Update status every minute
-                setInterval(updateWorkingStatus, 60000);
-            });
-        </script>
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
 
@@ -1582,7 +1183,10 @@
                     <a href="#contact" class="nav-link">Contact</a>
                 </li>
                 <li class="nav-item nav-cta">
-                    <a href="#contact" class="btn">Get Quote</a>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20cleaning%20services" class="btn btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Get Quote
+                    </a>
                 </li>
             </ul>
         </div>
@@ -1644,12 +1248,14 @@
                 </div>
 
                 <div class="hero-cta">
-                <li class="nav-item nav-cta">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=" class="btn btn-outline btn-large">Get Quote</a>
-                </li>
-                <li class="nav-item nav-cta">
-                    <a href="services.html" class="btn btn-outline btn-large">Get Quote</a>
-                </li>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20free%20cleaning%20quote" class="btn btn-large btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Free Cleaning Quote
+                    </a>
+                    <a href="services.html" class="btn btn-outline btn-large">
+                        <i class="fas fa-list"></i>
+                        View Our Services
+                    </a>
                 </div>
 
                 <div class="club-notice">
@@ -1749,12 +1355,12 @@
                             <i class="fas fa-star"></i>
                         </div>
                         <p class="testimonial-content">
-                            "I recently had an extractor deep clean done in my kitchen, and I couldn’t be happier with
+                            "I recently had an extractor deep clean done in my kitchen, and I couldn't be happier with
                             the results. The team was professional, thorough, and incredibly attentive to detail. Every
                             surface, appliance, and hard-to-reach area looks spotless and refreshed. The extractor
                             system, in particular, looks as good as new and is working far more efficiently.
 
-                            They arrived on time, worked efficiently, and left the space looking immaculate. It’s such a
+                            They arrived on time, worked efficiently, and left the space looking immaculate. It's such a
                             relief to have a kitchen that feels genuinely clean from top to bottom. Highly recommended
                             for anyone needing a proper deep clean and expert extractor cleaning!"
                         </p>
@@ -1777,9 +1383,9 @@
                             <i class="fas fa-star"></i>
                         </div>
                         <p class="testimonial-content">
-                            "I’m really happy with the service from this cleaning company! Everything was spotless —
+                            "I'm really happy with the service from this cleaning company! Everything was spotless —
                             they did such a great job. Tomi was especially helpful and kind; anytime I asked for a
-                            favor, he never hesitated. I’ve tried other cleaning companies before, but this one stands
+                            favor, he never hesitated. I've tried other cleaning companies before, but this one stands
                             out — very easy to communicate with and super reliable. Definitely recommending them to
                             others!
                             "
@@ -1809,10 +1415,6 @@
                             definitely recommend them to anyone in need of a professional clean!!"
                         </p>
                         <div class="testimonial-author">
-                            I was so impressed with the recent cleaning done by Green Glo !They were punctual, friendly,
-                            and incredibly thorough. They paid attention to detail, even in areas I hadn't noticed. My
-                            home now looks and smells amazing, and I feel so much more relaxed. I would definitely
-                            recommend them to anyone in need of a professional clean!!
                             <div class="author-info">
                                 <h4>Michaela Hickey</h4>
                                 <p>5 stars on Google Reviews</p>
@@ -1929,17 +1531,432 @@
                 <h2>Ready to book now?</h2>
                 <p>Schedule your professional cleaning service today with our easy online booking system.</p>
                 <div class="cta-buttons">
-                <li class="nav-item nav-cta">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=" class="btn btn-outline btn-large">Get Quote</a>
-                </li>
-                    <a href="tel:5551234569" class="btn btn-outline btn-large">
-                        <i class="fas fa-phone"></i>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20a%20cleaning%20service" class="btn btn-large btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Book now
+                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20request%20a%20quote" class="btn btn-outline btn-large" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
                         Request a quote
                     </a>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Floating WhatsApp Button -->
+    <style>
+        /* WhatsApp Button Core Styles */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        .whatsapp-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
+        }
+
+        .whatsapp-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Improved WhatsApp Logo */
+        .whatsapp-icon-container {
+            position: relative;
+            width: 30px;
+            height: 30px;
+        }
+
+        .whatsapp-icon {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-button:hover .whatsapp-icon {
+            transform: translateY(-2px);
+        }
+
+        /* Notification Badge */
+        .whatsapp-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #FF5252 0%, #FF1744 100%);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: notificationPulse 2s infinite;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(255, 23, 68, 0.4);
+            z-index: 1;
+        }
+
+        @keyframes notificationPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+            }
+        }
+
+        /* Message Bubble */
+        .whatsapp-message-bubble {
+            position: absolute;
+            bottom: 75px;
+            right: 0;
+            background: white;
+            border-radius: 18px 18px 0 18px;
+            padding: 15px;
+            width: 280px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .whatsapp-message-bubble.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .message-info h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .message-info p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: #25D366;
+            font-weight: 500;
+        }
+
+        .message-content {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 13px;
+            margin-bottom: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .message-input:focus {
+            border-color: #25D366;
+        }
+
+        .send-button {
+            width: 100%;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .send-button:hover {
+            background: linear-gradient(135deg, #22c55e 0%, #0d8a71 100%);
+        }
+
+        .close-bubble {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 20px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-bubble:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Tooltip */
+        .whatsapp-tooltip {
+            position: absolute;
+            right: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .whatsapp-button:hover+.whatsapp-tooltip {
+            opacity: 1;
+            visibility: visible;
+            right: 70px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .whatsapp-float {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .whatsapp-button {
+                width: 56px;
+                height: 56px;
+            }
+
+            .whatsapp-message-bubble {
+                width: calc(100vw - 40px);
+                max-width: 320px;
+                right: 0;
+            }
+
+            .whatsapp-tooltip {
+                display: none;
+            }
+        }
+    </style>
+
+    <div class="whatsapp-float">
+        <div class="whatsapp-message-bubble" id="whatsappBubble">
+            <button class="close-bubble" onclick="closeBubble()">×</button>
+            <div class="message-header">
+                <div class="message-avatar">GG</div>
+                <div class="message-info">
+                    <h4>Green Glo Cleaning Co</h4>
+                    <p id="statusText">Typically replies in 24 hours</p>
+                </div>
+            </div>
+            <div class="message-content">
+                Hello! 👋 Need a professional clean? Message us for a free quote or to book a service. We're here to
+                help!
+            </div>
+            <input type="text" class="message-input" id="whatsappMessage" placeholder="Type your message here..."
+                maxlength="200">
+            <button class="send-button" onclick="sendWhatsAppMessage()">
+                <i class="fab fa-whatsapp"></i>
+                Send to WhatsApp
+            </button>
+        </div>
+
+        <button class="whatsapp-button" id="whatsappButton" onclick="toggleBubble()">
+            <div class="whatsapp-notification" id="whatsappNotification">1</div>
+            <div class="whatsapp-icon-container">
+                <!-- Optimized WhatsApp Logo -->
+                <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
+                    <path
+                        d="M12 0a12 12 0 1 0 12 12A12 12 0 0 0 12 0Zm6.49 15.387l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0-8.858-.416l-1.21 1.21a6.9 6.9 0 0 0-.416 8.858l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0 .416-8.858l1.21-1.21a6.9 6.9 0 0 0 8.858-.416l1.745-1.745a.374.374 0 0 1 .531 0l1.93 1.93a.374.374 0 0 1 0 .53l-1.745 1.745a6.9 6.9 0 0 0 .416 8.858Z" />
+                </svg>
+            </div>
+        </button>
+        <span class="whatsapp-tooltip">Chat with Green Glo Cleaning</span>
+    </div>
+
+    <script>
+        // Configuration for Green Glo Cleaning Co
+        const whatsappConfig = {
+            phoneNumber: "447827784204",
+            companyName: "Green Glo Cleaning Co",
+            defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
+        };
+
+        // DOM Elements
+        const whatsappButton = document.getElementById('whatsappButton');
+        const whatsappBubble = document.getElementById('whatsappBubble');
+        const whatsappNotification = document.getElementById('whatsappNotification');
+        const whatsappMessageInput = document.getElementById('whatsappMessage');
+        const statusText = document.getElementById('statusText');
+
+        // Toggle message bubble
+        function toggleBubble() {
+            whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
+        }
+
+        function openBubble() {
+            whatsappBubble.classList.add('active');
+            whatsappMessageInput.focus();
+            whatsappNotification.style.display = 'none';
+            localStorage.setItem('whatsappNotificationRead', 'true');
+        }
+
+        function closeBubble() {
+            whatsappBubble.classList.remove('active');
+        }
+
+        // Send WhatsApp message using your specific link format
+        function sendWhatsAppMessage() {
+            let message = whatsappMessageInput.value.trim();
+            if (!message) message = whatsappConfig.defaultMessage;
+
+            // Construct the URL using your exact WhatsApp API link format
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+
+            // Open the chat in a new tab
+            window.open(whatsappUrl, '_blank');
+
+            // Close bubble and reset
+            closeBubble();
+            whatsappMessageInput.value = '';
+
+            // Optional: Track the event (for analytics)
+            console.log('WhatsApp message initiated for:', whatsappConfig.companyName);
+        }
+
+        // Manage notifications
+        function checkNotificationStatus() {
+            const notificationRead = localStorage.getItem('whatsappNotificationRead');
+            const lastVisit = localStorage.getItem('lastWhatsAppVisit');
+            const now = new Date().getTime();
+
+            if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
+                whatsappNotification.style.display = 'flex';
+            } else {
+                whatsappNotification.style.display = 'none';
+            }
+            localStorage.setItem('lastWhatsAppVisit', now.toString());
+        }
+
+        // Update status based on working hours
+        function updateWorkingStatus() {
+            const now = new Date();
+            const day = now.getDay(); // 0 = Sunday
+            const hour = now.getHours();
+
+            // Set working hours: Mon-Fri 8am-8pm, Sat 9am-6pm
+            const isWorkingHours = (
+                (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
+                (day === 6 && hour >= 9 && hour < 18)
+            );
+
+            if (statusText) {
+                statusText.textContent = isWorkingHours
+                    ? "Typically replies instantly"
+                    : "Will reply during working hours";
+                statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
+            }
+        }
+
+        // Close bubble when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!whatsappButton.contains(event.target) &&
+                !whatsappBubble.contains(event.target) &&
+                whatsappBubble.classList.contains('active')) {
+                closeBubble();
+            }
+        });
+
+        // Send message on Enter key
+        whatsappMessageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendWhatsAppMessage();
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            checkNotificationStatus();
+            updateWorkingStatus();
+
+            // Update status every minute
+            setInterval(updateWorkingStatus, 60000);
+        });
+    </script>
 
     <!-- Footer -->
     <footer class="footer">
@@ -1951,11 +1968,9 @@
                         Professional eco-friendly cleaning services for homes and offices across London.
                     </p>
                     <div class="social-links">
-
-
-                        <a href="instagram.com/greenglocleaningco" class="social-link"><i
-                                class="fab fa-instagram"></i></a>
-
+                        <a href="https://instagram.com/greenglocleaningco" class="social-link" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                        </a>
                     </div>
                 </div>
 
@@ -1986,7 +2001,6 @@
 
                 <div class="footer-col">
                     <h3>Contact Us</h3>
-
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
                         <i class="fas fa-phone" style="margin-right: 0.5rem;"></i> 07827 784204
                     </p>
@@ -2004,245 +2018,197 @@
                         Raif</a></p>
             </div>
         </div>
-        <!-- JavaScript -->
-        <script src="https://api.whatsapp.com/send?phone=447827784204&text=" type="text/javascript" async></script>
-        <script>
-            // ===== Mobile Navigation =====
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileCloseBtn = document.getElementById('mobileCloseBtn');
-            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-            const navMenu = document.getElementById('navMenu');
-            const navbar = document.getElementById('navbar');
-            const navLinks = document.querySelectorAll('.nav-link');
+    </footer>
 
-            // Function to open mobile menu
-            const openMobileMenu = () => {
-                navMenu.classList.add('active');
-                mobileMenuOverlay.classList.add('active');
-                mobileMenuBtn.classList.add('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-                document.body.style.overflow = 'hidden';
-            };
+    <!-- JavaScript -->
+    <script>
+        // ===== Mobile Navigation =====
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const navMenu = document.getElementById('navMenu');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-            // Function to close mobile menu
-            const closeMobileMenu = () => {
-                navMenu.classList.remove('active');
-                mobileMenuOverlay.classList.remove('active');
-                mobileMenuBtn.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                document.body.style.overflow = '';
-            };
+        // Function to open mobile menu
+        const openMobileMenu = () => {
+            navMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
+        };
 
-            // Toggle Mobile Menu
-            mobileMenuBtn.addEventListener('click', () => {
-                if (navMenu.classList.contains('active')) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
-            });
+        // Function to close mobile menu
+        const closeMobileMenu = () => {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        };
 
-            // Close Mobile Menu with Close Button
-            mobileCloseBtn.addEventListener('click', closeMobileMenu);
-
-            // Close Mobile Menu with Overlay Click
-            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-
-            // Close Mobile Menu on Link Click
-            navLinks.forEach(link => {
-                link.addEventListener('click', closeMobileMenu);
-            });
-
-            // Close menu on Escape key press
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-                    closeMobileMenu();
-                }
-            });
-
-            // Navbar Scroll Effect
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-
-            // ===== Testimonial Carousel =====
-            const carouselContainer = document.getElementById('carouselContainer');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const indicators = document.querySelectorAll('.carousel-indicator');
-            const totalSlides = document.querySelectorAll('.testimonial-card').length;
-            let currentSlide = 0;
-
-            // Function to update carousel position
-            function updateCarousel() {
-                carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-
-                // Update indicators
-                indicators.forEach((indicator, index) => {
-                    if (index === currentSlide) {
-                        indicator.classList.add('active');
-                    } else {
-                        indicator.classList.remove('active');
-                    }
-                });
+        // Toggle Mobile Menu
+        mobileMenuBtn.addEventListener('click', () => {
+            if (navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
             }
+        });
 
-            // Next slide function
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                updateCarousel();
+        // Close Mobile Menu with Close Button
+        mobileCloseBtn.addEventListener('click', closeMobileMenu);
+
+        // Close Mobile Menu with Overlay Click
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        // Close Mobile Menu on Link Click
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu on Escape key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMobileMenu();
             }
+        });
 
-            // Previous slide function
-            function prevSlide() {
-                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-                updateCarousel();
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
             }
+        });
 
-            // Add click events to buttons
-            prevBtn.addEventListener('click', prevSlide);
-            nextBtn.addEventListener('click', nextSlide);
+        // ===== Testimonial Carousel =====
+        const carouselContainer = document.getElementById('carouselContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        const totalSlides = document.querySelectorAll('.testimonial-card').length;
+        let currentSlide = 0;
 
-            // Add click events to indicators
+        // Function to update carousel position
+        function updateCarousel() {
+            carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // Update indicators
             indicators.forEach((indicator, index) => {
-                indicator.addEventListener('click', () => {
-                    currentSlide = index;
-                    updateCarousel();
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        // Next slide function
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        // Previous slide function
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        // Add click events to buttons
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        // Add click events to indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+
+        // Auto-rotate carousel every 5 seconds
+        let carouselInterval = setInterval(nextSlide, 5000);
+
+        // Pause auto-rotation on hover
+        const carousel = document.querySelector('.testimonials-carousel');
+        carousel.addEventListener('mouseenter', () => {
+            clearInterval(carouselInterval);
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            clearInterval(carouselInterval);
+            carouselInterval = setInterval(nextSlide, 5000);
+        });
+
+        // ===== FAQ Accordion =====
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.faq-toggle');
+
+                // Close other FAQs
+                faqQuestions.forEach(otherQuestion => {
+                    if (otherQuestion !== question) {
+                        const otherAnswer = otherQuestion.nextElementSibling;
+                        const otherToggle = otherQuestion.querySelector('.faq-toggle');
+                        otherAnswer.classList.remove('open');
+                        otherToggle.textContent = '+';
+                    }
                 });
+
+                // Toggle current FAQ
+                if (answer.classList.contains('open')) {
+                    answer.classList.remove('open');
+                    toggle.textContent = '+';
+                } else {
+                    answer.classList.add('open');
+                    toggle.textContent = '−';
+                }
             });
+        });
 
-            // Auto-rotate carousel every 5 seconds
-            let carouselInterval = setInterval(nextSlide, 5000);
+        // ===== Smooth Scrolling =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href') === '#') return;
 
-            // Pause auto-rotation on hover
-            const carousel = document.querySelector('.testimonials-carousel');
-            carousel.addEventListener('mouseenter', () => {
-                clearInterval(carouselInterval);
-            });
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
 
-            carousel.addEventListener('mouseleave', () => {
-                clearInterval(carouselInterval);
-                carouselInterval = setInterval(nextSlide, 5000);
-            });
-
-            // ===== FAQ Accordion =====
-            const faqQuestions = document.querySelectorAll('.faq-question');
-            faqQuestions.forEach(question => {
-                question.addEventListener('click', () => {
-                    const answer = question.nextElementSibling;
-                    const toggle = question.querySelector('.faq-toggle');
-
-                    // Close other FAQs
-                    faqQuestions.forEach(otherQuestion => {
-                        if (otherQuestion !== question) {
-                            const otherAnswer = otherQuestion.nextElementSibling;
-                            const otherToggle = otherQuestion.querySelector('.faq-toggle');
-                            otherAnswer.classList.remove('open');
-                            otherToggle.textContent = '+';
-                        }
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
                     });
-
-                    // Toggle current FAQ
-                    if (answer.classList.contains('open')) {
-                        answer.classList.remove('open');
-                        toggle.textContent = '+';
-                    } else {
-                        answer.classList.add('open');
-                        toggle.textContent = '−';
-                    }
-                });
+                }
             });
+        });
 
-            // ===== Animated Counter =====
-            const counters = document.querySelectorAll('[data-count]');
-            const speed = 200;
+        // ===== Add Loading Animation to Elements =====
+        const animatedElements = document.querySelectorAll('.feature-card, .testimonial-card');
+        animatedElements.forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        });
 
-            const animateCounter = () => {
-                counters.forEach(counter => {
-                    const target = +counter.getAttribute('data-count');
-                    const count = +counter.innerText.replace('+', '');
-
-                    if (count < target) {
-                        counter.innerText = Math.ceil(count + target / speed) + '+';
-                        setTimeout(animateCounter, 1);
-                    } else {
-                        counter.innerText = target + '+';
-                    }
-                });
-            };
-
-            // Trigger counter when in viewport
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        animateCounter();
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.5 });
-
-            counters.forEach(counter => observer.observe(counter.parentElement));
-
-            // ===== Calendly Integration =====
-            const calendlyButtons = document.querySelectorAll('.open-calendly-btn');
-            calendlyButtons.forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    Calendly.initPopupWidget({
-                        url: 'https://calendly.com/greenglocleaners',
-                        text: 'Schedule Your Cleaning',
-                        color: '#10B981',
-                        textColor: '#ffffff'
-                    });
-                });
+        const elementObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
+        }, { threshold: 0.1 });
 
-            // ===== Smooth Scrolling =====
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    if (this.getAttribute('href') === '#') return;
-
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-            // ===== Add Loading Animation to Elements =====
-            const animatedElements = document.querySelectorAll('.feature-card, .service-card, .testimonial-card');
-            animatedElements.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-            });
-
-            const elementObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            animatedElements.forEach(el => elementObserver.observe(el));
-        </script>
+        animatedElements.forEach(el => elementObserver.observe(el));
+    </script>
 </body>
 
-
 </html>
-
-
-
-
