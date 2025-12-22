@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Join GreenGlo Club | Premium Membership</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #10B981;
+            --secondary-green: #34D399;
+            --dark-green: #065F46;
+            --light-green: #D1FAE5;
+            --accent-green: #059669;
+            --teal: #0D9488;
+            --white: #FFFFFF;
+            --off-white: #F9FAFB;
+            --light-gray: #F3F4F6;
+            --medium-gray: #9CA3AF;
+            --dark-gray: #4B5563;
+            --black: #111827;
+            --gold: #FBBF24;
+            --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 16px;
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--teal));
+            --gradient-dark: linear-gradient(135deg, var(--dark-green), var(--teal));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.7;
+            color: var(--dark-gray);
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px rgba(16, 185, 129, 0.15);
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .logo-text h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .logo-text span {
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-green);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: var(--medium-gray);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .form-container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .required {
+            color: #EF4444;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--off-white);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .checkbox-group input {
+            width: auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-card {
+            background: var(--light-green);
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .benefit-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+        }
+
+        .benefit-text h4 {
+            font-size: 1rem;
+            color: var(--dark-green);
+            margin-bottom: 0.25rem;
+        }
+
+        .benefit-text p {
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
+        }
+
+        .btn i {
+            font-size: 1.25rem;
+        }
+
+        .success-message {
+            display: none;
+            background: var(--light-green);
+            border: 2px solid var(--primary-green);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .success-message i {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .success-message h3 {
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            color: #EF4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 2rem auto;
+                padding: 0 1rem;
+            }
+            
+            .form-container {
+                padding: 2rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .back-btn {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 2rem;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 1.5rem;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-text h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+    </a>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>GreenGlo Club</h1>
+                    <span>Premium Membership</span>
+                </div>
+            </div>
+
+            <h2>Join the Exclusive GreenGlo Club</h2>
+            <p class="subtitle">Fill out the form below to apply for membership and unlock exclusive benefits, discounts, and premium services.</p>
+        </div>
+
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="benefit-text">
+                    <h4>Priority Booking</h4>
+                    <p>Get priority access to our busiest time slots</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-pound-sign"></i>
+                </div>
+                <div class="benefit-text">
+                    <h4>£300 in Credits</h4>
+                    <p>Welcome bonus to use on any service</p>
+                </div>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="benefit-text">
+                    <h4>Member-Only Rates</h4>
+                    <p>Exclusive discounts on all services</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <form id="membershipForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                    <div class="error-message" id="nameError">Please enter your full name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                    <div class="error-message" id="emailError">Please enter a valid email address</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                    <div class="error-message" id="phoneError">Please enter a valid phone number</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" name="address" placeholder="Enter your address (optional)">
+                </div>
+
+                <div class="form-group">
+                    <label for="propertyType">Property Type <span class="required">*</span></label>
+                    <select id="propertyType" name="propertyType" required>
+                        <option value="">Select property type</option>
+                        <option value="Flat">Flat</option>
+                        <option value="House">House</option>
+                        <option value="Apartment">Apartment</option>
+                        <option value="Office">Office</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <div class="error-message" id="propertyError">Please select a property type</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bedrooms">Number of Bedrooms <span class="required">*</span></label>
+                    <select id="bedrooms" name="bedrooms" required>
+                        <option value="">Select number of bedrooms</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5+">5+</option>
+                    </select>
+                    <div class="error-message" id="bedroomsError">Please select number of bedrooms</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="membershipLevel">Desired Membership Level <span class="required">*</span></label>
+                    <select id="membershipLevel" name="membershipLevel" required>
+                        <option value="">Select membership level</option>
+                        <option value="Basic">Basic (£50/month)</option>
+                        <option value="Premium">Premium (£75/month)</option>
+                        <option value="VIP">VIP (£100/month)</option>
+                    </select>
+                    <div class="error-message" id="membershipError">Please select a membership level</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cleaningFrequency">Preferred Cleaning Frequency <span class="required">*</span></label>
+                    <select id="cleaningFrequency" name="cleaningFrequency" required>
+                        <option value="">Select frequency</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Fortnightly">Fortnightly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="One-off">One-off deep clean</option>
+                    </select>
+                    <div class="error-message" id="frequencyError">Please select cleaning frequency</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Additional Information</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Any special requirements or additional information..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                        <label for="agreeTerms">I agree to receive information about GreenGlo Club membership and special offers</label>
+                    </div>
+                    <div class="error-message" id="termsError">You must agree to the terms</div>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Membership Application
+                </button>
+            </form>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <h3>Application Submitted Successfully!</h3>
+                <p>Thank you for applying to the GreenGlo Club. We'll review your application and contact you within 24 hours.</p>
+                <p>You will also receive a confirmation email at <span id="userEmail"></span></p>
+                <a href="index.html" class="btn" style="margin-top: 1.5rem;">
+                    <i class="fas fa-home"></i>
+                    Return to Homepage
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('membershipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Validate form
+            let isValid = true;
+            const fullName = document.getElementById('fullName');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+            const propertyType = document.getElementById('propertyType');
+            const bedrooms = document.getElementById('bedrooms');
+            const membershipLevel = document.getElementById('membershipLevel');
+            const cleaningFrequency = document.getElementById('cleaningFrequency');
+            const agreeTerms = document.getElementById('agreeTerms');
+            
+            if (!fullName.value.trim()) {
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!email.value.trim() || !isValidEmail(email.value)) {
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!phone.value.trim()) {
+                document.getElementById('phoneError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!propertyType.value) {
+                document.getElementById('propertyError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!bedrooms.value) {
+                document.getElementById('bedroomsError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!membershipLevel.value) {
+                document.getElementById('membershipError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!cleaningFrequency.value) {
+                document.getElementById('frequencyError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!agreeTerms.checked) {
+                document.getElementById('termsError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                return;
+            }
+            
+            // Disable submit button
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            // Prepare email data
+            const formData = {
+                to: 'greenglocleaning@gmail.com',
+                subject: 'GreenGlo Club Membership Application - ' + fullName.value,
+                body: `
+GREEN GLO CLUB MEMBERSHIP APPLICATION
+====================================
+
+PERSONAL DETAILS:
+-----------------
+Full Name: ${fullName.value}
+Email: ${email.value}
+Phone: ${phone.value}
+Address: ${document.getElementById('address').value || 'Not provided'}
+
+PROPERTY DETAILS:
+-----------------
+Property Type: ${propertyType.value}
+Number of Bedrooms: ${bedrooms.value}
+
+MEMBERSHIP PREFERENCES:
+-----------------------
+Desired Membership Level: ${membershipLevel.value}
+Preferred Cleaning Frequency: ${cleaningFrequency.value}
+
+ADDITIONAL INFORMATION:
+-----------------------
+${document.getElementById('message').value || 'No additional information provided'}
+
+APPLICATION SUBMITTED ON: ${new Date().toLocaleString()}
+                `.trim()
+            };
+            
+            // Send email using mailto (this will open user's email client)
+            setTimeout(() => {
+                const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(formData.body)}`;
+                
+                // Show success message
+                document.getElementById('userEmail').textContent = email.value;
+                document.getElementById('membershipForm').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // Try to open email client (works on most devices)
+                window.location.href = mailtoLink;
+                
+                // Also log to console for debugging
+                console.log('Form submission data:', formData);
+            }, 1500);
+        });
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Add real-time validation
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+        });
+        
+        function validateField(field) {
+            const errorId = field.id + 'Error';
+            const errorElement = document.getElementById(errorId);
+            
+            if (!errorElement) return;
+            
+            if (field.type === 'checkbox') {
+                if (!field.checked) {
+                    errorElement.style.display = 'block';
+                } else {
+                    errorElement.style.display = 'none';
+                }
+                return;
+            }
+            
+            if (field.value.trim() === '' || (field.type === 'email' && !isValidEmail(field.value))) {
+                errorElement.style.display = 'block';
+            } else {
+                errorElement.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
