@@ -335,49 +335,46 @@
             font-weight: 800;
         }
 
-        /* ===== Bedroom Calculator ===== */
-        .calculator-section {
+        /* ===== Bedroom Selector ===== */
+        .bedroom-selector-section {
             background: var(--white);
             border-radius: var(--border-radius);
-            padding: 3rem;
-            margin: 3rem auto;
+            padding: 2rem;
+            margin: 2rem auto;
             box-shadow: var(--shadow);
             border: 2px solid var(--light-green);
-            max-width: 800px;
+            max-width: 600px;
         }
 
-        .calculator-header {
+        .bedroom-selector-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
-        .calculator-header h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        .bedroom-selector-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .calculator-controls {
+        .bedroom-selector-header p {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .bedroom-buttons {
             display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .bedroom-selector {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
             justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .bedroom-btn {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid var(--light-gray);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            border: 2px solid var(--light-gray);
             background: var(--white);
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--dark-gray);
             cursor: pointer;
@@ -401,79 +398,13 @@
         }
 
         .bedroom-label {
-            margin-top: 0.5rem;
+            margin-top: 0.25rem;
             font-size: 0.875rem;
             color: var(--medium-gray);
-        }
-
-        .calculator-results {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .price-card {
-            background: var(--off-white);
-            border-radius: var(--border-radius);
-            padding: 2rem;
             text-align: center;
-            border: 2px solid var(--light-green);
-            transition: var(--transition);
         }
 
-        .price-card.featured {
-            border-color: var(--primary-green);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-        }
-
-        .price-card h3 {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .price-card.greenglo h3 {
-            color: var(--primary-green);
-        }
-
-        .price-card.competitor h3 {
-            color: #666;
-        }
-
-        .price-amount {
-            font-size: 3rem;
-            font-weight: 800;
-            margin: 1rem 0;
-            line-height: 1;
-        }
-
-        .price-card.greenglo .price-amount {
-            color: var(--dark-green);
-        }
-
-        .price-card.competitor .price-amount {
-            color: #666;
-            text-decoration: line-through;
-        }
-
-        .savings-display {
-            background: var(--gradient-gold);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 700;
-            margin-top: 1rem;
-            display: inline-block;
-        }
-
-        .per-bedroom-note {
-            font-size: 0.875rem;
-            color: var(--medium-gray);
-            margin-top: 0.5rem;
-        }
-
-        /* ===== Services Grid ===== */
+        /* ===== Services Grid with Bedroom Selector ===== */
         .services-section {
             position: relative;
             background: linear-gradient(to bottom, var(--white) 0%, var(--off-white) 100%);
@@ -605,6 +536,57 @@
             padding: 2rem;
         }
 
+        /* Bedroom Selector in Service Card */
+        .service-bedroom-selector {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: var(--light-green);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .service-bedroom-selector h4 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--dark-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .service-bedroom-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .service-bedroom-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            border: 2px solid var(--light-gray);
+            background: var(--white);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-bedroom-btn:hover {
+            border-color: var(--primary-green);
+        }
+
+        .service-bedroom-btn.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-color: var(--primary-green);
+        }
+
+        /* Service Price Section */
         .service-price-section {
             display: flex;
             justify-content: space-between;
@@ -915,14 +897,6 @@
                 text-align: center;
             }
 
-            .calculator-section {
-                padding: 2rem 1.5rem;
-            }
-
-            .calculator-results {
-                grid-template-columns: 1fr;
-            }
-
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
@@ -938,9 +912,15 @@
             }
 
             .bedroom-btn {
-                width: 60px;
-                height: 60px;
-                font-size: 1.25rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.1rem;
+            }
+
+            .service-bedroom-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
             }
         }
 
@@ -970,14 +950,23 @@
                 padding: 0 1rem;
             }
 
-            .bedroom-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 1rem;
+            .bedroom-buttons {
+                gap: 0.5rem;
             }
 
-            .price-amount {
-                font-size: 2.5rem;
+            .bedroom-btn {
+                width: 45px;
+                height: 45px;
+            }
+
+            .service-bedroom-buttons {
+                gap: 0.25rem;
+            }
+
+            .service-bedroom-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -1008,7 +997,7 @@
                     <a href="services.html" class="nav-link active">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#calculator" class="nav-link">Price Calculator</a>
+                    <a href="#global-bedroom-selector" class="nav-link">Adjust Prices</a>
                 </li>
                 <li class="nav-item">
                     <a href="gallery.html" class="nav-link">Gallery</a>
@@ -1036,12 +1025,12 @@
                 </div>
                 <h1>Professional Cleaning Services</h1>
                 <p class="hero-subtitle">
-                    Get instant pricing for any property size. Compare our eco-friendly services with Fantastic Cleaners and see your savings in real-time.
+                    Select your property size to see real-time pricing. Compare GreenGlo Cleaners with Fantastic Cleaners and save instantly.
                 </p>
                 <div class="cta-buttons">
-                    <a href="#calculator" class="btn btn-large">
-                        <i class="fas fa-calculator"></i>
-                        Try Our Price Calculator
+                    <a href="#services" class="btn btn-large">
+                        <i class="fas fa-broom"></i>
+                        View Services
                     </a>
                     <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners%2C%20I%20saw%20your%20competitive%20prices%20and%20would%20like%20a%20quote." 
                        class="btn btn-large btn-whatsapp">
@@ -1053,79 +1042,42 @@
         </div>
     </section>
 
-    <!-- Bedroom Calculator Section -->
-    <section id="calculator" class="section section-light">
+    <!-- Global Bedroom Selector -->
+    <section id="global-bedroom-selector" class="section section-light">
         <div class="container">
-            <div class="calculator-section">
-                <div class="calculator-header">
-                    <h2>Compare Prices by Bedroom Count</h2>
-                    <p>Select the number of bedrooms to see how much you save with GreenGlo Cleaners vs Fantastic Cleaners</p>
+            <div class="bedroom-selector-section">
+                <div class="bedroom-selector-header">
+                    <h3>Select Your Property Size</h3>
+                    <p>Choose the number of bedrooms to adjust all service prices accordingly</p>
                 </div>
-                
-                <div class="calculator-controls">
-                    <div class="bedroom-selector">
-                        <div class="bedroom-option">
-                            <button class="bedroom-btn active" data-bedrooms="1">
-                                1
-                            </button>
-                            <div class="bedroom-label">1 Bedroom</div>
-                        </div>
-                        <div class="bedroom-option">
-                            <button class="bedroom-btn" data-bedrooms="2">
-                                2
-                            </button>
-                            <div class="bedroom-label">2 Bedrooms</div>
-                        </div>
-                        <div class="bedroom-option">
-                            <button class="bedroom-btn" data-bedrooms="3">
-                                3
-                            </button>
-                            <div class="bedroom-label">3 Bedrooms</div>
-                        </div>
-                        <div class="bedroom-option">
-                            <button class="bedroom-btn" data-bedrooms="4">
-                                4
-                            </button>
-                            <div class="bedroom-label">4 Bedrooms</div>
-                        </div>
+                <div class="bedroom-buttons">
+                    <div class="bedroom-option">
+                        <button class="bedroom-btn active" data-bedrooms="1">
+                            1
+                        </button>
+                        <div class="bedroom-label">1 Bedroom</div>
                     </div>
-                    
-                    <div class="per-bedroom-note">
-                        <i class="fas fa-info-circle"></i> Prices shown are for end of tenancy cleaning
+                    <div class="bedroom-option">
+                        <button class="bedroom-btn" data-bedrooms="2">
+                            2
+                        </button>
+                        <div class="bedroom-label">2 Bedrooms</div>
+                    </div>
+                    <div class="bedroom-option">
+                        <button class="bedroom-btn" data-bedrooms="3">
+                            3
+                        </button>
+                        <div class="bedroom-label">3 Bedrooms</div>
+                    </div>
+                    <div class="bedroom-option">
+                        <button class="bedroom-btn" data-bedrooms="4">
+                            4
+                        </button>
+                        <div class="bedroom-label">4 Bedrooms</div>
                     </div>
                 </div>
-                
-                <div class="calculator-results">
-                    <div class="price-card competitor">
-                        <h3>Fantastic Cleaners</h3>
-                        <div class="price-amount" id="fantasticPrice">£232</div>
-                        <p>End of Tenancy Cleaning</p>
-                        <ul class="comparison-features" style="text-align: left; margin-top: 1rem;">
-                            <li><i class="fas fa-times" style="color: var(--medium-gray);"></i> Standard cleaning products</li>
-                            <li><i class="fas fa-check" style="color: var(--medium-gray);"></i> 24-hour booking</li>
-                            <li><i class="fas fa-times" style="color: var(--medium-gray);"></i> Extra charge for oven cleaning</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="price-card greenglo featured">
-                        <h3>GreenGlo Cleaners</h3>
-                        <div class="price-amount" id="greengloPrice">£195</div>
-                        <p>End of Tenancy Cleaning</p>
-                        <div class="savings-display" id="savingsAmount">Save £37</div>
-                        <ul class="comparison-features" style="text-align: left; margin-top: 1rem;">
-                            <li><i class="fas fa-check" style="color: var(--primary-green);"></i> Eco-friendly products included</li>
-                            <li><i class="fas fa-check" style="color: var(--primary-green);"></i> Same-day booking available</li>
-                            <li><i class="fas fa-check" style="color: var(--primary-green);"></i> Oven cleaning included</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 2rem;">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners%2C%20I%27d%20like%20a%20quote%20for%20a%201%20bedroom%20end%20of%20tenancy%20cleaning." 
-                       class="btn btn-large" id="whatsappCalculatorBtn">
-                        <i class="fab fa-whatsapp"></i>
-                        Get Quote for 1 Bedroom
-                    </a>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <small class="price-note"><i class="fas fa-info-circle"></i> Prices update automatically across all services</small>
                 </div>
             </div>
         </div>
@@ -1136,7 +1088,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Our Competitive Services</h2>
-                <p>Professional cleaning services with transparent pricing. All prices include eco-friendly products and vetted professionals.</p>
+                <p>Select bedroom count on each service to see real-time pricing. All prices include eco-friendly products and vetted professionals.</p>
             </div>
 
             <div class="category-filters">
@@ -1195,7 +1147,7 @@
                     <h3>Our Services</h3>
                     <ul class="footer-links">
                         <li><a href="#services">Domestic cleaning</a></li>
-                        <li><a href="#calculator">End of tenancy cleaning</a></li>
+                        <li><a href="#services">End of tenancy cleaning</a></li>
                         <li><a href="#services">Office cleaning</a></li>
                         <li><a href="#services">Deep cleaning</a></li>
                         <li><a href="#services">Carpet cleaning</a></li>
@@ -1208,7 +1160,7 @@
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="services.html">Services</a></li>
-                        <li><a href="#calculator">Price Calculator</a></li>
+                        <li><a href="#global-bedroom-selector">Adjust Prices</a></li>
                         <li><a href="gallery.html">Gallery</a></li>
                         <li><a href="index.html#contact">Contact</a></li>
                     </ul>
@@ -1240,25 +1192,71 @@
     </div>
 
     <script>
-        // Price Calculator Data
+        // Price Calculator Data - Fantastic Cleaners vs GreenGlo
         const priceData = {
-            // GreenGlo Prices (based on market research and competitive pricing)
-            greenglo: {
-                1: 195,   // 1 bedroom
-                2: 235,   // 2 bedrooms
-                3: 275,   // 3 bedrooms
-                4: 315    // 4 bedrooms
+            // End of Tenancy Cleaning
+            endOfTenancy: {
+                greenglo: {
+                    1: 195,
+                    2: 235,
+                    3: 275,
+                    4: 315
+                },
+                fantastic: {
+                    1: 232,
+                    2: 282,
+                    3: 332,
+                    4: 382
+                }
             },
-            // Fantastic Cleaners Prices (based on their published rates)
-            fantastic: {
-                1: 232,   // 1 bedroom
-                2: 282,   // 2 bedrooms
-                3: 332,   // 3 bedrooms
-                4: 382    // 4 bedrooms
+            // Deep Spring Cleaning
+            deepCleaning: {
+                greenglo: {
+                    1: 150,
+                    2: 180,
+                    3: 210,
+                    4: 240
+                },
+                fantastic: {
+                    1: 180,
+                    2: 215,
+                    3: 250,
+                    4: 285
+                }
+            },
+            // After Builders Cleaning
+            afterBuilders: {
+                greenglo: {
+                    1: 180,
+                    2: 220,
+                    3: 260,
+                    4: 300
+                },
+                fantastic: {
+                    1: 215,
+                    2: 260,
+                    3: 305,
+                    4: 350
+                }
+            },
+            // One-Off Cleaning
+            oneOffCleaning: {
+                greenglo: {
+                    1: 75,
+                    2: 85,
+                    3: 95,
+                    4: 105
+                },
+                fantastic: {
+                    1: 90,
+                    2: 100,
+                    3: 110,
+                    4: 120
+                }
             }
         };
 
-        // Services Data with Competitive Pricing
+        // Services Data
         const servicesData = [
             {
                 id: 1,
@@ -1274,13 +1272,15 @@
                     "Kitchen degreasing"
                 ],
                 duration: "3-5 hours",
-                price: "£195",
-                priceNote: "1 bedroom flat",
-                competitorPrice: "£232",
+                basePrice: "£195",
+                baseNote: "1 bedroom flat",
+                competitorBasePrice: "£232",
                 savings: "£37",
                 image: "tenancy.png",
                 featured: true,
-                hasBedroomCalculator: true
+                hasBedroomSelector: true,
+                priceType: "endOfTenancy",
+                includesOven: true
             },
             {
                 id: 2,
@@ -1301,7 +1301,7 @@
                 competitorPrice: "£20/hour",
                 savings: "£3/hour",
                 image: "livingroom.png",
-                hasBedroomCalculator: false
+                hasBedroomSelector: false
             },
             {
                 id: 3,
@@ -1322,7 +1322,7 @@
                 competitorPrice: "£23/hour",
                 savings: "£3/hour",
                 image: "office.png",
-                hasBedroomCalculator: false
+                hasBedroomSelector: false
             },
             {
                 id: 4,
@@ -1338,25 +1338,14 @@
                     "Ventilation cleaning"
                 ],
                 duration: "4-8 hours",
-                price: "£180",
-                priceNote: "2 bedroom house",
-                competitorPrice: "£215",
+                basePrice: "£180",
+                baseNote: "2 bedroom house",
+                competitorBasePrice: "£215",
                 savings: "£35",
                 image: "kitchen.png",
                 featured: true,
-                hasBedroomCalculator: true,
-                bedroomPrices: {
-                    1: 150,
-                    2: 180,
-                    3: 210,
-                    4: 240
-                },
-                competitorBedroomPrices: {
-                    1: 180,
-                    2: 215,
-                    3: 250,
-                    4: 285
-                }
+                hasBedroomSelector: true,
+                priceType: "deepCleaning"
             },
             {
                 id: 5,
@@ -1377,7 +1366,7 @@
                 competitorPrice: "£65",
                 savings: "£10",
                 image: "ovenafter.png",
-                hasBedroomCalculator: false
+                hasBedroomSelector: false
             },
             {
                 id: 6,
@@ -1398,7 +1387,7 @@
                 competitorPrice: "£46",
                 savings: "£6",
                 image: "carpet.png",
-                hasBedroomCalculator: false
+                hasBedroomSelector: false
             },
             {
                 id: 7,
@@ -1414,24 +1403,13 @@
                     "Final touch-ups"
                 ],
                 duration: "4-6 hours",
-                price: "£220",
-                priceNote: "medium project",
-                competitorPrice: "£260",
+                basePrice: "£220",
+                baseNote: "medium project",
+                competitorBasePrice: "£260",
                 savings: "£40",
                 image: "flooring.png",
-                hasBedroomCalculator: true,
-                bedroomPrices: {
-                    1: 180,
-                    2: 220,
-                    3: 260,
-                    4: 300
-                },
-                competitorBedroomPrices: {
-                    1: 215,
-                    2: 260,
-                    3: 305,
-                    4: 350
-                }
+                hasBedroomSelector: true,
+                priceType: "afterBuilders"
             },
             {
                 id: 8,
@@ -1447,26 +1425,18 @@
                     "Satisfaction guarantee"
                 ],
                 duration: "3-4 hours",
-                price: "£85",
-                priceNote: "2 bedroom flat",
-                competitorPrice: "£100",
+                basePrice: "£85",
+                baseNote: "2 bedroom flat",
+                competitorBasePrice: "£100",
                 savings: "£15",
                 image: "bathroom.png",
-                hasBedroomCalculator: true,
-                bedroomPrices: {
-                    1: 75,
-                    2: 85,
-                    3: 95,
-                    4: 105
-                },
-                competitorBedroomPrices: {
-                    1: 90,
-                    2: 100,
-                    3: 110,
-                    4: 120
-                }
+                hasBedroomSelector: true,
+                priceType: "oneOffCleaning"
             }
         ];
+
+        // Global state
+        let currentGlobalBedrooms = 1;
 
         // DOM Elements
         const servicesGrid = document.getElementById('servicesGrid');
@@ -1474,92 +1444,46 @@
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navMenu = document.getElementById('navMenu');
         const navbar = document.getElementById('navbar');
-        const bedroomButtons = document.querySelectorAll('.bedroom-btn');
-        const fantasticPriceEl = document.getElementById('fantasticPrice');
-        const greengloPriceEl = document.getElementById('greengloPrice');
-        const savingsAmountEl = document.getElementById('savingsAmount');
-        const whatsappCalculatorBtn = document.getElementById('whatsappCalculatorBtn');
+        const globalBedroomButtons = document.querySelectorAll('.bedroom-btn');
 
-        // Current bedroom selection
-        let currentBedrooms = 1;
-
-        // Initialize Price Calculator
-        function updatePriceCalculator() {
-            const greengloPrice = priceData.greenglo[currentBedrooms];
-            const fantasticPrice = priceData.fantastic[currentBedrooms];
-            const savings = fantasticPrice - greengloPrice;
+        // Update service price based on bedroom count
+        function updateServicePrice(serviceCard, service, bedrooms) {
+            const priceAmount = serviceCard.querySelector('.price-amount-small');
+            const priceNote = serviceCard.querySelector('.price-note');
+            const competitorPrice = serviceCard.querySelector('.competitor-price');
+            const savings = serviceCard.querySelector('.savings');
+            const bookBtn = serviceCard.querySelector('.book-now-btn');
             
-            // Update display
-            greengloPriceEl.textContent = `£${greengloPrice}`;
-            fantasticPriceEl.textContent = `£${fantasticPrice}`;
-            savingsAmountEl.textContent = `Save £${savings}`;
-            
-            // Update WhatsApp button
-            whatsappCalculatorBtn.innerHTML = `<i class="fab fa-whatsapp"></i> Get Quote for ${currentBedrooms} Bedroom${currentBedrooms > 1 ? 's' : ''}`;
-            whatsappCalculatorBtn.href = `https://api.whatsapp.com/send?phone=447827784204&text=${encodeURIComponent(`Hello GreenGlo Cleaners, I'd like a quote for a ${currentBedrooms} bedroom end of tenancy cleaning.`)}`;
-            
-            // Update services that have bedroom calculator
-            updateServicesWithBedroomPrices();
+            if (service.hasBedroomSelector) {
+                const greengloPrice = priceData[service.priceType].greenglo[bedrooms];
+                const fantasticPrice = priceData[service.priceType].fantastic[bedrooms];
+                const serviceSavings = fantasticPrice - greengloPrice;
+                
+                // Update prices
+                priceAmount.textContent = `£${greengloPrice}`;
+                priceNote.textContent = `${bedrooms} bedroom${bedrooms > 1 ? 's' : ''}`;
+                competitorPrice.textContent = `Fantastic: £${fantasticPrice}`;
+                savings.textContent = `Save £${serviceSavings}`;
+                
+                // Update WhatsApp button
+                const message = `Hi, I'm interested in ${service.title} for ${bedrooms} bedroom${bedrooms > 1 ? 's' : ''} (£${greengloPrice}). Can you provide availability?`;
+                bookBtn.href = `https://api.whatsapp.com/send?phone=447827784204&text=${encodeURIComponent(message)}`;
+            }
         }
 
-        // Update services that support bedroom pricing
-        function updateServicesWithBedroomPrices() {
+        // Update all services with bedroom selectors
+        function updateAllBedroomPrices(bedrooms) {
             const serviceCards = document.querySelectorAll('.service-card');
             
             serviceCards.forEach(card => {
                 const serviceId = parseInt(card.dataset.serviceId);
                 const service = servicesData.find(s => s.id === serviceId);
                 
-                if (service && service.hasBedroomCalculator) {
-                    // Get the price elements within this card
-                    const priceAmount = card.querySelector('.price-amount-small');
-                    const competitorPrice = card.querySelector('.competitor-price');
-                    const savings = card.querySelector('.savings');
-                    const bookBtn = card.querySelector('.book-now-btn');
-                    
-                    if (priceAmount && competitorPrice && savings && bookBtn) {
-                        let greengloPrice, fantasticPrice;
-                        
-                        if (service.bedroomPrices && service.competitorBedroomPrices) {
-                            // Service has custom bedroom pricing
-                            greengloPrice = service.bedroomPrices[currentBedrooms];
-                            fantasticPrice = service.competitorBedroomPrices[currentBedrooms];
-                        } else {
-                            // Use default end of tenancy pricing
-                            greengloPrice = priceData.greenglo[currentBedrooms];
-                            fantasticPrice = priceData.fantastic[currentBedrooms];
-                        }
-                        
-                        const serviceSavings = fantasticPrice - greengloPrice;
-                        
-                        // Update prices
-                        priceAmount.textContent = `£${greengloPrice}`;
-                        competitorPrice.textContent = `Fantastic: £${fantasticPrice}`;
-                        savings.textContent = `Save £${serviceSavings}`;
-                        
-                        // Update WhatsApp button
-                        bookBtn.href = `https://api.whatsapp.com/send?phone=447827784204&text=${encodeURIComponent(`Hi, I'm interested in ${service.title} for ${currentBedrooms} bedroom${currentBedrooms > 1 ? 's' : ''} (£${greengloPrice}). Can you provide availability?`)}`;
-                    }
+                if (service && service.hasBedroomSelector) {
+                    updateServicePrice(card, service, bedrooms);
                 }
             });
         }
-
-        // Bedroom selection event listeners
-        bedroomButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                bedroomButtons.forEach(btn => btn.classList.remove('active'));
-                
-                // Add active class to clicked button
-                button.classList.add('active');
-                
-                // Update current bedroom selection
-                currentBedrooms = parseInt(button.dataset.bedrooms);
-                
-                // Update calculator
-                updatePriceCalculator();
-            });
-        });
 
         // Render Services
         function renderServices(category = 'all') {
@@ -1575,6 +1499,25 @@
                 serviceCard.setAttribute('data-category', service.category);
                 serviceCard.setAttribute('data-service-id', service.id);
 
+                // Determine initial price
+                let priceDisplay, priceNoteDisplay, competitorPriceDisplay, savingsDisplay;
+                
+                if (service.hasBedroomSelector) {
+                    const greengloPrice = priceData[service.priceType].greenglo[currentGlobalBedrooms];
+                    const fantasticPrice = priceData[service.priceType].fantastic[currentGlobalBedrooms];
+                    const serviceSavings = fantasticPrice - greengloPrice;
+                    
+                    priceDisplay = `£${greengloPrice}`;
+                    priceNoteDisplay = `${currentGlobalBedrooms} bedroom${currentGlobalBedrooms > 1 ? 's' : ''}`;
+                    competitorPriceDisplay = `Fantastic: £${fantasticPrice}`;
+                    savingsDisplay = `Save £${serviceSavings}`;
+                } else {
+                    priceDisplay = service.price || service.basePrice;
+                    priceNoteDisplay = service.priceNote || service.baseNote;
+                    competitorPriceDisplay = `Fantastic: ${service.competitorPrice || service.competitorBasePrice}`;
+                    savingsDisplay = service.savings;
+                }
+
                 serviceCard.innerHTML = `
                     <div class="service-image" style="background-image: url('${service.image}'); background-color: var(--light-green);">
                         <div class="service-overlay">
@@ -1584,19 +1527,41 @@
                     <div class="service-content">
                         <div class="service-price-section">
                             <div class="price-main">
-                                <div class="price-amount-small">${service.price}</div>
-                                <div class="price-note">${service.priceNote}</div>
+                                <div class="price-amount-small">${priceDisplay}</div>
+                                <div class="price-note">${priceNoteDisplay}</div>
                             </div>
                             <div class="price-comparison-small">
-                                <div class="competitor-price">Fantastic: ${service.competitorPrice}</div>
-                                <div class="savings">${service.savings}</div>
+                                <div class="competitor-price">${competitorPriceDisplay}</div>
+                                <div class="savings">${savingsDisplay}</div>
                             </div>
                         </div>
-                        ${service.hasBedroomCalculator ? `
-                        <div class="per-bedroom-note" style="margin-bottom: 1rem;">
-                            <i class="fas fa-home"></i> Price adjusts based on bedroom count
+                        
+                        ${service.hasBedroomSelector ? `
+                        <div class="service-bedroom-selector">
+                            <h4><i class="fas fa-bed"></i> Select Bedrooms</h4>
+                            <div class="service-bedroom-buttons">
+                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 1 ? 'active' : ''}" data-bedrooms="1">
+                                    1
+                                </button>
+                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 2 ? 'active' : ''}" data-bedrooms="2">
+                                    2
+                                </button>
+                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 3 ? 'active' : ''}" data-bedrooms="3">
+                                    3
+                                </button>
+                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 4 ? 'active' : ''}" data-bedrooms="4">
+                                    4
+                                </button>
+                            </div>
                         </div>
                         ` : ''}
+                        
+                        ${service.includesOven ? `
+                        <div style="background: var(--light-green); padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--primary-green);">
+                            <small><i class="fas fa-check-circle" style="color: var(--primary-green);"></i> <strong>Oven cleaning included</strong> (extra with Fantastic Cleaners)</small>
+                        </div>
+                        ` : ''}
+                        
                         <p class="service-description">${service.description}</p>
                         <ul class="service-features">
                             ${service.features.map(feature => `
@@ -1608,7 +1573,7 @@
                                 <i class="far fa-clock"></i>
                                 <span>${service.duration}</span>
                             </div>
-                            <a href="https://api.whatsapp.com/send?phone=447827784204&text=${encodeURIComponent(`Hi, I'm interested in ${service.title} (${service.price} ${service.priceNote}). Can you provide availability?`)}" 
+                            <a href="https://api.whatsapp.com/send?phone=447827784204&text=${encodeURIComponent(`Hi, I'm interested in ${service.title} (${priceDisplay} ${priceNoteDisplay}). Can you provide availability?`)}" 
                                class="btn book-now-btn" style="padding: 0.75rem 1.5rem;">
                                 <i class="fab fa-whatsapp"></i>
                                 Book Now
@@ -1618,6 +1583,32 @@
                 `;
 
                 servicesGrid.appendChild(serviceCard);
+                
+                // Add event listeners to service bedroom buttons
+                if (service.hasBedroomSelector) {
+                    const serviceBedroomButtons = serviceCard.querySelectorAll('.service-bedroom-btn');
+                    serviceBedroomButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            const bedrooms = parseInt(button.dataset.bedrooms);
+                            
+                            // Update global state
+                            currentGlobalBedrooms = bedrooms;
+                            
+                            // Update global selector
+                            globalBedroomButtons.forEach(btn => {
+                                btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
+                            });
+                            
+                            // Update all service prices
+                            updateAllBedroomPrices(bedrooms);
+                            
+                            // Update current service's button states
+                            serviceBedroomButtons.forEach(btn => {
+                                btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
+                            });
+                        });
+                    });
+                }
             });
 
             // Add animation
@@ -1626,10 +1617,31 @@
                 card.style.animationDelay = `${index * 0.1}s`;
                 card.classList.add('fade-in');
             });
-            
-            // Update bedroom prices for relevant services
-            updateServicesWithBedroomPrices();
         }
+
+        // Global bedroom selection
+        globalBedroomButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const bedrooms = parseInt(button.dataset.bedrooms);
+                
+                // Update global state
+                currentGlobalBedrooms = bedrooms;
+                
+                // Update button states
+                globalBedroomButtons.forEach(btn => {
+                    btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
+                });
+                
+                // Update all service prices
+                updateAllBedroomPrices(bedrooms);
+                
+                // Update service bedroom buttons
+                const allServiceBedroomButtons = document.querySelectorAll('.service-bedroom-btn');
+                allServiceBedroomButtons.forEach(btn => {
+                    btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
+                });
+            });
+        });
 
         // Category Filtering
         categoryButtons.forEach(button => {
@@ -1688,10 +1700,6 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize price calculator
-            updatePriceCalculator();
-            
-            // Render services
             renderServices();
             
             // Add CSS animation
