@@ -1,435 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Professional Cleaning Services | GreenGlo Cleaners - Best Prices in London</title>
-    <meta name="description" content="Get premium eco-friendly cleaning services at 15-20% lower prices than other cleaning companies. Same-day booking, guaranteed satisfaction.">
+    <title>Our Services | GreenGlo Cleaners - Professional Cleaning Services London</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        /* Add these new styles for the booking system */
-        .booking-section {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
-            padding: 6rem 0;
+        /* ===== CSS Variables ===== */
+        :root {
+            --primary-green: #10B981;
+            --secondary-green: #34D399;
+            --dark-green: #065F46;
+            --light-green: #D1FAE5;
+            --accent-green: #059669;
+            --white: #FFFFFF;
+            --off-white: #F9FAFB;
+            --light-gray: #F3F4F6;
+            --medium-gray: #9CA3AF;
+            --dark-gray: #4B5563;
+            --black: #111827;
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), #0D9488);
+            --gradient-dark: linear-gradient(135deg, var(--dark-green), #0D9488);
+            --shadow: 0 10px 25px rgba(16, 185, 129, 0.12);
+            --shadow-lg: 0 20px 40px rgba(16, 185, 129, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.7;
+            color: var(--dark-gray);
+            background-color: var(--off-white);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ===== Navigation ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.75rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            transition: var(--transition);
             position: relative;
         }
 
-        .booking-container {
-            max-width: 1000px;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.75rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            gap: 0.75rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 48px;
+            height: 48px;
+            background: var(--light-green);
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: 1.5rem;
+        }
+
+        /* ===== Services Hero ===== */
+        .services-hero {
+            padding: 160px 0 80px;
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.9) 0%, rgba(255, 255, 255, 1) 100%);
+            text-align: center;
+        }
+
+        .services-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
+            color: var(--dark-green);
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--dark-green), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .services-hero p {
+            font-size: 1.25rem;
+            color: var(--medium-gray);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        /* ===== Services Grid ===== */
+        .section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+            color: var(--dark-green);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            font-size: 1.125rem;
+            color: var(--medium-gray);
+            max-width: 700px;
             margin: 0 auto;
         }
 
-        .booking-card {
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
             background: var(--white);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-lg);
             overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
             border: 1px solid rgba(16, 185, 129, 0.1);
         }
 
-        .booking-header {
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .service-header {
+            height: 200px;
             background: var(--gradient-primary);
-            color: var(--white);
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .booking-header h3 {
-            color: var(--white);
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .booking-header p {
-            opacity: 0.9;
-            margin-bottom: 0;
-        }
-
-        .booking-content {
-            padding: 2rem;
-        }
-
-        .booking-steps {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .booking-steps::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--light-gray);
-            z-index: 1;
-        }
-
-        .booking-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light-gray);
-            color: var(--medium-gray);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            transition: var(--transition);
-        }
-
-        .step-circle.active {
-            background: var(--gradient-primary);
+            font-size: 3rem;
             color: var(--white);
-            transform: scale(1.1);
         }
 
-        .step-label {
-            font-size: 0.875rem;
-            font-weight: 600;
+        .service-content {
+            padding: 2rem;
+        }
+
+        .service-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-green);
+        }
+
+        .service-content p {
             color: var(--medium-gray);
-        }
-
-        .step-label.active {
-            color: var(--primary-green);
-        }
-
-        .booking-step-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .booking-step-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
             margin-bottom: 1.5rem;
         }
 
-        .form-group.full-width {
-            grid-column: 1 / -1;
+        .service-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
         }
 
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-green);
-            font-size: 1rem;
-        }
-
-        .form-label .required {
-            color: var(--red);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            transition: var(--transition);
-            background: var(--off-white);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-            background: var(--white);
-        }
-
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239CA3AF' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1.25rem center;
-            background-size: 16px;
-            padding-right: 3rem;
-        }
-
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .booking-summary {
-            background: var(--off-white);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            margin-bottom: 2rem;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-        }
-
-        .summary-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .summary-item.total {
-            font-weight: 700;
-            font-size: 1.125rem;
-            color: var(--dark-green);
-            border-top: 2px solid rgba(16, 185, 129, 0.2);
-            padding-top: 1rem;
-            margin-top: 1rem;
-        }
-
-        .booking-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-            gap: 1rem;
-        }
-
-        .booking-actions .btn {
-            min-width: 150px;
-        }
-
-        .time-slots {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-            margin-top: 0.5rem;
-        }
-
-        .time-slot {
-            padding: 0.75rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            background: var(--white);
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-            color: var(--dark-gray);
-        }
-
-        .time-slot:hover {
-            border-color: var(--primary-green);
-            background: var(--light-green);
-        }
-
-        .time-slot.selected {
-            border-color: var(--primary-green);
-            background: var(--gradient-primary);
-            color: var(--white);
-        }
-
-        .service-checkbox {
+        .service-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--light-gray);
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
+            gap: 0.75rem;
         }
 
-        .service-checkbox:hover {
-            border-color: var(--primary-green);
-            background: var(--light-green);
+        .service-features li:last-child {
+            border-bottom: none;
         }
 
-        .service-checkbox.selected {
-            border-color: var(--primary-green);
-            background: var(--light-green);
-        }
-
-        .service-checkbox input {
-            display: none;
-        }
-
-        .service-checkbox-content {
-            flex: 1;
-        }
-
-        .service-checkbox-title {
-            font-weight: 600;
-            color: var(--dark-green);
-            margin-bottom: 0.25rem;
-        }
-
-        .service-checkbox-price {
-            font-weight: 700;
+        .service-features i {
             color: var(--primary-green);
-            font-size: 1.125rem;
         }
 
-        .date-picker {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .date-option {
-            flex: 1;
-            text-align: center;
-            padding: 1rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .date-option:hover {
-            border-color: var(--primary-green);
-            background: var(--light-green);
-        }
-
-        .date-option.selected {
-            border-color: var(--primary-green);
-            background: var(--gradient-primary);
-            color: var(--white);
-        }
-
-        .date-day {
+        .service-price {
             font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+            color: var(--dark-green);
+            margin-bottom: 1.5rem;
         }
 
-        .date-month {
-            font-size: 0.875rem;
+        .service-price span {
+            font-size: 1rem;
             color: var(--medium-gray);
+            font-weight: 400;
         }
 
-        .date-option.selected .date-month {
-            color: rgba(255, 255, 255, 0.9);
+        /* ===== Pricing Table ===== */
+        .pricing-table {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-top: 3rem;
         }
 
-        .availability-note {
-            background: var(--light-green);
-            padding: 1rem;
-            border-radius: 12px;
-            margin: 1rem 0;
-            border-left: 4px solid var(--primary-green);
-        }
-
-        .availability-note i {
-            color: var(--primary-green);
-            margin-right: 0.5rem;
-        }
-
-        /* Success Message */
-        .booking-success {
-            text-align: center;
-            padding: 3rem 2rem;
-            display: none;
-        }
-
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2rem;
+        .pricing-header {
+            background: var(--gradient-dark);
             color: var(--white);
-            font-size: 2.5rem;
-            animation: successPulse 2s infinite;
+            padding: 2rem;
+            text-align: center;
         }
 
-        @keyframes successPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .pricing-header h3 {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
-        .booking-success h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        .pricing-rows {
+            padding: 2rem;
+        }
+
+        .pricing-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .pricing-row:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-row:hover {
+            background: var(--light-green);
+        }
+
+        .pricing-info h4 {
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-info p {
+            color: var(--medium-gray);
+            font-size: 0.875rem;
+        }
+
+        .pricing-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        /* ===== CTA Section ===== */
+        .cta-section {
+            background: var(--gradient-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 6rem 0;
+            border-radius: var(--border-radius);
+            margin: 4rem 0;
+        }
+
+        .cta-section h2 {
+            color: var(--white);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .btn-outline:hover {
+            background: var(--white);
             color: var(--dark-green);
         }
 
-        .booking-success p {
-            color: var(--medium-gray);
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+        /* ===== Footer ===== */
+        .footer {
+            background: var(--dark-green);
+            color: var(--white);
+            padding: 6rem 0 2rem;
         }
 
-        /* Add to existing responsive styles */
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-col h3 {
+            color: var(--white);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-green);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+        }
+
+        /* ===== Responsive ===== */
         @media (max-width: 768px) {
-            .booking-content {
-                padding: 1.5rem;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .booking-actions {
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background: var(--white);
                 flex-direction: column;
+                padding: 100px 2rem 2rem;
+                gap: 0;
+                transition: var(--transition);
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
             }
 
-            .booking-actions .btn {
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-item {
                 width: 100%;
             }
 
-            .time-slots {
-                grid-template-columns: repeat(2, 1fr);
+            .nav-link {
+                display: block;
+                padding: 1.25rem 1rem;
+                border-bottom: 1px solid rgba(16, 185, 129, 0.1);
             }
 
-            .date-picker {
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
                 flex-direction: column;
             }
-        }
 
-        @media (max-width: 480px) {
-            .time-slots {
-                grid-template-columns: 1fr;
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar">
         <div class="container nav-container">
             <a href="index.html" class="nav-logo">
                 <div class="logo-icon">
-                    <i class="fas fa-leaf"></i>
+                    <img src="logo.png" alt="GreenGlo Cleaners Logo"
+                        style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
                 </div>
                 <div class="logo-text">
                     <h1>GreenGlo</h1>
@@ -446,413 +560,252 @@
                     <a href="index.html" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="services.html" class="nav-link active">Services</a>
+                    <a href="#services" class="nav-link">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#global-bedroom-selector" class="nav-link">Adjust Prices</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#booking" class="nav-link">Book Now</a>
+                    <a href="#pricing" class="nav-link">Pricing</a>
                 </li>
                 <li class="nav-item">
                     <a href="gallery.html" class="nav-link">Gallery</a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html#contact" class="nav-link">Contact</a>
+                    <a href="admin.html" class="nav-link">
+                        <i class="fas fa-user-shield"></i> Admin Login
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a href="tel:+447827784204" class="btn" style="padding: 0.75rem 1.5rem;">
-                        <i class="fas fa-phone"></i>
-                        07827 784204
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote"
+                        class="btn" target="_blank">
+                        <i class="fas fa-whatsapp"></i> Get Quote
                     </a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero">
+    <!-- Services Hero -->
+    <section class="services-hero">
         <div class="container">
-            <div class="hero-content">
-                <div class="price-comparison-badge">
-                    <i class="fas fa-trophy"></i>
-                    <span>Beat Other Cleaners by <span class="savings">15-20%</span></span>
+            <h1>Our Professional Cleaning Services</h1>
+            <p>Experience premium eco-friendly cleaning services tailored to your needs. From regular home cleaning to specialized deep cleans, we've got you covered across London, Kent, and Essex.</p>
+            <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20a%20service"
+                class="btn" target="_blank" style="padding: 1rem 2.5rem; font-size: 1.125rem;">
+                <i class="fas fa-whatsapp"></i> Book a Service Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="section" id="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Cleaning Services</h2>
+                <p>Choose from our range of professional cleaning services, all using eco-friendly products</p>
+            </div>
+
+            <div class="services-grid">
+                <!-- Domestic Cleaning -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Domestic Cleaning</h3>
+                        <p>Regular home cleaning to keep your living space spotless and fresh. Perfect for busy families and professionals.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Weekly, fortnightly, or monthly</li>
+                            <li><i class="fas fa-check"></i> All rooms cleaned</li>
+                            <li><i class="fas fa-check"></i> Eco-friendly products</li>
+                            <li><i class="fas fa-check"></i> Fully insured cleaners</li>
+                        </ul>
+                        <div class="service-price">
+                            From £18/hour <span>(minimum 3 hours)</span>
+                        </div>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20domestic%20cleaning"
+                            class="btn" target="_blank" style="width: 100%;">
+                            <i class="fas fa-whatsapp"></i> Get Quote
+                        </a>
+                    </div>
                 </div>
-                <h1>Professional Cleaning Services</h1>
-                <p class="hero-subtitle">
-                    Select your property size to see real-time pricing. Compare GreenGlo Cleaners with Fantastic Cleaners and save instantly.
-                </p>
-                <div class="cta-buttons">
-                    <a href="#services" class="btn btn-large">
+
+                <!-- End of Tenancy -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>End of Tenancy Cleaning</h3>
+                        <p>Professional deep clean to ensure you get your full deposit back. Meets all landlord and agency requirements.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Full property deep clean</li>
+                            <li><i class="fas fa-check"></i> Oven and appliance cleaning</li>
+                            <li><i class="fas fa-check"></i> Carpet cleaning included</li>
+                            <li><i class="fas fa-check"></i> Guaranteed deposit return</li>
+                        </ul>
+                        <div class="service-price">
+                            From £150 <span>(1-bed flat)</span>
+                        </div>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20end%20of%20tenancy%20cleaning"
+                            class="btn" target="_blank" style="width: 100%;">
+                            <i class="fas fa-whatsapp"></i> Get Quote
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Deep Cleaning -->
+                <div class="service-card">
+                    <div class="service-header">
                         <i class="fas fa-broom"></i>
-                        View Services
-                    </a>
-                    <a href="#booking" class="btn btn-large btn-whatsapp">
-                        <i class="fas fa-calendar-check"></i>
-                        Book Service Now
-                    </a>
+                    </div>
+                    <div class="service-content">
+                        <h3>Deep Cleaning</h3>
+                        <p>Intensive cleaning service for neglected areas or before/after special occasions. Perfect for spring cleans.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Inside cabinets and drawers</li>
+                            <li><i class="fas fa-check"></i> Window tracks and sills</li>
+                            <li><i class="fas fa-check"></i> Light fittings and switches</li>
+                            <li><i class="fas fa-check"></i> Baseboards and corners</li>
+                        </ul>
+                        <div class="service-price">
+                            From £120 <span>(2-3 bedrooms)</span>
+                        </div>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20deep%20cleaning"
+                            class="btn" target="_blank" style="width: 100%;">
+                            <i class="fas fa-whatsapp"></i> Get Quote
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Office Cleaning -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Office & Commercial Cleaning</h3>
+                        <p>Keep your workplace clean and professional. We work around your schedule to minimize disruption.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Daily, weekly, or monthly plans</li>
+                            <li><i class="fas fa-check"></i> After-hours service available</li>
+                            <li><i class="fas fa-check"></i> Restroom sanitization</li>
+                            <li><i class="fas fa-check"></i> Kitchen and break areas</li>
+                        </ul>
+                        <div class="service-price">
+                            Custom Pricing <span>(contact for quote)</span>
+                        </div>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20office%20cleaning"
+                            class="btn" target="_blank" style="width: 100%;">
+                            <i class="fas fa-whatsapp"></i> Get Quote
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Carpet Cleaning -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-rug"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Carpet & Upholstery Cleaning</h3>
+                        <p>Professional steam cleaning to remove stains, odors, and allergens from carpets, rugs, and furniture.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Steam cleaning technology</li>
+                            <li><i class="fas fa-check"></i> Stain removal</li>
+                            <li><i class="fas fa-check"></i> Pet odor elimination</li>
+                            <li><i class="fas fa-check"></i> Quick drying time</li>
+                        </ul>
+                        <div class="service-price">
+                            From £25 <span>(per room)</span>
+                        </div>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20carpet%20cleaning"
+                            class="btn" target="_blank" style="width: 100%;">
+                            <i class="fas fa-whatsapp"></i> Get Quote
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Oven Cleaning -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <i class="fas fa-temperature-high"></i>
+                    </div>
+                    <div class="service-content">
+                        <h3>Oven & Appliance Cleaning</h3>
+                        <p>Specialized cleaning for ovens, extractor hoods, microwaves, and other kitchen appliances.</p>
+                        <ul class="service-features">
+                            <li><i class="fas fa-check"></i> Chemical-free cleaning</li>
+                            <li><i class="fas fa-check"></i> Grease and grime removal</li>
+                            <li><i class="fas fa-check"></i> Inside and outside cleaning</li>
+                            <li><i class="fas fa-check"></i> Same-day service available</li>
+                        </ul>
+                        <div class="service-price">
+                            From £45 <span>(standard oven)</span>
+                        </div>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20oven%20cleaning"
+                            class="btn" target="_blank" style="width: 100%;">
+                            <i class="fas fa-whatsapp"></i> Get Quote
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Global Bedroom Selector -->
-    <section id="global-bedroom-selector" class="section section-light">
-        <div class="container">
-            <div class="bedroom-selector-section">
-                <div class="bedroom-selector-header">
-                    <h3>Select Your Property Size</h3>
-                    <p>Choose the number of bedrooms to adjust all service prices accordingly</p>
-                </div>
-                <div class="bedroom-buttons">
-                    <div class="bedroom-option">
-                        <button class="bedroom-btn active" data-bedrooms="1">
-                            1
-                        </button>
-                        <div class="bedroom-label">1 Bedroom</div>
-                    </div>
-                    <div class="bedroom-option">
-                        <button class="bedroom-btn" data-bedrooms="2">
-                            2
-                        </button>
-                        <div class="bedroom-label">2 Bedrooms</div>
-                    </div>
-                    <div class="bedroom-option">
-                        <button class="bedroom-btn" data-bedrooms="3">
-                            3
-                        </button>
-                        <div class="bedroom-label">3 Bedrooms</div>
-                    </div>
-                    <div class="bedroom-option">
-                        <button class="bedroom-btn" data-bedrooms="4">
-                            4
-                        </button>
-                        <div class="bedroom-label">4 Bedrooms</div>
-                    </div>
-                </div>
-                <div style="text-align: center; margin-top: 1rem;">
-                    <small class="price-note"><i class="fas fa-info-circle"></i> Prices update automatically across all services</small>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section -->
-    <section id="services" class="services-section section">
+    <!-- Pricing Table -->
+    <section class="section" id="pricing">
         <div class="container">
             <div class="section-title">
-                <h2>Our Competitive Services</h2>
-                <p>Select bedroom count on each service to see real-time pricing. All prices include eco-friendly products and vetted professionals.</p>
+                <h2>Transparent Pricing</h2>
+                <p>No hidden fees. Simple, straightforward pricing for all our services</p>
             </div>
 
-            <div class="category-filters">
-                <button class="category-btn active" data-category="all">All Services</button>
-                <button class="category-btn" data-category="domestic">Domestic Cleaning</button>
-                <button class="category-btn" data-category="commercial">Commercial Cleaning</button>
-                <button class="category-btn" data-category="deep">Deep Cleaning</button>
-                <button class="category-btn" data-category="special">Special Services</button>
-            </div>
-
-            <div class="services-grid" id="servicesGrid">
-                <!-- Services will be populated by JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW: Booking Section -->
-    <section id="booking" class="booking-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Book Your Cleaning Service</h2>
-                <p>Fill out the form below to schedule your professional cleaning service</p>
-            </div>
-
-            <div class="booking-container">
-                <div class="booking-card">
-                    <div class="booking-header">
-                        <h3>Easy Online Booking</h3>
-                        <p>Complete the form in 3 simple steps</p>
+            <div class="pricing-table">
+                <div class="pricing-header">
+                    <h3>Standard Service Pricing</h3>
+                    <p>All prices include eco-friendly products and fully insured cleaners</p>
+                </div>
+                <div class="pricing-rows">
+                    <div class="pricing-row">
+                        <div class="pricing-info">
+                            <h4>Regular Domestic Cleaning</h4>
+                            <p>Weekly, fortnightly, or monthly service</p>
+                        </div>
+                        <div class="pricing-price">£18/hour</div>
                     </div>
-
-                    <div class="booking-content">
-                        <!-- Booking Steps Progress -->
-                        <div class="booking-steps">
-                            <div class="booking-step">
-                                <div class="step-circle active">1</div>
-                                <div class="step-label active">Service Details</div>
-                            </div>
-                            <div class="booking-step">
-                                <div class="step-circle">2</div>
-                                <div class="step-label">Date & Time</div>
-                            </div>
-                            <div class="booking-step">
-                                <div class="step-circle">3</div>
-                                <div class="step-label">Your Details</div>
-                            </div>
+                    <div class="pricing-row">
+                        <div class="pricing-info">
+                            <h4>One-off Deep Clean</h4>
+                            <p>2-3 bedroom house or flat</p>
                         </div>
-
-                        <!-- Step 1: Service Details -->
-                        <div class="booking-step-content active" id="step1">
-                            <h4 style="margin-bottom: 1.5rem; color: var(--dark-green);">Select Your Service</h4>
-                            
-                            <div class="service-selection">
-                                <div class="form-group full-width">
-                                    <label class="form-label">Choose Service <span class="required">*</span></label>
-                                    
-                                    <div class="service-checkbox" data-service="endOfTenancy">
-                                        <input type="checkbox" id="service1" name="service" value="endOfTenancy">
-                                        <div class="service-checkbox-content">
-                                            <div class="service-checkbox-title">End of Tenancy Cleaning</div>
-                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
-                                                Complete apartment cleaning for move-out inspection. Includes oven cleaning.
-                                            </p>
-                                            <div class="service-checkbox-price">From £195</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="service-checkbox" data-service="domestic">
-                                        <input type="checkbox" id="service2" name="service" value="domestic">
-                                        <div class="service-checkbox-content">
-                                            <div class="service-checkbox-title">Regular Domestic Cleaning</div>
-                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
-                                                Weekly or fortnightly cleaning to keep your home sparkling.
-                                            </p>
-                                            <div class="service-checkbox-price">From £17/hour</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="service-checkbox" data-service="deepCleaning">
-                                        <input type="checkbox" id="service3" name="service" value="deepCleaning">
-                                        <div class="service-checkbox-content">
-                                            <div class="service-checkbox-title">Deep Spring Cleaning</div>
-                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
-                                                Thorough whole-house deep cleaning for seasonal refresh.
-                                            </p>
-                                            <div class="service-checkbox-price">From £180</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="service-checkbox" data-service="afterBuilders">
-                                        <input type="checkbox" id="service4" name="service" value="afterBuilders">
-                                        <div class="service-checkbox-content">
-                                            <div class="service-checkbox-title">After Builders Cleaning</div>
-                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
-                                                Post-construction cleanup service for dust and debris removal.
-                                            </p>
-                                            <div class="service-checkbox-price">From £220</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="bedrooms" class="form-label">Number of Bedrooms <span class="required">*</span></label>
-                                    <select id="bedrooms" class="form-control form-select" required>
-                                        <option value="">Select bedrooms</option>
-                                        <option value="1">1 Bedroom</option>
-                                        <option value="2">2 Bedrooms</option>
-                                        <option value="3">3 Bedrooms</option>
-                                        <option value="4">4 Bedrooms</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="propertyType" class="form-label">Property Type <span class="required">*</span></label>
-                                    <select id="propertyType" class="form-control form-select" required>
-                                        <option value="">Select property type</option>
-                                        <option value="apartment">Apartment/Flat</option>
-                                        <option value="house">House</option>
-                                        <option value="studio">Studio</option>
-                                        <option value="office">Office</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group full-width">
-                                    <label for="specialInstructions" class="form-label">Special Instructions</label>
-                                    <textarea id="specialInstructions" class="form-control" placeholder="Any specific requirements, access instructions, or areas needing special attention..."></textarea>
-                                </div>
-                            </div>
-
-                            <div class="booking-actions">
-                                <div></div> <!-- Empty div for spacing -->
-                                <button type="button" class="btn" id="nextToStep2">
-                                    Next: Date & Time <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
+                        <div class="pricing-price">£120-£180</div>
+                    </div>
+                    <div class="pricing-row">
+                        <div class="pricing-info">
+                            <h4>End of Tenancy Clean</h4>
+                            <p>1-bed flat (studio from £100)</p>
                         </div>
-
-                        <!-- Step 2: Date & Time -->
-                        <div class="booking-step-content" id="step2">
-                            <h4 style="margin-bottom: 1.5rem; color: var(--dark-green);">Select Date & Time</h4>
-                            
-                            <div class="availability-note">
-                                <i class="fas fa-info-circle"></i>
-                                <strong>Same-day booking available!</strong> Select today's date for emergency cleaning service.
-                            </div>
-
-                            <div class="date-selection">
-                                <div class="form-group full-width">
-                                    <label class="form-label">Preferred Date <span class="required">*</span></label>
-                                    <div class="date-picker" id="datePicker">
-                                        <!-- Dates will be populated by JavaScript -->
-                                    </div>
-                                </div>
-
-                                <div class="form-group full-width">
-                                    <label class="form-label">Preferred Time Slot <span class="required">*</span></label>
-                                    <div class="time-slots">
-                                        <div class="time-slot" data-time="08:00-10:00">
-                                            8:00 AM - 10:00 AM
-                                        </div>
-                                        <div class="time-slot" data-time="10:00-12:00">
-                                            10:00 AM - 12:00 PM
-                                        </div>
-                                        <div class="time-slot" data-time="12:00-14:00">
-                                            12:00 PM - 2:00 PM
-                                        </div>
-                                        <div class="time-slot" data-time="14:00-16:00">
-                                            2:00 PM - 4:00 PM
-                                        </div>
-                                        <div class="time-slot" data-time="16:00-18:00">
-                                            4:00 PM - 6:00 PM
-                                        </div>
-                                        <div class="time-slot" data-time="18:00-20:00">
-                                            6:00 PM - 8:00 PM
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group full-width">
-                                    <label for="urgency" class="form-label">How Urgent is Your Cleaning?</label>
-                                    <select id="urgency" class="form-control form-select">
-                                        <option value="standard">Standard (Within 1 week)</option>
-                                        <option value="within3days">Within 3 Days</option>
-                                        <option value="tomorrow">Tomorrow</option>
-                                        <option value="sameDay">Same Day (Emergency)</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="booking-actions">
-                                <button type="button" class="btn btn-outline" id="backToStep1">
-                                    <i class="fas fa-arrow-left"></i> Back
-                                </button>
-                                <button type="button" class="btn" id="nextToStep3">
-                                    Next: Your Details <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
+                        <div class="pricing-price">£150+</div>
+                    </div>
+                    <div class="pricing-row">
+                        <div class="pricing-info">
+                            <h4>Carpet Cleaning</h4>
+                            <p>Per room (minimum 2 rooms)</p>
                         </div>
-
-                        <!-- Step 3: Your Details -->
-                        <div class="booking-step-content" id="step3">
-                            <h4 style="margin-bottom: 1.5rem; color: var(--dark-green);">Your Contact Details</h4>
-                            
-                            <div class="booking-summary">
-                                <h4 style="margin-bottom: 1rem; color: var(--dark-green);">Booking Summary</h4>
-                                <div class="summary-item">
-                                    <span>Service:</span>
-                                    <span id="summaryService">-</span>
-                                </div>
-                                <div class="summary-item">
-                                    <span>Property:</span>
-                                    <span id="summaryProperty">-</span>
-                                </div>
-                                <div class="summary-item">
-                                    <span>Date:</span>
-                                    <span id="summaryDate">-</span>
-                                </div>
-                                <div class="summary-item">
-                                    <span>Time:</span>
-                                    <span id="summaryTime">-</span>
-                                </div>
-                                <div class="summary-item total">
-                                    <span>Estimated Total:</span>
-                                    <span id="summaryTotal">-</span>
-                                </div>
-                            </div>
-
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
-                                    <input type="text" id="firstName" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
-                                    <input type="text" id="lastName" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email Address <span class="required">*</span></label>
-                                    <input type="email" id="email" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone" class="form-label">Phone Number <span class="required">*</span></label>
-                                    <input type="tel" id="phone" class="form-control" required>
-                                </div>
-                                <div class="form-group full-width">
-                                    <label for="address" class="form-label">Full Address <span class="required">*</span></label>
-                                    <textarea id="address" class="form-control" required placeholder="Street address, city, and postcode"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="postcode" class="form-label">Postcode <span class="required">*</span></label>
-                                    <input type="text" id="postcode" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="city" class="form-label">City <span class="required">*</span></label>
-                                    <input type="text" id="city" class="form-control" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group full-width">
-                                <label for="howHeard" class="form-label">How did you hear about us?</label>
-                                <select id="howHeard" class="form-control form-select">
-                                    <option value="">Select option</option>
-                                    <option value="google">Google Search</option>
-                                    <option value="recommendation">Recommendation</option>
-                                    <option value="social_media">Social Media</option>
-                                    <option value="previous_customer">Previous Customer</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group full-width">
-                                <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-top: 1rem;">
-                                    <input type="checkbox" id="terms" required style="margin-top: 0.25rem;">
-                                    <label for="terms" style="font-size: 0.875rem;">
-                                        I agree to the <a href="#" style="color: var(--primary-green);">Terms of Service</a> and confirm that all information provided is accurate.
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="booking-actions">
-                                <button type="button" class="btn btn-outline" id="backToStep2">
-                                    <i class="fas fa-arrow-left"></i> Back
-                                </button>
-                                <button type="button" class="btn btn-whatsapp" id="submitBooking">
-                                    <i class="fab fa-whatsapp"></i>
-                                    Confirm Booking via WhatsApp
-                                </button>
-                            </div>
+                        <div class="pricing-price">£25/room</div>
+                    </div>
+                    <div class="pricing-row">
+                        <div class="pricing-info">
+                            <h4>Oven Cleaning</h4>
+                            <p>Standard single oven</p>
                         </div>
-
-                        <!-- Success Message (Hidden Initially) -->
-                        <div class="booking-success" id="bookingSuccess">
-                            <div class="success-icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <h3>Booking Request Sent!</h3>
-                            <p>Thank you for choosing GreenGlo Cleaners. We've received your booking request and will contact you within 30 minutes to confirm your appointment.</p>
-                            <p style="font-weight: 600; color: var(--dark-green);">Your reference number: <span id="bookingReference">GG-</span></p>
-                            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 2rem auto;">
-                                <a href="services.html" class="btn">
-                                    <i class="fas fa-calendar-plus"></i>
-                                    Book Another Service
-                                </a>
-                                <a href="index.html" class="btn btn-outline">
-                                    <i class="fas fa-home"></i>
-                                    Return to Homepage
-                                </a>
-                            </div>
+                        <div class="pricing-price">£45</div>
+                    </div>
+                    <div class="pricing-row">
+                        <div class="pricing-info">
+                            <h4>Office Cleaning</h4>
+                            <p>Price per square meter</p>
                         </div>
+                        <div class="pricing-price">£0.50/m²</div>
                     </div>
                 </div>
             </div>
@@ -860,22 +813,18 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready for a Sparkling Clean?</h2>
-                <p>Get your free, no-obligation quote today. Chat with us on WhatsApp for instant pricing or call to speak with our cleaning experts.</p>
-                <div class="cta-buttons">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners%2C%20I%27d%20like%20a%20quote%20for%20cleaning%20services." 
-                       class="btn btn-large btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i>
-                        WhatsApp for Quote
-                    </a>
-                    <a href="tel:+447827784204" class="btn btn-large" style="background: var(--white); color: var(--primary-green);">
-                        <i class="fas fa-phone"></i>
-                        Call: 07827 784204
-                    </a>
-                </div>
+    <section class="container">
+        <div class="cta-section">
+            <h2>Ready for a Spotless Home?</h2>
+            <p>Book your cleaning service today and enjoy 10% off your first clean when you mention this website!</p>
+            <div class="cta-buttons">
+                <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20a%20cleaning%20service%20and%20claim%20my%2010%25%20discount"
+                    class="btn" target="_blank">
+                    <i class="fas fa-whatsapp"></i> Book with 10% Off
+                </a>
+                <a href="tel:07827784204" class="btn btn-outline">
+                    <i class="fas fa-phone"></i> Call: 07827 784204
+                </a>
             </div>
         </div>
     </section>
@@ -887,14 +836,8 @@
                 <div class="footer-col">
                     <h3>GreenGlo Cleaners</h3>
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
-                        London's premier eco-friendly cleaning service. Better prices than Fantastic Cleaners with superior service.
+                        Professional eco-friendly cleaning services for homes and offices across London, Kent, and Essex.
                     </p>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="https://instagram.com/greenglocleaningco" class="social-link"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
                 </div>
 
                 <div class="footer-col">
@@ -902,10 +845,10 @@
                     <ul class="footer-links">
                         <li><a href="#services">Domestic cleaning</a></li>
                         <li><a href="#services">End of tenancy cleaning</a></li>
-                        <li><a href="#services">Office cleaning</a></li>
                         <li><a href="#services">Deep cleaning</a></li>
                         <li><a href="#services">Carpet cleaning</a></li>
-                        <li><a href="#services">All services</a></li>
+                        <li><a href="#services">Office cleaning</a></li>
+                        <li><a href="#services">Oven cleaning</a></li>
                     </ul>
                 </div>
 
@@ -913,428 +856,71 @@
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="#global-bedroom-selector">Adjust Prices</a></li>
-                        <li><a href="#booking">Book Now</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
                         <li><a href="gallery.html">Gallery</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
+                        <li><a href="admin.html">Admin Login</a></li>
+                        <li><a href="index.html#faq">FAQ</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-col">
-                    <h3>Contact Info</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-phone" style="margin-right: 10px;"></i> 07827 784204</li>
-                        <li><i class="fas fa-envelope" style="margin-right: 10px;"></i> greenglocleaning@gmail.com</li>
-                        <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> Serving London & Surrounding Areas</li>
-                        <li><i class="fas fa-clock" style="margin-right: 10px;"></i> Mon-Sun: 8am-8pm</li>
-                    </ul>
+                    <h3>Contact Us</h3>
+                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
+                        <i class="fas fa-phone" style="margin-right: 0.5rem;"></i> 07827 784204
+                    </p>
+                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
+                        <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> greenglocleaning@gmail.com
+                    </p>
+                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
+                        <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i> Serving London, Kent & Essex
+                    </p>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p>GreenGlo Cleaners © 2025. All rights reserved. Prices subject to change. *Savings compared to Fantastic Cleaners standard rates.</p>
+                <p>GreenGlo Cleaners © 2025. All rights reserved | <a href="#" style="color: var(--primary-green);">Privacy Policy</a> | <a href="#" style="color: var(--primary-green);">Terms of Service</a></p>
             </div>
         </div>
     </footer>
 
-    <!-- WhatsApp Button -->
-    <div class="whatsapp-float">
-        <button class="whatsapp-button" onclick="window.open('https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners%2C%20I%27d%20like%20a%20quote%20for%20your%20services.', '_blank')">
-            <div class="whatsapp-notification">1</div>
-            <i class="fab fa-whatsapp" style="color: white; font-size: 28px;"></i>
-        </button>
-    </div>
-
+    <!-- JavaScript -->
     <script>
-        // ===== Booking System Logic =====
-        const bookingSteps = document.querySelectorAll('.booking-step-content');
-        const stepCircles = document.querySelectorAll('.step-circle');
-        const stepLabels = document.querySelectorAll('.step-label');
-        let currentStep = 1;
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
 
-        // Service selection
-        const serviceCheckboxes = document.querySelectorAll('.service-checkbox');
-        let selectedService = null;
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
 
-        // Date and time selection
-        let selectedDate = null;
-        let selectedTime = null;
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
 
-        // Form data storage
-        const bookingData = {
-            service: '',
-            bedrooms: '',
-            propertyType: '',
-            date: '',
-            time: '',
-            urgency: 'standard',
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            address: '',
-            postcode: '',
-            city: '',
-            specialInstructions: '',
-            howHeard: ''
-        };
-
-        // Initialize date picker
-        function initializeDatePicker() {
-            const datePicker = document.getElementById('datePicker');
-            datePicker.innerHTML = '';
-
-            const today = new Date();
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() + i);
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
                 
-                const dateOption = document.createElement('div');
-                dateOption.className = 'date-option';
-                if (i === 0) {
-                    dateOption.classList.add('selected');
-                    selectedDate = date;
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
                 }
-                
-                dateOption.dataset.date = date.toISOString().split('T')[0];
-                dateOption.innerHTML = `
-                    <div class="date-day">${date.getDate()}</div>
-                    <div class="date-month">${days[date.getDay()]}, ${months[date.getMonth()]}</div>
-                `;
-                
-                dateOption.addEventListener('click', function() {
-                    document.querySelectorAll('.date-option').forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedDate = new Date(this.dataset.date);
-                });
-                
-                datePicker.appendChild(dateOption);
-            }
-        }
-
-        // Time slot selection
-        function initializeTimeSlots() {
-            const timeSlots = document.querySelectorAll('.time-slot');
-            
-            timeSlots.forEach(slot => {
-                slot.addEventListener('click', function() {
-                    timeSlots.forEach(s => s.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedTime = this.dataset.time;
-                });
-            });
-
-            // Select first time slot by default
-            if (timeSlots.length > 0) {
-                timeSlots[0].click();
-            }
-        }
-
-        // Service checkbox selection
-        serviceCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('click', function() {
-                const serviceValue = this.dataset.service;
-                
-                // Remove selection from all checkboxes
-                serviceCheckboxes.forEach(cb => {
-                    cb.classList.remove('selected');
-                    cb.querySelector('input').checked = false;
-                });
-                
-                // Select current checkbox
-                this.classList.add('selected');
-                this.querySelector('input').checked = true;
-                selectedService = serviceValue;
-                
-                // Update booking summary
-                updateBookingSummary();
             });
         });
-
-        // Bedrooms selection
-        document.getElementById('bedrooms').addEventListener('change', function() {
-            bookingData.bedrooms = this.value;
-            updateBookingSummary();
-        });
-
-        // Property type selection
-        document.getElementById('propertyType').addEventListener('change', function() {
-            bookingData.propertyType = this.value;
-            updateBookingSummary();
-        });
-
-        // Urgency selection
-        document.getElementById('urgency').addEventListener('change', function() {
-            bookingData.urgency = this.value;
-            updateBookingSummary();
-        });
-
-        // Special instructions
-        document.getElementById('specialInstructions').addEventListener('input', function() {
-            bookingData.specialInstructions = this.value;
-        });
-
-        // How heard selection
-        document.getElementById('howHeard').addEventListener('change', function() {
-            bookingData.howHeard = this.value;
-        });
-
-        // Update booking summary
-        function updateBookingSummary() {
-            // Service name
-            const serviceNames = {
-                'endOfTenancy': 'End of Tenancy Cleaning',
-                'domestic': 'Regular Domestic Cleaning',
-                'deepCleaning': 'Deep Spring Cleaning',
-                'afterBuilders': 'After Builders Cleaning'
-            };
-            
-            document.getElementById('summaryService').textContent = selectedService ? serviceNames[selectedService] : '-';
-            
-            // Property info
-            const bedrooms = bookingData.bedrooms ? `${bookingData.bedrooms} bedroom${parseInt(bookingData.bedrooms) > 1 ? 's' : ''}` : '';
-            const propertyType = bookingData.propertyType ? bookingData.propertyType.charAt(0).toUpperCase() + bookingData.propertyType.slice(1) : '';
-            document.getElementById('summaryProperty').textContent = `${bedrooms} ${propertyType}`.trim();
-            
-            // Date
-            if (selectedDate) {
-                const dateStr = selectedDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-                document.getElementById('summaryDate').textContent = dateStr;
-                bookingData.date = dateStr;
-            }
-            
-            // Time
-            if (selectedTime) {
-                document.getElementById('summaryTime').textContent = selectedTime;
-                bookingData.time = selectedTime;
-            }
-            
-            // Total estimate
-            let estimatedTotal = 'Calculating...';
-            if (selectedService && bookingData.bedrooms) {
-                const priceLookup = {
-                    'endOfTenancy': {1: 195, 2: 235, 3: 275, 4: 315},
-                    'deepCleaning': {1: 150, 2: 180, 3: 210, 4: 240},
-                    'afterBuilders': {1: 180, 2: 220, 3: 260, 4: 300}
-                };
-                
-                if (priceLookup[selectedService] && priceLookup[selectedService][bookingData.bedrooms]) {
-                    estimatedTotal = `£${priceLookup[selectedService][bookingData.bedrooms]}`;
-                } else if (selectedService === 'domestic') {
-                    estimatedTotal = '£17/hour (2 hour minimum)';
-                }
-            }
-            document.getElementById('summaryTotal').textContent = estimatedTotal;
-        }
-
-        // Navigation functions
-        function showStep(stepNumber) {
-            // Hide all steps
-            bookingSteps.forEach(step => step.classList.remove('active'));
-            stepCircles.forEach(circle => circle.classList.remove('active'));
-            stepLabels.forEach(label => label.classList.remove('active'));
-            
-            // Show current step
-            document.getElementById(`step${stepNumber}`).classList.add('active');
-            stepCircles[stepNumber - 1].classList.add('active');
-            stepLabels[stepNumber - 1].classList.add('active');
-            
-            currentStep = stepNumber;
-        }
-
-        // Step navigation
-        document.getElementById('nextToStep2').addEventListener('click', function() {
-            if (!selectedService) {
-                alert('Please select a service first.');
-                return;
-            }
-            if (!bookingData.bedrooms) {
-                alert('Please select the number of bedrooms.');
-                return;
-            }
-            if (!bookingData.propertyType) {
-                alert('Please select the property type.');
-                return;
-            }
-            
-            showStep(2);
-            updateBookingSummary();
-        });
-
-        document.getElementById('backToStep1').addEventListener('click', function() {
-            showStep(1);
-        });
-
-        document.getElementById('nextToStep3').addEventListener('click', function() {
-            if (!selectedDate) {
-                alert('Please select a date.');
-                return;
-            }
-            if (!selectedTime) {
-                alert('Please select a time slot.');
-                return;
-            }
-            
-            showStep(3);
-        });
-
-        document.getElementById('backToStep2').addEventListener('click', function() {
-            showStep(2);
-        });
-
-        // Submit booking
-        document.getElementById('submitBooking').addEventListener('click', function() {
-            // Validate step 3 fields
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const postcode = document.getElementById('postcode').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const terms = document.getElementById('terms').checked;
-
-            if (!firstName || !lastName || !email || !phone || !address || !postcode || !city) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-
-            if (!terms) {
-                alert('Please agree to the Terms of Service.');
-                return;
-            }
-
-            // Store form data
-            bookingData.firstName = firstName;
-            bookingData.lastName = lastName;
-            bookingData.email = email;
-            bookingData.phone = phone;
-            bookingData.address = address;
-            bookingData.postcode = postcode;
-            bookingData.city = city;
-
-            // Generate booking reference
-            const bookingReference = 'GG-' + Date.now().toString().slice(-6);
-            document.getElementById('bookingReference').textContent = bookingReference;
-
-            // Prepare WhatsApp message
-            const serviceNames = {
-                'endOfTenancy': 'End of Tenancy Cleaning',
-                'domestic': 'Regular Domestic Cleaning',
-                'deepCleaning': 'Deep Spring Cleaning',
-                'afterBuilders': 'After Builders Cleaning'
-            };
-
-            const urgencyText = {
-                'standard': 'Standard (Within 1 week)',
-                'within3days': 'Within 3 Days',
-                'tomorrow': 'Tomorrow',
-                'sameDay': 'Same Day (Emergency)'
-            };
-
-            const howHeardText = {
-                'google': 'Google Search',
-                'recommendation': 'Recommendation',
-                'social_media': 'Social Media',
-                'previous_customer': 'Previous Customer',
-                'other': 'Other'
-            };
-
-            let message = `🔔 *NEW BOOKING REQUEST* - ${bookingReference}\n\n`;
-            message += `*Service:* ${serviceNames[selectedService]}\n`;
-            message += `*Property:* ${bookingData.bedrooms} bedroom ${bookingData.propertyType}\n`;
-            message += `*Date:* ${bookingData.date}\n`;
-            message += `*Time:* ${bookingData.time}\n`;
-            message += `*Urgency:* ${urgencyText[bookingData.urgency]}\n\n`;
-            message += `*Client Details:*\n`;
-            message += `👤 ${firstName} ${lastName}\n`;
-            message += `📞 ${phone}\n`;
-            message += `📧 ${email}\n`;
-            message += `📍 ${address}, ${city}, ${postcode}\n\n`;
-            
-            if (bookingData.specialInstructions) {
-                message += `*Special Instructions:*\n${bookingData.specialInstructions}\n\n`;
-            }
-            
-            if (bookingData.howHeard) {
-                message += `*How they heard about us:* ${howHeardText[bookingData.howHeard]}\n\n`;
-            }
-            
-            message += `📅 Please confirm availability for this booking.`;
-
-            // Encode message for WhatsApp URL
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-
-            // Open WhatsApp in new tab
-            window.open(whatsappUrl, '_blank');
-
-            // Show success message
-            document.getElementById('step3').style.display = 'none';
-            document.getElementById('bookingSuccess').style.display = 'block';
-
-            // Scroll to success message
-            document.getElementById('bookingSuccess').scrollIntoView({ behavior: 'smooth' });
-
-            // Reset form after 5 seconds
-            setTimeout(() => {
-                resetBookingForm();
-            }, 5000);
-        });
-
-        // Reset booking form
-        function resetBookingForm() {
-            // Reset form fields
-            serviceCheckboxes.forEach(cb => {
-                cb.classList.remove('selected');
-                cb.querySelector('input').checked = false;
-            });
-            
-            document.getElementById('bedrooms').value = '';
-            document.getElementById('propertyType').value = '';
-            document.getElementById('specialInstructions').value = '';
-            document.getElementById('urgency').value = 'standard';
-            document.getElementById('firstName').value = '';
-            document.getElementById('lastName').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('phone').value = '';
-            document.getElementById('address').value = '';
-            document.getElementById('postcode').value = '';
-            document.getElementById('city').value = '';
-            document.getElementById('howHeard').value = '';
-            document.getElementById('terms').checked = false;
-            
-            // Reset selections
-            selectedService = null;
-            selectedDate = null;
-            selectedTime = null;
-            
-            // Reset to step 1
-            showStep(1);
-            document.getElementById('bookingSuccess').style.display = 'none';
-            document.getElementById('step3').style.display = 'block';
-            
-            // Reinitialize date picker
-            initializeDatePicker();
-            initializeTimeSlots();
-            updateBookingSummary();
-        }
-
-        // Initialize booking system
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeDatePicker();
-            initializeTimeSlots();
-            updateBookingSummary();
-        });
-
-        // ===== Existing Services Page Script =====
-        // (Keep all your existing priceData, servicesData, and related functions here)
-        // ... [Your existing services page JavaScript remains here] ...
-
     </script>
 </body>
 </html>
