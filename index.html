@@ -16,6 +16,8 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <style>
         /* ===== CSS Reset & Variables ===== */
         :root {
@@ -870,6 +872,234 @@
             flex-wrap: wrap;
         }
 
+        /* ===== NEW: Coverage Checker Styles ===== */
+        .coverage-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .coverage-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        .coverage-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .postcode-form {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1rem;
+        }
+
+        .input-with-button {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #postcodeInput {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        #postcodeInput:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .input-hint {
+            display: block;
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        #checkButton {
+            padding: 1rem 1.75rem;
+            min-height: auto;
+            white-space: nowrap;
+        }
+
+        .coverage-result {
+            background: var(--off-white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(16, 185, 129, 0.3);
+            transition: var(--transition);
+        }
+
+        .result-placeholder {
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .result-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--light-gray);
+        }
+
+        .result-success,
+        .result-error {
+            text-align: center;
+            width: 100%;
+        }
+
+        .result-success i,
+        .result-error i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-success i {
+            color: var(--primary-green);
+        }
+
+        .result-error i {
+            color: #EF4444;
+        }
+
+        .result-success h4,
+        .result-error h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .result-success p,
+        .result-error p {
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .postcode-display {
+            display: inline-block;
+            background: var(--light-green);
+            color: var(--dark-green);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            font-family: monospace;
+        }
+
+        .result-cta {
+            margin-top: 1rem;
+        }
+
+        .service-areas {
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+            padding-top: 1.5rem;
+        }
+
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .area-badge {
+            padding: 0.75rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .area-london {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--dark-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .area-kent {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--dark-green);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .area-essex {
+            background: rgba(13, 148, 136, 0.1);
+            color: var(--dark-green);
+            border: 1px solid rgba(13, 148, 136, 0.3);
+        }
+
+        .areas-note {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        /* Map Styles */
+        #serviceAreaMap {
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            margin-bottom: 1.5rem;
+            z-index: 1;
+        }
+
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
         /* ===== Premium Footer ===== */
         .footer {
             background: var(--dark-green);
@@ -994,6 +1224,15 @@
                 width: 100%;
                 opacity: 0.3;
             }
+
+            .coverage-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            #serviceAreaMap {
+                height: 350px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1066,6 +1305,22 @@
 
             .section {
                 padding: 4rem 0;
+            }
+
+            .coverage-card {
+                padding: 1.75rem;
+            }
+
+            .areas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-with-button {
+                flex-direction: column;
+            }
+
+            #checkButton {
+                width: 100%;
             }
 
             /* Mobile Close Button */
@@ -1510,6 +1765,98 @@
         </div>
     </section>
 
+    <!-- NEW: Service Coverage Checker & Map Section -->
+    <section class="section section-light" id="coverage-checker">
+        <div class="container">
+            <div class="section-title">
+                <h2>Check Our Service Coverage</h2>
+                <p>Enter your postcode to see if GreenGlo serves your area in London, Kent, and Essex.</p>
+            </div>
+
+            <div class="coverage-container">
+                <!-- Left Column: Input Form & Results -->
+                <div class="coverage-form-container">
+                    <div class="coverage-card">
+                        <div class="feature-icon-large" style="margin: 0 auto 1.5rem;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 1rem;">Are We in Your Area?</h3>
+
+                        <!-- Input Form -->
+                        <form id="postcodeForm" class="postcode-form">
+                            <div class="form-group">
+                                <label for="postcodeInput">Your UK Postcode</label>
+                                <div class="input-with-button">
+                                    <input 
+                                        type="text" 
+                                        id="postcodeInput" 
+                                        placeholder="e.g., SW1A 1AA, ME14 2TT" 
+                                        aria-label="Enter your UK postcode"
+                                    >
+                                    <button type="submit" class="btn" id="checkButton">
+                                        <i class="fas fa-search"></i> Check
+                                    </button>
+                                </div>
+                                <small class="input-hint">Enter the first part (outcode) or full postcode.</small>
+                            </div>
+                        </form>
+
+                        <!-- Results Display -->
+                        <div id="coverageResult" class="coverage-result" aria-live="polite">
+                            <div class="result-placeholder">
+                                <i class="fas fa-map-pin"></i>
+                                <p>Your coverage result will appear here.</p>
+                            </div>
+                        </div>
+
+                        <!-- Service Area List -->
+                        <div class="service-areas">
+                            <h4 style="margin-bottom: 1rem;"><i class="fas fa-check-circle"></i> Our Primary Service Areas</h4>
+                            <div class="areas-grid">
+                                <div class="area-badge area-london">
+                                    <i class="fas fa-landmark"></i> London
+                                </div>
+                                <div class="area-badge area-kent">
+                                    <i class="fas fa-tree"></i> Kent
+                                </div>
+                                <div class="area-badge area-essex">
+                                    <i class="fas fa-water"></i> Essex
+                                </div>
+                            </div>
+                            <p class="areas-note">Coverage based on postcode areas. Some outer districts may vary.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Map -->
+                <div class="coverage-map-container">
+                    <div class="coverage-card">
+                        <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-map"></i> Service Coverage Map
+                        </h3>
+                        <p style="color: var(--medium-gray); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                            Explore our service regions. <strong>Green areas</strong> are covered.
+                        </p>
+                        
+                        <!-- Map Container -->
+                        <div id="serviceAreaMap"></div>
+                        
+                        <div class="map-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: rgba(16, 185, 129, 0.3); border-color: var(--primary-green);"></span>
+                                <span>Covered Region (London, Kent, Essex)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: var(--light-gray); border-color: var(--medium-gray);"></span>
+                                <span>Surrounding Areas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="section" id="contact">
         <div class="container">
@@ -1815,7 +2162,7 @@
             <input type="text" class="message-input" id="whatsappMessage" placeholder="Type your message here..."
                 maxlength="200">
             <button class="send-button" onclick="sendWhatsAppMessage()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <svg xmlns="http://www.whatsapp.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
                     <path d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z" />
                 </svg>
                 Send to WhatsApp
@@ -1834,118 +2181,6 @@
         </button>
         <span class="whatsapp-tooltip">Chat with Green Glo Cleaning</span>
     </div>
-
-    <script>
-        // Configuration for Green Glo Cleaning Co
-        const whatsappConfig = {
-            phoneNumber: "447827784204", // Your WhatsApp number from the link
-            companyName: "Green Glo Cleaning Co",
-            defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
-        };
-
-        // DOM Elements
-        const whatsappButton = document.getElementById('whatsappButton');
-        const whatsappBubble = document.getElementById('whatsappBubble');
-        const whatsappNotification = document.getElementById('whatsappNotification');
-        const whatsappMessageInput = document.getElementById('whatsappMessage');
-        const statusText = document.getElementById('statusText');
-
-        // Toggle message bubble
-        function toggleBubble() {
-            whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
-        }
-
-        function openBubble() {
-            whatsappBubble.classList.add('active');
-            whatsappMessageInput.focus();
-            whatsappNotification.style.display = 'none';
-            localStorage.setItem('whatsappNotificationRead', 'true');
-        }
-
-        function closeBubble() {
-            whatsappBubble.classList.remove('active');
-        }
-
-        // Send WhatsApp message using your specific link format
-        function sendWhatsAppMessage() {
-            let message = whatsappMessageInput.value.trim();
-            if (!message) message = whatsappConfig.defaultMessage;
-
-            // Construct the URL using your exact WhatsApp API link format
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-
-            // Open the chat in a new tab
-            window.open(whatsappUrl, '_blank');
-
-            // Close bubble and reset
-            closeBubble();
-            whatsappMessageInput.value = '';
-
-            // Optional: Track the event (for analytics)
-            console.log('WhatsApp message initiated for:', whatsappConfig.companyName);
-        }
-
-        // Manage notifications
-        function checkNotificationStatus() {
-            const notificationRead = localStorage.getItem('whatsappNotificationRead');
-            const lastVisit = localStorage.getItem('lastWhatsAppVisit');
-            const now = new Date().getTime();
-
-            if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
-                whatsappNotification.style.display = 'flex';
-            } else {
-                whatsappNotification.style.display = 'none';
-            }
-            localStorage.setItem('lastWhatsAppVisit', now.toString());
-        }
-
-        // Update status based on working hours
-        function updateWorkingStatus() {
-            const now = new Date();
-            const day = now.getDay(); // 0 = Sunday
-            const hour = now.getHours();
-
-            // Set working hours: Mon-Fri 8am-8pm, Sat 9am-6pm
-            const isWorkingHours = (
-                (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
-                (day === 6 && hour >= 9 && hour < 18)
-            );
-
-            if (statusText) {
-                statusText.textContent = isWorkingHours
-                    ? "Typically replies instantly"
-                    : "Will reply during working hours";
-                statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
-            }
-        }
-
-        // Close bubble when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!whatsappButton.contains(event.target) &&
-                !whatsappBubble.contains(event.target) &&
-                whatsappBubble.classList.contains('active')) {
-                closeBubble();
-            }
-        });
-
-        // Send message on Enter key
-        whatsappMessageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendWhatsAppMessage();
-            }
-        });
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            checkNotificationStatus();
-            updateWorkingStatus();
-
-            // Update status every minute
-            setInterval(updateWorkingStatus, 60000);
-        });
-    </script>
 
     <!-- Footer -->
     <footer class="footer">
@@ -2009,6 +2244,7 @@
     </footer>
 
     <!-- JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
         // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -2226,9 +2462,356 @@
         }, { threshold: 0.1 });
 
         animatedElements.forEach(el => elementObserver.observe(el));
+
+        // ===== NEW: Coverage Checker & Map Functionality =====
+        const serviceConfig = {
+            // Define covered postcode areas (first part of UK postcode)
+            coveredAreas: [
+                // London Postal Districts
+                'E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC',
+                // Kent Postal Districts (e.g., ME, TN, CT)
+                'ME', 'TN', 'CT', 'DA',
+                // Essex Postal Districts
+                'IG', 'RM', 'CM', 'SS', 'CO'
+            ],
+            companyName: 'GreenGlo Cleaners',
+            phoneNumber: '447827784204'
+        };
+
+        // DOM Elements for Coverage Checker
+        const postcodeForm = document.getElementById('postcodeForm');
+        const postcodeInput = document.getElementById('postcodeInput');
+        const coverageResult = document.getElementById('coverageResult');
+        const checkButton = document.getElementById('checkButton');
+
+        // Initialize the Map
+        let serviceMap = null;
+        let coverageLayer = null;
+        
+        function initServiceMap() {
+            // Center map on South East England
+            serviceMap = L.map('serviceAreaMap').setView([51.507, 0.127], 9);
+            
+            // Add tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 13,
+                minZoom: 7
+            }).addTo(serviceMap);
+            
+            // Define a rough polygon for the service area (London, Kent, Essex)
+            const serviceAreaCoords = [
+                [51.686, 0.010],  // NE Essex
+                [51.686, 0.800],  // NW Essex/Kent
+                [51.200, 0.800],  // SW Kent
+                [51.200, -0.510], // SW London
+                [51.686, -0.510], // NW London
+                [51.686, 0.010]   // Close polygon
+            ];
+            
+            // Add the service area polygon to the map
+            coverageLayer = L.polygon(serviceAreaCoords, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(16, 185, 129, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap);
+            
+            // Add a marker for central London
+            L.marker([51.507, -0.127])
+                .addTo(serviceMap)
+                .bindPopup('<b>GreenGlo Cleaners</b><br>London Headquarters')
+                .openPopup();
+        }
+
+        // UK Postcode Validation & Parser
+        function validateAndParsePostcode(postcode) {
+            // Clean and standardize input
+            let cleanPostcode = postcode.toUpperCase().replace(/\s+/g, '').trim();
+            
+            // Basic UK postcode regex (covers most formats)
+            const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\d[A-Z]{2}$/;
+            
+            if (!postcodeRegex.test(cleanPostcode)) {
+                // Also try to match just the outcode (first part)
+                const outcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)/;
+                const match = cleanPostcode.match(outcodeRegex);
+                if (match) {
+                    return { valid: true, fullPostcode: null, outcode: match[1] };
+                }
+                return { valid: false, error: 'Please enter a valid UK postcode format (e.g., SW1A 1AA or ME14 2TT).' };
+            }
+            
+            // Extract outcode (first part before the digit)
+            const outcodeMatch = cleanPostcode.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
+            const outcode = outcodeMatch ? outcodeMatch[0] : null;
+            
+            return {
+                valid: true,
+                fullPostcode: cleanPostcode.replace(/(.{3})$/, ' $1'), // Add space for display
+                outcode: outcode
+            };
+        }
+
+        // Check if Postcode is in Service Area
+        function checkServiceCoverage(postcodeData) {
+            const outcode = postcodeData.outcode;
+            if (!outcode) return false;
+            
+            // Find matching service area
+            for (const area of serviceConfig.coveredAreas) {
+                if (outcode.startsWith(area)) {
+                    return {
+                        covered: true,
+                        area: area,
+                        region: getRegionName(area)
+                    };
+                }
+            }
+            return { covered: false };
+        }
+        
+        // Get region name from postcode area
+        function getRegionName(area) {
+            const londonAreas = ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC'];
+            const kentAreas = ['ME', 'TN', 'CT', 'DA'];
+            const essexAreas = ['IG', 'RM', 'CM', 'SS', 'CO'];
+            
+            if (londonAreas.includes(area)) return 'London';
+            if (kentAreas.includes(area)) return 'Kent';
+            if (essexAreas.includes(area)) return 'Essex';
+            return area;
+        }
+
+        // Display Results
+        function displayCoverageResult(postcodeData, coverageInfo) {
+            if (coverageInfo.covered) {
+                coverageResult.innerHTML = `
+                    <div class="result-success">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Great News! We Cover Your Area</h4>
+                        <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                        <p>Your postcode is in our <strong>${coverageInfo.region}</strong> service area.</p>
+                        <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                            <i class="fas fa-clock"></i> Next available slots in ${coverageInfo.region}
+                        </p>
+                        <div class="result-cta">
+                            <a href="https://api.whatsapp.com/send?phone=${serviceConfig.phoneNumber}&text=Hello%20GreenGlo,%20I'm%20in%20${encodeURIComponent(postcodeData.outcode)}%20and%20would%20like%20a%20quote" 
+                               class="btn" 
+                               target="_blank" 
+                               style="margin-top: 1rem;">
+                                <i class="fas fa-whatsapp"></i> Get a Quote for ${postcodeData.outcode}
+                            </a>
+                        </div>
+                    </div>
+                `;
+                coverageResult.style.borderColor = 'var(--primary-green)';
+                coverageResult.style.background = 'rgba(16, 185, 129, 0.05)';
+            } else {
+                coverageResult.innerHTML = `
+                    <div class="result-error">
+                        <i class="fas fa-times-circle"></i>
+                        <h4>Currently Not in Your Area</h4>
+                        <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                        <p>We don't currently serve <strong>${postcodeData.outcode}</strong>. Our primary areas are London, Kent & Essex.</p>
+                        <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                            <i class="fas fa-info-circle"></i> Service areas expanding soon!
+                        </p>
+                        <div class="result-cta">
+                            <button class="btn btn-outline" onclick="document.getElementById('postcodeInput').focus()" style="margin-top: 1rem;">
+                                <i class="fas fa-redo"></i> Check Another Postcode
+                            </button>
+                        </div>
+                    </div>
+                `;
+                coverageResult.style.borderColor = '#EF4444';
+                coverageResult.style.background = 'rgba(239, 68, 68, 0.05)';
+            }
+        }
+
+        // Form Submission Handler
+        postcodeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const postcode = postcodeInput.value.trim();
+            if (!postcode) {
+                postcodeInput.focus();
+                return;
+            }
+            
+            // Disable button during processing
+            const originalBtnText = checkButton.innerHTML;
+            checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            checkButton.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Validate postcode
+                const postcodeData = validateAndParsePostcode(postcode);
+                
+                if (!postcodeData.valid) {
+                    coverageResult.innerHTML = `
+                        <div class="result-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Invalid Postcode</h4>
+                            <p>${postcodeData.error}</p>
+                            <p style="font-size: 0.9rem;">Examples: SW1A 1AA (London), ME14 2TT (Kent), CM1 1AA (Essex)</p>
+                        </div>
+                    `;
+                    coverageResult.style.borderColor = '#F59E0B';
+                    coverageResult.style.background = 'rgba(245, 158, 11, 0.05)';
+                } else {
+                    // Check coverage
+                    const coverageInfo = checkServiceCoverage(postcodeData);
+                    displayCoverageResult(postcodeData, coverageInfo);
+                    
+                    // Zoom map to approximate area if covered
+                    if (coverageInfo.covered && serviceMap) {
+                        const regions = {
+                            'London': { center: [51.507, -0.127], zoom: 10 },
+                            'Kent': { center: [51.278, 0.527], zoom: 9 },
+                            'Essex': { center: [51.759, 0.457], zoom: 9 }
+                        };
+                        
+                        if (regions[coverageInfo.region]) {
+                            const { center, zoom } = regions[coverageInfo.region];
+                            serviceMap.setView(center, zoom);
+                        }
+                    }
+                }
+                
+                // Re-enable button
+                checkButton.innerHTML = originalBtnText;
+                checkButton.disabled = false;
+            }, 800); // Simulated delay
+        });
+
+        // Initialize Coverage Checker when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initServiceMap();
+            
+            // Example postcodes for placeholder
+            const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
+            let exampleIndex = 0;
+            
+            // Optional: Cycle example postcodes in placeholder
+            setInterval(() => {
+                postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
+                exampleIndex = (exampleIndex + 1) % examples.length;
+            }, 3000);
+        });
+
+        // ===== WhatsApp Floating Button =====
+        const whatsappConfig = {
+            phoneNumber: "447827784204",
+            companyName: "Green Glo Cleaning Co",
+            defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
+        };
+
+        // DOM Elements for WhatsApp
+        const whatsappButton = document.getElementById('whatsappButton');
+        const whatsappBubble = document.getElementById('whatsappBubble');
+        const whatsappNotification = document.getElementById('whatsappNotification');
+        const whatsappMessageInput = document.getElementById('whatsappMessage');
+        const statusText = document.getElementById('statusText');
+
+        // Toggle message bubble
+        function toggleBubble() {
+            whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
+        }
+
+        function openBubble() {
+            whatsappBubble.classList.add('active');
+            whatsappMessageInput.focus();
+            whatsappNotification.style.display = 'none';
+            localStorage.setItem('whatsappNotificationRead', 'true');
+        }
+
+        function closeBubble() {
+            whatsappBubble.classList.remove('active');
+        }
+
+        // Send WhatsApp message using your specific link format
+        function sendWhatsAppMessage() {
+            let message = whatsappMessageInput.value.trim();
+            if (!message) message = whatsappConfig.defaultMessage;
+
+            // Construct the URL using your exact WhatsApp API link format
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+
+            // Open the chat in a new tab
+            window.open(whatsappUrl, '_blank');
+
+            // Close bubble and reset
+            closeBubble();
+            whatsappMessageInput.value = '';
+
+            // Optional: Track the event (for analytics)
+            console.log('WhatsApp message initiated for:', whatsappConfig.companyName);
+        }
+
+        // Manage notifications
+        function checkNotificationStatus() {
+            const notificationRead = localStorage.getItem('whatsappNotificationRead');
+            const lastVisit = localStorage.getItem('lastWhatsAppVisit');
+            const now = new Date().getTime();
+
+            if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
+                whatsappNotification.style.display = 'flex';
+            } else {
+                whatsappNotification.style.display = 'none';
+            }
+            localStorage.setItem('lastWhatsAppVisit', now.toString());
+        }
+
+        // Update status based on working hours
+        function updateWorkingStatus() {
+            const now = new Date();
+            const day = now.getDay(); // 0 = Sunday
+            const hour = now.getHours();
+
+            // Set working hours: Mon-Fri 8am-8pm, Sat 9am-6pm
+            const isWorkingHours = (
+                (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
+                (day === 6 && hour >= 9 && hour < 18)
+            );
+
+            if (statusText) {
+                statusText.textContent = isWorkingHours
+                    ? "Typically replies instantly"
+                    : "Will reply during working hours";
+                statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
+            }
+        }
+
+        // Close bubble when clicking outside
+        document.addEventListener('click', function (event) {
+            if (!whatsappButton.contains(event.target) &&
+                !whatsappBubble.contains(event.target) &&
+                whatsappBubble.classList.contains('active')) {
+                closeBubble();
+            }
+        });
+
+        // Send message on Enter key
+        if (whatsappMessageInput) {
+            whatsappMessageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendWhatsAppMessage();
+                }
+            });
+        }
+
+        // Initialize WhatsApp functionality
+        checkNotificationStatus();
+        updateWorkingStatus();
+
+        // Update status every minute
+        setInterval(updateWorkingStatus, 60000);
     </script>
 </body>
 
 </html>
-
-
