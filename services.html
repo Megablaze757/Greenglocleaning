@@ -4,41 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Our Services | GreenGlo Cleaners - Professional Cleaning Services London</title>
+    <title>GreenGlo Cleaners | Premium Eco-Friendly Cleaning Services London</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo.png">
+    <!-- Apple Touch Icon for iOS devices -->
     <link rel="apple-touch-icon" href="logo.png">
+    <!-- For IE and older browsers -->
     <link rel="shortcut icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <style>
-        /* ===== CSS Variables ===== */
+        /* ===== CSS Reset & Variables ===== */
         :root {
+            /* Modern Green Palette */
             --primary-green: #10B981;
             --secondary-green: #34D399;
             --dark-green: #065F46;
             --light-green: #D1FAE5;
             --accent-green: #059669;
+            --emerald: #10B981;
+            --teal: #0D9488;
+            --mint: #A7F3D0;
+
+            /* Neutrals */
             --white: #FFFFFF;
             --off-white: #F9FAFB;
             --light-gray: #F3F4F6;
             --medium-gray: #9CA3AF;
             --dark-gray: #4B5563;
             --black: #111827;
-            --gradient-primary: linear-gradient(135deg, var(--primary-green), #0D9488);
-            --gradient-dark: linear-gradient(135deg, var(--dark-green), #0D9488);
-            --shadow: 0 10px 25px rgba(16, 185, 129, 0.12);
-            --shadow-lg: 0 20px 40px rgba(16, 185, 129, 0.15);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            /* Accents */
+            --gold: #FBBF24;
+            --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
+            --shadow-lg: 0 25px 50px rgba(16, 185, 129, 0.15);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--teal));
+            --gradient-dark: linear-gradient(135deg, var(--dark-green), var(--teal));
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
         }
 
         body {
@@ -46,7 +71,21 @@
             line-height: 1.7;
             color: var(--dark-gray);
             background-color: var(--off-white);
+            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--dark-green);
+            letter-spacing: -0.5px;
         }
 
         .container {
@@ -56,7 +95,73 @@
             padding: 0 1.5rem;
         }
 
-        /* ===== Navigation ===== */
+        /* ===== Premium Button Styles ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: var(--shadow);
+            gap: 0.75rem;
+            min-height: 56px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-dark);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-large {
+            padding: 1.25rem 3rem;
+            font-size: 1.125rem;
+            min-height: 64px;
+        }
+
+        /* ===== Premium Navigation Bar ===== */
         .navbar {
             position: fixed;
             top: 0;
@@ -64,9 +169,16 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             z-index: 1000;
             border-bottom: 1px solid rgba(16, 185, 129, 0.1);
             transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.1);
+            padding: 0.5rem 0;
         }
 
         .nav-container {
@@ -81,6 +193,11 @@
             align-items: center;
             gap: 0.75rem;
             text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-logo:hover {
+            transform: translateY(-2px);
         }
 
         .logo-icon {
@@ -125,6 +242,10 @@
             list-style: none;
         }
 
+        .nav-item {
+            position: relative;
+        }
+
         .nav-link {
             text-decoration: none;
             color: var(--dark-gray);
@@ -154,25 +275,13 @@
             width: 100%;
         }
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.875rem 1.75rem;
-            background: var(--gradient-primary);
-            color: var(--white);
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            gap: 0.75rem;
+        .nav-cta {
+            margin-left: 1rem;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
+        .nav-cta .btn {
+            padding: 0.75rem 1.75rem;
+            min-height: auto;
         }
 
         .mobile-menu-btn {
@@ -187,34 +296,225 @@
             justify-content: center;
             color: var(--primary-green);
             font-size: 1.5rem;
+            transition: var(--transition);
         }
 
-        /* ===== Services Hero ===== */
-        .services-hero {
-            padding: 160px 0 80px;
-            background: linear-gradient(135deg, rgba(209, 250, 229, 0.9) 0%, rgba(255, 255, 255, 1) 100%);
-            text-align: center;
+        .mobile-menu-btn:hover {
+            background: var(--mint);
+            transform: rotate(90deg);
         }
 
-        .services-hero h1 {
-            font-size: clamp(2.5rem, 6vw, 3.5rem);
+        /* ===== Mobile Menu Overlay ===== */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ===== Premium Hero Section ===== */
+        .hero {
+            min-height: 100vh;
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--light-green) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 650px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .hero-badge i {
+            color: var(--gold);
+            font-size: 1.25rem;
+        }
+
+        .hero-badge span {
+            font-weight: 600;
             color: var(--dark-green);
+            font-size: 0.9375rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
             margin-bottom: 1.5rem;
-            background: linear-gradient(to right, var(--dark-green), var(--primary-green));
+            line-height: 1.1;
+            background: linear-gradient(to right, var(--dark-green), var(--teal));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .services-hero p {
-            font-size: 1.25rem;
-            color: var(--medium-gray);
-            max-width: 700px;
-            margin: 0 auto 3rem;
+        .hero-subtitle {
+            font-size: clamp(1.125rem, 3vw, 1.375rem);
+            color: var(--dark-gray);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 600px;
         }
 
-        /* ===== Services Grid ===== */
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
+        }
+
+        .hero-feature:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-green);
+        }
+
+        .feature-icon {
+            min-width: 56px;
+            height: 56px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-text h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--dark-green);
+        }
+
+        .feature-text p {
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+            margin: 0;
+        }
+
+        .hero-cta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            max-width: 600px;
+            z-index: 0;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .club-notice {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 1.25rem 2rem;
+            border-radius: var(--border-radius);
+            margin-top: 2rem;
+        }
+
+        .club-notice i {
+            font-size: 1.5rem;
+        }
+
+        .club-notice p {
+            margin: 0;
+            font-weight: 600;
+            font-size: 0.9375rem;
+        }
+
+        /* ===== Modern Section Styles ===== */
         .section {
             padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-light {
+            background: var(--white);
+        }
+
+        .section-gray {
+            background: var(--off-white);
         }
 
         .section-title {
@@ -225,7 +525,6 @@
         .section-title h2 {
             font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 1.5rem;
-            color: var(--dark-green);
             position: relative;
             display: inline-block;
         }
@@ -249,152 +548,862 @@
             margin: 0 auto;
         }
 
-        .services-grid {
+        /* ===== Premium Features Grid ===== */
+        .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
 
-        .service-card {
+        .feature-card {
             background: var(--white);
+            padding: 3rem 2rem;
             border-radius: var(--border-radius);
-            overflow: hidden;
+            text-align: center;
             box-shadow: var(--shadow);
             transition: var(--transition);
             border: 1px solid rgba(16, 185, 129, 0.1);
         }
 
-        .service-card:hover {
+        .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary-green);
         }
 
-        .service-header {
-            height: 200px;
+        .feature-icon-large {
+            width: 80px;
+            height: 80px;
             background: var(--gradient-primary);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            margin: 0 auto 2rem;
             color: var(--white);
+            font-size: 2rem;
         }
 
-        .service-content {
-            padding: 2rem;
-        }
-
-        .service-content h3 {
+        .feature-card h3 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
-            color: var(--dark-green);
         }
 
-        .service-content p {
-            color: var(--medium-gray);
-            margin-bottom: 1.5rem;
+        /* ===== Premium Stats Counter ===== */
+        .stats {
+            background: var(--gradient-dark);
+            color: var(--white);
+            padding: 4rem 0;
+            border-radius: var(--border-radius-lg);
+            margin: 4rem auto;
+            max-width: 1200px;
         }
 
-        .service-features {
-            list-style: none;
-            margin-bottom: 1.5rem;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            text-align: center;
         }
 
-        .service-features li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--light-gray);
+        .stat-item h3 {
+            font-size: 3.5rem;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .stat-item p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        /* ===== Testimonials Carousel ===== */
+        .testimonials-carousel {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .carousel-container {
             display: flex;
-            align-items: center;
-            gap: 0.75rem;
+            transition: transform 0.5s ease-in-out;
         }
 
-        .service-features li:last-child {
-            border-bottom: none;
-        }
-
-        .service-features i {
-            color: var(--primary-green);
-        }
-
-        .service-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark-green);
-            margin-bottom: 1.5rem;
-        }
-
-        .service-price span {
-            font-size: 1rem;
-            color: var(--medium-gray);
-            font-weight: 400;
-        }
-
-        /* ===== Pricing Table ===== */
-        .pricing-table {
+        .testimonial-card {
+            flex: 0 0 100%;
             background: var(--white);
+            padding: 2.5rem;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            overflow: hidden;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            font-size: 4rem;
+            color: var(--light-green);
+            font-family: serif;
+            line-height: 1;
+        }
+
+        .testimonial-rating {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .testimonial-content {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--dark-gray);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .author-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--light-green);
+        }
+
+        .author-info h4 {
+            margin-bottom: 0.25rem;
+            font-size: 1.125rem;
+        }
+
+        .author-info p {
+            color: var(--medium-gray);
+            font-size: 0.875rem;
+            margin: 0;
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
             margin-top: 3rem;
         }
 
-        .pricing-header {
-            background: var(--gradient-dark);
+        .carousel-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            color: var(--white);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .carousel-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .carousel-indicators {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .carousel-indicator.active {
+            background: var(--primary-green);
+            transform: scale(1.2);
+        }
+
+        /* ===== Premium FAQ ===== */
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .faq-question {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--light-green);
+        }
+
+        .faq-toggle {
+            width: 32px;
+            height: 32px;
+            background: var(--light-green);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .faq-answer {
+            padding: 0 2rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-answer.open {
+            padding: 0 2rem 2rem;
+        }
+
+        /* ===== NEW: Dynamic Booking System Styles ===== */
+        .booking-system-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .booking-header {
+            background: var(--gradient-primary);
             color: var(--white);
             padding: 2rem;
             text-align: center;
         }
 
-        .pricing-header h3 {
+        .booking-header h3 {
             color: var(--white);
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             margin-bottom: 0.5rem;
         }
 
-        .pricing-rows {
-            padding: 2rem;
+        .booking-header p {
+            opacity: 0.9;
+            font-size: 1.125rem;
         }
 
-        .pricing-row {
+        .booking-steps {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem;
+            justify-content: center;
+            padding: 2rem;
             border-bottom: 1px solid var(--light-gray);
         }
 
-        .pricing-row:last-child {
-            border-bottom: none;
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .pricing-row:hover {
-            background: var(--light-green);
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .pricing-info h4 {
-            color: var(--dark-green);
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-info p {
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-gray);
             color: var(--medium-gray);
-            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: var(--transition);
         }
 
-        .pricing-price {
-            font-size: 1.5rem;
-            font-weight: 700;
+        .step.active .step-circle {
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .step.completed .step-circle {
+            background: var(--secondary-green);
+            color: var(--white);
+        }
+
+        .step-line {
+            width: 60px;
+            height: 2px;
+            background: var(--light-gray);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--medium-gray);
+        }
+
+        .step.active .step-label {
             color: var(--primary-green);
         }
 
-        /* ===== CTA Section ===== */
+        .booking-content {
+            padding: 3rem;
+        }
+
+        .booking-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .booking-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Calendar Styles for Booking */
+        .booking-calendar {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .calendar-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .calendar-title {
+            font-size: 1.5rem;
+            color: var(--dark-green);
+            font-weight: 600;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-header-cell {
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark-gray);
+            padding: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .calendar-cell {
+            aspect-ratio: 1;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+            position: relative;
+        }
+
+        .calendar-cell:hover:not(.disabled):not(.past) {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .calendar-cell.selected {
+            border-color: var(--primary-green);
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .calendar-cell.available {
+            border-color: var(--secondary-green);
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .calendar-cell.past {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--off-white);
+        }
+
+        .calendar-cell.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: var(--light-gray);
+        }
+
+        .calendar-cell.full {
+            border-color: #EF4444;
+            background: rgba(239, 68, 68, 0.1);
+            cursor: not-allowed;
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .availability-dots {
+            position: absolute;
+            bottom: 5px;
+            display: flex;
+            gap: 2px;
+        }
+
+        .availability-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--secondary-green);
+        }
+
+        /* Time Slots Grid */
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .time-slot {
+            padding: 1.25rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            background: var(--white);
+        }
+
+        .time-slot:hover:not(.booked):not(.selected) {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+            transform: translateY(-3px);
+        }
+
+        .time-slot.selected {
+            border-color: var(--primary-green);
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .time-slot.booked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--off-white);
+        }
+
+        .slot-time {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .slot-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+        }
+
+        .status-booked {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        /* Booking Form */
+        .booking-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .booking-summary {
+            background: var(--off-white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: var(--medium-gray);
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .booking-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .booking-message {
+            display: none;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .booking-message.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--primary-green);
+        }
+
+        .booking-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+        }
+
+        /* Coverage Checker Styles */
+        .coverage-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .coverage-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        .coverage-card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .postcode-form {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1rem;
+        }
+
+        .input-with-button {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #postcodeInput {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        #postcodeInput:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .input-hint {
+            display: block;
+            color: var(--medium-gray);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+        }
+
+        #checkButton {
+            padding: 1rem 1.75rem;
+            min-height: auto;
+            white-space: nowrap;
+        }
+
+        .coverage-result {
+            background: var(--off-white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(16, 185, 129, 0.3);
+            transition: var(--transition);
+        }
+
+        .result-placeholder {
+            text-align: center;
+            color: var(--medium-gray);
+        }
+
+        .result-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--light-gray);
+        }
+
+        .result-success,
+        .result-error {
+            text-align: center;
+            width: 100%;
+        }
+
+        .result-success i,
+        .result-error i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-success i {
+            color: var(--primary-green);
+        }
+
+        .result-error i {
+            color: #EF4444;
+        }
+
+        .result-success h4,
+        .result-error h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .result-success p,
+        .result-error p {
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        .postcode-display {
+            display: inline-block;
+            background: var(--light-green);
+            color: var(--dark-green);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            font-family: monospace;
+        }
+
+        .result-cta {
+            margin-top: 1rem;
+        }
+
+        .service-areas {
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+            padding-top: 1.5rem;
+        }
+
+        .areas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .area-badge {
+            padding: 0.75rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .area-london {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--dark-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .area-kent {
+            background: rgba(52, 211, 153, 0.1);
+            color: var(--dark-green);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .area-essex {
+            background: rgba(13, 148, 136, 0.1);
+            color: var(--dark-green);
+            border: 1px solid rgba(13, 148, 136, 0.3);
+        }
+
+        .areas-note {
+            font-size: 0.8rem;
+            color: var(--medium-gray);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        /* Map Styles */
+        #serviceAreaMap {
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            margin-bottom: 1.5rem;
+            z-index: 1;
+        }
+
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--dark-gray);
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        /* ===== Premium CTA ===== */
         .cta-section {
             background: var(--gradient-dark);
             color: var(--white);
             text-align: center;
             padding: 6rem 0;
-            border-radius: var(--border-radius);
-            margin: 4rem 0;
+            border-radius: var(--border-radius-lg);
+            margin: 4rem auto;
+            max-width: 1200px;
         }
 
         .cta-section h2 {
@@ -417,18 +1426,7 @@
             flex-wrap: wrap;
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--white);
-            color: var(--white);
-        }
-
-        .btn-outline:hover {
-            background: var(--white);
-            color: var(--dark-green);
-        }
-
-        /* ===== Footer ===== */
+        /* ===== Premium Footer ===== */
         .footer {
             background: var(--dark-green);
             color: var(--white);
@@ -472,10 +1470,55 @@
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             transition: var(--transition);
+            display: inline-block;
         }
 
         .footer-links a:hover {
             color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary-green);
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            margin-top: 1.5rem;
+        }
+
+        .newsletter-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: var(--white);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .footer-bottom {
@@ -486,7 +1529,42 @@
             font-size: 0.875rem;
         }
 
-        /* ===== Responsive ===== */
+        .footer-bottom a {
+            color: var(--primary-green);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-bottom a:hover {
+            color: var(--secondary-green);
+            text-decoration: underline;
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 1024px) {
+            .hero-image {
+                display: none;
+            }
+
+            .hero::before {
+                width: 100%;
+                opacity: 0.3;
+            }
+
+            .coverage-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            #serviceAreaMap {
+                height: 350px;
+            }
+
+            .booking-system-container {
+                margin: 0 1rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .nav-menu {
                 position: fixed;
@@ -500,6 +1578,8 @@
                 gap: 0;
                 transition: var(--transition);
                 box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+                z-index: 1001;
+                overflow-y: auto;
             }
 
             .nav-menu.active {
@@ -514,33 +1594,178 @@
                 display: block;
                 padding: 1.25rem 1rem;
                 border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+                font-size: 1.1rem;
+            }
+
+            .nav-cta {
+                margin: 2rem 0 0;
+                width: 100%;
+            }
+
+            .nav-cta .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 1rem 2rem;
             }
 
             .mobile-menu-btn {
                 display: flex;
+                z-index: 1002;
+                position: relative;
             }
 
-            .services-grid {
+            .mobile-menu-btn.active {
+                background: var(--primary-green);
+                color: var(--white);
+            }
+
+            .hero-features {
                 grid-template-columns: 1fr;
+            }
+
+            .features-grid,
+            .services-grid,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 100px 0 4rem;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .coverage-card {
+                padding: 1.75rem;
+            }
+
+            .areas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-with-button {
+                flex-direction: column;
+            }
+
+            #checkButton {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slots-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+            }
+
+            .calendar-cell {
+                aspect-ratio: 1.2;
+            }
+
+            .booking-steps {
+                padding: 1rem;
+            }
+
+            .step-line {
+                width: 30px;
+            }
+
+            .booking-content {
+                padding: 1.5rem;
+            }
+
+            /* Mobile Close Button */
+            .mobile-menu-close {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                width: 44px;
+                height: 44px;
+                background: var(--light-green);
+                border-radius: 12px;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--primary-green);
+                font-size: 1.25rem;
+                transition: var(--transition);
+                z-index: 1003;
+            }
+
+            .mobile-menu-close:hover {
+                background: var(--mint);
+                transform: rotate(90deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .hero-cta .btn {
+                width: 100%;
+                justify-content: center;
             }
 
             .cta-buttons {
                 flex-direction: column;
             }
 
-            .btn {
+            .nav-menu {
+                width: 85%;
+            }
+
+            .testimonial-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .time-slots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .booking-navigation .btn {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .step-indicator {
+                gap: 0.5rem;
+            }
+
+            .step-line {
+                width: 20px;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Premium Navigation Bar -->
+    <nav class="navbar" id="navbar">
         <div class="container nav-container">
-            <a href="index.html" class="nav-logo">
+            <a href="#" class="nav-logo">
                 <div class="logo-icon">
                     <img src="logo.png" alt="GreenGlo Cleaners Logo"
                         style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
@@ -556,256 +1781,645 @@
             </button>
 
             <ul class="nav-menu" id="navMenu">
+                <button class="mobile-menu-close" id="mobileCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+
                 <li class="nav-item">
-                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="#home" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#services" class="nav-link">Services</a>
+                    <a href="#booking" class="nav-link">Book Now</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#pricing" class="nav-link">Pricing</a>
+                    <a href="services.html" class="nav-link">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a href="gallery.html" class="nav-link">Gallery</a>
+                    <a href="#coverage" class="nav-link">Coverage</a>
                 </li>
                 <li class="nav-item">
-                    <a href="admin.html" class="nav-link">
-                        <i class="fas fa-user-shield"></i> Admin Login
-                    </a>
+                    <a href="#testimonials" class="nav-link">Testimonials</a>
                 </li>
                 <li class="nav-item">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote"
-                        class="btn" target="_blank">
-                        <i class="fas fa-whatsapp"></i> Get Quote
-                    </a>
+                    <a href="#faq" class="nav-link">FAQ</a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin.html" class="nav-link">Admin</a>
+                </li>
+                <li class="nav-item nav-cta">
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20cleaning%20services"
+                        class="btn" target="_blank">Get Quote</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <!-- Services Hero -->
-    <section class="services-hero">
+    <!-- Premium Hero Section -->
+    <section class="hero" id="home">
         <div class="container">
-            <h1>Our Professional Cleaning Services</h1>
-            <p>Experience premium eco-friendly cleaning services tailored to your needs. From regular home cleaning to specialized deep cleans, we've got you covered across London, Kent, and Essex.</p>
-            <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20a%20service"
-                class="btn" target="_blank" style="padding: 1rem 2.5rem; font-size: 1.125rem;">
-                <i class="fas fa-whatsapp"></i> Book a Service Now
-            </a>
-        </div>
-    </section>
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>BICSc Registered</span>
+                </div>
 
-    <!-- Services Grid -->
-    <section class="section" id="services">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Cleaning Services</h2>
-                <p>Choose from our range of professional cleaning services, all using eco-friendly products</p>
+                <h1>Professional Cleaning and Maintenance Services</h1>
+
+                <p class="hero-subtitle">
+                    Affordable cleaning rates and Maintenance services London. Reliable home cleaning services near you
+                    available on weekends and holidays
+                </p>
+
+                <div class="hero-features">
+                    <div class="hero-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Background-checked & Insured</h4>
+                            <p>Fully vetted cleaners across London</p>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Flexible Scheduling</h4>
+                            <p>Weekly, fortnightly, monthly, or one-off</p>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Professional Housekeepers</h4>
+                            <p>Expert cleaners with great discounts</p>
+                        </div>
+                    </div>
+                    <div class="hero-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Eco-Friendly Cleaning</h4>
+                            <p>Non-toxic and pet-friendly solutions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="#booking" class="btn btn-large">
+                        <i class="fas fa-calendar-check"></i>
+                        Book Cleaning Now
+                    </a>
+                    <a href="#coverage" class="btn btn-outline btn-large">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Check Coverage
+                    </a>
+                </div>
+
+                <div class="club-notice">
+                    <i class="fas fa-crown"></i>
+                    <p>Enjoy priority booking, £300 in credits & MORE with GreenGlo Club</p>
+                </div>
             </div>
 
-            <div class="services-grid">
-                <!-- Domestic Cleaning -->
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-home"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Domestic Cleaning</h3>
-                        <p>Regular home cleaning to keep your living space spotless and fresh. Perfect for busy families and professionals.</p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Weekly, fortnightly, or monthly</li>
-                            <li><i class="fas fa-check"></i> All rooms cleaned</li>
-                            <li><i class="fas fa-check"></i> Eco-friendly products</li>
-                            <li><i class="fas fa-check"></i> Fully insured cleaners</li>
-                        </ul>
-                        <div class="service-price">
-                            From £18/hour <span>(minimum 3 hours)</span>
-                        </div>
-                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20domestic%20cleaning"
-                            class="btn" target="_blank" style="width: 100%;">
-                            <i class="fas fa-whatsapp"></i> Get Quote
-                        </a>
-                    </div>
-                </div>
-
-                <!-- End of Tenancy -->
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>End of Tenancy Cleaning</h3>
-                        <p>Professional deep clean to ensure you get your full deposit back. Meets all landlord and agency requirements.</p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Full property deep clean</li>
-                            <li><i class="fas fa-check"></i> Oven and appliance cleaning</li>
-                            <li><i class="fas fa-check"></i> Carpet cleaning included</li>
-                            <li><i class="fas fa-check"></i> Guaranteed deposit return</li>
-                        </ul>
-                        <div class="service-price">
-                            From £150 <span>(1-bed flat)</span>
-                        </div>
-                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20end%20of%20tenancy%20cleaning"
-                            class="btn" target="_blank" style="width: 100%;">
-                            <i class="fas fa-whatsapp"></i> Get Quote
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Deep Cleaning -->
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-broom"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Deep Cleaning</h3>
-                        <p>Intensive cleaning service for neglected areas or before/after special occasions. Perfect for spring cleans.</p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Inside cabinets and drawers</li>
-                            <li><i class="fas fa-check"></i> Window tracks and sills</li>
-                            <li><i class="fas fa-check"></i> Light fittings and switches</li>
-                            <li><i class="fas fa-check"></i> Baseboards and corners</li>
-                        </ul>
-                        <div class="service-price">
-                            From £120 <span>(2-3 bedrooms)</span>
-                        </div>
-                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20deep%20cleaning"
-                            class="btn" target="_blank" style="width: 100%;">
-                            <i class="fas fa-whatsapp"></i> Get Quote
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Office Cleaning -->
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-briefcase"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Office & Commercial Cleaning</h3>
-                        <p>Keep your workplace clean and professional. We work around your schedule to minimize disruption.</p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Daily, weekly, or monthly plans</li>
-                            <li><i class="fas fa-check"></i> After-hours service available</li>
-                            <li><i class="fas fa-check"></i> Restroom sanitization</li>
-                            <li><i class="fas fa-check"></i> Kitchen and break areas</li>
-                        </ul>
-                        <div class="service-price">
-                            Custom Pricing <span>(contact for quote)</span>
-                        </div>
-                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20office%20cleaning"
-                            class="btn" target="_blank" style="width: 100%;">
-                            <i class="fas fa-whatsapp"></i> Get Quote
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Carpet Cleaning -->
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-rug"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Carpet & Upholstery Cleaning</h3>
-                        <p>Professional steam cleaning to remove stains, odors, and allergens from carpets, rugs, and furniture.</p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Steam cleaning technology</li>
-                            <li><i class="fas fa-check"></i> Stain removal</li>
-                            <li><i class="fas fa-check"></i> Pet odor elimination</li>
-                            <li><i class="fas fa-check"></i> Quick drying time</li>
-                        </ul>
-                        <div class="service-price">
-                            From £25 <span>(per room)</span>
-                        </div>
-                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20carpet%20cleaning"
-                            class="btn" target="_blank" style="width: 100%;">
-                            <i class="fas fa-whatsapp"></i> Get Quote
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Oven Cleaning -->
-                <div class="service-card">
-                    <div class="service-header">
-                        <i class="fas fa-temperature-high"></i>
-                    </div>
-                    <div class="service-content">
-                        <h3>Oven & Appliance Cleaning</h3>
-                        <p>Specialized cleaning for ovens, extractor hoods, microwaves, and other kitchen appliances.</p>
-                        <ul class="service-features">
-                            <li><i class="fas fa-check"></i> Chemical-free cleaning</li>
-                            <li><i class="fas fa-check"></i> Grease and grime removal</li>
-                            <li><i class="fas fa-check"></i> Inside and outside cleaning</li>
-                            <li><i class="fas fa-check"></i> Same-day service available</li>
-                        </ul>
-                        <div class="service-price">
-                            From £45 <span>(standard oven)</span>
-                        </div>
-                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20oven%20cleaning"
-                            class="btn" target="_blank" style="width: 100%;">
-                            <i class="fas fa-whatsapp"></i> Get Quote
-                        </a>
-                    </div>
+            <div class="hero-image">
+                <!-- Replace with actual cleaning image -->
+                <div
+                    style="width: 100%; height: 600px; background: var(--gradient-primary); border-radius: var(--border-radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    <i class="fas fa-spray-can-sparkles" style="font-size: 4rem; opacity: 0.8;"></i>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Table -->
-    <section class="section" id="pricing">
+    <!-- Features Section -->
+    <section class="section section-light" id="sustainability">
         <div class="container">
             <div class="section-title">
-                <h2>Transparent Pricing</h2>
-                <p>No hidden fees. Simple, straightforward pricing for all our services</p>
+                <h2>Sustainability & Service Excellence</h2>
+                <p>Tailored cleaning plans for individual homes</p>
             </div>
 
-            <div class="pricing-table">
-                <div class="pricing-header">
-                    <h3>Standard Service Pricing</h3>
-                    <p>All prices include eco-friendly products and fully insured cleaners</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h3>Easy To Book</h3>
+                    <p>Getting a quote is quick and easy through our WhatsApp. Message us anytime, and we'll send you a
+                        prompt, no-hassle estimate right away.</p>
                 </div>
-                <div class="pricing-rows">
-                    <div class="pricing-row">
-                        <div class="pricing-info">
-                            <h4>Regular Domestic Cleaning</h4>
-                            <p>Weekly, fortnightly, or monthly service</p>
-                        </div>
-                        <div class="pricing-price">£18/hour</div>
+                <div class="feature-card">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-calendar-check"></i>
                     </div>
-                    <div class="pricing-row">
-                        <div class="pricing-info">
-                            <h4>One-off Deep Clean</h4>
-                            <p>2-3 bedroom house or flat</p>
-                        </div>
-                        <div class="pricing-price">£120-£180</div>
+                    <h3>Flexible Scheduling</h3>
+                    <p>Manage all your house cleaning appointments from a single account! Easily book, reschedule, or
+                        plan your future cleaning services with just a few clicks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-large">
+                        <i class="fas fa-heart"></i>
                     </div>
-                    <div class="pricing-row">
-                        <div class="pricing-info">
-                            <h4>End of Tenancy Clean</h4>
-                            <p>1-bed flat (studio from £100)</p>
+                    <h3>Family-Friendly Cleaning</h3>
+                    <p>Enjoy a spotless home without the harsh chemicals. Our non-toxic, eco-friendly cleaning products
+                        are safe for your family, pets, and the environment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dynamic Booking System -->
+    <section class="section section-gray" id="booking">
+        <div class="container">
+            <div class="section-title">
+                <h2>Book Your Cleaning Service</h2>
+                <p>Select from available dates and times managed by our team</p>
+            </div>
+
+            <div class="booking-system-container">
+                <div class="booking-header">
+                    <h3>3-Step Booking Process</h3>
+                    <p>Choose a date, select a time slot, and confirm your booking</p>
+                </div>
+
+                <div class="booking-steps">
+                    <div class="step-indicator">
+                        <div class="step active" data-step="1">
+                            <div class="step-circle">1</div>
+                            <div class="step-label">Select Date</div>
                         </div>
-                        <div class="pricing-price">£150+</div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="2">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Select Time</div>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step" data-step="3">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Confirm Details</div>
+                        </div>
                     </div>
-                    <div class="pricing-row">
-                        <div class="pricing-info">
-                            <h4>Carpet Cleaning</h4>
-                            <p>Per room (minimum 2 rooms)</p>
+                </div>
+
+                <div class="booking-content">
+                    <!-- Step 1: Select Date -->
+                    <div class="booking-step active" id="step1">
+                        <div class="booking-calendar">
+                            <div class="calendar-navigation">
+                                <button class="btn btn-outline" id="prevMonth">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </button>
+                                <div class="calendar-title" id="currentMonthYear">December 2024</div>
+                                <button class="btn btn-outline" id="nextMonth">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="calendar-grid" id="calendarHeader">
+                                <div class="calendar-header-cell">Sun</div>
+                                <div class="calendar-header-cell">Mon</div>
+                                <div class="calendar-header-cell">Tue</div>
+                                <div class="calendar-header-cell">Wed</div>
+                                <div class="calendar-header-cell">Thu</div>
+                                <div class="calendar-header-cell">Fri</div>
+                                <div class="calendar-header-cell">Sat</div>
+                            </div>
+                            <div class="calendar-grid" id="calendarDays">
+                                <!-- Calendar days populated by JavaScript -->
+                            </div>
                         </div>
-                        <div class="pricing-price">£25/room</div>
+                        <div class="booking-navigation">
+                            <div></div> <!-- Empty div for spacing -->
+                            <button class="btn" id="nextToStep2" disabled>
+                                Next: Select Time <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="pricing-row">
-                        <div class="pricing-info">
-                            <h4>Oven Cleaning</h4>
-                            <p>Standard single oven</p>
+
+                    <!-- Step 2: Select Time -->
+                    <div class="booking-step" id="step2">
+                        <div class="selected-date-info">
+                            <i class="fas fa-calendar-day"></i>
+                            <span id="selectedDateDisplay">No date selected</span>
                         </div>
-                        <div class="pricing-price">£45</div>
+                        
+                        <div class="loading-spinner" id="loadingSlots" style="display: none;">
+                            <div class="spinner"></div>
+                            <p>Loading available time slots...</p>
+                        </div>
+                        
+                        <div class="time-slots-grid" id="timeSlotsContainer">
+                            <!-- Time slots populated by JavaScript -->
+                        </div>
+                        
+                        <div class="no-slots" id="noSlotsMessage" style="display: none;">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>No available time slots for this date</p>
+                            <button class="btn btn-outline" onclick="goToStep(1)">
+                                <i class="fas fa-calendar-alt"></i> Choose Another Date
+                            </button>
+                        </div>
+                        
+                        <div class="booking-navigation">
+                            <button class="btn btn-outline" onclick="goToStep(1)">
+                                <i class="fas fa-arrow-left"></i> Back to Calendar
+                            </button>
+                            <button class="btn" id="nextToStep3" disabled>
+                                Next: Confirm Details <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="pricing-row">
-                        <div class="pricing-info">
-                            <h4>Office Cleaning</h4>
-                            <p>Price per square meter</p>
+
+                    <!-- Step 3: Confirm Booking -->
+                    <div class="booking-step" id="step3">
+                        <div class="booking-summary">
+                            <h4>Booking Summary</h4>
+                            <div class="summary-item">
+                                <span class="summary-label">Date:</span>
+                                <span class="summary-value" id="summaryDate">--</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Time:</span>
+                                <span class="summary-value" id="summaryTime">--</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Service Type:</span>
+                                <span class="summary-value" id="summaryServiceType">Standard Cleaning</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Estimated Price:</span>
+                                <span class="summary-value" id="summaryPrice">£18/hour</span>
+                            </div>
                         </div>
-                        <div class="pricing-price">£0.50/m²</div>
+
+                        <div class="booking-form">
+                            <h4>Your Details</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="customerName">Full Name *</label>
+                                    <input type="text" id="customerName" placeholder="John Smith" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="customerPhone">Phone Number *</label>
+                                    <input type="tel" id="customerPhone" placeholder="07123 456789" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerEmail">Email Address</label>
+                                <input type="email" id="customerEmail" placeholder="john@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="customerAddress">Address *</label>
+                                <textarea id="customerAddress" placeholder="Enter your full address" rows="2" required></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="serviceType">Service Type</label>
+                                    <select id="serviceType">
+                                        <option value="regular">Regular Cleaning (£18/hour)</option>
+                                        <option value="deep">Deep Cleaning (£25/hour)</option>
+                                        <option value="end_tenancy">End of Tenancy (£30/hour)</option>
+                                        <option value="carpet">Carpet Cleaning (£25/room)</option>
+                                        <option value="oven">Oven Cleaning (£45 fixed)</option>
+                                        <option value="office">Office Cleaning (£0.5/m²)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="duration">Duration/Hours</label>
+                                    <select id="duration">
+                                        <option value="2">2 hours</option>
+                                        <option value="3" selected>3 hours</option>
+                                        <option value="4">4 hours</option>
+                                        <option value="6">6 hours</option>
+                                        <option value="8">Full day (8 hours)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="specialInstructions">Special Instructions</label>
+                                <textarea id="specialInstructions" placeholder="Any special requests or notes" rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="booking-message" id="bookingMessage"></div>
+
+                        <div class="booking-navigation">
+                            <button class="btn btn-outline" onclick="goToStep(2)">
+                                <i class="fas fa-arrow-left"></i> Back to Time Selection
+                            </button>
+                            <button class="btn btn-primary" id="confirmBooking">
+                                <i class="fas fa-calendar-check"></i> Confirm Booking
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Carousel Section -->
+    <section class="section section-light" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Home Cleaning Services London Reviews</h2>
+                <p>Residential cleaning experts for same-day and emergency cleaning service</p>
+            </div>
+
+            <div class="testimonials-carousel">
+                <div class="carousel-container" id="carouselContainer">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-content">
+                            "Green Glo Cleaning were amazing for my end of tenancy clean for my 1 bed flat. It was quite
+                            easy to get an appointment booked and the service was top notch.
+
+                            Will definitely recommend to my contacts who require cleaning services.
+                            "
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-info">
+                                <h4>Adekunle Adepitan</h4>
+                                <p>5stars on Google reviews </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-content">
+                            "I recently had an extractor deep clean done in my kitchen, and I couldn't be happier with
+                            the results. The team was professional, thorough, and incredibly attentive to detail. Every
+                            surface, appliance, and hard-to-reach area looks spotless and refreshed. The extractor
+                            system, in particular, looks as good as new and is working far more efficiently.
+
+                            They arrived on time, worked efficiently, and left the space looking immaculate. It's such a
+                            relief to have a kitchen that feels genuinely clean from top to bottom. Highly recommended
+                            for anyone needing a proper deep clean and expert extractor cleaning!"
+                        </p>
+                        <div class="testimonial-author">
+
+                            <div class="author-info">
+                                <h4>Natasha Cheema</h4>
+                                <p>5stars on Google reviews </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-content">
+                            "I'm really happy with the service from this cleaning company! Everything was spotless —
+                            they did such a great job. Tomi was especially helpful and kind; anytime I asked for a
+                            favor, he never hesitated. I've tried other cleaning companies before, but this one stands
+                            out — very easy to communicate with and super reliable. Definitely recommending them to
+                            others!
+                            "
+                        </p>
+                        <div class="testimonial-author">
+
+                            <div class="author-info">
+                                <h4>Fresus Anne Velicaria</h4>
+                                <p>5 stars on Google Reviews</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Testimonial 4 -->
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-content">
+                            "I was so impressed with the recent cleaning done by Green Glo !They were punctual,
+                            friendly, and incredibly thorough. They paid attention to detail, even in areas I hadn't
+                            noticed. My home now looks and smells amazing, and I feel so much more relaxed. I would
+                            definitely recommend them to anyone in need of a professional clean!!"
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-info">
+                                <h4>Michaela Hickey</h4>
+                                <p>5 stars on Google Reviews</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-indicators" id="carouselIndicators">
+                        <span class="carousel-indicator active" data-slide="0"></span>
+                        <span class="carousel-indicator" data-slide="1"></span>
+                        <span class="carousel-indicator" data-slide="2"></span>
+                        <span class="carousel-indicator" data-slide="3"></span>
+                    </div>
+                    <button class="carousel-btn" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GreenGlo Club Section -->
+    <section class="section section-gray" id="club">
+        <div class="container">
+            <div class="section-title">
+                <h2>GreenGlo Membership Club</h2>
+                <p>Join GreenGlo</p>
+            </div>
+
+            <div class="feature-card" style="max-width: 800px; margin: 0 auto;">
+                <div class="feature-icon-large">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3 style="font-size: 2rem; margin-bottom: 1rem;">Enjoy premium booking slots & preferential member
+                    rates</h3>
+                <p style="font-size: 1.125rem; color: var(--medium-gray); margin-bottom: 2rem;">
+                    Join our exclusive membership club and enjoy benefits like priority booking, exclusive discounts,
+                    £300 in credits, and much more.
+                </p>
+                <a href="greengloclub.html" class="btn btn-large">
+                    <i class="fas fa-gem"></i>
+                    Learn about the club
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Coverage Checker & Map Section -->
+    <section class="section section-light" id="coverage">
+        <div class="container">
+            <div class="section-title">
+                <h2>Check Our Service Coverage</h2>
+                <p>Enter your postcode to see if GreenGlo serves your area in London, Kent, and Essex.</p>
+            </div>
+
+            <div class="coverage-container">
+                <!-- Left Column: Input Form & Results -->
+                <div class="coverage-form-container">
+                    <div class="coverage-card">
+                        <div class="feature-icon-large" style="margin: 0 auto 1.5rem;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3 style="text-align: center; margin-bottom: 1rem;">Are We in Your Area?</h3>
+
+                        <!-- Input Form -->
+                        <form id="postcodeForm" class="postcode-form">
+                            <div class="form-group">
+                                <label for="postcodeInput">Your UK Postcode</label>
+                                <div class="input-with-button">
+                                    <input 
+                                        type="text" 
+                                        id="postcodeInput" 
+                                        placeholder="e.g., SW1A 1AA, ME14 2TT" 
+                                        aria-label="Enter your UK postcode"
+                                    >
+                                    <button type="submit" class="btn" id="checkButton">
+                                        <i class="fas fa-search"></i> Check
+                                    </button>
+                                </div>
+                                <small class="input-hint">Enter the first part (outcode) or full postcode.</small>
+                            </div>
+                        </form>
+
+                        <!-- Results Display -->
+                        <div id="coverageResult" class="coverage-result" aria-live="polite">
+                            <div class="result-placeholder">
+                                <i class="fas fa-map-pin"></i>
+                                <p>Your coverage result will appear here.</p>
+                            </div>
+                        </div>
+
+                        <!-- Service Area List -->
+                        <div class="service-areas">
+                            <h4 style="margin-bottom: 1rem;"><i class="fas fa-check-circle"></i> Our Primary Service Areas</h4>
+                            <div class="areas-grid">
+                                <div class="area-badge area-london">
+                                    <i class="fas fa-landmark"></i> London
+                                </div>
+                                <div class="area-badge area-kent">
+                                    <i class="fas fa-tree"></i> Kent
+                                </div>
+                                <div class="area-badge area-essex">
+                                    <i class="fas fa-water"></i> Essex
+                                </div>
+                            </div>
+                            <p class="areas-note">Coverage based on postcode areas. Some outer districts may vary.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Map -->
+                <div class="coverage-map-container">
+                    <div class="coverage-card">
+                        <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-map"></i> Service Coverage Map
+                        </h3>
+                        <p style="color: var(--medium-gray); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                            Explore our service regions. <strong>Green areas</strong> are covered.
+                        </p>
+                        
+                        <!-- Map Container -->
+                        <div id="serviceAreaMap"></div>
+                        
+                        <div class="map-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: rgba(16, 185, 129, 0.3); border-color: var(--primary-green);"></span>
+                                <span>Covered Region (London, Kent, Essex)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: var(--light-gray); border-color: var(--medium-gray);"></span>
+                                <span>Surrounding Areas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section section-gray" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <h2>House Cleaning Services FAQ</h2>
+                <p>Common questions about our cleaning services</p>
+            </div>
+
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How much does a professional house cleaning service cost in London?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our affordable home cleaning services in London starts at £18/h and offer clear, transparent
+                            pricing with no hidden fees. You can get a personalised quote based on the size of your
+                            property and the level of cleaning required.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Are the cleaners vetted and insured?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, all our local cleaners in London are fully background-checked, trained, and insured.
+                            Hiring our trusted domestic cleaners London ensures your home is in safe, professional
+                            hands.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What tasks are included in a standard home cleaning service?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our house cleaning services London include dusting, vacuuming, sweeping, mopping, kitchen and
+                            bathroom cleaning, and general tidying of living areas. You can also request extras such as
+                            appliance cleaning and oven cleaning London for a complete, spotless home.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I schedule or manage bookings online?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our easy-to-use platform allows you to book professional home cleaners London in just a few
+                            clicks. You can manage all appointments, reschedule services, and plan future visits
+                            directly from your account.</p>
                     </div>
                 </div>
             </div>
@@ -813,18 +2427,22 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="container">
-        <div class="cta-section">
-            <h2>Ready for a Spotless Home?</h2>
-            <p>Book your cleaning service today and enjoy 10% off your first clean when you mention this website!</p>
-            <div class="cta-buttons">
-                <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20a%20cleaning%20service%20and%20claim%20my%2010%25%20discount"
-                    class="btn" target="_blank">
-                    <i class="fas fa-whatsapp"></i> Book with 10% Off
-                </a>
-                <a href="tel:07827784204" class="btn btn-outline">
-                    <i class="fas fa-phone"></i> Call: 07827 784204
-                </a>
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="cta-section">
+                <h2>Ready to book now?</h2>
+                <p>Schedule your professional cleaning service today with our easy online booking system.</p>
+                <div class="cta-buttons">
+                    <a href="#booking" class="btn btn-large">
+                        <i class="fas fa-calendar-check"></i>
+                        Book Online Now
+                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20request%20a%20quote"
+                        class="btn btn-outline btn-large" target="_blank">
+                        <i class="fas fa-whatsapp"></i>
+                        Request a quote
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -838,29 +2456,35 @@
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
                         Professional eco-friendly cleaning services for homes and offices across London, Kent, and Essex.
                     </p>
+                    <div class="social-links">
+                        <a href="https://instagram.com/greenglocleaningco" class="social-link" target="_blank"><i
+                                class="fab fa-instagram"></i></a>
+                        <a href="https://facebook.com" class="social-link" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com" class="social-link" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
 
                 <div class="footer-col">
                     <h3>Our Services</h3>
                     <ul class="footer-links">
-                        <li><a href="#services">Domestic cleaning</a></li>
-                        <li><a href="#services">End of tenancy cleaning</a></li>
-                        <li><a href="#services">Deep cleaning</a></li>
-                        <li><a href="#services">Carpet cleaning</a></li>
-                        <li><a href="#services">Office cleaning</a></li>
-                        <li><a href="#services">Oven cleaning</a></li>
+                        <li><a href="services.html">Domestic cleaning</a></li>
+                        <li><a href="services.html">One-off cleaning</a></li>
+                        <li><a href="services.html">End of tenancy cleaning</a></li>
+                        <li><a href="services.html">Carpet cleaning</a></li>
+                        <li><a href="services.html">Office cleaning</a></li>
+                        <li><a href="services.html">View all services</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-col">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#pricing">Pricing</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#booking">Book Now</a></li>
+                        <li><a href="#coverage">Coverage Checker</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#faq">FAQ</a></li>
                         <li><a href="admin.html">Admin Login</a></li>
-                        <li><a href="index.html#faq">FAQ</a></li>
                     </ul>
                 </div>
 
@@ -879,48 +2503,968 @@
             </div>
 
             <div class="footer-bottom">
-                <p>GreenGlo Cleaners © 2025. All rights reserved | <a href="#" style="color: var(--primary-green);">Privacy Policy</a> | <a href="#" style="color: var(--primary-green);">Terms of Service</a></p>
+                <p>GreenGlo Cleaners London © 2025. All rights reserved | <a href="#" style="color: var(--primary-green);">Privacy Policy</a> | <a
+                        href="#" style="color: var(--primary-green);">Terms of Service</a></p>
+                <p style="margin-top: 0.5rem;">Created by <a
+                        href="https://api.whatsapp.com/send?phone=447543737488&text=" target="_blank" style="color: var(--primary-green);">Sacha
+                        Raif</a></p>
             </div>
         </div>
     </footer>
 
     <!-- JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
-        // Mobile menu toggle
+        // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         const navMenu = document.getElementById('navMenu');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
 
+        // Function to open mobile menu
+        const openMobileMenu = () => {
+            navMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
+        };
+
+        // Function to close mobile menu
+        const closeMobileMenu = () => {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        };
+
+        // Toggle Mobile Menu
         mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
+            if (navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
         });
 
-        // Close menu when clicking on a link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        // Close Mobile Menu with Close Button
+        mobileCloseBtn.addEventListener('click', closeMobileMenu);
+
+        // Close Mobile Menu with Overlay Click
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        // Close Mobile Menu on Link Click
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu on Escape key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== Testimonial Carousel =====
+        const carouselContainer = document.getElementById('carouselContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        const totalSlides = document.querySelectorAll('.testimonial-card').length;
+        let currentSlide = 0;
+
+        // Function to update carousel position
+        function updateCarousel() {
+            carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            // Update indicators
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        // Next slide function
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        // Previous slide function
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        // Add click events to buttons
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        // Add click events to indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
             });
         });
 
-        // Smooth scrolling for anchor links
+        // Auto-rotate carousel every 5 seconds
+        let carouselInterval = setInterval(nextSlide, 5000);
+
+        // Pause auto-rotation on hover
+        const carousel = document.querySelector('.testimonials-carousel');
+        carousel.addEventListener('mouseenter', () => {
+            clearInterval(carouselInterval);
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            clearInterval(carouselInterval);
+            carouselInterval = setInterval(nextSlide, 5000);
+        });
+
+        // ===== FAQ Accordion =====
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.faq-toggle');
+
+                // Close other FAQs
+                faqQuestions.forEach(otherQuestion => {
+                    if (otherQuestion !== question) {
+                        const otherAnswer = otherQuestion.nextElementSibling;
+                        const otherToggle = otherQuestion.querySelector('.faq-toggle');
+                        otherAnswer.classList.remove('open');
+                        otherToggle.textContent = '+';
+                    }
+                });
+
+                // Toggle current FAQ
+                if (answer.classList.contains('open')) {
+                    answer.classList.remove('open');
+                    toggle.textContent = '+';
+                } else {
+                    answer.classList.add('open');
+                    toggle.textContent = '−';
+                }
+            });
+        });
+
+        // ===== Smooth Scrolling =====
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') return;
+
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
                 const targetElement = document.querySelector(targetId);
+
                 if (targetElement) {
                     window.scrollTo({
-                        top: targetElement.offsetTop - 100,
+                        top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
                 }
             });
         });
+
+        // ===== Add Loading Animation to Elements =====
+        const animatedElements = document.querySelectorAll('.feature-card, .testimonial-card');
+        animatedElements.forEach((el, index) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        });
+
+        const elementObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => elementObserver.observe(el));
+
+        // ===== DYNAMIC BOOKING SYSTEM =====
+        class BookingSystem {
+            constructor() {
+                // Initialize Firebase
+                const { database } = initializeFirebase();
+                this.db = database;
+                
+                // State variables
+                this.currentStep = 1;
+                this.selectedDate = null;
+                this.selectedTimeSlot = null;
+                this.availabilityData = {};
+                this.currentMonth = new Date().getMonth();
+                this.currentYear = new Date().getFullYear();
+                
+                // DOM Elements
+                this.elements = {
+                    step1: document.getElementById('step1'),
+                    step2: document.getElementById('step2'),
+                    step3: document.getElementById('step3'),
+                    calendarDays: document.getElementById('calendarDays'),
+                    currentMonthYear: document.getElementById('currentMonthYear'),
+                    prevMonthBtn: document.getElementById('prevMonth'),
+                    nextMonthBtn: document.getElementById('nextMonth'),
+                    nextToStep2Btn: document.getElementById('nextToStep2'),
+                    nextToStep3Btn: document.getElementById('nextToStep3'),
+                    selectedDateDisplay: document.getElementById('selectedDateDisplay'),
+                    timeSlotsContainer: document.getElementById('timeSlotsContainer'),
+                    loadingSlots: document.getElementById('loadingSlots'),
+                    noSlotsMessage: document.getElementById('noSlotsMessage'),
+                    summaryDate: document.getElementById('summaryDate'),
+                    summaryTime: document.getElementById('summaryTime'),
+                    summaryServiceType: document.getElementById('summaryServiceType'),
+                    summaryPrice: document.getElementById('summaryPrice'),
+                    serviceTypeSelect: document.getElementById('serviceType'),
+                    durationSelect: document.getElementById('duration'),
+                    confirmBookingBtn: document.getElementById('confirmBooking'),
+                    bookingMessage: document.getElementById('bookingMessage'),
+                    stepIndicators: document.querySelectorAll('.step')
+                };
+                
+                // Initialize
+                this.init();
+            }
+            
+            init() {
+                this.renderCalendar();
+                this.setupEventListeners();
+                this.loadAvailabilityData();
+            }
+            
+            setupEventListeners() {
+                // Calendar navigation
+                this.elements.prevMonthBtn.addEventListener('click', () => this.navigateMonth(-1));
+                this.elements.nextMonthBtn.addEventListener('click', () => this.navigateMonth(1));
+                
+                // Step navigation
+                this.elements.nextToStep2Btn.addEventListener('click', () => this.goToStep(2));
+                this.elements.nextToStep3Btn.addEventListener('click', () => this.goToStep(3));
+                
+                // Service type change
+                this.elements.serviceTypeSelect.addEventListener('change', () => this.updatePrice());
+                this.elements.durationSelect.addEventListener('change', () => this.updatePrice());
+                
+                // Confirm booking
+                this.elements.confirmBookingBtn.addEventListener('click', () => this.submitBooking());
+            }
+            
+            navigateMonth(direction) {
+                this.currentMonth += direction;
+                if (this.currentMonth < 0) {
+                    this.currentMonth = 11;
+                    this.currentYear--;
+                } else if (this.currentMonth > 11) {
+                    this.currentMonth = 0;
+                    this.currentYear++;
+                }
+                this.renderCalendar();
+            }
+            
+            renderCalendar() {
+                this.elements.calendarDays.innerHTML = '';
+                
+                const firstDay = new Date(this.currentYear, this.currentMonth, 1);
+                const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                const firstDayIndex = firstDay.getDay();
+                const today = new Date();
+                
+                // Update month display
+                this.elements.currentMonthYear.textContent = firstDay.toLocaleDateString('en-GB', {
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                // Add empty cells for days before first day
+                for (let i = 0; i < firstDayIndex; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.className = 'calendar-cell disabled';
+                    this.elements.calendarDays.appendChild(emptyCell);
+                }
+                
+                // Add days of month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const date = new Date(this.currentYear, this.currentMonth, day);
+                    const dateString = this.formatDate(date);
+                    const cell = document.createElement('div');
+                    cell.className = 'calendar-cell';
+                    cell.dataset.date = dateString;
+                    
+                    // Check if today
+                    if (date.toDateString() === today.toDateString()) {
+                        cell.classList.add('today');
+                    }
+                    
+                    // Check if past date
+                    if (date < today && date.toDateString() !== today.toDateString()) {
+                        cell.classList.add('past');
+                    }
+                    
+                    // Check availability
+                    if (this.availabilityData[dateString]) {
+                        const availableSlots = this.availabilityData[dateString].slots.filter(slot => slot.available);
+                        if (availableSlots.length > 0) {
+                            cell.classList.add('available');
+                            
+                            // Add availability dots
+                            const dots = document.createElement('div');
+                            dots.className = 'availability-dots';
+                            const dotCount = Math.min(availableSlots.length, 3);
+                            for (let i = 0; i < dotCount; i++) {
+                                const dot = document.createElement('div');
+                                dot.className = 'availability-dot';
+                                dots.appendChild(dot);
+                            }
+                            cell.appendChild(dots);
+                        } else {
+                            cell.classList.add('full');
+                        }
+                    }
+                    
+                    // Day number
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = day;
+                    cell.appendChild(dayNumber);
+                    
+                    // Click event
+                    if (!cell.classList.contains('past') && !cell.classList.contains('full') && !cell.classList.contains('disabled')) {
+                        cell.addEventListener('click', () => this.selectDate(date));
+                    }
+                    
+                    this.elements.calendarDays.appendChild(cell);
+                }
+            }
+            
+            formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            async loadAvailabilityData() {
+                try {
+                    // Load current month's availability
+                    const startDate = new Date(this.currentYear, this.currentMonth, 1);
+                    const endDate = new Date(this.currentYear, this.currentMonth + 1, 0);
+                    
+                    // In production, you would query Firebase for this date range
+                    // For now, we'll load all availability and filter client-side
+                    const snapshot = await this.db.ref(DB_STRUCTURE.AVAILABILITY).once('value');
+                    this.availabilityData = snapshot.val() || {};
+                    
+                    // Re-render calendar with updated availability
+                    this.renderCalendar();
+                } catch (error) {
+                    console.error('Error loading availability:', error);
+                }
+            }
+            
+            async selectDate(date) {
+                this.selectedDate = date;
+                const dateString = this.formatDate(date);
+                
+                // Update UI
+                document.querySelectorAll('.calendar-cell').forEach(cell => {
+                    cell.classList.remove('selected');
+                });
+                
+                const selectedCell = document.querySelector(`.calendar-cell[data-date="${dateString}"]`);
+                if (selectedCell) {
+                    selectedCell.classList.add('selected');
+                }
+                
+                // Update step button
+                this.elements.nextToStep2Btn.disabled = false;
+                
+                // Update selected date display
+                this.elements.selectedDateDisplay.textContent = date.toLocaleDateString('en-GB', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                // Load time slots for selected date
+                await this.loadTimeSlots(dateString);
+            }
+            
+            async loadTimeSlots(dateString) {
+                // Show loading
+                this.elements.timeSlotsContainer.innerHTML = '';
+                this.elements.loadingSlots.style.display = 'block';
+                this.elements.noSlotsMessage.style.display = 'none';
+                
+                try {
+                    // Check Firebase for availability
+                    const snapshot = await this.db.ref(`${DB_STRUCTURE.AVAILABILITY}/${dateString}`).once('value');
+                    const dateData = snapshot.val();
+                    
+                    if (dateData && dateData.slots) {
+                        this.renderTimeSlots(dateData.slots);
+                    } else {
+                        // No availability set for this date
+                        this.showNoSlots();
+                    }
+                } catch (error) {
+                    console.error('Error loading time slots:', error);
+                    this.showNoSlots();
+                } finally {
+                    this.elements.loadingSlots.style.display = 'none';
+                }
+            }
+            
+            renderTimeSlots(slots) {
+                this.elements.timeSlotsContainer.innerHTML = '';
+                const availableSlots = slots.filter(slot => slot.available);
+                
+                if (availableSlots.length === 0) {
+                    this.showNoSlots();
+                    return;
+                }
+                
+                availableSlots.forEach(slot => {
+                    const slotElement = document.createElement('div');
+                    slotElement.className = 'time-slot';
+                    slotElement.dataset.time = slot.time;
+                    
+                    slotElement.innerHTML = `
+                        <div class="slot-time">${slot.time}</div>
+                        <div class="slot-status status-available">Available</div>
+                    `;
+                    
+                    slotElement.addEventListener('click', () => {
+                        // Remove selected class from all slots
+                        document.querySelectorAll('.time-slot').forEach(s => {
+                            s.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked slot
+                        slotElement.classList.add('selected');
+                        this.selectedTimeSlot = slot.time;
+                        
+                        // Update step button
+                        this.elements.nextToStep3Btn.disabled = false;
+                        
+                        // Update summary
+                        this.updateSummary();
+                    });
+                    
+                    this.elements.timeSlotsContainer.appendChild(slotElement);
+                });
+                
+                this.elements.timeSlotsContainer.style.display = 'grid';
+                this.elements.noSlotsMessage.style.display = 'none';
+            }
+            
+            showNoSlots() {
+                this.elements.timeSlotsContainer.style.display = 'none';
+                this.elements.noSlotsMessage.style.display = 'block';
+            }
+            
+            goToStep(step) {
+                // Update current step
+                this.currentStep = step;
+                
+                // Hide all steps
+                this.elements.step1.classList.remove('active');
+                this.elements.step2.classList.remove('active');
+                this.elements.step3.classList.remove('active');
+                
+                // Show current step
+                document.getElementById(`step${step}`).classList.add('active');
+                
+                // Update step indicators
+                this.elements.stepIndicators.forEach((indicator, index) => {
+                    const stepNumber = index + 1;
+                    if (stepNumber < step) {
+                        indicator.classList.remove('active');
+                        indicator.classList.add('completed');
+                    } else if (stepNumber === step) {
+                        indicator.classList.add('active');
+                        indicator.classList.remove('completed');
+                    } else {
+                        indicator.classList.remove('active', 'completed');
+                    }
+                });
+                
+                // Update summary if going to step 3
+                if (step === 3) {
+                    this.updateSummary();
+                }
+                
+                // Scroll to top of booking section
+                document.getElementById('booking').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }
+            
+            updateSummary() {
+                if (this.selectedDate) {
+                    this.elements.summaryDate.textContent = this.selectedDate.toLocaleDateString('en-GB', {
+                        weekday: 'long',
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                }
+                
+                if (this.selectedTimeSlot) {
+                    this.elements.summaryTime.textContent = this.selectedTimeSlot;
+                }
+                
+                this.updatePrice();
+            }
+            
+            updatePrice() {
+                const serviceType = this.elements.serviceTypeSelect.value;
+                const duration = parseInt(this.elements.durationSelect.value);
+                let price = 0;
+                
+                // Calculate price based on service type and duration
+                switch(serviceType) {
+                    case 'regular':
+                        price = 18 * duration;
+                        this.elements.summaryServiceType.textContent = `Regular Cleaning (${duration} hours)`;
+                        break;
+                    case 'deep':
+                        price = 25 * duration;
+                        this.elements.summaryServiceType.textContent = `Deep Cleaning (${duration} hours)`;
+                        break;
+                    case 'end_tenancy':
+                        price = 30 * duration;
+                        this.elements.summaryServiceType.textContent = `End of Tenancy (${duration} hours)`;
+                        break;
+                    case 'carpet':
+                        price = 25 * duration;
+                        this.elements.summaryServiceType.textContent = `Carpet Cleaning (${duration} rooms)`;
+                        break;
+                    case 'oven':
+                        price = 45;
+                        this.elements.summaryServiceType.textContent = `Oven Cleaning`;
+                        break;
+                    case 'office':
+                        price = 0.5 * 100; // Assuming 100m² default
+                        this.elements.summaryServiceType.textContent = `Office Cleaning`;
+                        break;
+                }
+                
+                this.elements.summaryPrice.textContent = `£${price}`;
+            }
+            
+            async submitBooking() {
+                // Get form data
+                const customerName = document.getElementById('customerName').value;
+                const customerPhone = document.getElementById('customerPhone').value;
+                const customerEmail = document.getElementById('customerEmail').value;
+                const customerAddress = document.getElementById('customerAddress').value;
+                const serviceType = this.elements.serviceTypeSelect.value;
+                const duration = parseInt(this.elements.durationSelect.value);
+                const specialInstructions = document.getElementById('specialInstructions').value;
+                
+                // Validate required fields
+                if (!customerName || !customerPhone || !customerAddress) {
+                    this.showMessage('Please fill in all required fields (Name, Phone, Address)', 'error');
+                    return;
+                }
+                
+                if (!this.selectedDate || !this.selectedTimeSlot) {
+                    this.showMessage('Please select a date and time for your booking', 'error');
+                    return;
+                }
+                
+                // Calculate price
+                let price = 0;
+                switch(serviceType) {
+                    case 'regular': price = 18 * duration; break;
+                    case 'deep': price = 25 * duration; break;
+                    case 'end_tenancy': price = 30 * duration; break;
+                    case 'carpet': price = 25 * duration; break;
+                    case 'oven': price = 45; break;
+                    case 'office': price = 0.5 * 100; break;
+                }
+                
+                // Generate booking reference
+                const bookingRef = 'GG-' + Date.now().toString().slice(-6);
+                const dateString = this.formatDate(this.selectedDate);
+                
+                // Create booking object
+                const bookingData = {
+                    id: bookingRef,
+                    date: dateString,
+                    time: this.selectedTimeSlot,
+                    customer: {
+                        name: customerName,
+                        phone: customerPhone,
+                        email: customerEmail,
+                        address: customerAddress
+                    },
+                    service: serviceType,
+                    duration: duration,
+                    specialInstructions: specialInstructions,
+                    price: price,
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                try {
+                    // Save booking to Firebase
+                    await this.db.ref(`${DB_STRUCTURE.BOOKINGS}/${bookingRef}`).set(bookingData);
+                    
+                    // Update availability - mark slot as booked
+                    const availabilityRef = this.db.ref(`${DB_STRUCTURE.AVAILABILITY}/${dateString}/slots`);
+                    const snapshot = await availabilityRef.once('value');
+                    const slots = snapshot.val();
+                    
+                    if (slots) {
+                        const updatedSlots = slots.map(slot => {
+                            if (slot.time === this.selectedTimeSlot) {
+                                return {
+                                    ...slot,
+                                    available: false,
+                                    bookedBy: bookingRef
+                                };
+                            }
+                            return slot;
+                        });
+                        
+                        await availabilityRef.set(updatedSlots);
+                        
+                        // Update local availability data
+                        this.availabilityData[dateString] = {
+                            ...this.availabilityData[dateString],
+                            slots: updatedSlots
+                        };
+                    }
+                    
+                    // Send WhatsApp notification
+                    this.sendWhatsAppNotification(bookingData);
+                    
+                    // Show success message
+                    this.showMessage(`Booking confirmed! Your reference is ${bookingRef}. We'll contact you shortly.`, 'success');
+                    
+                    // Reset form after 5 seconds
+                    setTimeout(() => {
+                        this.resetBookingForm();
+                        this.goToStep(1);
+                    }, 5000);
+                    
+                } catch (error) {
+                    console.error('Error creating booking:', error);
+                    this.showMessage('Error creating booking. Please try again.', 'error');
+                }
+            }
+            
+            showMessage(message, type) {
+                this.elements.bookingMessage.textContent = message;
+                this.elements.bookingMessage.className = `booking-message ${type}`;
+                this.elements.bookingMessage.style.display = 'block';
+                
+                // Scroll to message
+                this.elements.bookingMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            sendWhatsAppNotification(bookingData) {
+                const message = `New Booking: ${bookingData.id}
+Date: ${bookingData.date}
+Time: ${bookingData.time}
+Service: ${bookingData.service}
+Duration: ${bookingData.duration} hours
+Customer: ${bookingData.customer.name}
+Phone: ${bookingData.customer.phone}
+Address: ${bookingData.customer.address}
+Price: £${bookingData.price}
+${bookingData.specialInstructions ? `Notes: ${bookingData.specialInstructions}` : ''}`;
+                
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+                
+                // Open in new tab
+                window.open(whatsappUrl, '_blank');
+            }
+            
+            resetBookingForm() {
+                // Reset selections
+                this.selectedDate = null;
+                this.selectedTimeSlot = null;
+                
+                // Reset form fields
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerPhone').value = '';
+                document.getElementById('customerEmail').value = '';
+                document.getElementById('customerAddress').value = '';
+                document.getElementById('specialInstructions').value = '';
+                
+                // Reset UI
+                this.elements.nextToStep2Btn.disabled = true;
+                this.elements.nextToStep3Btn.disabled = true;
+                
+                // Clear calendar selection
+                document.querySelectorAll('.calendar-cell').forEach(cell => {
+                    cell.classList.remove('selected');
+                });
+                
+                // Clear time slot selection
+                this.elements.timeSlotsContainer.innerHTML = '';
+                this.elements.noSlotsMessage.style.display = 'none';
+                
+                // Hide message
+                this.elements.bookingMessage.style.display = 'none';
+                
+                // Reload availability data
+                this.loadAvailabilityData();
+            }
+        }
+
+        // ===== Coverage Checker & Map =====
+        const serviceConfig = {
+            coveredAreas: [
+                'E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC',
+                'ME', 'TN', 'CT', 'DA',
+                'IG', 'RM', 'CM', 'SS', 'CO'
+            ],
+            companyName: 'GreenGlo Cleaners',
+            phoneNumber: '447827784204'
+        };
+
+        // DOM Elements for Coverage Checker
+        const postcodeForm = document.getElementById('postcodeForm');
+        const postcodeInput = document.getElementById('postcodeInput');
+        const coverageResult = document.getElementById('coverageResult');
+        const checkButton = document.getElementById('checkButton');
+
+        // Initialize the Map
+        let serviceMap = null;
+        let coverageLayer = null;
+        
+        function initServiceMap() {
+            // Center map on South East England
+            serviceMap = L.map('serviceAreaMap').setView([51.507, 0.127], 9);
+            
+            // Add tile layer (OpenStreetMap)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 13,
+                minZoom: 7
+            }).addTo(serviceMap);
+            
+            // Define a rough polygon for the service area
+            const serviceAreaCoords = [
+                [51.686, 0.010],  // NE Essex
+                [51.686, 0.800],  // NW Essex/Kent
+                [51.200, 0.800],  // SW Kent
+                [51.200, -0.510], // SW London
+                [51.686, -0.510], // NW London
+                [51.686, 0.010]   // Close polygon
+            ];
+            
+            // Add the service area polygon to the map
+            coverageLayer = L.polygon(serviceAreaCoords, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(16, 185, 129, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap);
+            
+            // Add a marker for central London
+            L.marker([51.507, -0.127])
+                .addTo(serviceMap)
+                .bindPopup('<b>GreenGlo Cleaners</b><br>London Headquarters')
+                .openPopup();
+        }
+
+        // UK Postcode Validation & Parser
+        function validateAndParsePostcode(postcode) {
+            let cleanPostcode = postcode.toUpperCase().replace(/\s+/g, '').trim();
+            
+            const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\d[A-Z]{2}$/;
+            
+            if (!postcodeRegex.test(cleanPostcode)) {
+                const outcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)/;
+                const match = cleanPostcode.match(outcodeRegex);
+                if (match) {
+                    return { valid: true, fullPostcode: null, outcode: match[1] };
+                }
+                return { valid: false, error: 'Please enter a valid UK postcode format (e.g., SW1A 1AA or ME14 2TT).' };
+            }
+            
+            const outcodeMatch = cleanPostcode.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
+            const outcode = outcodeMatch ? outcodeMatch[0] : null;
+            
+            return {
+                valid: true,
+                fullPostcode: cleanPostcode.replace(/(.{3})$/, ' $1'),
+                outcode: outcode
+            };
+        }
+
+        // Check if Postcode is in Service Area
+        function checkServiceCoverage(postcodeData) {
+            const outcode = postcodeData.outcode;
+            if (!outcode) return false;
+            
+            for (const area of serviceConfig.coveredAreas) {
+                if (outcode.startsWith(area)) {
+                    return {
+                        covered: true,
+                        area: area,
+                        region: getRegionName(area)
+                    };
+                }
+            }
+            return { covered: false };
+        }
+        
+        function getRegionName(area) {
+            const londonAreas = ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC'];
+            const kentAreas = ['ME', 'TN', 'CT', 'DA'];
+            const essexAreas = ['IG', 'RM', 'CM', 'SS', 'CO'];
+            
+            if (londonAreas.includes(area)) return 'London';
+            if (kentAreas.includes(area)) return 'Kent';
+            if (essexAreas.includes(area)) return 'Essex';
+            return area;
+        }
+
+        // Display Results
+        function displayCoverageResult(postcodeData, coverageInfo) {
+            if (coverageInfo.covered) {
+                coverageResult.innerHTML = `
+                    <div class="result-success">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Great News! We Cover Your Area</h4>
+                        <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                        <p>Your postcode is in our <strong>${coverageInfo.region}</strong> service area.</p>
+                        <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                            <i class="fas fa-clock"></i> Next available slots in ${coverageInfo.region}
+                        </p>
+                        <div class="result-cta">
+                            <a href="#booking" 
+                               class="btn" 
+                               style="margin-top: 1rem;">
+                                <i class="fas fa-calendar-check"></i> Book Now for ${postcodeData.outcode}
+                            </a>
+                        </div>
+                    </div>
+                `;
+                coverageResult.style.borderColor = 'var(--primary-green)';
+                coverageResult.style.background = 'rgba(16, 185, 129, 0.05)';
+            } else {
+                coverageResult.innerHTML = `
+                    <div class="result-error">
+                        <i class="fas fa-times-circle"></i>
+                        <h4>Currently Not in Your Area</h4>
+                        <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                        <p>We don't currently serve <strong>${postcodeData.outcode}</strong>. Our primary areas are London, Kent & Essex.</p>
+                        <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                            <i class="fas fa-info-circle"></i> Service areas expanding soon!
+                        </p>
+                        <div class="result-cta">
+                            <button class="btn btn-outline" onclick="document.getElementById('postcodeInput').focus()" style="margin-top: 1rem;">
+                                <i class="fas fa-redo"></i> Check Another Postcode
+                            </button>
+                        </div>
+                    </div>
+                `;
+                coverageResult.style.borderColor = '#EF4444';
+                coverageResult.style.background = 'rgba(239, 68, 68, 0.05)';
+            }
+        }
+
+        // Form Submission Handler
+        postcodeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const postcode = postcodeInput.value.trim();
+            if (!postcode) {
+                postcodeInput.focus();
+                return;
+            }
+            
+            // Disable button during processing
+            const originalBtnText = checkButton.innerHTML;
+            checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            checkButton.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Validate postcode
+                const postcodeData = validateAndParsePostcode(postcode);
+                
+                if (!postcodeData.valid) {
+                    coverageResult.innerHTML = `
+                        <div class="result-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Invalid Postcode</h4>
+                            <p>${postcodeData.error}</p>
+                            <p style="font-size: 0.9rem;">Examples: SW1A 1AA (London), ME14 2TT (Kent), CM1 1AA (Essex)</p>
+                        </div>
+                    `;
+                    coverageResult.style.borderColor = '#F59E0B';
+                    coverageResult.style.background = 'rgba(245, 158, 11, 0.05)';
+                } else {
+                    // Check coverage
+                    const coverageInfo = checkServiceCoverage(postcodeData);
+                    displayCoverageResult(postcodeData, coverageInfo);
+                }
+                
+                // Re-enable button
+                checkButton.innerHTML = originalBtnText;
+                checkButton.disabled = false;
+            }, 800);
+        });
+
+        // ===== Initialize Everything =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize coverage map
+            initServiceMap();
+            
+            // Initialize booking system
+            window.bookingSystem = new BookingSystem();
+            
+            // Example postcodes for placeholder
+            const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
+            let exampleIndex = 0;
+            
+            // Optional: Cycle example postcodes in placeholder
+            setInterval(() => {
+                postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
+                exampleIndex = (exampleIndex + 1) % examples.length;
+            }, 3000);
+        });
+
+        // Global function for step navigation (used in HTML onclick)
+        window.goToStep = function(step) {
+            if (window.bookingSystem) {
+                window.bookingSystem.goToStep(step);
+            }
+        };
     </script>
 </body>
 </html>
