@@ -1,26 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>GreenGlo Club | Exclusive Membership Benefits & Premium Cleaning Services</title>
+    <title>GreenGlo Club Membership | Premium Cleaning Services London</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo.png">
-    <!-- Apple Touch Icon for iOS devices -->
     <link rel="apple-touch-icon" href="logo.png">
-    <!-- For IE and older browsers -->
     <link rel="shortcut icon" type="image/x-icon" href="logo.png">
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Stripe Elements for secure payment -->
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
-        /* ===== CSS Reset & Variables ===== */
         :root {
-            /* Modern Green Palette */
             --primary-green: #10B981;
             --secondary-green: #34D399;
             --dark-green: #065F46;
@@ -29,17 +22,15 @@
             --emerald: #10B981;
             --teal: #0D9488;
             --mint: #A7F3D0;
-
-            /* Neutrals */
             --white: #FFFFFF;
             --off-white: #F9FAFB;
             --light-gray: #F3F4F6;
             --medium-gray: #9CA3AF;
             --dark-gray: #4B5563;
             --black: #111827;
-
-            /* Accents */
             --gold: #FBBF24;
+            --silver: #9CA3AF;
+            --bronze: #CD7F32;
             --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
             --shadow-lg: 0 25px 50px rgba(16, 185, 129, 0.15);
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -47,6 +38,9 @@
             --border-radius-lg: 24px;
             --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--teal));
             --gradient-dark: linear-gradient(135deg, var(--dark-green), var(--teal));
+            --gradient-bronze: linear-gradient(135deg, #CD7F32, #B87333);
+            --gradient-silver: linear-gradient(135deg, #9CA3AF, #6B7280);
+            --gradient-gold: linear-gradient(135deg, #FBBF24, #F59E0B);
         }
 
         * {
@@ -71,12 +65,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
+        h1, h2, h3, h4, h5, h6 {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
             line-height: 1.2;
@@ -91,7 +80,7 @@
             padding: 0 1.5rem;
         }
 
-        /* ===== Premium Button Styles ===== */
+        /* Premium Button Styles */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -136,10 +125,6 @@
             box-shadow: var(--shadow-lg);
         }
 
-        .btn:active {
-            transform: translateY(-2px);
-        }
-
         .btn-outline {
             background: transparent;
             border: 2px solid var(--primary-green);
@@ -157,15 +142,7 @@
             min-height: 64px;
         }
 
-        .btn-gold {
-            background: linear-gradient(135deg, var(--gold), #F59E0B);
-        }
-
-        .btn-gold::before {
-            background: linear-gradient(135deg, #D97706, #B45309);
-        }
-
-        /* ===== Premium Navigation Bar ===== */
+        /* Premium Navigation Bar */
         .navbar {
             position: fixed;
             top: 0;
@@ -308,7 +285,7 @@
             transform: rotate(90deg);
         }
 
-        /* ===== Mobile Menu Overlay ===== */
+        /* Mobile Menu Overlay */
         .mobile-menu-overlay {
             position: fixed;
             top: 0;
@@ -328,10 +305,10 @@
             visibility: visible;
         }
 
-        /* ===== Club Hero Section ===== */
-        .club-hero {
-            min-height: 70vh;
-            padding: 140px 0 60px;
+        /* Hero Section for Membership Page */
+        .membership-hero {
+            min-height: 60vh;
+            padding: 160px 0 80px;
             background: linear-gradient(135deg, rgba(209, 250, 229, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
             position: relative;
             overflow: hidden;
@@ -340,60 +317,25 @@
             text-align: center;
         }
 
-        .club-hero::before {
+        .membership-hero::before {
             content: '';
             position: absolute;
             top: 0;
             right: 0;
-            width: 100%;
+            width: 40%;
             height: 100%;
             background: linear-gradient(135deg, var(--light-green) 0%, transparent 70%);
             z-index: 0;
         }
 
-        .club-hero-content {
+        .membership-hero-content {
             position: relative;
             z-index: 1;
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        .club-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: var(--white);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            box-shadow: var(--shadow);
-            margin-bottom: 2.5rem;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        .club-badge i {
-            color: var(--gold);
-            font-size: 1.25rem;
-        }
-
-        .club-badge span {
-            font-weight: 600;
-            color: var(--dark-green);
-            font-size: 0.9375rem;
-        }
-
-        .club-hero h1 {
+        .membership-hero h1 {
             font-size: clamp(2.5rem, 6vw, 4rem);
             margin-bottom: 1.5rem;
             line-height: 1.1;
@@ -402,29 +344,28 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .club-subtitle {
-            font-size: clamp(1.125rem, 3vw, 1.5rem);
+        .membership-hero p {
+            font-size: clamp(1.125rem, 3vw, 1.375rem);
             color: var(--dark-gray);
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             line-height: 1.6;
-            max-width: 800px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .club-hero-cta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 3rem;
+        /* Section Styles */
+        .section {
+            padding: 6rem 0;
+            position: relative;
         }
 
-        /* ===== Club Benefits Section ===== */
-        .club-benefits {
-            padding: 6rem 0;
+        .section-light {
             background: var(--white);
+        }
+
+        .section-gray {
+            background: var(--off-white);
         }
 
         .section-title {
@@ -458,154 +399,112 @@
             margin: 0 auto;
         }
 
-        .benefits-grid {
+        /* Pricing Plans */
+        .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
         }
 
-        .benefit-card {
+        .pricing-card {
             background: var(--white);
-            padding: 3rem 2rem;
             border-radius: var(--border-radius);
-            text-align: center;
+            overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            border: 2px solid rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.1);
             position: relative;
-            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
-        .benefit-card:hover {
+        .pricing-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary-green);
         }
 
-        .benefit-icon {
+        .pricing-card.popular {
+            border: 2px solid var(--primary-green);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .pricing-header {
+            padding: 2.5rem 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .plan-icon {
             width: 80px;
             height: 80px;
-            background: var(--gradient-primary);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 2rem;
-            color: var(--white);
+            margin: 0 auto 1.5rem;
             font-size: 2rem;
         }
 
-        .benefit-card.gold .benefit-icon {
-            background: linear-gradient(135deg, var(--gold), #F59E0B);
+        .starter-icon {
+            background: var(--gradient-bronze);
+            color: white;
         }
 
-        .benefit-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+        .plus-icon {
+            background: var(--gradient-silver);
+            color: white;
         }
 
-        .benefit-card p {
-            color: var(--medium-gray);
-            margin-bottom: 1.5rem;
+        .premium-icon {
+            background: var(--gradient-gold);
+            color: white;
         }
 
-        .benefit-tag {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--gold);
-            color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ===== Membership Tiers ===== */
-        .membership-tiers {
-            padding: 6rem 0;
-            background: var(--off-white);
-        }
-
-        .tiers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .tier-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 2px solid rgba(16, 185, 129, 0.1);
-            position: relative;
-        }
-
-        .tier-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .tier-card.popular {
-            border-color: var(--gold);
-            transform: scale(1.05);
-        }
-
-        .tier-card.popular:hover {
-            transform: scale(1.05) translateY(-10px);
-        }
-
-        .tier-header {
-            padding: 2.5rem 2rem;
-            text-align: center;
-            background: var(--gradient-primary);
-            color: var(--white);
-            position: relative;
-        }
-
-        .tier-card.popular .tier-header {
-            background: linear-gradient(135deg, var(--gold), #F59E0B);
-        }
-
-        .tier-header h3 {
-            color: var(--white);
+        .pricing-header h3 {
             font-size: 1.75rem;
             margin-bottom: 0.5rem;
         }
 
-        .tier-price {
+        .price {
             font-size: 3rem;
             font-weight: 800;
-            margin-bottom: 0.5rem;
+            color: var(--dark-green);
+            margin: 1rem 0;
+            line-height: 1;
         }
 
-        .tier-period {
-            font-size: 0.875rem;
-            opacity: 0.9;
+        .price span {
+            font-size: 1rem;
+            color: var(--medium-gray);
+            font-weight: 400;
         }
 
-        .popular-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--white);
-            color: var(--gold);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .tier-features {
+        .pricing-features {
             padding: 2rem;
+            flex-grow: 1;
         }
 
         .feature-list {
@@ -614,79 +513,285 @@
         }
 
         .feature-list li {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
             margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
             color: var(--dark-gray);
         }
 
-        .feature-list li i {
+        .feature-list i {
             color: var(--primary-green);
             font-size: 1.125rem;
+            margin-top: 0.125rem;
+            flex-shrink: 0;
         }
 
-        .feature-list li.disabled {
-            color: var(--medium-gray);
-            text-decoration: line-through;
+        .pricing-footer {
+            padding: 0 2rem 2.5rem;
+            text-align: center;
         }
 
-        .feature-list li.disabled i {
-            color: var(--medium-gray);
-        }
-
-        .tier-cta {
-            padding: 0 2rem 2rem;
-        }
-
-        /* ===== How It Works ===== */
-        .how-it-works {
-            padding: 6rem 0;
-            background: var(--white);
-        }
-
-        .steps-grid {
+        /* Services Grid */
+        .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
             margin-top: 3rem;
         }
 
-        .step-card {
+        .service-item {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
             text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        /* Registration Form */
+        .registration-section {
+            background: linear-gradient(135deg, rgba(209, 250, 229, 0.3) 0%, rgba(255, 255, 255, 0.95) 100%);
+            padding: 6rem 0;
+        }
+
+        .registration-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .registration-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .form-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
             position: relative;
         }
 
-        .step-number {
-            width: 60px;
-            height: 60px;
+        .form-progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--light-gray);
+            z-index: 1;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            color: var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .step-circle.active {
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--medium-gray);
+        }
+
+        .step-label.active {
+            color: var(--primary-green);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+            background: var(--off-white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            background: var(--white);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            gap: 1rem;
+        }
+
+        .form-actions .btn {
+            min-width: 150px;
+        }
+
+        /* Stripe Payment Elements */
+        .stripe-element {
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            background: var(--off-white);
+            transition: var(--transition);
+        }
+
+        .stripe-element.focused {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            background: var(--white);
+        }
+
+        .payment-summary {
+            background: var(--off-white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-item.total {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--dark-green);
+            border-top: 2px solid rgba(16, 185, 129, 0.2);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Success Message */
+        .success-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            display: none;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
             background: var(--gradient-primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--white);
-            font-size: 1.5rem;
-            font-weight: 700;
             margin: 0 auto 2rem;
-            box-shadow: var(--shadow);
+            color: var(--white);
+            font-size: 2.5rem;
+            animation: successPulse 2s infinite;
         }
 
-        .step-content h3 {
-            font-size: 1.5rem;
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-message h3 {
+            font-size: 2rem;
             margin-bottom: 1rem;
+            color: var(--dark-green);
         }
 
-        .step-content p {
+        .success-message p {
             color: var(--medium-gray);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        /* ===== FAQ Section ===== */
-        .faq-section {
-            padding: 6rem 0;
-            background: var(--off-white);
-        }
-
+        /* FAQ Section */
         .faq-grid {
             max-width: 800px;
             margin: 0 auto;
@@ -738,38 +843,7 @@
             padding: 0 2rem 2rem;
         }
 
-        /* ===== CTA Section ===== */
-        .cta-section {
-            background: var(--gradient-dark);
-            color: var(--white);
-            text-align: center;
-            padding: 6rem 0;
-            border-radius: var(--border-radius-lg);
-            margin: 4rem auto;
-            max-width: 1200px;
-        }
-
-        .cta-section h2 {
-            color: var(--white);
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1.5rem;
-        }
-
-        .cta-section p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto 3rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* ===== Premium Footer ===== */
+        /* Footer */
         .footer {
             background: var(--dark-green);
             color: var(--white);
@@ -864,13 +938,20 @@
             text-decoration: underline;
         }
 
-        /* ===== Responsive Design ===== */
+        /* Responsive Design */
         @media (max-width: 1024px) {
-            .tier-card.popular {
-                transform: none;
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
             }
             
-            .tier-card.popular:hover {
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+            
+            .pricing-card.popular:hover {
                 transform: translateY(-10px);
             }
         }
@@ -929,25 +1010,29 @@
                 color: var(--white);
             }
 
-            .benefits-grid,
-            .tiers-grid,
-            .steps-grid {
-                grid-template-columns: 1fr;
+            .membership-hero {
+                padding: 140px 0 60px;
+                min-height: 50vh;
             }
 
-            .club-hero {
-                padding: 120px 0 4rem;
-            }
-
-            .club-benefits,
-            .membership-tiers,
-            .how-it-works,
-            .faq-section {
+            .section {
                 padding: 4rem 0;
             }
 
-            .cta-buttons {
+            .registration-card {
+                padding: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
                 flex-direction: column;
+            }
+
+            .form-actions .btn {
+                width: 100%;
             }
 
             /* Mobile Close Button */
@@ -980,23 +1065,21 @@
             .container {
                 padding: 0 1rem;
             }
-
-            .club-hero-cta {
-                flex-direction: column;
+            
+            .pricing-header {
+                padding: 2rem 1.5rem 1.5rem;
             }
-
-            .club-hero-cta .btn {
-                width: 100%;
-                justify-content: center;
+            
+            .pricing-features, .pricing-footer {
+                padding: 1.5rem;
             }
-
-            .nav-menu {
-                width: 85%;
+            
+            .price {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
-
 <body>
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
@@ -1011,7 +1094,7 @@
                 </div>
                 <div class="logo-text">
                     <h1>GreenGlo</h1>
-                    <span>Club</span>
+                    <span>Cleaners</span>
                 </div>
             </a>
 
@@ -1028,246 +1111,413 @@
                     <a href="index.html" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="services.html" class="nav-link">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html#about" class="nav-link">About</a>
+                    <a href="gallery.html" class="nav-link">Gallery</a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html#gallery" class="nav-link">Gallery</a>
+                    <a href="greengloclub.html" class="nav-link active">Green Glo Club</a>
                 </li>
                 <li class="nav-item">
-                    <a href="index.html#testimonials" class="nav-link">Reviews</a>
+                    <a href="index.html#testimonials" class="nav-link">Testimonials</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#contact" class="nav-link">Contact</a>
                 </li>
                 <li class="nav-item nav-cta">
-                    <a href="#apply" class="btn btn-gold">
-                        <i class="fas fa-crown"></i>
-                        Apply Now
-                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20cleaning%20services"
+                        class="btn" target="_blank">Get Quote</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <!-- Club Hero Section -->
-    <section class="club-hero">
+    <!-- Membership Hero Section -->
+    <section class="membership-hero">
         <div class="container">
-            <div class="club-hero-content">
-                <div class="club-badge">
+            <div class="membership-hero-content">
+                <h1>Join the GreenGlo Club</h1>
+                <p>Get premium cleaning benefits, exclusive discounts, and priority service with our membership plans. Choose the perfect plan for your home and enjoy professional cleaning all year round.</p>
+                <a href="#pricing" class="btn btn-large">
                     <i class="fas fa-crown"></i>
-                    <span>Exclusive Membership</span>
-                </div>
-
-                <h1>Welcome to GreenGlo Club</h1>
-
-                <p class="club-subtitle">
-                    Join London's most exclusive cleaning membership. Enjoy priority booking, £300 in credits, 
-                    member-only rates, and premium services designed for those who demand the best.
-                </p>
-
-                <div class="club-hero-cta">
-                    <a href="#apply" class="btn btn-large btn-gold">
-                        <i class="fas fa-gem"></i>
-                        Apply for Membership
-                    </a>
-                    <a href="#benefits" class="btn btn-outline btn-large">
-                        <i class="fas fa-list"></i>
-                        View Benefits
-                    </a>
-                </div>
+                    View Membership Plans
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Club Benefits Section -->
-    <section class="club-benefits" id="benefits">
+    <!-- Pricing Plans Section -->
+    <section class="section section-light" id="pricing">
         <div class="container">
             <div class="section-title">
-                <h2>Exclusive Member Benefits</h2>
-                <p>Unlock premium perks designed to make your life cleaner and easier</p>
+                <h2>Choose Your GreenGlo Plan</h2>
+                <p>Select the membership that fits your cleaning needs</p>
             </div>
 
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-tag">Popular</div>
-                    <div class="benefit-icon">
-                        <i class="fas fa-pound-sign"></i>
+            <div class="pricing-grid">
+                <!-- Starter Plan -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <div class="plan-icon starter-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <h3>Green Starter</h3>
+                        <div class="price">£9.99<span>/month</span></div>
+                        <p class="plan-description">Best for light users</p>
                     </div>
-                    <h3>£300 Welcome Credits</h3>
-                    <p>Start your membership with £300 in cleaning credits to use on any service, no restrictions.</p>
-                </div>
-
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-calendar-star"></i>
-                    </div>
-                    <h3>Priority Booking</h3>
-                    <p>Get exclusive access to prime time slots and priority scheduling, even during peak periods.</p>
-                </div>
-
-                <div class="benefit-card gold">
-                    <div class="benefit-tag">Premium</div>
-                    <div class="benefit-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h3>Member-Only Rates</h3>
-                    <p>Enjoy exclusive discounts of up to 25% on all cleaning services compared to regular rates.</p>
-                </div>
-
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Enhanced Insurance</h3>
-                    <p>Premium coverage up to £1,000,000 for added peace of mind during every clean.</p>
-                </div>
-
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-gift"></i>
-                    </div>
-                    <h3>Quarterly Rewards</h3>
-                    <p>Receive special gifts and bonuses every quarter as a thank you for your loyalty.</p>
-                </div>
-
-                <div class="benefit-card gold">
-                    <div class="benefit-tag">VIP</div>
-                    <div class="benefit-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>Dedicated Support</h3>
-                    <p>24/7 access to our VIP support team and a personal account manager for all your needs.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Membership Tiers -->
-    <section class="membership-tiers" id="tiers">
-        <div class="container">
-            <div class="section-title">
-                <h2>Choose Your Membership</h2>
-                <p>Select the perfect plan for your cleaning needs</p>
-            </div>
-
-            <div class="tiers-grid">
-                <!-- Basic Tier -->
-                <div class="tier-card">
-                    <div class="tier-header">
-                        <h3>Essential</h3>
-                        <div class="tier-price">£50</div>
-                        <div class="tier-period">per month</div>
-                    </div>
-                    <div class="tier-features">
+                    
+                    <div class="pricing-features">
                         <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> £150 Welcome Credits</li>
-                            <li><i class="fas fa-check"></i> 15% Member Discount</li>
-                            <li><i class="fas fa-check"></i> Priority Booking Access</li>
-                            <li><i class="fas fa-check"></i> Standard Insurance</li>
-                            <li class="disabled"><i class="fas fa-times"></i> Quarterly Rewards</li>
-                            <li class="disabled"><i class="fas fa-times"></i> Dedicated Support</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>£5 off</strong> every cleaning</li>
+                            <li><i class="fas fa-check-circle"></i> Priority booking</li>
+                            <li><i class="fas fa-check-circle"></i> Same-cleaner guarantee (where possible)</li>
+                            <li><i class="fas fa-check-circle"></i> Eco-friendly products included</li>
+                            <li><i class="fas fa-check-circle"></i> No call-out fee</li>
                         </ul>
                     </div>
-                    <div class="tier-cta">
-                        <a href="#apply" class="btn" style="width: 100%;">
-                            <i class="fas fa-rocket"></i>
-                            Get Started
-                        </a>
+                    
+                    <div class="pricing-footer">
+                        <button class="btn btn-outline select-plan" data-plan="starter">
+                            Select Starter Plan
+                        </button>
                     </div>
                 </div>
 
-                <!-- Premium Tier (Most Popular) -->
-                <div class="tier-card popular">
-                    <div class="popular-badge">Most Popular</div>
-                    <div class="tier-header">
-                        <h3>Premium</h3>
-                        <div class="tier-price">£75</div>
-                        <div class="tier-period">per month</div>
+                <!-- Plus Plan (Most Popular) -->
+                <div class="pricing-card popular">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <div class="plan-icon plus-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h3>Green Plus</h3>
+                        <div class="price">£19.99<span>/month</span></div>
+                        <p class="plan-description">For regular households</p>
                     </div>
-                    <div class="tier-features">
+                    
+                    <div class="pricing-features">
                         <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> £300 Welcome Credits</li>
-                            <li><i class="fas fa-check"></i> 25% Member Discount</li>
-                            <li><i class="fas fa-check"></i> Priority + Flex Booking</li>
-                            <li><i class="fas fa-check"></i> Enhanced Insurance</li>
-                            <li><i class="fas fa-check"></i> Quarterly Rewards</li>
-                            <li class="disabled"><i class="fas fa-times"></i> Dedicated Support</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>£10 off</strong> every cleaning</li>
+                            <li><i class="fas fa-check-circle"></i> 1 FREE fridge OR oven clean per year</li>
+                            <li><i class="fas fa-check-circle"></i> Priority + weekend booking</li>
+                            <li><i class="fas fa-check-circle"></i> Same-cleaner guarantee</li>
+                            <li><i class="fas fa-check-circle"></i> Eco deep-clean checklist included</li>
+                            <li><i class="fas fa-check-circle"></i> Discounted end-of-tenancy cleans</li>
                         </ul>
                     </div>
-                    <div class="tier-cta">
-                        <a href="#apply" class="btn btn-gold" style="width: 100%;">
-                            <i class="fas fa-crown"></i>
-                            Join Premium
-                        </a>
+                    
+                    <div class="pricing-footer">
+                        <button class="btn select-plan" data-plan="plus">
+                            Select Plus Plan
+                        </button>
                     </div>
                 </div>
 
-                <!-- VIP Tier -->
-                <div class="tier-card">
-                    <div class="tier-header">
-                        <h3>VIP Elite</h3>
-                        <div class="tier-price">£100</div>
-                        <div class="tier-period">per month</div>
+                <!-- Premium Plan -->
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <div class="plan-icon premium-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <h3>Green Premium</h3>
+                        <div class="price">£29.99<span>/month</span></div>
+                        <p class="plan-description">For premium & family homes</p>
                     </div>
-                    <div class="tier-features">
+                    
+                    <div class="pricing-features">
                         <ul class="feature-list">
-                            <li><i class="fas fa-check"></i> £500 Welcome Credits</li>
-                            <li><i class="fas fa-check"></i> 30% Member Discount</li>
-                            <li><i class="fas fa-check"></i> Ultimate Priority Access</li>
-                            <li><i class="fas fa-check"></i> Premium Insurance</li>
-                            <li><i class="fas fa-check"></i> Monthly Rewards</li>
-                            <li><i class="fas fa-check"></i> Dedicated Support 24/7</li>
+                            <li><i class="fas fa-check-circle"></i> <strong>£15 off</strong> every cleaning</li>
+                            <li><i class="fas fa-check-circle"></i> 2 FREE add-ons per year (oven, fridge, inside windows)</li>
+                            <li><i class="fas fa-check-circle"></i> Annual eco deep clean included</li>
+                            <li><i class="fas fa-check-circle"></i> Emergency same-day bookings</li>
+                            <li><i class="fas fa-check-circle"></i> Dedicated account support</li>
+                            <li><i class="fas fa-check-circle"></i> Best rates on all services</li>
                         </ul>
                     </div>
-                    <div class="tier-cta">
-                        <a href="#apply" class="btn" style="width: 100%;">
-                            <i class="fas fa-gem"></i>
-                            Go VIP Elite
-                        </a>
+                    
+                    <div class="pricing-footer">
+                        <button class="btn btn-outline select-plan" data-plan="premium">
+                            Select Premium Plan
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="how-it-works">
+    <!-- Services Included Section -->
+    <section class="section section-gray" id="services">
         <div class="container">
             <div class="section-title">
-                <h2>How GreenGlo Club Works</h2>
-                <p>Simple steps to start enjoying premium cleaning services</p>
+                <h2>Services Included Under Membership</h2>
+                <p>All services still charged per clean, but with exclusive member discounts</p>
             </div>
 
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h3>Apply Online</h3>
-                        <p>Fill out our simple membership application form with your details and preferences.</p>
+            <div class="services-grid">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-home"></i>
                     </div>
+                    <h3>Regular Domestic Cleaning</h3>
+                    <p>Weekly, fortnightly or monthly cleaning tailored to your needs</p>
                 </div>
-
-                <div class="step-card">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>Get Approved</h3>
-                        <p>We'll review your application and get back to you within 24 hours with confirmation.</p>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-broom"></i>
                     </div>
+                    <h3>Deep Cleaning</h3>
+                    <p>Thorough cleaning of every corner and surface</p>
                 </div>
-
-                <div class="step-card">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h3>Receive Welcome Pack</h3>
-                        <p>Get instant access to your £300 credits and member portal upon approval.</p>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-key"></i>
                     </div>
+                    <h3>End of Tenancy Cleaning</h3>
+                    <p>Professional cleaning to ensure deposit return</p>
                 </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Eco Office Cleaning</h3>
+                    <p>Commercial cleaning with eco-friendly products</p>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <h3>After-Builders Cleaning</h3>
+                    <p>Post-construction cleanup and dust removal</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                <div class="step-card">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h3>Start Booking</h3>
-                        <p>Schedule your first premium cleaning service with priority access and member rates.</p>
+    <!-- Registration Form Section -->
+    <section class="registration-section" id="registration">
+        <div class="container">
+            <div class="section-title">
+                <h2>Become a GreenGlo Member</h2>
+                <p>Fill out the form below to start enjoying premium benefits</p>
+            </div>
+
+            <div class="registration-container">
+                <div class="registration-card">
+                    <!-- Form Progress -->
+                    <div class="form-progress">
+                        <div class="progress-step">
+                            <div class="step-circle active">1</div>
+                            <div class="step-label active">Plan Selection</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Personal Details</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Payment</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle">4</div>
+                            <div class="step-label">Confirmation</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Plan Selection -->
+                    <div class="form-step active" id="step1">
+                        <h3 style="margin-bottom: 1.5rem;">Select Your Membership Plan</h3>
+                        
+                        <div class="plan-selection">
+                            <div class="form-group">
+                                <label>Choose Plan:</label>
+                                <select class="form-control" id="planSelect">
+                                    <option value="">Please select a plan</option>
+                                    <option value="starter">🌿 Green Starter - £9.99/month</option>
+                                    <option value="plus">🌱 Green Plus - £19.99/month (Most Popular)</option>
+                                    <option value="premium">🌳 Green Premium - £29.99/month</option>
+                                </select>
+                            </div>
+
+                            <div class="payment-summary" id="planSummary" style="display: none;">
+                                <h4 style="margin-bottom: 1rem;">Plan Summary</h4>
+                                <div class="summary-item">
+                                    <span>Membership Plan:</span>
+                                    <span id="summaryPlan">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Monthly Fee:</span>
+                                    <span id="summaryPrice">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Setup Fee:</span>
+                                    <span>£0.00</span>
+                                </div>
+                                <div class="summary-item total">
+                                    <span>Total Monthly:</span>
+                                    <span id="summaryTotal">-</span>
+                                </div>
+                                <p style="font-size: 0.875rem; color: var(--medium-gray); margin-top: 1rem;">
+                                    <i class="fas fa-info-circle"></i> Cancel anytime. No long-term contract required.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" disabled>Previous</button>
+                            <button type="button" class="btn" id="nextToStep2">Next: Personal Details</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Personal Details -->
+                    <div class="form-step" id="step2">
+                        <h3 style="margin-bottom: 1.5rem;">Personal Information</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Address *</label>
+                            <input type="text" id="address" class="form-control" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="postcode">Postcode *</label>
+                                <input type="text" id="postcode" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="backToStep1">Previous</button>
+                            <button type="button" class="btn" id="nextToStep3">Next: Payment</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Payment -->
+                    <div class="form-step" id="step3">
+                        <h3 style="margin-bottom: 1.5rem;">Payment Details</h3>
+                        
+                        <div class="payment-summary">
+                            <h4 style="margin-bottom: 1rem;">Order Summary</h4>
+                            <div class="summary-item">
+                                <span>Selected Plan:</span>
+                                <span id="paymentPlan">-</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Monthly Amount:</span>
+                                <span id="paymentAmount">-</span>
+                            </div>
+                            <div class="summary-item total">
+                                <span>First Payment:</span>
+                                <span id="paymentTotal">-</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Card Details</label>
+                            <div id="card-element" class="stripe-element"></div>
+                            <div id="card-errors" role="alert" style="color: #dc3545; margin-top: 0.5rem; font-size: 0.875rem;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="billingAddress">Billing Address (if different)</label>
+                            <textarea id="billingAddress" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                                <input type="checkbox" id="terms" required style="margin-top: 0.25rem;">
+                                <label for="terms" style="font-size: 0.875rem;">
+                                    I agree to the <a href="#" style="color: var(--primary-green);">Terms of Service</a> and <a href="#" style="color: var(--primary-green);">Privacy Policy</a>. I understand that this is a recurring monthly subscription that I can cancel at any time.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                                <input type="checkbox" id="marketing" style="margin-top: 0.25rem;">
+                                <label for="marketing" style="font-size: 0.875rem;">
+                                    I would like to receive updates about new services and special offers from GreenGlo Cleaners.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-outline" id="backToStep2">Previous</button>
+                            <button type="button" class="btn" id="submitPayment">
+                                <i class="fas fa-lock"></i>
+                                Complete Payment
+                            </button>
+                        </div>
+
+                        <div style="margin-top: 2rem; text-align: center;">
+                            <p style="font-size: 0.875rem; color: var(--medium-gray);">
+                                <i class="fas fa-shield-alt"></i> Secure payment processed by Stripe. Your information is encrypted and secure.
+                            </p>
+                            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                                <img src="https://stripe.com/img/v3/home/two-icons/icon-security.svg" alt="Secure" height="24">
+                                <img src="https://stripe.com/img/v3/home/two-icons/icon-pci.svg" alt="PCI Compliant" height="24">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Success -->
+                    <div class="form-step" id="step4">
+                        <div class="success-message">
+                            <div class="success-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h3>Welcome to GreenGlo Club!</h3>
+                            <p>Your membership has been successfully activated. You will receive a confirmation email shortly with your membership details and next steps.</p>
+                            
+                            <div style="background: var(--off-white); padding: 1.5rem; border-radius: var(--border-radius); margin: 2rem 0; text-align: left;">
+                                <h4 style="margin-bottom: 1rem;">Membership Details</h4>
+                                <p><strong>Plan:</strong> <span id="confirmationPlan">-</span></p>
+                                <p><strong>Member ID:</strong> <span id="memberId">GG-000001</span></p>
+                                <p><strong>Start Date:</strong> <span id="startDate">-</span></p>
+                                <p><strong>Next Payment:</strong> <span id="nextPayment">-</span></p>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto;">
+                                <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%20just%20signed%20up%20for%20the%20GreenGlo%20Club%20and%20would%20like%20to%20book%20my%20first%20cleaning"
+                                   class="btn" target="_blank">
+                                    <i class="fas fa-whatsapp"></i>
+                                    Book Your First Cleaning
+                                </a>
+                                <a href="index.html" class="btn btn-outline">
+                                    <i class="fas fa-home"></i>
+                                    Return to Homepage
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1275,71 +1525,61 @@
     </section>
 
     <!-- FAQ Section -->
-    <section class="faq-section">
+    <section class="section section-light" id="faq">
         <div class="container">
             <div class="section-title">
                 <h2>Frequently Asked Questions</h2>
-                <p>Common questions about GreenGlo Club membership</p>
+                <p>Everything you need to know about GreenGlo Club</p>
             </div>
 
             <div class="faq-grid">
                 <div class="faq-item">
                     <div class="faq-question">
-                        How do I apply for GreenGlo Club membership?
+                        How does the membership work?
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>Simply fill out our online application form on this page. We'll review your application and get back to you within 24 hours with approval and next steps.</p>
+                        <p>The GreenGlo Club is a monthly subscription that provides you with exclusive benefits and discounts on all our cleaning services. You'll receive your selected discount on every cleaning, plus additional perks based on your plan level.</p>
                     </div>
                 </div>
-
+                
                 <div class="faq-item">
                     <div class="faq-question">
-                        Can I use my welcome credits immediately?
+                        Can I cancel my membership anytime?
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>Yes! Once your membership is approved, your welcome credits are immediately available in your member portal. You can use them for any cleaning service right away.</p>
+                        <p>Yes! There's no long-term contract. You can cancel your membership at any time through your account portal or by contacting our support team. Your benefits will continue until the end of your current billing period.</p>
                     </div>
                 </div>
-
+                
                 <div class="faq-item">
                     <div class="faq-question">
-                        Is there a contract or minimum term?
+                        How do I book cleanings with my membership?
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>GreenGlo Club operates on a month-to-month basis with no long-term contracts. You can cancel at any time with 30 days' notice.</p>
+                        <p>Once you're a member, you can book cleanings through WhatsApp, phone, or email. Just mention that you're a GreenGlo Club member, and we'll apply your discount automatically. Plus and Premium members also get priority booking access.</p>
                     </div>
                 </div>
-
+                
                 <div class="faq-item">
                     <div class="faq-question">
-                        What payment methods do you accept?
+                        What happens to my free add-ons if I change plans?
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>We accept all major credit/debit cards, PayPal, and direct bank transfer. Membership fees are charged automatically each month.</p>
+                        <p>If you upgrade or downgrade your plan, any unused add-ons from your current plan will be available until they expire. New add-ons will be provided according to your new plan's benefits starting from your next billing cycle.</p>
                     </div>
                 </div>
-
+                
                 <div class="faq-item">
                     <div class="faq-question">
-                        Can I upgrade or downgrade my membership?
+                        Is there a setup fee or long-term contract?
                         <span class="faq-toggle">+</span>
                     </div>
                     <div class="faq-answer">
-                        <p>Absolutely! You can upgrade or downgrade your membership tier at any time. Changes take effect at the start of your next billing cycle.</p>
-                    </div>
-                </div>
-
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Are there any hidden fees?
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>No hidden fees. Your monthly membership fee covers all the benefits listed. Any additional services beyond your credits are charged at your member discount rate.</p>
+                        <p>No setup fees and no long-term contracts! You only pay your monthly membership fee and can cancel anytime. Your first payment is prorated based on when you sign up during the month.</p>
                     </div>
                 </div>
             </div>
@@ -1347,19 +1587,20 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="section" id="apply">
+    <section class="section">
         <div class="container">
-            <div class="cta-section">
-                <h2>Ready to Join GreenGlo Club?</h2>
-                <p>Start enjoying exclusive benefits, premium services, and London's best cleaning experience today.</p>
-                <div class="cta-buttons">
-                    <a href="club-form.html" class="btn btn-large btn-gold">
+            <div class="cta-section" style="background: var(--gradient-dark); color: var(--white); text-align: center; padding: 6rem 0; border-radius: var(--border-radius-lg); margin: 4rem auto; max-width: 1200px;">
+                <h2 style="color: var(--white);">Ready to Transform Your Cleaning Experience?</h2>
+                <p style="font-size: 1.25rem; opacity: 0.9; max-width: 700px; margin: 0 auto 3rem;">Join hundreds of satisfied members enjoying premium cleaning services with exclusive benefits.</p>
+                <div class="cta-buttons" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#registration" class="btn btn-large" style="background: var(--white); color: var(--dark-green);">
                         <i class="fas fa-crown"></i>
-                        Apply for Membership
+                        Join Now
                     </a>
-                    <a href="tel:07827784204" class="btn btn-outline btn-large">
-                        <i class="fas fa-phone"></i>
-                        Call to Learn More
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%20have%20questions%20about%20the%20GreenGlo%20Club%20membership"
+                       class="btn btn-outline btn-large" style="border-color: var(--white); color: var(--white);">
+                        <i class="fas fa-whatsapp"></i>
+                        Ask Questions
                     </a>
                 </div>
             </div>
@@ -1371,9 +1612,9 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-col">
-                    <h3>GreenGlo Club</h3>
+                    <h3>GreenGlo Cleaners</h3>
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
-                        London's most exclusive cleaning membership program. Premium services, exclusive benefits, and unparalleled quality.
+                        Professional eco-friendly cleaning services for homes and offices across London.
                     </p>
                     <div class="social-links">
                         <a href="https://instagram.com/greenglocleaningco" class="social-link" target="_blank">
@@ -1383,14 +1624,14 @@
                 </div>
 
                 <div class="footer-col">
-                    <h3>Club Benefits</h3>
+                    <h3>Our Services</h3>
                     <ul class="footer-links">
-                        <li><a href="#benefits">£300 Welcome Credits</a></li>
-                        <li><a href="#benefits">Priority Booking</a></li>
-                        <li><a href="#benefits">Member-Only Rates</a></li>
-                        <li><a href="#benefits">Enhanced Insurance</a></li>
-                        <li><a href="#benefits">Quarterly Rewards</a></li>
-                        <li><a href="#benefits">Dedicated Support</a></li>
+                        <li><a href="services.html">Domestic cleaning</a></li>
+                        <li><a href="services.html">One-off cleaning</a></li>
+                        <li><a href="services.html">End of tenancy cleaning</a></li>
+                        <li><a href="services.html">Carpet cleaning</a></li>
+                        <li><a href="services.html">Office cleaning</a></li>
+                        <li><a href="services.html">View all services</a></li>
                     </ul>
                 </div>
 
@@ -1398,33 +1639,28 @@
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#services">Services</a></li>
-                        <li><a href="#tiers">Membership Tiers</a></li>
-                        <li><a href="#apply">Apply Now</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="greengloclub.html">GreenGlo Club</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
                         <li><a href="#faq">FAQ</a></li>
                         <li><a href="index.html#contact">Contact</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-col">
-                    <h3>Contact Club Support</h3>
+                    <h3>Contact Us</h3>
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
                         <i class="fas fa-phone" style="margin-right: 0.5rem;"></i> 07827 784204
                     </p>
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
                         <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> greenglocleaning@gmail.com
                     </p>
-                    <p style="color: rgba(255, 255, 255, 0.8);">
-                        <i class="fas fa-clock" style="margin-right: 0.5rem;"></i> Support: Mon-Fri 8am-8pm
-                    </p>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p>GreenGlo Club © 2025. An exclusive membership program by GreenGlo Cleaners London. All rights reserved | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
-                <p style="margin-top: 0.5rem;">Created by <a
-                        href="https://api.whatsapp.com/send?phone=447543737488&text=" target="_blank">Sacha
-                        Raif</a></p>
+                <p>GreenGlo Cleaners London © 2025. All rights reserved | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+                <p style="margin-top: 0.5rem;">Created by <a href="https://api.whatsapp.com/send?phone=447543737488&text=" target="_blank">Sacha Raif</a></p>
             </div>
         </div>
     </footer>
@@ -1493,6 +1729,299 @@
             }
         });
 
+        // ===== Smooth Scrolling =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href') === '#') return;
+
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ===== Membership Plans Configuration =====
+        const membershipPlans = {
+            starter: {
+                name: '🌿 Green Starter',
+                price: 9.99,
+                description: 'Best for light users',
+                features: [
+                    '£5 off every cleaning',
+                    'Priority booking',
+                    'Same-cleaner guarantee (where possible)',
+                    'Eco-friendly products included',
+                    'No call-out fee'
+                ]
+            },
+            plus: {
+                name: '🌱 Green Plus',
+                price: 19.99,
+                description: 'For regular households',
+                features: [
+                    '£10 off every cleaning',
+                    '1 FREE fridge OR oven clean per year',
+                    'Priority + weekend booking',
+                    'Same-cleaner guarantee',
+                    'Eco deep-clean checklist included',
+                    'Discounted end-of-tenancy cleans'
+                ]
+            },
+            premium: {
+                name: '🌳 Green Premium',
+                price: 29.99,
+                description: 'For premium & family homes',
+                features: [
+                    '£15 off every cleaning',
+                    '2 FREE add-ons per year (oven, fridge, inside windows)',
+                    'Annual eco deep clean included',
+                    'Emergency same-day bookings (subject to availability)',
+                    'Dedicated account support',
+                    'Best rates on all services'
+                ]
+            }
+        };
+
+        // ===== Registration Form Logic =====
+        let selectedPlan = '';
+        let stripe = null;
+        let cardElement = null;
+
+        // Initialize Stripe (replace with your publishable key)
+        function initStripe() {
+            // Note: Replace 'pk_test_your_key_here' with your actual Stripe publishable key
+            stripe = Stripe('pk_test_your_key_here'); // Replace with your Stripe publishable key
+            
+            const elements = stripe.elements();
+            const style = {
+                base: {
+                    color: '#32325d',
+                    fontFamily: '"Montserrat", sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '16px',
+                    '::placeholder': {
+                        color: '#9CA3AF'
+                    }
+                },
+                invalid: {
+                    color: '#dc3545',
+                    iconColor: '#dc3545'
+                }
+            };
+
+            cardElement = elements.create('card', { style: style });
+            cardElement.mount('#card-element');
+
+            // Handle real-time validation errors
+            cardElement.addEventListener('change', function(event) {
+                const displayError = document.getElementById('card-errors');
+                if (event.error) {
+                    displayError.textContent = event.error.message;
+                } else {
+                    displayError.textContent = '';
+                }
+            });
+        }
+
+        // Plan Selection
+        document.querySelectorAll('.select-plan').forEach(button => {
+            button.addEventListener('click', function() {
+                selectedPlan = this.dataset.plan;
+                document.getElementById('planSelect').value = selectedPlan;
+                updatePlanSummary();
+                document.getElementById('planSummary').style.display = 'block';
+                document.getElementById('nextToStep2').disabled = false;
+            });
+        });
+
+        document.getElementById('planSelect').addEventListener('change', function() {
+            selectedPlan = this.value;
+            if (selectedPlan) {
+                updatePlanSummary();
+                document.getElementById('planSummary').style.display = 'block';
+                document.getElementById('nextToStep2').disabled = false;
+            } else {
+                document.getElementById('planSummary').style.display = 'none';
+                document.getElementById('nextToStep2').disabled = true;
+            }
+        });
+
+        function updatePlanSummary() {
+            if (!selectedPlan || !membershipPlans[selectedPlan]) return;
+            
+            const plan = membershipPlans[selectedPlan];
+            document.getElementById('summaryPlan').textContent = plan.name;
+            document.getElementById('summaryPrice').textContent = `£${plan.price.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `£${plan.price.toFixed(2)}`;
+            
+            // Update payment step summary
+            document.getElementById('paymentPlan').textContent = plan.name;
+            document.getElementById('paymentAmount').textContent = `£${plan.price.toFixed(2)}`;
+            document.getElementById('paymentTotal').textContent = `£${plan.price.toFixed(2)}`;
+            
+            // Update confirmation step
+            document.getElementById('confirmationPlan').textContent = plan.name;
+        }
+
+        // Form Navigation
+        let currentStep = 1;
+        const steps = document.querySelectorAll('.form-step');
+        const stepCircles = document.querySelectorAll('.step-circle');
+        const stepLabels = document.querySelectorAll('.step-label');
+
+        function showStep(stepNumber) {
+            // Hide all steps
+            steps.forEach(step => step.classList.remove('active'));
+            stepCircles.forEach(circle => circle.classList.remove('active'));
+            stepLabels.forEach(label => label.classList.remove('active'));
+            
+            // Show current step
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            stepCircles[stepNumber - 1].classList.add('active');
+            stepLabels[stepNumber - 1].classList.add('active');
+            
+            currentStep = stepNumber;
+        }
+
+        // Step Navigation
+        document.getElementById('nextToStep2').addEventListener('click', function() {
+            if (!selectedPlan) {
+                alert('Please select a membership plan first.');
+                return;
+            }
+            showStep(2);
+            // Scroll to top of form
+            document.querySelector('.registration-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        document.getElementById('backToStep1').addEventListener('click', function() {
+            showStep(1);
+        });
+
+        document.getElementById('nextToStep3').addEventListener('click', function() {
+            // Validate personal details
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const postcode = document.getElementById('postcode').value.trim();
+            const city = document.getElementById('city').value.trim();
+
+            if (!firstName || !lastName || !email || !phone || !address || !postcode || !city) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            showStep(3);
+            // Initialize Stripe if not already initialized
+            if (!stripe) {
+                initStripe();
+            }
+        });
+
+        document.getElementById('backToStep2').addEventListener('click', function() {
+            showStep(2);
+        });
+
+        // Payment Submission
+        document.getElementById('submitPayment').addEventListener('click', async function() {
+            // Validate terms agreement
+            if (!document.getElementById('terms').checked) {
+                alert('Please agree to the Terms of Service and Privacy Policy.');
+                return;
+            }
+
+            // Get form data
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const postcode = document.getElementById('postcode').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const billingAddress = document.getElementById('billingAddress').value.trim();
+            const marketingOptIn = document.getElementById('marketing').checked;
+
+            // Disable button and show loading state
+            const submitBtn = this;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+
+            try {
+                // In a real implementation, you would:
+                // 1. Create a payment intent on your server
+                // 2. Confirm the card payment with Stripe
+                // 3. Save the customer and subscription details to your database
+                
+                // For demo purposes, we'll simulate a successful payment
+                setTimeout(() => {
+                    // Generate a random member ID
+                    const memberId = 'GG-' + Math.floor(100000 + Math.random() * 900000);
+                    const today = new Date();
+                    const nextMonth = new Date(today);
+                    nextMonth.setMonth(nextMonth.getMonth() + 1);
+                    
+                    // Format dates
+                    const formatDate = (date) => {
+                        return date.toLocaleDateString('en-GB', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                    };
+
+                    // Update confirmation details
+                    document.getElementById('memberId').textContent = memberId;
+                    document.getElementById('startDate').textContent = formatDate(today);
+                    document.getElementById('nextPayment').textContent = formatDate(nextMonth);
+
+                    // Show success step
+                    showStep(4);
+                    
+                    // Reset form (in real implementation, you would clear sensitive data)
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    // Scroll to top of success message
+                    document.querySelector('.success-message').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Send confirmation email (simulated)
+                    console.log('Membership activated:', {
+                        memberId,
+                        plan: selectedPlan,
+                        customer: { firstName, lastName, email, phone },
+                        address: { address, postcode, city }
+                    });
+                    
+                    // In real implementation, you would send this data to your server
+                    // to create the actual subscription and send confirmation emails
+                    
+                }, 2000); // Simulate processing delay
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('There was an error processing your payment. Please try again.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
         // ===== FAQ Accordion =====
         const faqQuestions = document.querySelectorAll('.faq-question');
         faqQuestions.forEach(question => {
@@ -1521,43 +2050,38 @@
             });
         });
 
-        // ===== Smooth Scrolling =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.getAttribute('href') === '#') return;
+        // ===== Initialize on page load =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up smooth scrolling for internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#' && href !== '#registration') {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
 
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+            // Highlight current page in navigation
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
                 }
             });
         });
 
-        // ===== Add Loading Animation to Elements =====
-        const animatedElements = document.querySelectorAll('.benefit-card, .tier-card, .step-card');
-        animatedElements.forEach((el, index) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-        });
-
-        const elementObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, { threshold: 0.1 });
-
-        animatedElements.forEach(el => elementObserver.observe(el));
+        // Note: For production use, you need to:
+        // 1. Get a Stripe account (stripe.com)
+        // 2. Replace 'pk_test_your_key_here' with your actual Stripe publishable key
+        // 3. Set up a server to handle payment intents and customer creation
+        // 4. Implement proper form validation and error handling
+        // 5. Set up webhooks to handle subscription events
+        // 6. Add proper security measures and data protection
     </script>
 </body>
-
 </html>
