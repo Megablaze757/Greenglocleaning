@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,966 +7,418 @@
     <meta name="description" content="Get premium eco-friendly cleaning services at 15-20% lower prices than other cleaning companies. Same-day booking, guaranteed satisfaction.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
     <style>
-        /* ===== CSS Variables ===== */
-        :root {
-            --primary-green: #10B981;
-            --secondary-green: #34D399;
-            --dark-green: #065F46;
-            --light-green: #D1FAE5;
-            --accent-green: #059669;
-            --emerald: #10B981;
-            --teal: #0D9488;
-            --mint: #A7F3D0;
-            --white: #FFFFFF;
-            --off-white: #F9FAFB;
-            --light-gray: #F3F4F6;
-            --medium-gray: #9CA3AF;
-            --dark-gray: #4B5563;
-            --black: #111827;
-            --gold: #FBBF24;
-            --red: #EF4444;
-            --blue: #3B82F6;
-            --shadow: 0 10px 25px rgba(16, 185, 129, 0.12);
-            --shadow-lg: 0 20px 40px rgba(16, 185, 129, 0.15);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --border-radius: 16px;
-            --border-radius-lg: 24px;
-            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--teal));
-            --gradient-dark: linear-gradient(135deg, var(--dark-green), var(--teal));
-            --gradient-gold: linear-gradient(135deg, var(--gold), #F59E0B);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-            scroll-padding-top: 100px;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.7;
-            color: var(--dark-gray);
-            background-color: var(--off-white);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            line-height: 1.2;
-            color: var(--dark-green);
-            letter-spacing: -0.5px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .section {
+        /* Add these new styles for the booking system */
+        .booking-section {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
             padding: 6rem 0;
             position: relative;
         }
 
-        .section-light {
-            background: var(--white);
+        .booking-container {
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
-        .section-gray {
-            background: var(--off-white);
-        }
-
-        /* ===== Buttons ===== */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem 2.5rem;
-            background: var(--gradient-primary);
-            color: var(--white);
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            box-shadow: var(--shadow);
-            gap: 0.75rem;
-            min-height: 56px;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-dark);
-            opacity: 0;
-            transition: var(--transition);
-            z-index: -1;
-        }
-
-        .btn:hover::before {
-            opacity: 1;
-        }
-
-        .btn:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn:active {
-            transform: translateY(-2px);
-        }
-
-        .btn-large {
-            padding: 1.25rem 3rem;
-            font-size: 1.125rem;
-            min-height: 64px;
-        }
-
-        .btn-whatsapp {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-        }
-
-        .btn-whatsapp:hover {
-            background: linear-gradient(135deg, #22c55e, #0d8a71);
-        }
-
-        .btn-gold {
-            background: var(--gradient-gold);
-        }
-
-        .btn-gold:hover {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-        }
-
-        /* ===== Navigation ===== */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            transition: var(--transition);
-            padding: 0.75rem 0;
-        }
-
-        .navbar.scrolled {
-            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.1);
-            padding: 0.5rem 0;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1.5rem;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .logo-text h1 {
-            font-size: 1.75rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-            line-height: 1;
-        }
-
-        .logo-text span {
-            font-size: 0.75rem;
-            color: var(--medium-gray);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-top: 0.25rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--dark-gray);
-            font-weight: 600;
-            font-size: 1rem;
-            padding: 0.5rem 0;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-primary);
-            transition: var(--transition);
-        }
-
-        .nav-link:hover {
-            color: var(--primary-green);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary-green);
-            cursor: pointer;
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            background: var(--light-green);
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ===== Hero Section ===== */
-        .hero {
-            padding: 160px 0 80px;
-            background: linear-gradient(135deg, rgba(209, 250, 229, 0.9) 0%, rgba(255, 255, 255, 1) 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            max-width: 700px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-            background: linear-gradient(to right, var(--dark-green), var(--teal));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--dark-gray);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .price-comparison-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--white);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            border: 2px solid var(--light-green);
-        }
-
-        .price-comparison-badge i {
-            color: var(--gold);
-            font-size: 1.25rem;
-        }
-
-        .price-comparison-badge span {
-            font-weight: 700;
-            color: var(--dark-green);
-        }
-
-        .price-comparison-badge .savings {
-            color: var(--red);
-            font-weight: 800;
-        }
-
-        /* ===== Bedroom Selector ===== */
-        .bedroom-selector-section {
+        .booking-card {
             background: var(--white);
             border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .booking-header {
+            background: var(--gradient-primary);
+            color: var(--white);
             padding: 2rem;
-            margin: 2rem auto;
-            box-shadow: var(--shadow);
-            border: 2px solid var(--light-green);
-            max-width: 600px;
-        }
-
-        .bedroom-selector-header {
             text-align: center;
-            margin-bottom: 1.5rem;
         }
 
-        .bedroom-selector-header h3 {
-            font-size: 1.5rem;
+        .booking-header h3 {
+            color: var(--white);
+            font-size: 1.75rem;
             margin-bottom: 0.5rem;
         }
 
-        .bedroom-selector-header p {
-            color: var(--medium-gray);
-            font-size: 0.95rem;
+        .booking-header p {
+            opacity: 0.9;
+            margin-bottom: 0;
         }
 
-        .bedroom-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .bedroom-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            border: 2px solid var(--light-gray);
-            background: var(--white);
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--dark-gray);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .bedroom-btn:hover {
-            border-color: var(--primary-green);
-            transform: translateY(-3px);
-        }
-
-        .bedroom-btn.active {
-            background: var(--gradient-primary);
-            color: var(--white);
-            border-color: var(--primary-green);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .bedroom-label {
-            margin-top: 0.25rem;
-            font-size: 0.875rem;
-            color: var(--medium-gray);
-            text-align: center;
-        }
-
-        /* ===== Services Grid with Bedroom Selector ===== */
-        .services-section {
-            position: relative;
-            background: linear-gradient(to bottom, var(--white) 0%, var(--off-white) 100%);
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title h2 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--gradient-primary);
-            border-radius: 2px;
-        }
-
-        .section-title p {
-            font-size: 1.125rem;
-            color: var(--medium-gray);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .category-filters {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .category-btn {
-            padding: 0.875rem 1.75rem;
-            background: var(--white);
-            border: 2px solid var(--primary-green);
-            border-radius: 50px;
-            color: var(--primary-green);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 1rem;
-            box-shadow: var(--shadow);
-        }
-
-        .category-btn:hover,
-        .category-btn.active {
-            background: var(--gradient-primary);
-            color: var(--white);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .service-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            position: relative;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-green);
-        }
-
-        .service-card.featured::before {
-            content: 'MOST POPULAR';
-            position: absolute;
-            top: 15px;
-            right: -35px;
-            background: var(--gradient-gold);
-            color: white;
-            padding: 0.5rem 2.5rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            transform: rotate(45deg);
-            z-index: 2;
-        }
-
-        .service-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            background-color: var(--light-green);
-        }
-
-        .service-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent 50%, rgba(6, 95, 70, 0.8) 100%);
-            display: flex;
-            align-items: flex-end;
-            padding: 1.5rem;
-        }
-
-        .service-overlay h3 {
-            color: var(--white);
-            font-size: 1.5rem;
-            margin: 0;
-        }
-
-        .service-content {
+        .booking-content {
             padding: 2rem;
         }
 
-        /* Bedroom Selector in Service Card */
-        .service-bedroom-selector {
-            margin: 1rem 0;
-            padding: 1rem;
-            background: var(--light-green);
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .service-bedroom-selector h4 {
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            color: var(--dark-green);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .service-bedroom-buttons {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-        }
-
-        .service-bedroom-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            border: 2px solid var(--light-gray);
-            background: var(--white);
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--dark-gray);
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .service-bedroom-btn:hover {
-            border-color: var(--primary-green);
-        }
-
-        .service-bedroom-btn.active {
-            background: var(--gradient-primary);
-            color: var(--white);
-            border-color: var(--primary-green);
-        }
-
-        /* Service Price Section */
-        .service-price-section {
+        .booking-steps {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid var(--light-green);
+            margin-bottom: 2rem;
+            position: relative;
         }
 
-        .price-main {
+        .booking-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--light-gray);
+            z-index: 1;
+        }
+
+        .booking-step {
             display: flex;
             flex-direction: column;
-        }
-
-        .price-amount-small {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: var(--dark-green);
-            line-height: 1;
-        }
-
-        .price-note {
-            font-size: 0.875rem;
-            color: var(--medium-gray);
-            margin-top: 0.25rem;
-        }
-
-        .price-comparison-small {
-            text-align: right;
-        }
-
-        .price-comparison-small .competitor-price {
-            font-size: 0.875rem;
-            color: var(--medium-gray);
-            text-decoration: line-through;
-        }
-
-        .price-comparison-small .savings {
-            font-size: 0.875rem;
-            color: var(--red);
-            font-weight: 700;
-        }
-
-        .service-description {
-            color: var(--medium-gray);
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .service-features {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-
-        .service-features li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            display: flex;
             align-items: center;
-            color: var(--dark-gray);
-        }
-
-        .service-features li:last-child {
-            border-bottom: none;
-        }
-
-        .service-features li i {
-            color: var(--secondary-green);
-            margin-right: 0.75rem;
-            font-size: 0.875rem;
-            min-width: 20px;
-        }
-
-        .service-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid var(--light-green);
-        }
-
-        .service-duration {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--medium-gray);
-        }
-
-        /* ===== CTA Section ===== */
-        .cta-section {
-            background: var(--gradient-dark);
-            color: var(--white);
-            padding: 6rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-content {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
             position: relative;
             z-index: 2;
         }
 
-        .cta-section h2 {
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            color: var(--medium-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .step-circle.active {
+            background: var(--gradient-primary);
             color: var(--white);
-            font-size: clamp(2rem, 5vw, 3.5rem);
+            transform: scale(1.1);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--medium-gray);
+        }
+
+        .step-label.active {
+            color: var(--primary-green);
+        }
+
+        .booking-step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .booking-step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
             margin-bottom: 1.5rem;
         }
 
-        .cta-section p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            margin-bottom: 3rem;
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1rem;
+        }
+
+        .form-label .required {
+            color: var(--red);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+            background: var(--off-white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            background: var(--white);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239CA3AF' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.25rem center;
+            background-size: 16px;
+            padding-right: 3rem;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .booking-summary {
+            background: var(--off-white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-item.total {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--dark-green);
+            border-top: 2px solid rgba(16, 185, 129, 0.2);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .booking-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .booking-actions .btn {
+            min-width: 150px;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .time-slot {
+            padding: 0.75rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            background: var(--white);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .time-slot.selected {
+            border-color: var(--primary-green);
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .service-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .service-checkbox:hover {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .service-checkbox.selected {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .service-checkbox input {
+            display: none;
+        }
+
+        .service-checkbox-content {
+            flex: 1;
+        }
+
+        .service-checkbox-title {
+            font-weight: 600;
+            color: var(--dark-green);
+            margin-bottom: 0.25rem;
+        }
+
+        .service-checkbox-price {
+            font-weight: 700;
+            color: var(--primary-green);
+            font-size: 1.125rem;
+        }
+
+        .date-picker {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .date-option {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .date-option:hover {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .date-option.selected {
+            border-color: var(--primary-green);
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .date-day {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .date-month {
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+        }
+
+        .date-option.selected .date-month {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .availability-note {
+            background: var(--light-green);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .availability-note i {
+            color: var(--primary-green);
+            margin-right: 0.5rem;
+        }
+
+        /* Success Message */
+        .booking-success {
+            text-align: center;
+            padding: 3rem 2rem;
+            display: none;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: var(--white);
+            font-size: 2.5rem;
+            animation: successPulse 2s infinite;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .booking-success h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark-green);
+        }
+
+        .booking-success p {
+            color: var(--medium-gray);
+            margin-bottom: 2rem;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .cta-buttons {
-            display: flex;
-            gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* ===== Footer ===== */
-        .footer {
-            background: var(--dark-green);
-            color: var(--white);
-            padding: 6rem 0 2rem;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 4rem;
-            margin-bottom: 4rem;
-        }
-
-        .footer-col h3 {
-            color: var(--white);
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.75rem;
-        }
-
-        .footer-col h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: var(--primary-green);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: var(--white);
-            padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-link {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--primary-green);
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.875rem;
-        }
-
-        /* ===== WhatsApp Button ===== */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
-        }
-
-        .whatsapp-button {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            position: relative;
-        }
-
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
-        }
-
-        .whatsapp-notification {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--red);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* ===== Responsive Design ===== */
-        @media (max-width: 1024px) {
-            .services-grid {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                gap: 2rem;
-            }
-        }
-
+        /* Add to existing responsive styles */
         @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 300px;
-                height: 100vh;
-                background: var(--white);
+            .booking-content {
+                padding: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-actions {
                 flex-direction: column;
-                padding: 100px 2rem 2rem;
-                gap: 0;
-                transition: var(--transition);
-                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
-                z-index: 1001;
             }
 
-            .nav-menu.active {
-                right: 0;
-            }
-
-            .nav-item {
+            .booking-actions .btn {
                 width: 100%;
             }
 
-            .nav-link {
-                display: block;
-                padding: 1rem 0;
-                border-bottom: 1px solid var(--light-gray);
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .mobile-menu-btn {
-                display: flex;
-            }
-
-            .hero {
-                padding: 140px 0 60px;
-                text-align: center;
-            }
-
-            .cta-buttons {
+            .date-picker {
                 flex-direction: column;
-                align-items: center;
-            }
-
-            .section {
-                padding: 4rem 0;
-            }
-
-            .whatsapp-float {
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .bedroom-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 1.1rem;
-            }
-
-            .service-bedroom-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 0.9rem;
             }
         }
 
         @media (max-width: 480px) {
-            .services-grid {
+            .time-slots {
                 grid-template-columns: 1fr;
-            }
-
-            .service-card.featured::before {
-                right: -30px;
-                padding: 0.5rem 2rem;
-                font-size: 0.7rem;
-            }
-
-            .category-filters {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 1rem;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .category-btn {
-                flex-shrink: 0;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .bedroom-buttons {
-                gap: 0.5rem;
-            }
-
-            .bedroom-btn {
-                width: 45px;
-                height: 45px;
-            }
-
-            .service-bedroom-buttons {
-                gap: 0.25rem;
-            }
-
-            .service-bedroom-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 0.8rem;
             }
         }
     </style>
@@ -999,6 +450,9 @@
                 </li>
                 <li class="nav-item">
                     <a href="#global-bedroom-selector" class="nav-link">Adjust Prices</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#booking" class="nav-link">Book Now</a>
                 </li>
                 <li class="nav-item">
                     <a href="gallery.html" class="nav-link">Gallery</a>
@@ -1033,10 +487,9 @@
                         <i class="fas fa-broom"></i>
                         View Services
                     </a>
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners%2C%20I%20saw%20your%20competitive%20prices%20and%20would%20like%20a%20quote." 
-                       class="btn btn-large btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i>
-                        Get Instant Quote
+                    <a href="#booking" class="btn btn-large btn-whatsapp">
+                        <i class="fas fa-calendar-check"></i>
+                        Book Service Now
                     </a>
                 </div>
             </div>
@@ -1106,6 +559,306 @@
         </div>
     </section>
 
+    <!-- NEW: Booking Section -->
+    <section id="booking" class="booking-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Book Your Cleaning Service</h2>
+                <p>Fill out the form below to schedule your professional cleaning service</p>
+            </div>
+
+            <div class="booking-container">
+                <div class="booking-card">
+                    <div class="booking-header">
+                        <h3>Easy Online Booking</h3>
+                        <p>Complete the form in 3 simple steps</p>
+                    </div>
+
+                    <div class="booking-content">
+                        <!-- Booking Steps Progress -->
+                        <div class="booking-steps">
+                            <div class="booking-step">
+                                <div class="step-circle active">1</div>
+                                <div class="step-label active">Service Details</div>
+                            </div>
+                            <div class="booking-step">
+                                <div class="step-circle">2</div>
+                                <div class="step-label">Date & Time</div>
+                            </div>
+                            <div class="booking-step">
+                                <div class="step-circle">3</div>
+                                <div class="step-label">Your Details</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 1: Service Details -->
+                        <div class="booking-step-content active" id="step1">
+                            <h4 style="margin-bottom: 1.5rem; color: var(--dark-green);">Select Your Service</h4>
+                            
+                            <div class="service-selection">
+                                <div class="form-group full-width">
+                                    <label class="form-label">Choose Service <span class="required">*</span></label>
+                                    
+                                    <div class="service-checkbox" data-service="endOfTenancy">
+                                        <input type="checkbox" id="service1" name="service" value="endOfTenancy">
+                                        <div class="service-checkbox-content">
+                                            <div class="service-checkbox-title">End of Tenancy Cleaning</div>
+                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
+                                                Complete apartment cleaning for move-out inspection. Includes oven cleaning.
+                                            </p>
+                                            <div class="service-checkbox-price">From £195</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="service-checkbox" data-service="domestic">
+                                        <input type="checkbox" id="service2" name="service" value="domestic">
+                                        <div class="service-checkbox-content">
+                                            <div class="service-checkbox-title">Regular Domestic Cleaning</div>
+                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
+                                                Weekly or fortnightly cleaning to keep your home sparkling.
+                                            </p>
+                                            <div class="service-checkbox-price">From £17/hour</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="service-checkbox" data-service="deepCleaning">
+                                        <input type="checkbox" id="service3" name="service" value="deepCleaning">
+                                        <div class="service-checkbox-content">
+                                            <div class="service-checkbox-title">Deep Spring Cleaning</div>
+                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
+                                                Thorough whole-house deep cleaning for seasonal refresh.
+                                            </p>
+                                            <div class="service-checkbox-price">From £180</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="service-checkbox" data-service="afterBuilders">
+                                        <input type="checkbox" id="service4" name="service" value="afterBuilders">
+                                        <div class="service-checkbox-content">
+                                            <div class="service-checkbox-title">After Builders Cleaning</div>
+                                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin: 0.25rem 0;">
+                                                Post-construction cleanup service for dust and debris removal.
+                                            </p>
+                                            <div class="service-checkbox-price">From £220</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="bedrooms" class="form-label">Number of Bedrooms <span class="required">*</span></label>
+                                    <select id="bedrooms" class="form-control form-select" required>
+                                        <option value="">Select bedrooms</option>
+                                        <option value="1">1 Bedroom</option>
+                                        <option value="2">2 Bedrooms</option>
+                                        <option value="3">3 Bedrooms</option>
+                                        <option value="4">4 Bedrooms</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="propertyType" class="form-label">Property Type <span class="required">*</span></label>
+                                    <select id="propertyType" class="form-control form-select" required>
+                                        <option value="">Select property type</option>
+                                        <option value="apartment">Apartment/Flat</option>
+                                        <option value="house">House</option>
+                                        <option value="studio">Studio</option>
+                                        <option value="office">Office</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="specialInstructions" class="form-label">Special Instructions</label>
+                                    <textarea id="specialInstructions" class="form-control" placeholder="Any specific requirements, access instructions, or areas needing special attention..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="booking-actions">
+                                <div></div> <!-- Empty div for spacing -->
+                                <button type="button" class="btn" id="nextToStep2">
+                                    Next: Date & Time <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Date & Time -->
+                        <div class="booking-step-content" id="step2">
+                            <h4 style="margin-bottom: 1.5rem; color: var(--dark-green);">Select Date & Time</h4>
+                            
+                            <div class="availability-note">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Same-day booking available!</strong> Select today's date for emergency cleaning service.
+                            </div>
+
+                            <div class="date-selection">
+                                <div class="form-group full-width">
+                                    <label class="form-label">Preferred Date <span class="required">*</span></label>
+                                    <div class="date-picker" id="datePicker">
+                                        <!-- Dates will be populated by JavaScript -->
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label class="form-label">Preferred Time Slot <span class="required">*</span></label>
+                                    <div class="time-slots">
+                                        <div class="time-slot" data-time="08:00-10:00">
+                                            8:00 AM - 10:00 AM
+                                        </div>
+                                        <div class="time-slot" data-time="10:00-12:00">
+                                            10:00 AM - 12:00 PM
+                                        </div>
+                                        <div class="time-slot" data-time="12:00-14:00">
+                                            12:00 PM - 2:00 PM
+                                        </div>
+                                        <div class="time-slot" data-time="14:00-16:00">
+                                            2:00 PM - 4:00 PM
+                                        </div>
+                                        <div class="time-slot" data-time="16:00-18:00">
+                                            4:00 PM - 6:00 PM
+                                        </div>
+                                        <div class="time-slot" data-time="18:00-20:00">
+                                            6:00 PM - 8:00 PM
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="urgency" class="form-label">How Urgent is Your Cleaning?</label>
+                                    <select id="urgency" class="form-control form-select">
+                                        <option value="standard">Standard (Within 1 week)</option>
+                                        <option value="within3days">Within 3 Days</option>
+                                        <option value="tomorrow">Tomorrow</option>
+                                        <option value="sameDay">Same Day (Emergency)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="booking-actions">
+                                <button type="button" class="btn btn-outline" id="backToStep1">
+                                    <i class="fas fa-arrow-left"></i> Back
+                                </button>
+                                <button type="button" class="btn" id="nextToStep3">
+                                    Next: Your Details <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Your Details -->
+                        <div class="booking-step-content" id="step3">
+                            <h4 style="margin-bottom: 1.5rem; color: var(--dark-green);">Your Contact Details</h4>
+                            
+                            <div class="booking-summary">
+                                <h4 style="margin-bottom: 1rem; color: var(--dark-green);">Booking Summary</h4>
+                                <div class="summary-item">
+                                    <span>Service:</span>
+                                    <span id="summaryService">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Property:</span>
+                                    <span id="summaryProperty">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Date:</span>
+                                    <span id="summaryDate">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Time:</span>
+                                    <span id="summaryTime">-</span>
+                                </div>
+                                <div class="summary-item total">
+                                    <span>Estimated Total:</span>
+                                    <span id="summaryTotal">-</span>
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                                    <input type="text" id="firstName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+                                    <input type="text" id="lastName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                                    <input type="email" id="email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone Number <span class="required">*</span></label>
+                                    <input type="tel" id="phone" class="form-control" required>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label for="address" class="form-label">Full Address <span class="required">*</span></label>
+                                    <textarea id="address" class="form-control" required placeholder="Street address, city, and postcode"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="postcode" class="form-label">Postcode <span class="required">*</span></label>
+                                    <input type="text" id="postcode" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city" class="form-label">City <span class="required">*</span></label>
+                                    <input type="text" id="city" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="howHeard" class="form-label">How did you hear about us?</label>
+                                <select id="howHeard" class="form-control form-select">
+                                    <option value="">Select option</option>
+                                    <option value="google">Google Search</option>
+                                    <option value="recommendation">Recommendation</option>
+                                    <option value="social_media">Social Media</option>
+                                    <option value="previous_customer">Previous Customer</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-top: 1rem;">
+                                    <input type="checkbox" id="terms" required style="margin-top: 0.25rem;">
+                                    <label for="terms" style="font-size: 0.875rem;">
+                                        I agree to the <a href="#" style="color: var(--primary-green);">Terms of Service</a> and confirm that all information provided is accurate.
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="booking-actions">
+                                <button type="button" class="btn btn-outline" id="backToStep2">
+                                    <i class="fas fa-arrow-left"></i> Back
+                                </button>
+                                <button type="button" class="btn btn-whatsapp" id="submitBooking">
+                                    <i class="fab fa-whatsapp"></i>
+                                    Confirm Booking via WhatsApp
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Success Message (Hidden Initially) -->
+                        <div class="booking-success" id="bookingSuccess">
+                            <div class="success-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h3>Booking Request Sent!</h3>
+                            <p>Thank you for choosing GreenGlo Cleaners. We've received your booking request and will contact you within 30 minutes to confirm your appointment.</p>
+                            <p style="font-weight: 600; color: var(--dark-green);">Your reference number: <span id="bookingReference">GG-</span></p>
+                            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 2rem auto;">
+                                <a href="services.html" class="btn">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    Book Another Service
+                                </a>
+                                <a href="index.html" class="btn btn-outline">
+                                    <i class="fas fa-home"></i>
+                                    Return to Homepage
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="container">
@@ -1162,6 +915,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="services.html">Services</a></li>
                         <li><a href="#global-bedroom-selector">Adjust Prices</a></li>
+                        <li><a href="#booking">Book Now</a></li>
                         <li><a href="gallery.html">Gallery</a></li>
                         <li><a href="index.html#contact">Contact</a></li>
                     </ul>
@@ -1193,538 +947,394 @@
     </div>
 
     <script>
-        // Price Calculator Data - Fantastic Cleaners vs GreenGlo
-        const priceData = {
-            // End of Tenancy Cleaning
-            endOfTenancy: {
-                greenglo: {
-                    1: 195,
-                    2: 235,
-                    3: 275,
-                    4: 315
-                },
-                fantastic: {
-                    1: 232,
-                    2: 282,
-                    3: 332,
-                    4: 382
-                }
-            },
-            // Deep Spring Cleaning
-            deepCleaning: {
-                greenglo: {
-                    1: 150,
-                    2: 180,
-                    3: 210,
-                    4: 240
-                },
-                fantastic: {
-                    1: 180,
-                    2: 215,
-                    3: 250,
-                    4: 285
-                }
-            },
-            // After Builders Cleaning
-            afterBuilders: {
-                greenglo: {
-                    1: 180,
-                    2: 220,
-                    3: 260,
-                    4: 300
-                },
-                fantastic: {
-                    1: 215,
-                    2: 260,
-                    3: 305,
-                    4: 350
-                }
-            },
-            // One-Off Cleaning
-            oneOffCleaning: {
-                greenglo: {
-                    1: 75,
-                    2: 85,
-                    3: 95,
-                    4: 105
-                },
-                fantastic: {
-                    1: 90,
-                    2: 100,
-                    3: 110,
-                    4: 120
-                }
-            }
+        // ===== Booking System Logic =====
+        const bookingSteps = document.querySelectorAll('.booking-step-content');
+        const stepCircles = document.querySelectorAll('.step-circle');
+        const stepLabels = document.querySelectorAll('.step-label');
+        let currentStep = 1;
+
+        // Service selection
+        const serviceCheckboxes = document.querySelectorAll('.service-checkbox');
+        let selectedService = null;
+
+        // Date and time selection
+        let selectedDate = null;
+        let selectedTime = null;
+
+        // Form data storage
+        const bookingData = {
+            service: '',
+            bedrooms: '',
+            propertyType: '',
+            date: '',
+            time: '',
+            urgency: 'standard',
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            address: '',
+            postcode: '',
+            city: '',
+            specialInstructions: '',
+            howHeard: ''
         };
 
-        // Services Data
-        const servicesData = [
-            {
-                id: 1,
-                title: "End of Tenancy Cleaning",
-                category: "domestic",
-                description: "Complete apartment cleaning for move-out inspection. Meets all landlord requirements for deposit return. Includes oven cleaning and carpet vacuuming.",
-                features: [
-                    "Complete apartment deep clean",
-                    "Carpet vacuuming",
-                    "Window sills & frames",
-                    "Bathroom sanitization",
-                    "Kitchen degreasing"
-                ],
-                duration: "3-5 hours",
-                basePrice: "£195",
-                baseNote: "1 bedroom flat",
-                competitorBasePrice: "£232",
-                savings: "£37",
-                image: "tenancy.png",
-                featured: true,
-                hasBedroomSelector: true,
-                priceType: "endOfTenancy",
-                includesOven: true
-            },
-            {
-                id: 2,
-                title: "Regular Domestic Cleaning",
-                category: "domestic",
-                description: "Weekly or fortnightly cleaning service to keep your home sparkling. Customizable checklists and consistent, reliable service.",
-                features: [
-                    "Dusting & polishing",
-                    "Vacuuming & mopping",
-                    "Kitchen cleaning",
-                    "Bathroom sanitization",
-                    "Surface cleaning",
-                    "Bin emptying"
-                ],
-                duration: "2-3 hours",
-                price: "£17/hour",
-                priceNote: "minimum 2 hours",
-                competitorPrice: "£20/hour",
-                savings: "£3/hour",
-                image: "livingroom.png",
-                hasBedroomSelector: false
-            },
-            {
-                id: 3,
-                title: "Office Cleaning",
-                category: "commercial",
-                description: "Professional office cleaning for businesses. Daily, weekly, or custom schedules available. After-hours service to avoid disruption.",
-                features: [
-                    "Workstation sanitization",
-                    "Meeting room cleaning",
-                    "Reception area",
-                    "Kitchenette cleaning",
-                    "Floor care",
-                    "Glass cleaning"
-                ],
-                duration: "Flexible",
-                price: "£20/hour",
-                priceNote: "commercial rate",
-                competitorPrice: "£23/hour",
-                savings: "£3/hour",
-                image: "office.png",
-                hasBedroomSelector: false
-            },
-            {
-                id: 4,
-                title: "Deep Spring Cleaning",
-                category: "deep",
-                description: "Thorough whole-house deep cleaning. Perfect for seasonal cleaning, moving in, or refreshing your living space.",
-                features: [
-                    "Behind & under furniture",
-                    "Inside appliances",
-                    "Light fixtures",
-                    "Walls & skirting boards",
-                    "Window tracks",
-                    "Ventilation cleaning"
-                ],
-                duration: "4-8 hours",
-                basePrice: "£180",
-                baseNote: "2 bedroom house",
-                competitorBasePrice: "£215",
-                savings: "£35",
-                image: "kitchen.png",
-                featured: true,
-                hasBedroomSelector: true,
-                priceType: "deepCleaning"
-            },
-            {
-                id: 5,
-                title: "Oven Deep Cleaning",
-                category: "deep",
-                description: "Professional oven cleaning service. Interior, door, racks, and exterior cleaned to like-new condition. Eco-friendly products only.",
-                features: [
-                    "Complete interior cleaning",
-                    "Door & glass deep clean",
-                    "Rack restoration",
-                    "Exterior polishing",
-                    "Control panel cleaning",
-                    "Eco-friendly products"
-                ],
-                duration: "1-2 hours",
-                price: "£55",
-                priceNote: "standard oven",
-                competitorPrice: "£65",
-                savings: "£10",
-                image: "ovenafter.png",
-                hasBedroomSelector: false
-            },
-            {
-                id: 6,
-                title: "Carpet Cleaning",
-                category: "special",
-                description: "Professional carpet cleaning and stain removal. Steam cleaning with eco-friendly solutions that are safe for pets and children.",
-                features: [
-                    "Steam cleaning",
-                    "Stain removal",
-                    "Pet odor treatment",
-                    "Eco-friendly solutions",
-                    "Fast drying",
-                    "Protective treatment"
-                ],
-                duration: "1-2 hours",
-                price: "£40",
-                priceNote: "per room",
-                competitorPrice: "£46",
-                savings: "£6",
-                image: "carpet.png",
-                hasBedroomSelector: false
-            },
-            {
-                id: 7,
-                title: "After Builders Cleaning",
-                category: "special",
-                description: "Post-construction cleanup service. Removes all dust, debris, and construction residue. Leaves your space ready to move in.",
-                features: [
-                    "Construction dust removal",
-                    "Debris cleanup",
-                    "Surface deep cleaning",
-                    "Window cleaning",
-                    "Floor care",
-                    "Final touch-ups"
-                ],
-                duration: "4-6 hours",
-                basePrice: "£220",
-                baseNote: "medium project",
-                competitorBasePrice: "£260",
-                savings: "£40",
-                image: "flooring.png",
-                hasBedroomSelector: true,
-                priceType: "afterBuilders"
-            },
-            {
-                id: 8,
-                title: "One-Off Cleaning",
-                category: "domestic",
-                description: "Single cleaning session for special occasions, guest visits, or when you need extra help. No contract required.",
-                features: [
-                    "Full house clean",
-                    "Customizable areas",
-                    "Same-day service",
-                    "No contract",
-                    "Eco-friendly products",
-                    "Satisfaction guarantee"
-                ],
-                duration: "3-4 hours",
-                basePrice: "£85",
-                baseNote: "2 bedroom flat",
-                competitorBasePrice: "£100",
-                savings: "£15",
-                image: "bathroom.png",
-                hasBedroomSelector: true,
-                priceType: "oneOffCleaning"
-            }
-        ];
+        // Initialize date picker
+        function initializeDatePicker() {
+            const datePicker = document.getElementById('datePicker');
+            datePicker.innerHTML = '';
 
-        // Global state
-        let currentGlobalBedrooms = 1;
+            const today = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-        // DOM Elements
-        const servicesGrid = document.getElementById('servicesGrid');
-        const categoryButtons = document.querySelectorAll('.category-btn');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navMenu = document.getElementById('navMenu');
-        const navbar = document.getElementById('navbar');
-        const globalBedroomButtons = document.querySelectorAll('.bedroom-btn');
-
-        // Update service price based on bedroom count
-        function updateServicePrice(serviceCard, service, bedrooms) {
-            const priceAmount = serviceCard.querySelector('.price-amount-small');
-            const priceNote = serviceCard.querySelector('.price-note');
-            const competitorPrice = serviceCard.querySelector('.competitor-price');
-            const savings = serviceCard.querySelector('.savings');
-            const bookBtn = serviceCard.querySelector('.book-now-btn');
-            
-            if (service.hasBedroomSelector) {
-                const greengloPrice = priceData[service.priceType].greenglo[bedrooms];
-                const fantasticPrice = priceData[service.priceType].fantastic[bedrooms];
-                const serviceSavings = fantasticPrice - greengloPrice;
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
                 
-                // Update prices
-                priceAmount.textContent = `£${greengloPrice}`;
-                priceNote.textContent = `${bedrooms} bedroom${bedrooms > 1 ? 's' : ''}`;
-                competitorPrice.textContent = `Fantastic: £${fantasticPrice}`;
-                savings.textContent = `Save £${serviceSavings}`;
-                
-                // Update WhatsApp button
-                const message = `Hi, I'm interested in ${service.title} for ${bedrooms} bedroom${bedrooms > 1 ? 's' : ''} (£${greengloPrice}). Can you provide availability?`;
-                bookBtn.href = `https://api.whatsapp.com/send?phone=447827784204&text=${encodeURIComponent(message)}`;
-            }
-        }
-
-        // Update all services with bedroom selectors
-        function updateAllBedroomPrices(bedrooms) {
-            const serviceCards = document.querySelectorAll('.service-card');
-            
-            serviceCards.forEach(card => {
-                const serviceId = parseInt(card.dataset.serviceId);
-                const service = servicesData.find(s => s.id === serviceId);
-                
-                if (service && service.hasBedroomSelector) {
-                    updateServicePrice(card, service, bedrooms);
+                const dateOption = document.createElement('div');
+                dateOption.className = 'date-option';
+                if (i === 0) {
+                    dateOption.classList.add('selected');
+                    selectedDate = date;
                 }
-            });
-        }
-
-        // Render Services
-        function renderServices(category = 'all') {
-            servicesGrid.innerHTML = '';
-
-            const filteredServices = category === 'all' 
-                ? servicesData 
-                : servicesData.filter(service => service.category === category);
-
-            filteredServices.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = `service-card ${service.featured ? 'featured' : ''}`;
-                serviceCard.setAttribute('data-category', service.category);
-                serviceCard.setAttribute('data-service-id', service.id);
-
-                // Determine initial price
-                let priceDisplay, priceNoteDisplay, competitorPriceDisplay, savingsDisplay;
                 
-                if (service.hasBedroomSelector) {
-                    const greengloPrice = priceData[service.priceType].greenglo[currentGlobalBedrooms];
-                    const fantasticPrice = priceData[service.priceType].fantastic[currentGlobalBedrooms];
-                    const serviceSavings = fantasticPrice - greengloPrice;
-                    
-                    priceDisplay = `£${greengloPrice}`;
-                    priceNoteDisplay = `${currentGlobalBedrooms} bedroom${currentGlobalBedrooms > 1 ? 's' : ''}`;
-                    competitorPriceDisplay = `Fantastic: £${fantasticPrice}`;
-                    savingsDisplay = `Save £${serviceSavings}`;
-                } else {
-                    priceDisplay = service.price || service.basePrice;
-                    priceNoteDisplay = service.priceNote || service.baseNote;
-                    competitorPriceDisplay = `Fantastic: ${service.competitorPrice || service.competitorBasePrice}`;
-                    savingsDisplay = service.savings;
-                }
-
-                serviceCard.innerHTML = `
-                    <div class="service-image" style="background-image: url('${service.image}'); background-color: var(--light-green);">
-                        <div class="service-overlay">
-                            <h3>${service.title}</h3>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <div class="service-price-section">
-                            <div class="price-main">
-                                <div class="price-amount-small">${priceDisplay}</div>
-                                <div class="price-note">${priceNoteDisplay}</div>
-                            </div>
-                            <div class="price-comparison-small">
-                                <div class="competitor-price">${competitorPriceDisplay}</div>
-                                <div class="savings">${savingsDisplay}</div>
-                            </div>
-                        </div>
-                        
-                        ${service.hasBedroomSelector ? `
-                        <div class="service-bedroom-selector">
-                            <h4><i class="fas fa-bed"></i> Select Bedrooms</h4>
-                            <div class="service-bedroom-buttons">
-                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 1 ? 'active' : ''}" data-bedrooms="1">
-                                    1
-                                </button>
-                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 2 ? 'active' : ''}" data-bedrooms="2">
-                                    2
-                                </button>
-                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 3 ? 'active' : ''}" data-bedrooms="3">
-                                    3
-                                </button>
-                                <button class="service-bedroom-btn ${currentGlobalBedrooms === 4 ? 'active' : ''}" data-bedrooms="4">
-                                    4
-                                </button>
-                            </div>
-                        </div>
-                        ` : ''}
-                        
-                        ${service.includesOven ? `
-                        <div style="background: var(--light-green); padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--primary-green);">
-                            <small><i class="fas fa-check-circle" style="color: var(--primary-green);"></i> <strong>Oven cleaning included</strong> (extra with Fantastic Cleaners)</small>
-                        </div>
-                        ` : ''}
-                        
-                        <p class="service-description">${service.description}</p>
-                        <ul class="service-features">
-                            ${service.features.map(feature => `
-                                <li><i class="fas fa-check"></i>${feature}</li>
-                            `).join('')}
-                        </ul>
-                        <div class="service-meta">
-                            <div class="service-duration">
-                                <i class="far fa-clock"></i>
-                                <span>${service.duration}</span>
-                            </div>
-                            <a href="https://api.whatsapp.com/send?phone=447827784204&text=${encodeURIComponent(`Hi, I'm interested in ${service.title} (${priceDisplay} ${priceNoteDisplay}). Can you provide availability?`)}" 
-                               class="btn book-now-btn" style="padding: 0.75rem 1.5rem;">
-                                <i class="fab fa-whatsapp"></i>
-                                Book Now
-                            </a>
-                        </div>
-                    </div>
+                dateOption.dataset.date = date.toISOString().split('T')[0];
+                dateOption.innerHTML = `
+                    <div class="date-day">${date.getDate()}</div>
+                    <div class="date-month">${days[date.getDay()]}, ${months[date.getMonth()]}</div>
                 `;
-
-                servicesGrid.appendChild(serviceCard);
                 
-                // Add event listeners to service bedroom buttons
-                if (service.hasBedroomSelector) {
-                    const serviceBedroomButtons = serviceCard.querySelectorAll('.service-bedroom-btn');
-                    serviceBedroomButtons.forEach(button => {
-                        button.addEventListener('click', () => {
-                            const bedrooms = parseInt(button.dataset.bedrooms);
-                            
-                            // Update global state
-                            currentGlobalBedrooms = bedrooms;
-                            
-                            // Update global selector
-                            globalBedroomButtons.forEach(btn => {
-                                btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
-                            });
-                            
-                            // Update all service prices
-                            updateAllBedroomPrices(bedrooms);
-                            
-                            // Update current service's button states
-                            serviceBedroomButtons.forEach(btn => {
-                                btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
-                            });
-                        });
-                    });
-                }
-            });
-
-            // Add animation
-            const cards = document.querySelectorAll('.service-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.classList.add('fade-in');
-            });
+                dateOption.addEventListener('click', function() {
+                    document.querySelectorAll('.date-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedDate = new Date(this.dataset.date);
+                });
+                
+                datePicker.appendChild(dateOption);
+            }
         }
 
-        // Global bedroom selection
-        globalBedroomButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const bedrooms = parseInt(button.dataset.bedrooms);
-                
-                // Update global state
-                currentGlobalBedrooms = bedrooms;
-                
-                // Update button states
-                globalBedroomButtons.forEach(btn => {
-                    btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
-                });
-                
-                // Update all service prices
-                updateAllBedroomPrices(bedrooms);
-                
-                // Update service bedroom buttons
-                const allServiceBedroomButtons = document.querySelectorAll('.service-bedroom-btn');
-                allServiceBedroomButtons.forEach(btn => {
-                    btn.classList.toggle('active', parseInt(btn.dataset.bedrooms) === bedrooms);
-                });
-            });
-        });
-
-        // Category Filtering
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                renderServices(button.dataset.category);
-            });
-        });
-
-        // Mobile Menu Toggle
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            mobileMenuBtn.innerHTML = navMenu.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                navMenu.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        });
-
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Smooth Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 100,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
-                    navMenu.classList.remove('active');
-                    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-        });
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            renderServices();
+        // Time slot selection
+        function initializeTimeSlots() {
+            const timeSlots = document.querySelectorAll('.time-slot');
             
-            // Add CSS animation
-            const style = document.createElement('style');
-            style.textContent = `
-                .fade-in {
-                    animation: fadeInUp 0.6s ease forwards;
-                    opacity: 0;
-                }
+            timeSlots.forEach(slot => {
+                slot.addEventListener('click', function() {
+                    timeSlots.forEach(s => s.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedTime = this.dataset.time;
+                });
+            });
+
+            // Select first time slot by default
+            if (timeSlots.length > 0) {
+                timeSlots[0].click();
+            }
+        }
+
+        // Service checkbox selection
+        serviceCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                const serviceValue = this.dataset.service;
                 
-                @keyframes fadeInUp {
-                    from {
-                        opacity: 0;
-                        transform: translateY(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-            `;
-            document.head.appendChild(style);
+                // Remove selection from all checkboxes
+                serviceCheckboxes.forEach(cb => {
+                    cb.classList.remove('selected');
+                    cb.querySelector('input').checked = false;
+                });
+                
+                // Select current checkbox
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+                selectedService = serviceValue;
+                
+                // Update booking summary
+                updateBookingSummary();
+            });
         });
+
+        // Bedrooms selection
+        document.getElementById('bedrooms').addEventListener('change', function() {
+            bookingData.bedrooms = this.value;
+            updateBookingSummary();
+        });
+
+        // Property type selection
+        document.getElementById('propertyType').addEventListener('change', function() {
+            bookingData.propertyType = this.value;
+            updateBookingSummary();
+        });
+
+        // Urgency selection
+        document.getElementById('urgency').addEventListener('change', function() {
+            bookingData.urgency = this.value;
+            updateBookingSummary();
+        });
+
+        // Special instructions
+        document.getElementById('specialInstructions').addEventListener('input', function() {
+            bookingData.specialInstructions = this.value;
+        });
+
+        // How heard selection
+        document.getElementById('howHeard').addEventListener('change', function() {
+            bookingData.howHeard = this.value;
+        });
+
+        // Update booking summary
+        function updateBookingSummary() {
+            // Service name
+            const serviceNames = {
+                'endOfTenancy': 'End of Tenancy Cleaning',
+                'domestic': 'Regular Domestic Cleaning',
+                'deepCleaning': 'Deep Spring Cleaning',
+                'afterBuilders': 'After Builders Cleaning'
+            };
+            
+            document.getElementById('summaryService').textContent = selectedService ? serviceNames[selectedService] : '-';
+            
+            // Property info
+            const bedrooms = bookingData.bedrooms ? `${bookingData.bedrooms} bedroom${parseInt(bookingData.bedrooms) > 1 ? 's' : ''}` : '';
+            const propertyType = bookingData.propertyType ? bookingData.propertyType.charAt(0).toUpperCase() + bookingData.propertyType.slice(1) : '';
+            document.getElementById('summaryProperty').textContent = `${bedrooms} ${propertyType}`.trim();
+            
+            // Date
+            if (selectedDate) {
+                const dateStr = selectedDate.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+                document.getElementById('summaryDate').textContent = dateStr;
+                bookingData.date = dateStr;
+            }
+            
+            // Time
+            if (selectedTime) {
+                document.getElementById('summaryTime').textContent = selectedTime;
+                bookingData.time = selectedTime;
+            }
+            
+            // Total estimate
+            let estimatedTotal = 'Calculating...';
+            if (selectedService && bookingData.bedrooms) {
+                const priceLookup = {
+                    'endOfTenancy': {1: 195, 2: 235, 3: 275, 4: 315},
+                    'deepCleaning': {1: 150, 2: 180, 3: 210, 4: 240},
+                    'afterBuilders': {1: 180, 2: 220, 3: 260, 4: 300}
+                };
+                
+                if (priceLookup[selectedService] && priceLookup[selectedService][bookingData.bedrooms]) {
+                    estimatedTotal = `£${priceLookup[selectedService][bookingData.bedrooms]}`;
+                } else if (selectedService === 'domestic') {
+                    estimatedTotal = '£17/hour (2 hour minimum)';
+                }
+            }
+            document.getElementById('summaryTotal').textContent = estimatedTotal;
+        }
+
+        // Navigation functions
+        function showStep(stepNumber) {
+            // Hide all steps
+            bookingSteps.forEach(step => step.classList.remove('active'));
+            stepCircles.forEach(circle => circle.classList.remove('active'));
+            stepLabels.forEach(label => label.classList.remove('active'));
+            
+            // Show current step
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+            stepCircles[stepNumber - 1].classList.add('active');
+            stepLabels[stepNumber - 1].classList.add('active');
+            
+            currentStep = stepNumber;
+        }
+
+        // Step navigation
+        document.getElementById('nextToStep2').addEventListener('click', function() {
+            if (!selectedService) {
+                alert('Please select a service first.');
+                return;
+            }
+            if (!bookingData.bedrooms) {
+                alert('Please select the number of bedrooms.');
+                return;
+            }
+            if (!bookingData.propertyType) {
+                alert('Please select the property type.');
+                return;
+            }
+            
+            showStep(2);
+            updateBookingSummary();
+        });
+
+        document.getElementById('backToStep1').addEventListener('click', function() {
+            showStep(1);
+        });
+
+        document.getElementById('nextToStep3').addEventListener('click', function() {
+            if (!selectedDate) {
+                alert('Please select a date.');
+                return;
+            }
+            if (!selectedTime) {
+                alert('Please select a time slot.');
+                return;
+            }
+            
+            showStep(3);
+        });
+
+        document.getElementById('backToStep2').addEventListener('click', function() {
+            showStep(2);
+        });
+
+        // Submit booking
+        document.getElementById('submitBooking').addEventListener('click', function() {
+            // Validate step 3 fields
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const postcode = document.getElementById('postcode').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const terms = document.getElementById('terms').checked;
+
+            if (!firstName || !lastName || !email || !phone || !address || !postcode || !city) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (!terms) {
+                alert('Please agree to the Terms of Service.');
+                return;
+            }
+
+            // Store form data
+            bookingData.firstName = firstName;
+            bookingData.lastName = lastName;
+            bookingData.email = email;
+            bookingData.phone = phone;
+            bookingData.address = address;
+            bookingData.postcode = postcode;
+            bookingData.city = city;
+
+            // Generate booking reference
+            const bookingReference = 'GG-' + Date.now().toString().slice(-6);
+            document.getElementById('bookingReference').textContent = bookingReference;
+
+            // Prepare WhatsApp message
+            const serviceNames = {
+                'endOfTenancy': 'End of Tenancy Cleaning',
+                'domestic': 'Regular Domestic Cleaning',
+                'deepCleaning': 'Deep Spring Cleaning',
+                'afterBuilders': 'After Builders Cleaning'
+            };
+
+            const urgencyText = {
+                'standard': 'Standard (Within 1 week)',
+                'within3days': 'Within 3 Days',
+                'tomorrow': 'Tomorrow',
+                'sameDay': 'Same Day (Emergency)'
+            };
+
+            const howHeardText = {
+                'google': 'Google Search',
+                'recommendation': 'Recommendation',
+                'social_media': 'Social Media',
+                'previous_customer': 'Previous Customer',
+                'other': 'Other'
+            };
+
+            let message = `🔔 *NEW BOOKING REQUEST* - ${bookingReference}\n\n`;
+            message += `*Service:* ${serviceNames[selectedService]}\n`;
+            message += `*Property:* ${bookingData.bedrooms} bedroom ${bookingData.propertyType}\n`;
+            message += `*Date:* ${bookingData.date}\n`;
+            message += `*Time:* ${bookingData.time}\n`;
+            message += `*Urgency:* ${urgencyText[bookingData.urgency]}\n\n`;
+            message += `*Client Details:*\n`;
+            message += `👤 ${firstName} ${lastName}\n`;
+            message += `📞 ${phone}\n`;
+            message += `📧 ${email}\n`;
+            message += `📍 ${address}, ${city}, ${postcode}\n\n`;
+            
+            if (bookingData.specialInstructions) {
+                message += `*Special Instructions:*\n${bookingData.specialInstructions}\n\n`;
+            }
+            
+            if (bookingData.howHeard) {
+                message += `*How they heard about us:* ${howHeardText[bookingData.howHeard]}\n\n`;
+            }
+            
+            message += `📅 Please confirm availability for this booking.`;
+
+            // Encode message for WhatsApp URL
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+
+            // Open WhatsApp in new tab
+            window.open(whatsappUrl, '_blank');
+
+            // Show success message
+            document.getElementById('step3').style.display = 'none';
+            document.getElementById('bookingSuccess').style.display = 'block';
+
+            // Scroll to success message
+            document.getElementById('bookingSuccess').scrollIntoView({ behavior: 'smooth' });
+
+            // Reset form after 5 seconds
+            setTimeout(() => {
+                resetBookingForm();
+            }, 5000);
+        });
+
+        // Reset booking form
+        function resetBookingForm() {
+            // Reset form fields
+            serviceCheckboxes.forEach(cb => {
+                cb.classList.remove('selected');
+                cb.querySelector('input').checked = false;
+            });
+            
+            document.getElementById('bedrooms').value = '';
+            document.getElementById('propertyType').value = '';
+            document.getElementById('specialInstructions').value = '';
+            document.getElementById('urgency').value = 'standard';
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('postcode').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('howHeard').value = '';
+            document.getElementById('terms').checked = false;
+            
+            // Reset selections
+            selectedService = null;
+            selectedDate = null;
+            selectedTime = null;
+            
+            // Reset to step 1
+            showStep(1);
+            document.getElementById('bookingSuccess').style.display = 'none';
+            document.getElementById('step3').style.display = 'block';
+            
+            // Reinitialize date picker
+            initializeDatePicker();
+            initializeTimeSlots();
+            updateBookingSummary();
+        }
+
+        // Initialize booking system
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDatePicker();
+            initializeTimeSlots();
+            updateBookingSummary();
+        });
+
+        // ===== Existing Services Page Script =====
+        // (Keep all your existing priceData, servicesData, and related functions here)
+        // ... [Your existing services page JavaScript remains here] ...
+
     </script>
 </body>
 </html>
-
-
