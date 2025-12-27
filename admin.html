@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* Your existing admin panel CSS styles here */
         :root {
             --primary-green: #10B981;
             --secondary-green: #34D399;
@@ -53,7 +52,7 @@
             min-height: 100vh;
         }
 
-        /* Sidebar styles - keep your existing CSS */
+        /* Sidebar */
         .admin-sidebar {
             width: 280px;
             background: var(--gradient-dark);
@@ -67,27 +66,613 @@
             box-shadow: 5px 0 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* Keep all your existing CSS styles from the admin panel */
-        /* ... */
+        .admin-sidebar-header {
+            margin-bottom: 3rem;
+        }
 
-        /* Login Container */
-        .login-container {
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .admin-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, rgba(209, 250, 229, 0.9) 0%, rgba(255, 255, 255, 1) 100%);
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .admin-logo-text h2 {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .admin-logo-text span {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .admin-nav {
+            list-style: none;
+            flex: 1;
+        }
+
+        .admin-nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .admin-nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            margin-left: 280px;
             padding: 2rem;
         }
 
-        .login-card {
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 1rem;
+            }
+            
+            .admin-main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+        }
+
+        /* Header */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .admin-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            color: var(--dark-green);
+        }
+
+        .last-updated {
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Dashboard Stats */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-icon.green {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+        }
+
+        .stat-icon.blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--blue);
+        }
+
+        .stat-icon.orange {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--orange);
+        }
+
+        .stat-icon.red {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+        }
+
+        /* Calendar */
+        .calendar-management {
             background: var(--white);
             border-radius: var(--border-radius);
-            box-shadow: var(--shadow-lg);
-            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-header h3 {
+            color: var(--white);
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .calendar-nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .current-month {
+            font-weight: 600;
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .calendar-grid {
+            padding: 2rem;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark-gray);
+            padding: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            background: var(--white);
+        }
+
+        .calendar-day:hover {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .calendar-day.past {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--off-white);
+        }
+
+        .calendar-day.today {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .calendar-day.selected {
+            border-color: var(--primary-green);
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .calendar-day.empty {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .calendar-day.empty:hover {
+            background: transparent;
+        }
+
+        .day-number {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Time Slots */
+        .time-slot-management {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .time-slot-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .time-slot-header h3 {
+            color: var(--dark-green);
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .slot-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-slots-grid {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .time-slot {
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .time-slot.available {
+            border-color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .time-slot.unavailable {
+            border-color: var(--red);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .time-slot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .time-slot-time {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .time-slot-status {
+            font-size: 0.75rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .time-slot.available .time-slot-status {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+        }
+
+        .time-slot.unavailable .time-slot-status {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+        }
+
+        .time-slot-label {
+            font-size: 0.875rem;
+            color: var(--medium-gray);
+        }
+
+        .time-slot-actions {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Services Management */
+        .services-management {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-5px);
+        }
+
+        .service-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .service-card-header h4 {
+            font-size: 1.125rem;
+            color: var(--dark-green);
+            margin: 0;
+            flex: 1;
+        }
+
+        .service-category {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            background: var(--light-green);
+            color: var(--dark-green);
+            margin-left: 0.5rem;
+        }
+
+        .service-card-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card-body p {
+            color: var(--dark-gray);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .service-details {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+        }
+
+        .service-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Form Styles */
+        .service-form {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h3 {
+            color: var(--dark-green);
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
-            max-width: 450px;
-            border: 1px solid rgba(16, 185, 129, 0.1);
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border-radius: 12px;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+            border: 2px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: var(--red);
+            color: var(--white);
         }
 
         /* Loading Spinner */
@@ -114,7 +699,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Error Message */
+        /* Messages */
         .error-message {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.2);
@@ -131,7 +716,6 @@
             display: flex;
         }
 
-        /* Success Message */
         .success-message {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid rgba(16, 185, 129, 0.2);
@@ -148,69 +732,49 @@
             display: flex;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-container {
-                flex-direction: column;
-            }
-            
-            .admin-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 1rem;
-            }
-            
-            .admin-main {
-                margin-left: 0;
-                padding: 1rem;
-            }
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--medium-gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h4 {
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .quick-actions h3 {
+            color: var(--dark-green);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
-    <!-- Login Page -->
-    <div id="loginPage" class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="login-logo">
-                    <div class="login-logo-icon">
-                        <i class="fas fa-leaf"></i>
-                    </div>
-                    <div class="login-logo-text">
-                        <h2>GreenGlo</h2>
-                        <span>Admin Panel</span>
-                    </div>
-                </div>
-                <p>Sign in to manage services & availability</p>
-            </div>
-            
-            <div class="error-message" id="loginError">
-                <i class="fas fa-exclamation-circle"></i>
-                <span id="errorMessage">Invalid credentials</span>
-            </div>
-            
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="adminEmail">Admin Email</label>
-                    <input type="email" id="adminEmail" placeholder="admin@greenglo.com" value="admin@greenglo.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="adminPassword">Password</label>
-                    <input type="password" id="adminPassword" placeholder="••••••••" value="GreenGloAdmin2025!" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Sign In
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Admin Dashboard -->
-    <div id="adminDashboard" class="admin-container" style="display: none;">
+    <!-- Admin Dashboard - No Login Required -->
+    <div class="admin-container">
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="admin-sidebar-header">
@@ -258,13 +822,13 @@
                         <i class="fas fa-user-shield"></i>
                     </div>
                     <div class="admin-user-details">
-                        <h4 id="adminName">Administrator</h4>
-                        <span id="adminRole">System Admin</span>
+                        <h4>Administrator</h4>
+                        <span>Open Access Mode</span>
                     </div>
                 </div>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
+                <button class="btn btn-outline" onclick="refreshData()" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-sync"></i>
+                    Refresh Data
                 </button>
             </div>
         </aside>
@@ -285,9 +849,9 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon blue">
-                                <i class="fas fa-calendar-check"></i>
+                                <i class="fas fa-broom"></i>
                             </div>
-                            <span class="stat-trend up">Live</span>
+                            <span class="stat-trend">Live</span>
                         </div>
                         <div class="stat-value" id="totalServices">0</div>
                         <div class="stat-label">Total Services</div>
@@ -296,9 +860,9 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon green">
-                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-calendar-check"></i>
                             </div>
-                            <span class="stat-trend up">Live</span>
+                            <span class="stat-trend">Live</span>
                         </div>
                         <div class="stat-value" id="availableSlots">0</div>
                         <div class="stat-label">Available Slots</div>
@@ -307,7 +871,7 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <div class="stat-icon orange">
-                                <i class="fas fa-clock"></i>
+                                <i class="fas fa-calendar-day"></i>
                             </div>
                             <span class="stat-trend">Today</span>
                         </div>
@@ -320,7 +884,7 @@
                             <div class="stat-icon red">
                                 <i class="fas fa-database"></i>
                             </div>
-                            <span class="stat-trend">Connected</span>
+                            <span class="stat-trend">Status</span>
                         </div>
                         <div class="stat-value" id="dbStatus">Online</div>
                         <div class="stat-label">Database Status</div>
@@ -337,7 +901,7 @@
                             <i class="fas fa-calendar-plus"></i> Set Availability
                         </button>
                         <button class="btn btn-outline" onclick="refreshData()">
-                            <i class="fas fa-sync"></i> Refresh Data
+                            <i class="fas fa-sync"></i> Refresh All Data
                         </button>
                     </div>
                 </div>
@@ -536,7 +1100,6 @@ Eco-friendly products"></textarea>
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // ===== Global Variables =====
-        let currentUser = null;
         let selectedDate = null;
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
@@ -552,44 +1115,7 @@ Eco-friendly products"></textarea>
             { time: "18:00-20:00", label: "Late Evening" }
         ];
         
-        // ===== Authentication =====
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            // Simple authentication (in production, use proper auth)
-            if (email === 'admin@greenglo.com' && password === 'GreenGloAdmin2025!') {
-                currentUser = { email, name: 'GreenGlo Admin' };
-                localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminEmail', email);
-                showAdminDashboard();
-                loadDashboardData();
-            } else {
-                showError('loginError', 'Invalid email or password');
-            }
-        });
-        
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('adminEmail');
-            currentUser = null;
-            showLoginPage();
-        });
-        
         // ===== UI Functions =====
-        function showLoginPage() {
-            document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('adminDashboard').style.display = 'none';
-        }
-        
-        function showAdminDashboard() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'flex';
-            showSection('dashboard');
-        }
-        
         function showSection(sectionName) {
             // Hide all sections
             document.querySelectorAll('.admin-section').forEach(section => {
@@ -642,6 +1168,8 @@ Eco-friendly products"></textarea>
                 
                 if (!servicesError) {
                     document.getElementById('totalServices').textContent = services?.length || 0;
+                } else {
+                    console.error('Error fetching services:', servicesError);
                 }
                 
                 // Fetch available slots
@@ -654,6 +1182,8 @@ Eco-friendly products"></textarea>
                 
                 if (!slotsError) {
                     document.getElementById('availableSlots').textContent = slots?.length || 0;
+                } else {
+                    console.error('Error fetching slots:', slotsError);
                 }
                 
                 // Update today's date
@@ -665,13 +1195,18 @@ Eco-friendly products"></textarea>
                 document.getElementById('todayDate').textContent = todayStr;
                 
                 // Test database connection
-                const { error: testError } = await supabase
-                    .from('services')
-                    .select('id')
-                    .limit(1);
-                
-                document.getElementById('dbStatus').textContent = testError ? 'Offline' : 'Online';
-                document.getElementById('dbStatus').style.color = testError ? 'var(--red)' : 'var(--primary-green)';
+                try {
+                    const { error: testError } = await supabase
+                        .from('services')
+                        .select('id')
+                        .limit(1);
+                    
+                    document.getElementById('dbStatus').textContent = testError ? 'Offline' : 'Online';
+                    document.getElementById('dbStatus').style.color = testError ? 'var(--red)' : 'var(--primary-green)';
+                } catch (testError) {
+                    document.getElementById('dbStatus').textContent = 'Offline';
+                    document.getElementById('dbStatus').style.color = 'var(--red)';
+                }
                 
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
@@ -702,15 +1237,20 @@ Eco-friendly products"></textarea>
                     .select('*')
                     .order('id', { ascending: true });
                 
-                if (error) throw error;
+                if (error) {
+                    showError('servicesError', 'Failed to load services: ' + error.message);
+                    console.error('Error loading services:', error);
+                } else {
+                    renderServices(services || []);
+                }
                 
-                renderServices(services || []);
                 showLoading('servicesLoading', false);
                 showElement('servicesGrid');
                 
             } catch (error) {
                 showError('servicesError', 'Failed to load services: ' + error.message);
                 showLoading('servicesLoading', false);
+                console.error('Error:', error);
             }
         }
         
@@ -718,7 +1258,7 @@ Eco-friendly products"></textarea>
             const container = document.getElementById('servicesGrid');
             container.innerHTML = '';
             
-            if (services.length === 0) {
+            if (!services || services.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-broom" style="font-size: 3rem; color: var(--medium-gray); margin-bottom: 1rem;"></i>
@@ -807,6 +1347,7 @@ Eco-friendly products"></textarea>
                 
             } catch (error) {
                 showError('servicesError', 'Failed to load service: ' + error.message);
+                console.error('Error loading service data:', error);
             }
         }
         
@@ -854,6 +1395,7 @@ Eco-friendly products"></textarea>
                 
             } catch (error) {
                 showError('servicesError', 'Failed to save service: ' + error.message);
+                console.error('Error saving service:', error);
             }
         });
         
@@ -877,8 +1419,18 @@ Eco-friendly products"></textarea>
                 
             } catch (error) {
                 showError('servicesError', 'Failed to delete service: ' + error.message);
+                console.error('Error deleting service:', error);
             }
         });
+        
+        function editService(serviceId) {
+            showServiceForm(serviceId);
+        }
+        
+        function viewService(serviceId) {
+            alert('View service with ID: ' + serviceId);
+            // You can implement a detailed view modal here
+        }
         
         // ===== Calendar Functions =====
         function renderMonthCalendar() {
@@ -976,19 +1528,24 @@ Eco-friendly products"></textarea>
                     .select('*')
                     .eq('date', dateString);
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Error loading slots:', error);
+                    // Use default slots on error
+                    renderDefaultTimeSlots();
+                } else {
+                    // Merge with default slots
+                    const slots = defaultTimeSlots.map(defaultSlot => {
+                        const existingSlot = existingSlots?.find(s => s.time_slot === defaultSlot.time);
+                        return {
+                            time: defaultSlot.time,
+                            label: defaultSlot.label,
+                            is_available: existingSlot ? existingSlot.is_available : true
+                        };
+                    });
+                    
+                    renderTimeSlots(slots);
+                }
                 
-                // Merge with default slots
-                const slots = defaultTimeSlots.map(defaultSlot => {
-                    const existingSlot = existingSlots?.find(s => s.time_slot === defaultSlot.time);
-                    return {
-                        time: defaultSlot.time,
-                        label: defaultSlot.label,
-                        is_available: existingSlot ? existingSlot.is_available : true
-                    };
-                });
-                
-                renderTimeSlots(slots);
                 showLoading('slotsLoading', false);
                 showElement('timeSlotsGrid');
                 showElement('slotActions');
@@ -997,11 +1554,15 @@ Eco-friendly products"></textarea>
                 console.error('Error loading time slots:', error);
                 showLoading('slotsLoading', false);
                 // Render default slots on error
-                const slots = defaultTimeSlots.map(slot => ({ ...slot, is_available: true }));
-                renderTimeSlots(slots);
+                renderDefaultTimeSlots();
                 showElement('timeSlotsGrid');
                 showElement('slotActions');
             }
+        }
+        
+        function renderDefaultTimeSlots() {
+            const slots = defaultTimeSlots.map(slot => ({ ...slot, is_available: true }));
+            renderTimeSlots(slots);
         }
         
         function renderTimeSlots(slots) {
@@ -1057,7 +1618,10 @@ Eco-friendly products"></textarea>
         }
         
         async function saveTimeSlots() {
-            if (!selectedDate) return;
+            if (!selectedDate) {
+                showError('servicesError', 'Please select a date first');
+                return;
+            }
             
             const dateString = selectedDate.toISOString().split('T')[0];
             const slotElements = document.querySelectorAll('.time-slot');
@@ -1087,6 +1651,7 @@ Eco-friendly products"></textarea>
                 
             } catch (error) {
                 showError('servicesError', 'Failed to save time slots: ' + error.message);
+                console.error('Error saving time slots:', error);
             }
         }
         
@@ -1098,101 +1663,101 @@ Eco-friendly products"></textarea>
         
         // ===== Utility Functions =====
         function showElement(id) {
-            document.getElementById(id).style.display = 'block';
+            const element = document.getElementById(id);
+            if (element) element.style.display = 'block';
         }
         
         function hideElement(id) {
-            document.getElementById(id).style.display = 'none';
+            const element = document.getElementById(id);
+            if (element) element.style.display = 'none';
         }
         
         function showLoading(id, show) {
-            document.getElementById(id).style.display = show ? 'flex' : 'none';
+            const element = document.getElementById(id);
+            if (element) element.style.display = show ? 'flex' : 'none';
         }
         
         function showError(elementId, message) {
             const element = document.getElementById(elementId);
-            element.querySelector('span').textContent = message;
-            element.classList.add('show');
-            setTimeout(() => element.classList.remove('show'), 5000);
+            if (element) {
+                const span = element.querySelector('span');
+                if (span) span.textContent = message;
+                element.classList.add('show');
+                setTimeout(() => element.classList.remove('show'), 5000);
+            }
         }
         
         function showSuccess(elementId, message) {
             const element = document.getElementById(elementId);
-            element.querySelector('span').textContent = message;
-            element.classList.add('show');
-            setTimeout(() => element.classList.remove('show'), 5000);
+            if (element) {
+                const span = element.querySelector('span');
+                if (span) span.textContent = message;
+                element.classList.add('show');
+                setTimeout(() => element.classList.remove('show'), 5000);
+            }
         }
         
         function refreshData() {
-            if (currentUser) {
-                loadDashboardData();
-                if (document.getElementById('servicesSection').style.display !== 'none') {
-                    loadServices();
-                }
+            loadDashboardData();
+            if (document.getElementById('servicesSection').style.display !== 'none') {
+                loadServices();
+            }
+            if (selectedDate && document.getElementById('availabilitySection').style.display !== 'none') {
+                loadTimeSlots(selectedDate);
             }
         }
         
         // ===== Initialize =====
         document.addEventListener('DOMContentLoaded', () => {
-            // Check if already logged in
-            if (localStorage.getItem('adminLoggedIn') === 'true') {
-                currentUser = {
-                    email: localStorage.getItem('adminEmail') || 'admin@greenglo.com',
-                    name: 'GreenGlo Admin'
-                };
-                showAdminDashboard();
-                loadDashboardData();
-            }
+            // Start with dashboard
+            loadDashboardData();
             
-            // Add some CSS for new elements
-            const style = document.createElement('style');
-            style.textContent = `
-                .service-card {
-                    background: var(--white);
-                    border-radius: var(--border-radius);
-                    padding: 1.5rem;
-                    margin-bottom: 1rem;
-                    border: 1px solid var(--light-gray);
-                }
-                .time-slot {
-                    padding: 1rem;
-                    border: 2px solid var(--light-gray);
-                    border-radius: 12px;
-                    cursor: pointer;
-                    transition: var(--transition);
-                }
-                .time-slot.available {
-                    border-color: var(--primary-green);
-                    background: var(--light-green);
-                }
-                .time-slot.unavailable {
-                    border-color: var(--red);
-                    background: rgba(239, 68, 68, 0.05);
-                }
-                .btn {
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 12px;
-                    border: none;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: var(--transition);
-                }
-                .btn-primary {
-                    background: var(--gradient-primary);
-                    color: var(--white);
-                }
-                .btn-outline {
-                    background: transparent;
-                    border: 2px solid var(--primary-green);
-                    color: var(--primary-green);
-                }
-                .btn-danger {
-                    background: var(--red);
-                    color: var(--white);
-                }
-            `;
-            document.head.appendChild(style);
+            // Add initial data if database is empty
+            checkAndInitializeDatabase();
         });
+        
+        // Function to check if database has data and initialize if needed
+        async function checkAndInitializeDatabase() {
+            try {
+                const { data: services, error } = await supabase
+                    .from('services')
+                    .select('id')
+                    .limit(1);
+                
+                // If no services exist, create some sample data
+                if (!error && (!services || services.length === 0)) {
+                    const sampleServices = [
+                        {
+                            title: "Living Room Deep Clean",
+                            category: "domestic",
+                            description: "Complete living room cleaning and organization. We remove all dust and debris, leaving your space spotless.",
+                            features: ["Dust removal", "Vacuuming", "Surface cleaning", "Organization"],
+                            duration: "2-3 hours",
+                            image_url: "livingroom.png"
+                        },
+                        {
+                            title: "Office Cleaning",
+                            category: "office",
+                            description: "Professional office cleaning including workstations, meeting rooms, and common areas.",
+                            features: ["Workstation sanitization", "Meeting room cleaning", "Trash removal", "Floor cleaning"],
+                            duration: "3-4 hours",
+                            image_url: "office.png"
+                        }
+                    ];
+                    
+                    const { error: insertError } = await supabase
+                        .from('services')
+                        .insert(sampleServices);
+                    
+                    if (!insertError) {
+                        console.log('Sample services added to database');
+                        loadServices();
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking database:', error);
+            }
+        }
     </script>
 </body>
 </html>
