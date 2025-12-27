@@ -3466,5 +3466,27 @@ ${bookingData.specialInstructions ? `Notes: ${bookingData.specialInstructions}` 
             }
         };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Connect to your Supabase
+const supabase = supabase.createClient(
+  'https://faxjeniohetefqwcsefi.supabase.co',
+  'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7.'
+);
+
+// Fetch services from database
+async function loadServices() {
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .order('id');
+  
+  if (data) {
+    // Use this data in your services grid
+    console.log('Loaded services:', data);
+  }
+}
+</script>
 </body>
 </html>
+
