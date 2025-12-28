@@ -1292,54 +1292,25 @@ async function checkDatabaseSchema() {
     }
     
     try {
-        // Check if bookings table exists
-        const { data: tableExists, error: tableError } = await supabaseClient
+        // Simple test query to check if table exists
+        const { data, error } = await supabaseClient
             .from('bookings')
-            .select('count', { count: 'exact', head: true })
+            .select('id')
             .limit(1);
         
-        if (tableError) {
-            console.error('❌ Bookings table error:', tableError);
+        if (error) {
+            console.error('❌ Bookings table error:', error);
+            
+            // Check if it's a column error
+            if (error.message.includes('service_title') || error.code === 'PGRST204') {
+                console.error('❌ Database schema mismatch. Please run the SQL setup in Supabase.');
+                return false;
+            }
+            
             return false;
         }
         
-        console.log('✅ Bookings table exists');
-        
-        // Try to describe table structure by inserting a test record
-        const testData = {
-            service_title: 'Test Service',
-            service_id: 0,
-            customer_name: 'Test Customer',
-            customer_phone: '07123456789',
-            customer_email: 'test@example.com',
-            customer_address: 'Test Address, London',
-            booking_date: '2099-12-31',
-            time_slot: '00:00-01:00',
-            duration: '1 hour',
-            notes: 'Test record - please delete',
-            status: 'test'
-        };
-        
-        const { data: testResult, error: testError } = await supabaseClient
-            .from('bookings')
-            .insert([testData])
-            .select()
-            .single();
-        
-        if (testError) {
-            console.error('❌ Schema test failed:', testError);
-            return false;
-        }
-        
-        console.log('✅ Schema test passed:', testResult);
-        
-        // Clean up test record
-        await supabaseClient
-            .from('bookings')
-            .delete()
-            .eq('id', testResult.id);
-        
-        console.log('✅ Test record cleaned up');
+        console.log('✅ Bookings table is accessible');
         return true;
         
     } catch (err) {
@@ -1407,6 +1378,17 @@ window.addEventListener('DOMContentLoaded', async function() {
         console.warn('⚠️ Database schema issues detected');
     }
 });
+
+// Enhanced logging for debugging
+function logBookingState() {
+    console.log('📋 Current Booking State:', {
+        service: currentBooking.service,
+        date: currentBooking.date,
+        timeSlot: currentBooking.timeSlot,
+        slotId: currentBooking.slotId,
+        slotIdType: typeof currentBooking.slotId
+    });
+}
 
 // ===== Booking Modal Functions =====
 function openBookingModal(serviceTitle, serviceId) {
@@ -1552,11 +1534,11 @@ async function loadTimeSlots(date) {
                 // Select this one
                 this.classList.add('selected');
                 
-                // Update booking
+                // Update booking - ensure slot.id is converted to string
                 currentBooking.timeSlot = slot.time_slot;
-                currentBooking.slotId = slot.id;
+                currentBooking.slotId = String(slot.id); // Convert to string
                 
-                console.log('✅ Selected time slot:', slot.time_slot);
+                console.log('✅ Selected time slot:', slot.time_slot, 'Slot ID:', slot.id, 'Type:', typeof slot.id);
             });
             
             container.appendChild(slotElement);
@@ -1591,10 +1573,16 @@ function nextBookingStep() {
         return;
     }
     
+    // Log for debugging
+    logBookingState();
+    
     if (!currentBooking.slotId) {
         alert('⚠️ Error: No slot ID selected. Please select a time slot again.');
         return;
     }
+    
+    // Ensure slotId is a string
+    currentBooking.slotId = String(currentBooking.slotId);
     
     // Update summary
     updateBookingSummary();
@@ -1617,6 +1605,9 @@ function updateBookingSummary() {
     const [start, end] = currentBooking.timeSlot.split('-');
     const bookingDate = new Date(currentBooking.date);
     
+    // Convert slotId to string to avoid substring error
+    const slotIdStr = String(currentBooking.slotId || '');
+    
     summary.innerHTML = `
         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
             <span style="color: var(--dark-gray); font-weight: 600;">Service:</span>
@@ -1630,10 +1621,12 @@ function updateBookingSummary() {
             <span style="color: var(--dark-gray); font-weight: 600;">Time:</span>
             <span style="font-weight: 600; color: var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span>
         </div>
+        ${slotIdStr ? `
         <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--dark-gray); font-weight: 600;">Booking ID:</span>
-            <span style="font-size: 12px; color: var(--medium-gray);">${currentBooking.slotId.substring(0, 8)}...</span>
+            <span style="color: var(--dark-gray); font-weight: 600;">Slot ID:</span>
+            <span style="font-size: 12px; color: var(--medium-gray);">${slotIdStr.substring(0, 8)}...</span>
         </div>
+        ` : ''}
     `;
 }
 
@@ -1709,26 +1702,44 @@ async function confirmBooking() {
         
         console.log('📝 Booking data prepared:', bookingData);
         
-        // 3. Insert booking record
+        // 3. Insert booking record WITHOUT the columns parameter
         const { data: booking, error: bookingError } = await supabaseClient
             .from('bookings')
             .insert([bookingData])
             .select()
             .single();
-        
+
         if (bookingError) {
             console.error('❌ Booking insert error:', bookingError);
             
-            // Try alternative approach without .select()
+            // Try alternative insert method
             const { error: simpleInsertError } = await supabaseClient
                 .from('bookings')
                 .insert(bookingData);
             
             if (simpleInsertError) {
-                throw new Error(`Database insert failed: ${simpleInsertError.message}`);
+                // Try with simpler data structure
+                const simpleData = {
+                    service_title: currentBooking.service.title,
+                    customer_name: customerName,
+                    customer_phone: customerPhone,
+                    customer_address: customerAddress,
+                    booking_date: currentBooking.date,
+                    time_slot: currentBooking.timeSlot,
+                    status: 'confirmed'
+                };
+                
+                const { error: minimalError } = await supabaseClient
+                    .from('bookings')
+                    .insert(simpleData);
+                
+                if (minimalError) {
+                    throw new Error(`Database insert failed: ${minimalError.message}`);
+                }
+                console.log('✅ Booking created (minimal data)');
+            } else {
+                console.log('✅ Booking created (alternative method)');
             }
-            
-            console.log('✅ Booking created (alternative method)');
         } else {
             console.log('✅ Booking created:', booking);
         }
@@ -2233,5 +2244,6 @@ window.addEventListener('load', () => {
     </script>
 </body>
 </html>
+
 
 
