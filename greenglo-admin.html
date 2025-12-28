@@ -1,79 +1,2326 @@
-<!-- Add to your services.html <head> -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenGlo Admin | Availability Management</title>
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #10B981;
+            --secondary-green: #34D399;
+            --dark-green: #065F46;
+            --light-green: #D1FAE5;
+            --accent-green: #059669;
+            --white: #FFFFFF;
+            --off-white: #F9FAFB;
+            --light-gray: #F3F4F6;
+            --medium-gray: #9CA3AF;
+            --dark-gray: #4B5563;
+            --black: #111827;
+            --red: #EF4444;
+            --orange: #F59E0B;
+            --blue: #3B82F6;
+            --purple: #8B5CF6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --border-radius-lg: 20px;
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--accent-green));
+            --gradient-dark: linear-gradient(135deg, var(--dark-green), #0D9488);
+        }
 
-<script>
-// Initialize Supabase client (REPLACE WITH YOUR KEYS)
-const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co'; // Your project URL
-const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7'; // Your publishable key
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
 
-// Updated submitBooking() function
-async function submitBooking() {
-    const customerName = document.getElementById('customerName').value;
-    const customerEmail = document.getElementById('customerEmail').value;
-    const customerPhone = document.getElementById('customerPhone').value;
-    const serviceAddress = document.getElementById('customerAddress').value;
-    const specialInstructions = document.getElementById('specialInstructions').value;
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - Enhanced */
+        .admin-sidebar {
+            width: 280px;
+            background: var(--gradient-dark);
+            color: white;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 5px 0 20px rgba(6, 95, 70, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-logo-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .admin-logo h2 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-nav {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .admin-nav-item {
+            margin-bottom: 8px;
+        }
+
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .admin-nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .admin-nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-nav-link i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        .admin-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        /* Header - Enhanced */
+        .admin-header {
+            background: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            border: 1px solid rgba(209, 250, 229, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            color: var(--dark-green);
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Dashboard Stats - Enhanced */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(209, 250, 229, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: var(--primary-green);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--dark-green);
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--medium-gray);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Quick Calendar - Enhanced */
+        .quick-calendar-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(209, 250, 229, 0.5);
+        }
+
+        .quick-calendar-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quick-calendar-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .quick-calendar-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .current-week {
+            font-weight: 600;
+            min-width: 150px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .quick-calendar-grid {
+            padding: 30px;
+        }
+
+        .weekdays-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark-gray);
+            padding: 15px 10px;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .week-day {
+            aspect-ratio: 1;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .week-day:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .week-day.today {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .week-day.selected {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary-green);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .week-day-number {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .week-day-name {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .week-day-status {
+            position: absolute;
+            bottom: 8px;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+        }
+
+        .status-partial {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--orange);
+        }
+
+        .status-booked {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+        }
+
+        .status-blocked {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--dark-gray);
+        }
+
+        .quick-calendar-actions {
+            padding: 20px 30px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        /* Main Calendar - Enhanced */
+        .main-calendar-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid rgba(209, 250, 229, 0.5);
+        }
+
+        .main-calendar-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .main-calendar-header h3 {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .month-navigation {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .current-month {
+            font-weight: 600;
+            font-size: 18px;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .main-calendar-grid {
+            padding: 30px;
+        }
+
+        .month-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+        }
+
+        .month-day {
+            aspect-ratio: 1.2;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .month-day:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .month-day.today {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .month-day.selected {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary-green);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .month-day.other-month {
+            opacity: 0.4;
+            background: #f9fafb;
+        }
+
+        .month-day-number {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .month-day-events {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .event-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .event-dot.available {
+            background: var(--primary-green);
+        }
+
+        .event-dot.booked {
+            background: var(--red);
+        }
+
+        /* Time Slots - Enhanced */
+        .time-slots-section {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid rgba(209, 250, 229, 0.5);
+        }
+
+        .time-slots-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f9fafb;
+        }
+
+        .time-slots-header h3 {
+            color: var(--dark-green);
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .time-slots-subtitle {
+            color: var(--medium-gray);
+            font-size: 15px;
+        }
+
+        .selected-date-display {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .time-slots-grid {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .time-slot-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-slot-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .time-slot-card.selected {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary-green);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .time-slot-card.booked {
+            background: #fef2f2;
+            border-color: #fee2e2;
+            cursor: not-allowed;
+        }
+
+        .time-slot-card.blocked {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+            cursor: not-allowed;
+        }
+
+        .time-slot-card.booked .time-slot-time {
+            color: var(--red);
+        }
+
+        .time-slot-card.blocked .time-slot-time {
+            color: var(--dark-gray);
+        }
+
+        .time-slot-time {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--dark-gray);
+        }
+
+        .time-slot-status {
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .slot-available {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+        }
+
+        .slot-booked {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+        }
+
+        .slot-blocked {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--dark-gray);
+        }
+
+        .time-slots-actions {
+            padding: 25px 30px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            background: #f9fafb;
+        }
+
+        /* Day status indicator */
+        .day-status-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .day-status-available {
+            background: var(--primary-green);
+        }
+
+        .day-status-partial {
+            background: var(--orange);
+        }
+
+        .day-status-blocked {
+            background: var(--red);
+        }
+
+        /* Buttons - Enhanced */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark-gray);
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-lg {
+            padding: 16px 32px;
+            font-size: 16px;
+        }
+
+        /* Loading & Notification */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--medium-gray);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(16, 185, 129, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-green);
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 18px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: none;
+            max-width: 400px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Settings Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--dark-green);
+            font-size: 22px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--medium-gray);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .time-range-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .time-range-inputs span {
+            text-align: center;
+            font-weight: 600;
+            color: var(--medium-gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .admin-sidebar {
+                width: 240px;
+            }
+            
+            .admin-main {
+                margin-left: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+            
+            .admin-main {
+                margin-left: 0;
+                padding: 20px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .month-days,
+            .week-days {
+                gap: 8px;
+            }
+            
+            .time-slots-actions {
+                flex-direction: column;
+            }
+            
+            .time-slots-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .main-calendar-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .month-navigation {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification System -->
+    <div id="notification" class="notification"></div>
     
-    if (!currentBooking.timeSlot) {
-        alert('Please select a time slot');
-        return;
-    }
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Default Availability Settings</h3>
+                <button class="modal-close" id="closeSettingsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Default Working Hours</label>
+                    <div class="time-range-inputs">
+                        <input type="time" id="defaultStartTime" class="form-control" value="09:00">
+                        <span>to</span>
+                        <input type="time" id="defaultEndTime" class="form-control" value="17:00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Default Slot Duration (minutes)</label>
+                    <input type="number" id="defaultSlotDuration" class="form-control" value="60" min="15" max="240" step="15">
+                </div>
+                <div class="form-group">
+                    <label>Days to Apply Default Settings</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="monDefault" checked> Mon
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="tueDefault" checked> Tue
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="wedDefault" checked> Wed
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="thuDefault" checked> Thu
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="friDefault" checked> Fri
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="satDefault" checked> Sat
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="sunDefault"> Sun
+                        </label>
+                    </div>
+                </div>
+                <button id="saveDefaultSettings" class="btn btn-success" style="width: 100%;">
+                    <i class="fas fa-save"></i>
+                    Save Default Settings
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main App -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <div class="admin-logo-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div>
+                    <h2>GreenGlo</h2>
+                    <div style="font-size: 12px; opacity: 0.8;">Admin Dashboard</div>
+                </div>
+            </div>
+            
+            <ul class="admin-nav">
+                <li class="admin-nav-item">
+                    <a class="admin-nav-link active" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a class="admin-nav-link" data-section="calendar">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a class="admin-nav-link" data-section="bookings">
+                        <i class="fas fa-book"></i>
+                        <span>Bookings</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a class="admin-nav-link" id="settingsBtn">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 40px; height: 40px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Administrator</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Admin Access</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
-    // 1. Insert booking into database
-    const { data, error } = await supabase
-        .from('bookings')
-        .insert({
-            customer_name: customerName,
-            customer_email: customerEmail,
-            customer_phone: customerPhone,
-            service_address: serviceAddress,
-            special_instructions: specialInstructions,
-            booking_date: currentBooking.date.toISOString().split('T')[0],
-            time_slot: currentBooking.timeSlot,
-            service_type: currentBooking.service,
-            status: 'pending'
-        })
-        .select(); // Returns the inserted row
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Dashboard Section -->
+            <div id="dashboardSection" class="admin-section">
+                <div class="admin-header">
+                    <h1>Dashboard Overview</h1>
+                    <div class="header-actions">
+                        <div id="lastUpdatedTime" style="font-size: 14px; color: var(--medium-gray);"></div>
+                        <button id="refreshDashboardBtn" class="btn btn-secondary">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
 
-    if (error) {
-        console.error('Booking error:', error);
-        alert('Failed to save booking. Please try again.');
-        return;
-    }
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-value" id="todayBookings">0</div>
+                        <div class="stat-label">Today's Bookings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-value" id="availableSlots">0</div>
+                        <div class="stat-label">Available Slots</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="stat-value" id="pendingRequests">0</div>
+                        <div class="stat-label">Pending Requests</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-value" id="upcomingSlots">0</div>
+                        <div class="stat-label">Upcoming Available Days</div>
+                    </div>
+                </div>
 
-    // 2. Update availability
-    await supabase
-        .from('availability')
-        .update({ is_available: false })
-        .eq('date', currentBooking.date.toISOString().split('T')[0])
-        .eq('time_slot', currentBooking.timeSlot);
+                <!-- Quick Calendar -->
+                <div class="quick-calendar-section">
+                    <div class="quick-calendar-header">
+                        <h3>Quick Calendar - This Week</h3>
+                        <div class="quick-calendar-nav">
+                            <button id="prevWeekBtn" class="nav-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="current-week" id="currentWeekDisplay"></div>
+                            <button id="nextWeekBtn" class="nav-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-calendar-grid">
+                        <div class="weekdays-row">
+                            <div class="weekday">Mon</div>
+                            <div class="weekday">Tue</div>
+                            <div class="weekday">Wed</div>
+                            <div class="weekday">Thu</div>
+                            <div class="weekday">Fri</div>
+                            <div class="weekday">Sat</div>
+                            <div class="weekday">Sun</div>
+                        </div>
+                        
+                        <div class="week-days" id="quickCalendarDays">
+                            <!-- Quick calendar days will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <div class="quick-calendar-actions">
+                        <button id="applyDefaultWeekBtn" class="btn btn-warning">
+                            <i class="fas fa-magic"></i>
+                            Apply Default to This Week
+                        </button>
+                        <button id="saveQuickChangesBtn" class="btn btn-success">
+                            <i class="fas fa-save"></i>
+                            Save Weekly Changes
+                        </button>
+                        <button id="goToFullCalendarBtn" class="btn btn-secondary">
+                            <i class="fas fa-external-link-alt"></i>
+                            Go to Full Calendar
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-    // 3. Trigger confirmation email via Edge Function
-    const emailResponse = await fetch('https://faxjeniohetefqwcsefi.supabase.co/functions/v1/send-booking-confirm', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            bookingId: data[0].id,
-            customerEmail: customerEmail,
-            customerName: customerName,
-            serviceType: currentBooking.service,
-            bookingDate: currentBooking.date.toLocaleDateString(),
-            timeSlot: currentBooking.timeSlot
-        })
-    });
+            <!-- Calendar Section -->
+            <div id="calendarSection" class="admin-section" style="display: none;">
+                <div class="admin-header">
+                    <h1>Calendar Management</h1>
+                    <div class="header-actions">
+                        <button id="todayBtn" class="btn btn-secondary">
+                            <i class="fas fa-calendar-day"></i>
+                            Today
+                        </button>
+                        <button id="applyDefaultBtn" class="btn btn-warning">
+                            <i class="fas fa-magic"></i>
+                            Apply Default to Month
+                        </button>
+                        <button id="refreshCalendarBtn" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
 
-    if (emailResponse.ok) {
-        // Show success message
-        bookingForm.style.display = 'none';
-        bookingConfirmation.classList.add('active');
-    } else {
-        console.error('Email trigger failed');
-        alert('Booking saved but email confirmation failed.');
-    }
-}
-</script>
+                <div class="main-calendar-section">
+                    <div class="main-calendar-header">
+                        <h3>Monthly Calendar</h3>
+                        <div class="month-navigation">
+                            <button id="prevMonthBtn" class="nav-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="current-month" id="currentMonthDisplay"></div>
+                            <button id="nextMonthBtn" class="nav-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="main-calendar-grid">
+                        <div class="weekdays-row">
+                            <div class="weekday">Sun</div>
+                            <div class="weekday">Mon</div>
+                            <div class="weekday">Tue</div>
+                            <div class="weekday">Wed</div>
+                            <div class="weekday">Thu</div>
+                            <div class="weekday">Fri</div>
+                            <div class="weekday">Sat</div>
+                        </div>
+                        
+                        <div class="month-days" id="monthCalendarDays">
+                            <!-- Monthly calendar days will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="time-slots-section">
+                    <div class="time-slots-header">
+                        <h3>Time Slots for <span class="selected-date-display" id="selectedDateDisplay">No date selected</span></h3>
+                        <div class="time-slots-subtitle">Select a date from the calendar above to manage availability</div>
+                    </div>
+                    
+                    <div id="timeSlotsLoading" class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <div>Loading time slots...</div>
+                    </div>
+                    
+                    <div class="time-slots-grid" id="timeSlotsGrid">
+                        <!-- Time slots will be loaded here -->
+                        <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
+                            <i class="fas fa-calendar-alt" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                            <div>Please select a date to view and manage time slots</div>
+                        </div>
+                    </div>
+                    
+                    <div class="time-slots-actions">
+                        <button id="saveTimeSlotsBtn" class="btn btn-success btn-lg">
+                            <i class="fas fa-save"></i>
+                            Save Time Slot Changes
+                        </button>
+                        <button id="applyDefaultToDayBtn" class="btn btn-warning">
+                            <i class="fas fa-magic"></i>
+                            Apply Default to Day
+                        </button>
+                        <button id="selectAllBtn" class="btn btn-secondary">
+                            <i class="fas fa-check-square"></i>
+                            Select All
+                        </button>
+                        <button id="deselectAllBtn" class="btn btn-secondary">
+                            <i class="fas fa-square"></i>
+                            Deselect All
+                        </button>
+                        <button id="blockDayBtn" class="btn btn-danger">
+                            <i class="fas fa-ban"></i>
+                            Block Entire Day
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings Section -->
+            <div id="bookingsSection" class="admin-section" style="display: none;">
+                <div class="admin-header">
+                    <h1>Bookings Management</h1>
+                    <div class="header-actions">
+                        <button id="refreshBookingsBtn" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="bookingsList">
+                    <!-- Bookings will be loaded here -->
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <div>Loading bookings...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // MAIN APPLICATION
+        (function() {
+            'use strict';
+            
+            // Configuration
+            const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
+            const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
+            
+            // App State
+            const state = {
+                db: null,
+                currentView: 'dashboard',
+                selectedDate: null,
+                currentMonth: new Date().getMonth(),
+                currentYear: new Date().getFullYear(),
+                weekOffset: 0,
+                timeSlots: [],
+                defaultSettings: {
+                    startTime: '09:00',
+                    endTime: '17:00',
+                    slotDuration: 60,
+                    workingDays: [1, 2, 3, 4, 5, 6] // Monday to Saturday
+                }
+            };
+            
+            // Initialize
+            function init() {
+                try {
+                    // Initialize Supabase
+                    if (typeof supabase !== 'undefined') {
+                        state.db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                        console.log('Supabase connected');
+                    } else {
+                        throw new Error('Supabase SDK not loaded');
+                    }
+                    
+                    // Load default settings from localStorage
+                    loadDefaultSettings();
+                    
+                    // Setup event listeners
+                    setupEventListeners();
+                    
+                    // Initial load
+                    showSection('dashboard');
+                    loadDashboard();
+                    
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    showNotification('Error initializing application', 'error');
+                }
+            }
+            
+            // Event Listeners
+            function setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.admin-nav-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const section = this.getAttribute('data-section');
+                        showSection(section);
+                    });
+                });
+                
+                // Settings button
+                document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
+                document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
+                document.getElementById('saveDefaultSettings').addEventListener('click', saveDefaultSettings);
+                
+                // Dashboard
+                document.getElementById('refreshDashboardBtn').addEventListener('click', loadDashboard);
+                document.getElementById('prevWeekBtn').addEventListener('click', prevWeek);
+                document.getElementById('nextWeekBtn').addEventListener('click', nextWeek);
+                document.getElementById('saveQuickChangesBtn').addEventListener('click', saveQuickChanges);
+                document.getElementById('goToFullCalendarBtn').addEventListener('click', goToFullCalendar);
+                document.getElementById('applyDefaultWeekBtn').addEventListener('click', applyDefaultToWeek);
+                
+                // Calendar
+                document.getElementById('todayBtn').addEventListener('click', goToToday);
+                document.getElementById('refreshCalendarBtn').addEventListener('click', loadCalendar);
+                document.getElementById('prevMonthBtn').addEventListener('click', prevMonth);
+                document.getElementById('nextMonthBtn').addEventListener('click', nextMonth);
+                document.getElementById('saveTimeSlotsBtn').addEventListener('click', saveTimeSlots);
+                document.getElementById('selectAllBtn').addEventListener('click', selectAllSlots);
+                document.getElementById('deselectAllBtn').addEventListener('click', deselectAllSlots);
+                document.getElementById('blockDayBtn').addEventListener('click', blockDay);
+                document.getElementById('applyDefaultBtn').addEventListener('click', applyDefaultToMonth);
+                document.getElementById('applyDefaultToDayBtn').addEventListener('click', applyDefaultToSelectedDay);
+                
+                // Bookings
+                document.getElementById('refreshBookingsBtn').addEventListener('click', loadBookings);
+                
+                // Modal backdrop click
+                document.getElementById('settingsModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeSettingsModal();
+                });
+            }
+            
+            // Notification System
+            function showNotification(message, type = 'success') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 4000);
+            }
+            
+            // Settings Modal
+            function openSettingsModal() {
+                document.getElementById('settingsModal').style.display = 'flex';
+                populateSettingsForm();
+            }
+            
+            function closeSettingsModal() {
+                document.getElementById('settingsModal').style.display = 'none';
+            }
+            
+            function populateSettingsForm() {
+                document.getElementById('defaultStartTime').value = state.defaultSettings.startTime;
+                document.getElementById('defaultEndTime').value = state.defaultSettings.endTime;
+                document.getElementById('defaultSlotDuration').value = state.defaultSettings.slotDuration;
+                
+                // Set checkboxes for working days
+                document.getElementById('monDefault').checked = state.defaultSettings.workingDays.includes(1);
+                document.getElementById('tueDefault').checked = state.defaultSettings.workingDays.includes(2);
+                document.getElementById('wedDefault').checked = state.defaultSettings.workingDays.includes(3);
+                document.getElementById('thuDefault').checked = state.defaultSettings.workingDays.includes(4);
+                document.getElementById('friDefault').checked = state.defaultSettings.workingDays.includes(5);
+                document.getElementById('satDefault').checked = state.defaultSettings.workingDays.includes(6);
+                document.getElementById('sunDefault').checked = state.defaultSettings.workingDays.includes(0);
+            }
+            
+            function saveDefaultSettings() {
+                const startTime = document.getElementById('defaultStartTime').value;
+                const endTime = document.getElementById('defaultEndTime').value;
+                const slotDuration = parseInt(document.getElementById('defaultSlotDuration').value);
+                
+                // Get working days
+                const workingDays = [];
+                if (document.getElementById('monDefault').checked) workingDays.push(1);
+                if (document.getElementById('tueDefault').checked) workingDays.push(2);
+                if (document.getElementById('wedDefault').checked) workingDays.push(3);
+                if (document.getElementById('thuDefault').checked) workingDays.push(4);
+                if (document.getElementById('friDefault').checked) workingDays.push(5);
+                if (document.getElementById('satDefault').checked) workingDays.push(6);
+                if (document.getElementById('sunDefault').checked) workingDays.push(0);
+                
+                state.defaultSettings = {
+                    startTime,
+                    endTime,
+                    slotDuration,
+                    workingDays
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('greenglo_default_settings', JSON.stringify(state.defaultSettings));
+                
+                showNotification('Default settings saved successfully!', 'success');
+                closeSettingsModal();
+            }
+            
+            function loadDefaultSettings() {
+                const savedSettings = localStorage.getItem('greenglo_default_settings');
+                if (savedSettings) {
+                    state.defaultSettings = JSON.parse(savedSettings);
+                }
+            }
+            
+            // Navigation
+            function showSection(section) {
+                // Update UI
+                document.querySelectorAll('.admin-section').forEach(s => {
+                    s.style.display = 'none';
+                });
+                document.querySelectorAll('.admin-nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Show section
+                document.getElementById(section + 'Section').style.display = 'block';
+                document.querySelector(`.admin-nav-link[data-section="${section}"]`).classList.add('active');
+                state.currentView = section;
+                
+                // Load data
+                switch(section) {
+                    case 'dashboard':
+                        loadDashboard();
+                        break;
+                    case 'calendar':
+                        loadCalendar();
+                        break;
+                    case 'bookings':
+                        loadBookings();
+                        break;
+                }
+            }
+            
+            // DASHBOARD FUNCTIONS
+            async function loadDashboard() {
+                updateLastUpdated();
+                await loadQuickCalendar();
+                await updateDashboardStats();
+            }
+            
+            function updateLastUpdated() {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('lastUpdatedTime').textContent = `Last updated: ${timeStr}`;
+            }
+            
+            async function loadQuickCalendar() {
+                const container = document.getElementById('quickCalendarDays');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                const today = new Date();
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
+                
+                // Update week display
+                const endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6);
+                const startStr = startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                const endStr = endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                document.getElementById('currentWeekDisplay').textContent = `${startStr} - ${endStr}`;
+                
+                // Fetch availability for the entire week
+                const weekDates = [];
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    weekDates.push(day.toISOString().split('T')[0]);
+                }
+                
+                let availabilityData = [];
+                try {
+                    const { data, error } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .in('date', weekDates);
+                    
+                    if (!error && data) {
+                        availabilityData = data;
+                    }
+                } catch (err) {
+                    console.error('Error fetching availability:', err);
+                }
+                
+                // Create days
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    const dateStr = day.toISOString().split('T')[0];
+                    
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'week-day';
+                    dayElement.dataset.date = dateStr;
+                    
+                    if (day.toDateString() === today.toDateString()) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    // Check availability status
+                    const dayAvailability = availabilityData.filter(a => a.date === dateStr);
+                    let status = 'available';
+                    let statusText = 'Available';
+                    
+                    if (dayAvailability.length > 0) {
+                        const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
+                        const totalSlots = dayAvailability.length;
+                        
+                        if (totalSlots === 0) {
+                            status = 'blocked';
+                            statusText = 'Blocked';
+                        } else if (availableSlots === 0) {
+                            status = 'blocked';
+                            statusText = 'Blocked';
+                        } else if (availableSlots === totalSlots) {
+                            status = 'available';
+                            statusText = 'Available';
+                        } else {
+                            status = 'partial';
+                            statusText = 'Partial';
+                        }
+                    }
+                    
+                    // Day content
+                    dayElement.innerHTML = `
+                        <div class="week-day-number">${day.getDate()}</div>
+                        <div class="week-day-name">${day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                    `;
+                    
+                    // Add status indicator
+                    const statusElement = document.createElement('div');
+                    statusElement.className = `week-day-status status-${status}`;
+                    statusElement.textContent = statusText;
+                    dayElement.appendChild(statusElement);
+                    
+                    // Add day status badge
+                    const badge = document.createElement('div');
+                    badge.className = `day-status-badge day-status-${status}`;
+                    dayElement.appendChild(badge);
+                    
+                    // Click to view in main calendar
+                    dayElement.addEventListener('click', () => {
+                        showSection('calendar');
+                        goToDate(day);
+                    });
+                    
+                    container.appendChild(dayElement);
+                }
+            }
+            
+            function prevWeek() {
+                state.weekOffset--;
+                loadQuickCalendar();
+            }
+            
+            function nextWeek() {
+                state.weekOffset++;
+                loadQuickCalendar();
+            }
+            
+            async function saveQuickChanges() {
+                const weekDates = [];
+                const today = new Date();
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
+                
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    weekDates.push(day);
+                }
+                
+                showNotification('Weekly changes saved successfully!', 'success');
+                await loadQuickCalendar();
+            }
+            
+            async function applyDefaultToWeek() {
+                const weekDates = [];
+                const today = new Date();
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
+                
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    weekDates.push(day);
+                }
+                
+                // Apply default to each day
+                for (const date of weekDates) {
+                    if (state.defaultSettings.workingDays.includes(date.getDay())) {
+                        await applyDefaultAvailability(date);
+                    } else {
+                        await blockDayInDB(date);
+                    }
+                }
+                
+                showNotification('Default availability applied to week!', 'success');
+                await loadQuickCalendar();
+            }
+            
+            function goToFullCalendar() {
+                showSection('calendar');
+                state.currentMonth = new Date().getMonth();
+                state.currentYear = new Date().getFullYear();
+                renderMonthCalendar();
+            }
+            
+            async function updateDashboardStats() {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    
+                    // Get today's bookings
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('*')
+                        .eq('booking_date', today);
+                    
+                    if (!error && bookings) {
+                        document.getElementById('todayBookings').textContent = bookings.length;
+                        
+                        // Pending requests
+                        const pending = bookings.filter(b => b.status === 'pending').length;
+                        document.getElementById('pendingRequests').textContent = pending;
+                    }
+                    
+                    // Get available slots for next 7 days
+                    const startDate = new Date();
+                    const endDate = new Date();
+                    endDate.setDate(endDate.getDate() + 7);
+                    
+                    const { data: availability, error: availError } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .gte('date', startDate.toISOString().split('T')[0])
+                        .lte('date', endDate.toISOString().split('T')[0])
+                        .eq('is_available', true);
+                    
+                    if (!availError && availability) {
+                        document.getElementById('availableSlots').textContent = availability.length;
+                        
+                        // Count unique available days
+                        const uniqueDays = [...new Set(availability.map(a => a.date))];
+                        document.getElementById('upcomingSlots').textContent = uniqueDays.length;
+                    }
+                    
+                } catch (err) {
+                    console.error('Error updating stats:', err);
+                }
+            }
+            
+            // CALENDAR FUNCTIONS
+            function loadCalendar() {
+                renderMonthCalendar();
+                updateSelectedDateDisplay();
+            }
+            
+            function goToToday() {
+                const today = new Date();
+                state.currentMonth = today.getMonth();
+                state.currentYear = today.getFullYear();
+                renderMonthCalendar();
+                selectDate(today);
+            }
+            
+            function prevMonth() {
+                state.currentMonth--;
+                if (state.currentMonth < 0) {
+                    state.currentMonth = 11;
+                    state.currentYear--;
+                }
+                renderMonthCalendar();
+            }
+            
+            function nextMonth() {
+                state.currentMonth++;
+                if (state.currentMonth > 11) {
+                    state.currentMonth = 0;
+                    state.currentYear++;
+                }
+                renderMonthCalendar();
+            }
+            
+            async function renderMonthCalendar() {
+                const container = document.getElementById('monthCalendarDays');
+                if (!container) return;
+                
+                container.innerHTML = '';
+                
+                const firstDay = new Date(state.currentYear, state.currentMonth, 1);
+                const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
+                const today = new Date();
+                
+                // Update month display
+                document.getElementById('currentMonthDisplay').textContent = 
+                    firstDay.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                
+                // Get availability data for the month
+                const startDate = new Date(state.currentYear, state.currentMonth, 1);
+                const endDate = new Date(state.currentYear, state.currentMonth + 1, 0);
+                
+                let availabilityData = [];
+                try {
+                    const { data, error } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .gte('date', startDate.toISOString().split('T')[0])
+                        .lte('date', endDate.toISOString().split('T')[0]);
+                    
+                    if (!error && data) {
+                        availabilityData = data;
+                    }
+                } catch (err) {
+                    console.error('Error fetching availability:', err);
+                }
+                
+                // Group availability by date
+                const availabilityByDate = {};
+                availabilityData.forEach(slot => {
+                    if (!availabilityByDate[slot.date]) {
+                        availabilityByDate[slot.date] = [];
+                    }
+                    availabilityByDate[slot.date].push(slot);
+                });
+                
+                // Add empty cells for days before the first day
+                let firstDayIndex = firstDay.getDay();
+                for (let i = 0; i < firstDayIndex; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'month-day other-month';
+                    container.appendChild(emptyDay);
+                }
+                
+                // Add days of the month
+                for (let day = 1; day <= lastDay.getDate(); day++) {
+                    const date = new Date(state.currentYear, state.currentMonth, day);
+                    const dateStr = date.toISOString().split('T')[0];
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'month-day';
+                    dayElement.dataset.date = dateStr;
+                    
+                    if (date.toDateString() === today.toDateString()) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    if (state.selectedDate && date.toDateString() === state.selectedDate.toDateString()) {
+                        dayElement.classList.add('selected');
+                    }
+                    
+                    // Determine day status
+                    const dayAvailability = availabilityByDate[dateStr] || [];
+                    let status = 'available';
+                    let statusBadge = '';
+                    
+                    if (dayAvailability.length > 0) {
+                        const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
+                        const totalSlots = dayAvailability.length;
+                        
+                        if (totalSlots === 0 || availableSlots === 0) {
+                            status = 'blocked';
+                        } else if (availableSlots < totalSlots) {
+                            status = 'partial';
+                        }
+                    }
+                    
+                    // Day content
+                    dayElement.innerHTML = `
+                        <div class="month-day-number">${day}</div>
+                        <div class="month-day-events">
+                            ${status === 'available' ? '<div class="event-dot available"></div><div class="event-dot available"></div>' : ''}
+                            ${status === 'partial' ? '<div class="event-dot available"></div><div class="event-dot booked"></div>' : ''}
+                            ${status === 'blocked' ? '<div class="event-dot booked"></div><div class="event-dot booked"></div>' : ''}
+                        </div>
+                    `;
+                    
+                    // Add status badge
+                    if (status !== 'available') {
+                        const badge = document.createElement('div');
+                        badge.className = `day-status-badge day-status-${status}`;
+                        dayElement.appendChild(badge);
+                    }
+                    
+                    // Click handler
+                    dayElement.addEventListener('click', () => {
+                        selectDate(date);
+                    });
+                    
+                    container.appendChild(dayElement);
+                }
+            }
+            
+            async function selectDate(date) {
+                state.selectedDate = date;
+                
+                // Update UI
+                document.querySelectorAll('.month-day').forEach(day => {
+                    day.classList.remove('selected');
+                });
+                
+                const dateStr = date.toISOString().split('T')[0];
+                const dayElement = document.querySelector(`.month-day[data-date="${dateStr}"]`);
+                if (dayElement) {
+                    dayElement.classList.add('selected');
+                }
+                
+                updateSelectedDateDisplay();
+                await loadTimeSlots(date);
+            }
+            
+            function updateSelectedDateDisplay() {
+                const element = document.getElementById('selectedDateDisplay');
+                if (element && state.selectedDate) {
+                    element.textContent = state.selectedDate.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                } else {
+                    element.textContent = 'No date selected';
+                }
+            }
+            
+            async function loadTimeSlots(date) {
+                const container = document.getElementById('timeSlotsGrid');
+                const loading = document.getElementById('timeSlotsLoading');
+                
+                if (!container) return;
+                
+                container.innerHTML = '';
+                loading.style.display = 'block';
+                
+                const dateStr = date.toISOString().split('T')[0];
+                
+                try {
+                    // Fetch existing availability for this date
+                    const { data: existingSlots, error } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .eq('date', dateStr)
+                        .order('time_slot');
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    loading.style.display = 'none';
+                    
+                    // If no slots exist, create default slots
+                    let slots = existingSlots;
+                    
+                    if (existingSlots.length === 0) {
+                        // Check if it's a working day
+                        const isWorkingDay = state.defaultSettings.workingDays.includes(date.getDay());
+                        
+                        if (isWorkingDay) {
+                            slots = generateDefaultSlots(date);
+                        } else {
+                            // Non-working day - no slots
+                            container.innerHTML = `
+                                <div style="text-align: center; padding: 40px; color: var(--medium-gray); grid-column: 1 / -1;">
+                                    <i class="fas fa-ban" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                                    <div style="font-size: 18px; margin-bottom: 10px;">Non-Working Day</div>
+                                    <div>This is not a working day according to your default settings</div>
+                                    <button onclick="applyDefaultToSelectedDay()" class="btn btn-warning" style="margin-top: 20px;">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        Create Working Day
+                                    </button>
+                                </div>
+                            `;
+                            return;
+                        }
+                    }
+                    
+                    // Display slots
+                    slots.forEach(slot => {
+                        const slotElement = document.createElement('div');
+                        slotElement.className = `time-slot-card ${slot.is_available ? 'selected' : 'booked'}`;
+                        slotElement.dataset.slotId = slot.id || 'new';
+                        slotElement.dataset.timeSlot = slot.time_slot;
+                        
+                        slotElement.innerHTML = `
+                            <div class="time-slot-time">${formatTimeSlot(slot.time_slot)}</div>
+                            <div class="time-slot-status ${slot.is_available ? 'slot-available' : 'slot-blocked'}">
+                                ${slot.is_available ? 'Available' : 'Blocked'}
+                            </div>
+                        `;
+                        
+                        // Toggle availability
+                        slotElement.addEventListener('click', function() {
+                            this.classList.toggle('selected');
+                            this.classList.toggle('booked');
+                            
+                            const status = this.querySelector('.time-slot-status');
+                            if (this.classList.contains('selected')) {
+                                status.textContent = 'Available';
+                                status.className = 'time-slot-status slot-available';
+                            } else {
+                                status.textContent = 'Blocked';
+                                status.className = 'time-slot-status slot-blocked';
+                            }
+                        });
+                        
+                        container.appendChild(slotElement);
+                    });
+                    
+                } catch (err) {
+                    console.error('Error loading time slots:', err);
+                    loading.style.display = 'none';
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--red); grid-column: 1 / -1;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                            <div>Error loading time slots</div>
+                            <button onclick="loadTimeSlots(state.selectedDate)" class="btn btn-secondary" style="margin-top: 20px;">
+                                <i class="fas fa-redo"></i>
+                                Retry
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+            
+            function generateDefaultSlots(date) {
+                const slots = [];
+                const start = state.defaultSettings.startTime;
+                const end = state.defaultSettings.endTime;
+                const duration = state.defaultSettings.slotDuration;
+                
+                const startHour = parseInt(start.split(':')[0]);
+                const startMinute = parseInt(start.split(':')[1]);
+                const endHour = parseInt(end.split(':')[0]);
+                const endMinute = parseInt(end.split(':')[1]);
+                
+                let currentHour = startHour;
+                let currentMinute = startMinute;
+                
+                while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
+                    const startTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+                    
+                    // Calculate end time
+                    let endHourCalc = currentHour;
+                    let endMinuteCalc = currentMinute + duration;
+                    
+                    while (endMinuteCalc >= 60) {
+                        endHourCalc += 1;
+                        endMinuteCalc -= 60;
+                    }
+                    
+                    const endTime = `${endHourCalc.toString().padStart(2, '0')}:${endMinuteCalc.toString().padStart(2, '0')}`;
+                    
+                    slots.push({
+                        id: null,
+                        date: date.toISOString().split('T')[0],
+                        time_slot: `${startTime}-${endTime}`,
+                        is_available: true
+                    });
+                    
+                    // Move to next slot
+                    currentHour = endHourCalc;
+                    currentMinute = endMinuteCalc;
+                }
+                
+                return slots;
+            }
+            
+            function formatTimeSlot(timeSlot) {
+                const [start, end] = timeSlot.split('-');
+                return `${formatTime(start)} - ${formatTime(end)}`;
+            }
+            
+            function formatTime(time) {
+                const [hour, minute] = time.split(':');
+                const hourNum = parseInt(hour);
+                const suffix = hourNum >= 12 ? 'PM' : 'AM';
+                const displayHour = hourNum > 12 ? hourNum - 12 : hourNum;
+                return `${displayHour}:${minute} ${suffix}`;
+            }
+            
+            async function saveTimeSlots() {
+                if (!state.selectedDate) {
+                    showNotification('Please select a date first', 'warning');
+                    return;
+                }
+                
+                const container = document.getElementById('timeSlotsGrid');
+                const slotElements = container.querySelectorAll('.time-slot-card');
+                
+                if (slotElements.length === 0) {
+                    showNotification('No time slots to save', 'warning');
+                    return;
+                }
+                
+                const dateStr = state.selectedDate.toISOString().split('T')[0];
+                const slotsToSave = [];
+                
+                slotElements.forEach(slotElement => {
+                    const timeSlot = slotElement.dataset.timeSlot;
+                    const isAvailable = slotElement.classList.contains('selected');
+                    const slotId = slotElement.dataset.slotId;
+                    
+                    slotsToSave.push({
+                        id: slotId === 'new' ? null : slotId,
+                        date: dateStr,
+                        time_slot: timeSlot,
+                        is_available: isAvailable
+                    });
+                });
+                
+                try {
+                    // First, delete existing slots for this date
+                    const { error: deleteError } = await state.db
+                        .from('availability')
+                        .delete()
+                        .eq('date', dateStr);
+                    
+                    if (deleteError) throw deleteError;
+                    
+                    // Insert new slots
+                    const { error: insertError } = await state.db
+                        .from('availability')
+                        .insert(slotsToSave.map(slot => ({
+                            date: slot.date,
+                            time_slot: slot.time_slot,
+                            is_available: slot.is_available
+                        })));
+                    
+                    if (insertError) throw insertError;
+                    
+                    showNotification('Time slots saved successfully!', 'success');
+                    
+                    // Reload calendar and slots
+                    await renderMonthCalendar();
+                    await loadTimeSlots(state.selectedDate);
+                    
+                } catch (err) {
+                    console.error('Error saving time slots:', err);
+                    showNotification('Error saving time slots', 'error');
+                }
+            }
+            
+            async function applyDefaultToSelectedDay() {
+                if (!state.selectedDate) {
+                    showNotification('Please select a date first', 'warning');
+                    return;
+                }
+                
+                await applyDefaultAvailability(state.selectedDate);
+                await loadTimeSlots(state.selectedDate);
+                await renderMonthCalendar();
+                
+                showNotification('Default availability applied to selected day!', 'success');
+            }
+            
+            async function applyDefaultToMonth() {
+                if (!confirm('Apply default availability settings to all working days in this month?')) {
+                    return;
+                }
+                
+                // Get all dates in the current month
+                const firstDay = new Date(state.currentYear, state.currentMonth, 1);
+                const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
+                
+                let processed = 0;
+                const totalDays = lastDay.getDate();
+                
+                for (let day = 1; day <= totalDays; day++) {
+                    const date = new Date(state.currentYear, state.currentMonth, day);
+                    
+                    if (state.defaultSettings.workingDays.includes(date.getDay())) {
+                        await applyDefaultAvailability(date);
+                    } else {
+                        await blockDayInDB(date);
+                    }
+                    
+                    processed++;
+                    
+                    // Update progress
+                    if (day % 5 === 0 || day === totalDays) {
+                        showNotification(`Processing... ${processed}/${totalDays} days`, 'success');
+                    }
+                }
+                
+                showNotification('Default availability applied to entire month!', 'success');
+                await renderMonthCalendar();
+            }
+            
+            async function applyDefaultAvailability(date) {
+                const dateStr = date.toISOString().split('T')[0];
+                const slots = generateDefaultSlots(date);
+                
+                try {
+                    // Delete existing slots
+                    await state.db
+                        .from('availability')
+                        .delete()
+                        .eq('date', dateStr);
+                    
+                    // Insert default slots
+                    await state.db
+                        .from('availability')
+                        .insert(slots.map(slot => ({
+                            date: slot.date,
+                            time_slot: slot.time_slot,
+                            is_available: true
+                        })));
+                    
+                } catch (err) {
+                    console.error('Error applying default availability:', err);
+                    throw err;
+                }
+            }
+            
+            async function blockDayInDB(date) {
+                const dateStr = date.toISOString().split('T')[0];
+                
+                try {
+                    // Delete all slots for this date (effectively blocking it)
+                    await state.db
+                        .from('availability')
+                        .delete()
+                        .eq('date', dateStr);
+                    
+                } catch (err) {
+                    console.error('Error blocking day:', err);
+                    throw err;
+                }
+            }
+            
+            function selectAllSlots() {
+                document.querySelectorAll('.time-slot-card').forEach(slot => {
+                    slot.classList.add('selected');
+                    slot.classList.remove('booked');
+                    
+                    const status = slot.querySelector('.time-slot-status');
+                    status.textContent = 'Available';
+                    status.className = 'time-slot-status slot-available';
+                });
+            }
+            
+            function deselectAllSlots() {
+                document.querySelectorAll('.time-slot-card').forEach(slot => {
+                    slot.classList.remove('selected');
+                    slot.classList.add('booked');
+                    
+                    const status = slot.querySelector('.time-slot-status');
+                    status.textContent = 'Blocked';
+                    status.className = 'time-slot-status slot-blocked';
+                });
+            }
+            
+            async function blockDay() {
+                if (!state.selectedDate) {
+                    showNotification('Please select a date first', 'warning');
+                    return;
+                }
+                
+                if (confirm('Block all time slots for this day? This cannot be undone.')) {
+                    await blockDayInDB(state.selectedDate);
+                    showNotification('Day blocked successfully!', 'success');
+                    await loadTimeSlots(state.selectedDate);
+                    await renderMonthCalendar();
+                }
+            }
+            
+            function goToDate(date) {
+                state.currentMonth = date.getMonth();
+                state.currentYear = date.getFullYear();
+                renderMonthCalendar();
+                selectDate(date);
+            }
+            
+            // BOOKINGS FUNCTIONS
+            async function loadBookings() {
+                const container = document.getElementById('bookingsList');
+                if (!container) return;
+                
+                container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading bookings...</div></div>';
+                
+                try {
+                    // Fetch bookings from database
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('*')
+                        .order('booking_date', { ascending: false })
+                        .limit(50);
+                    
+                    if (error) throw error;
+                    
+                    if (bookings.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 60px; color: var(--medium-gray);">
+                                <i class="fas fa-calendar-check" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
+                                <h3 style="margin-bottom: 10px;">No Bookings Yet</h3>
+                                <p>No bookings have been made yet</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Group bookings by date
+                    const bookingsByDate = {};
+                    bookings.forEach(booking => {
+                        if (!bookingsByDate[booking.booking_date]) {
+                            bookingsByDate[booking.booking_date] = [];
+                        }
+                        bookingsByDate[booking.booking_date].push(booking);
+                    });
+                    
+                    // Create bookings list
+                    let html = '<div style="display: flex; flex-direction: column; gap: 20px;">';
+                    
+                    Object.keys(bookingsByDate).sort().reverse().forEach(date => {
+                        const dateBookings = bookingsByDate[date];
+                        const dateObj = new Date(date);
+                        const dateStr = dateObj.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        
+                        html += `
+                            <div style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden;">
+                                <div style="background: var(--light-green); padding: 15px 20px; border-bottom: 1px solid #e5e7eb;">
+                                    <h3 style="color: var(--dark-green);">${dateStr}</h3>
+                                </div>
+                                <div style="padding: 20px;">
+                                    ${dateBookings.map(booking => `
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--off-white); border-radius: 8px; margin-bottom: 10px;">
+                                            <div>
+                                                <div style="font-weight: 600; color: var(--dark-gray);">${booking.customer_name || 'Anonymous'}</div>
+                                                <div style="font-size: 14px; color: var(--medium-gray);">${booking.time_slot}</div>
+                                            </div>
+                                            <div>
+                                                <span style="padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; 
+                                                    background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
+                                                               booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
+                                                               'rgba(239, 68, 68, 0.1)'}; 
+                                                    color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : 
+                                                            booking.status === 'pending' ? 'var(--orange)' : 
+                                                            'var(--red)'};">
+                                                    ${booking.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                    
+                } catch (err) {
+                    console.error('Error loading bookings:', err);
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 60px; color: var(--red);">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 60px; margin-bottom: 20px;"></i>
+                            <h3 style="margin-bottom: 10px;">Error Loading Bookings</h3>
+                            <p>${err.message}</p>
+                            <button onclick="loadBookings()" class="btn btn-secondary" style="margin-top: 20px;">
+                                <i class="fas fa-redo"></i>
+                                Retry
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Initialize when DOM is loaded
+            document.addEventListener('DOMContentLoaded', init);
+            
+            // Expose some functions globally for onclick handlers
+            window.applyDefaultToSelectedDay = applyDefaultToSelectedDay;
+            window.loadTimeSlots = loadTimeSlots;
+            window.showSection = showSection;
+            
+        })();
+    </script>
+</body>
+</html>
