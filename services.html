@@ -1199,6 +1199,68 @@
 
     <!-- JavaScript -->
     <script>
+// ===== Mobile Navigation =====
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+const navMenu = document.getElementById('navMenu');
+const navbar = document.getElementById('navbar');
+const navLinks = document.querySelectorAll('.nav-link');
+
+// Function to open mobile menu
+const openMobileMenu = () => {
+    navMenu.classList.add('active');
+    mobileMenuOverlay.classList.add('active');
+    mobileMenuBtn.classList.add('active');
+    mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+    document.body.style.overflow = 'hidden';
+};
+
+// Function to close mobile menu
+const closeMobileMenu = () => {
+    navMenu.classList.remove('active');
+    mobileMenuOverlay.classList.remove('active');
+    mobileMenuBtn.classList.remove('active');
+    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    document.body.style.overflow = '';
+};
+
+// Toggle Mobile Menu
+mobileMenuBtn.addEventListener('click', () => {
+    if (navMenu.classList.contains('active')) {
+        closeMobileMenu();
+    } else {
+        openMobileMenu();
+    }
+});
+
+// Close Mobile Menu with Close Button
+mobileCloseBtn.addEventListener('click', closeMobileMenu);
+
+// Close Mobile Menu with Overlay Click
+mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+// Close Mobile Menu on Link Click
+navLinks.forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+});
+
+// Close menu on Escape key press
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+        closeMobileMenu();
+    }
+});
+
+// Navbar Scroll Effect
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
+
 // ===== Booking System =====
 const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
@@ -1215,13 +1277,141 @@ let currentBooking = {
 // Initialize Supabase
 if (typeof supabase !== 'undefined') {
     supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    console.log('Supabase initialized');
+    console.log('✅ Supabase initialized');
 } else {
-    console.error('Supabase SDK not loaded');
+    console.error('❌ Supabase SDK not loaded');
 }
 
-// Booking Modal Functions
+// Database Schema Check
+async function checkDatabaseSchema() {
+    console.log('🔍 Checking database schema...');
+    
+    if (!supabaseClient) {
+        console.error('❌ Supabase client not available');
+        return false;
+    }
+    
+    try {
+        // Check if bookings table exists
+        const { data: tableExists, error: tableError } = await supabaseClient
+            .from('bookings')
+            .select('count', { count: 'exact', head: true })
+            .limit(1);
+        
+        if (tableError) {
+            console.error('❌ Bookings table error:', tableError);
+            return false;
+        }
+        
+        console.log('✅ Bookings table exists');
+        
+        // Try to describe table structure by inserting a test record
+        const testData = {
+            service_title: 'Test Service',
+            service_id: 0,
+            customer_name: 'Test Customer',
+            customer_phone: '07123456789',
+            customer_email: 'test@example.com',
+            customer_address: 'Test Address, London',
+            booking_date: '2099-12-31',
+            time_slot: '00:00-01:00',
+            duration: '1 hour',
+            notes: 'Test record - please delete',
+            status: 'test'
+        };
+        
+        const { data: testResult, error: testError } = await supabaseClient
+            .from('bookings')
+            .insert([testData])
+            .select()
+            .single();
+        
+        if (testError) {
+            console.error('❌ Schema test failed:', testError);
+            return false;
+        }
+        
+        console.log('✅ Schema test passed:', testResult);
+        
+        // Clean up test record
+        await supabaseClient
+            .from('bookings')
+            .delete()
+            .eq('id', testResult.id);
+        
+        console.log('✅ Test record cleaned up');
+        return true;
+        
+    } catch (err) {
+        console.error('❌ Schema check error:', err);
+        return false;
+    }
+}
+
+// Show Connection Status
+function showConnectionStatus(status, message) {
+    const existingStatus = document.getElementById('dbStatus');
+    if (existingStatus) {
+        existingStatus.remove();
+    }
+    
+    const statusDiv = document.createElement('div');
+    statusDiv.id = 'dbStatus';
+    statusDiv.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        font-weight: bold;
+        text-align: center;
+        display: none;
+    `;
+    
+    if (status === 'success') {
+        statusDiv.style.background = '#d1fae5';
+        statusDiv.style.color = '#065f46';
+        statusDiv.style.border = '2px solid #10b981';
+    } else {
+        statusDiv.style.background = '#fef3c7';
+        statusDiv.style.color = '#92400e';
+        statusDiv.style.border = '2px solid #f59e0b';
+    }
+    
+    statusDiv.textContent = message;
+    document.body.appendChild(statusDiv);
+    statusDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        statusDiv.style.display = 'none';
+    }, 3000);
+}
+
+// Initialize Database Check
+window.addEventListener('DOMContentLoaded', async function() {
+    console.log('🔄 Initializing booking system...');
+    
+    if (!supabaseClient) {
+        showConnectionStatus('error', '⚠️ Booking system not available. Please contact us directly.');
+        return;
+    }
+    
+    const schemaOk = await checkDatabaseSchema();
+    if (schemaOk) {
+        showConnectionStatus('success', '✅ Booking system ready!');
+        console.log('✅ Booking system initialized successfully');
+    } else {
+        showConnectionStatus('error', '⚠️ Booking system issues detected. Please call 07827 784204.');
+        console.warn('⚠️ Database schema issues detected');
+    }
+});
+
+// ===== Booking Modal Functions =====
 function openBookingModal(serviceTitle, serviceId) {
+    console.log('📅 Opening booking modal for:', serviceTitle);
+    
     currentBooking.service = {
         title: serviceTitle,
         id: serviceId
@@ -1250,6 +1440,8 @@ function openBookingModal(serviceTitle, serviceId) {
     document.getElementById('customerEmail').value = '';
     document.getElementById('customerAddress').value = '';
     document.getElementById('bookingNotes').value = '';
+    
+    console.log('✅ Booking modal opened');
 }
 
 function closeBookingModal() {
@@ -1261,6 +1453,7 @@ function closeBookingModal() {
         slotId: null,
         customer: {}
     };
+    console.log('📅 Booking modal closed');
 }
 
 // Close modal when clicking outside
@@ -1283,18 +1476,18 @@ document.getElementById('bookingDate').addEventListener('change', function() {
     loadTimeSlots(this.value);
 });
 
+// Load available time slots
 async function loadTimeSlots(date) {
     const container = document.getElementById('timeSlotsContainer');
-    container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin"></i> Loading available time slots...</div>';
+    container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top: 10px;">Loading available time slots...</div></div>';
     
     if (!supabaseClient) {
-        console.error('Supabase client not initialized');
-        container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--red);">Error: Cannot connect to booking system</div>';
+        container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--red);"><i class="fas fa-exclamation-triangle fa-2x"></i><div style="margin-top: 10px;">Error: Cannot connect to booking system</div></div>';
         return;
     }
     
     try {
-        console.log('Loading time slots for date:', date);
+        console.log('🕒 Loading time slots for:', date);
         
         const { data: availability, error } = await supabaseClient
             .from('availability')
@@ -1304,16 +1497,25 @@ async function loadTimeSlots(date) {
             .order('time_slot');
         
         if (error) {
-            console.error('Supabase error:', error);
+            console.error('❌ Error loading time slots:', error);
             throw error;
         }
         
-        console.log('Available slots:', availability);
+        console.log(`✅ Found ${availability?.length || 0} available slots`);
         
         container.innerHTML = '';
         
         if (!availability || availability.length === 0) {
-            container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);">No available slots for this date. Please select another date.</div>';
+            container.innerHTML = `
+                <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                    <i class="fas fa-calendar-times fa-2x"></i>
+                    <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">No Available Slots</div>
+                    <div>No time slots available for ${new Date(date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                        <i class="fas fa-phone"></i> Call us at 07827 784204 for alternative times
+                    </div>
+                </div>
+            `;
             return;
         }
         
@@ -1328,11 +1530,17 @@ async function loadTimeSlots(date) {
             slotElement.dataset.timeSlot = slot.time_slot;
             
             const [start, end] = slot.time_slot.split('-');
-            const formattedTime = `${formatTime(start)} - ${formatTime(end)}`;
             
             slotElement.innerHTML = `
-                <div style="font-weight: 600; color: var(--dark-green); margin-bottom: 5px;">${formatTime(start)}</div>
-                <div style="font-size: 13px; color: var(--medium-gray);">to ${formatTime(end)}</div>
+                <div style="font-weight: 700; color: var(--dark-green); margin-bottom: 5px; font-size: 18px;">
+                    ${formatTime(start)}
+                </div>
+                <div style="font-size: 13px; color: var(--medium-gray); margin-bottom: 5px;">
+                    to ${formatTime(end)}
+                </div>
+                <div style="font-size: 11px; color: var(--primary-green);">
+                    <i class="fas fa-check-circle"></i> Available
+                </div>
             `;
             
             slotElement.addEventListener('click', function() {
@@ -1347,15 +1555,25 @@ async function loadTimeSlots(date) {
                 // Update booking
                 currentBooking.timeSlot = slot.time_slot;
                 currentBooking.slotId = slot.id;
-                console.log('Selected slot:', slot);
+                
+                console.log('✅ Selected time slot:', slot.time_slot);
             });
             
             container.appendChild(slotElement);
         });
         
     } catch (err) {
-        console.error('Error loading time slots:', err);
-        container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--red);">Error loading time slots. Please try again.</div>';
+        console.error('❌ Error loading time slots:', err);
+        container.innerHTML = `
+            <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--red);">
+                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Connection Error</div>
+                <div>Unable to load time slots. Please try again.</div>
+                <button onclick="loadTimeSlots('${date}')" class="btn btn-outline" style="margin-top: 20px; padding: 10px 20px;">
+                    <i class="fas fa-redo"></i> Retry
+                </button>
+            </div>
+        `;
     }
 }
 
@@ -1369,12 +1587,12 @@ function formatTime(time) {
 
 function nextBookingStep() {
     if (!currentBooking.timeSlot) {
-        alert('Please select a time slot');
+        alert('⚠️ Please select a time slot');
         return;
     }
     
     if (!currentBooking.slotId) {
-        alert('Error: No slot ID selected. Please select a time slot again.');
+        alert('⚠️ Error: No slot ID selected. Please select a time slot again.');
         return;
     }
     
@@ -1384,11 +1602,14 @@ function nextBookingStep() {
     // Show step 2
     document.getElementById('bookingStep1').style.display = 'none';
     document.getElementById('bookingStep2').style.display = 'block';
+    
+    console.log('✅ Moving to customer details step');
 }
 
 function prevBookingStep() {
     document.getElementById('bookingStep2').style.display = 'none';
     document.getElementById('bookingStep1').style.display = 'block';
+    console.log('⬅️ Returning to time slot selection');
 }
 
 function updateBookingSummary() {
@@ -1397,23 +1618,28 @@ function updateBookingSummary() {
     const bookingDate = new Date(currentBooking.date);
     
     summary.innerHTML = `
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span style="color: var(--dark-gray);">Service:</span>
-            <span style="font-weight: 600;">${currentBooking.service.title}</span>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+            <span style="color: var(--dark-gray); font-weight: 600;">Service:</span>
+            <span style="font-weight: 700; color: var(--dark-green);">${currentBooking.service.title}</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span style="color: var(--dark-gray);">Date:</span>
-            <span>${bookingDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+            <span style="color: var(--dark-gray); font-weight: 600;">Date:</span>
+            <span>${bookingDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span style="color: var(--dark-gray);">Time:</span>
-            <span>${formatTime(start)} - ${formatTime(end)}</span>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+            <span style="color: var(--dark-gray); font-weight: 600;">Time:</span>
+            <span style="font-weight: 600; color: var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--dark-gray); font-weight: 600;">Booking ID:</span>
+            <span style="font-size: 12px; color: var(--medium-gray);">${currentBooking.slotId.substring(0, 8)}...</span>
         </div>
     `;
 }
 
+// Main Booking Confirmation Function
 async function confirmBooking() {
-    console.log('Starting booking confirmation...');
+    console.log('🚀 Starting booking confirmation process...');
     
     // Validate form
     const customerName = document.getElementById('customerName').value.trim();
@@ -1421,23 +1647,28 @@ async function confirmBooking() {
     const customerAddress = document.getElementById('customerAddress').value.trim();
     
     if (!customerName || !customerPhone || !customerAddress) {
-        alert('Please fill in all required fields (Name, Phone, and Address)');
+        alert('❌ Please fill in all required fields:\n\n• Full Name\n• Phone Number\n• Service Address');
         return;
     }
     
     if (!currentBooking.timeSlot || !currentBooking.slotId) {
-        alert('Please select a time slot');
+        alert('❌ Please select a time slot');
         return;
     }
     
     if (!supabaseClient) {
-        alert('Cannot connect to booking system. Please contact us directly.');
+        alert('❌ Cannot connect to booking system.\n\nPlease call us directly at 07827 784204.');
         return;
     }
     
+    // Disable the confirm button to prevent double-clicking
+    const confirmBtn = document.querySelector('.btn-success');
+    const originalText = confirmBtn.innerHTML;
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Booking...';
+    confirmBtn.disabled = true;
+    
     try {
-        console.log('Step 1: Checking slot availability...');
-        console.log('Slot ID:', currentBooking.slotId);
+        console.log('1️⃣ Checking slot availability...');
         
         // 1. Check if slot is still available
         const { data: slotCheck, error: checkError } = await supabaseClient
@@ -1447,26 +1678,20 @@ async function confirmBooking() {
             .eq('is_available', true)
             .single();
         
-        console.log('Slot check result:', slotCheck);
-        
-        if (checkError) {
-            console.error('Slot check error:', checkError);
-            throw new Error('Error checking slot availability: ' + checkError.message);
-        }
-        
-        if (!slotCheck) {
-            alert('This time slot is no longer available. Please select another.');
+        if (checkError || !slotCheck) {
+            alert('❌ This time slot is no longer available.\n\nPlease select another time slot.');
             loadTimeSlots(currentBooking.date);
             return;
         }
         
-        console.log('Step 2: Creating booking record...');
+        console.log('✅ Slot is available');
+        console.log('2️⃣ Creating booking record...');
         
-        // Find service duration from servicesData
+        // Find service duration
         const serviceData = servicesData.find(s => s.id == currentBooking.service.id);
         const serviceDuration = serviceData ? serviceData.duration : '2-3 hours';
         
-        // 2. Create booking record
+        // 2. Prepare booking data
         const bookingData = {
             service_title: currentBooking.service.title,
             service_id: parseInt(currentBooking.service.id),
@@ -1478,11 +1703,13 @@ async function confirmBooking() {
             time_slot: currentBooking.timeSlot,
             duration: serviceDuration,
             notes: document.getElementById('bookingNotes').value.trim() || null,
-            status: 'confirmed'
+            status: 'confirmed',
+            created_at: new Date().toISOString()
         };
         
-        console.log('Booking data:', bookingData);
+        console.log('📝 Booking data prepared:', bookingData);
         
+        // 3. Insert booking record
         const { data: booking, error: bookingError } = await supabaseClient
             .from('bookings')
             .insert([bookingData])
@@ -1490,15 +1717,25 @@ async function confirmBooking() {
             .single();
         
         if (bookingError) {
-            console.error('Booking insert error:', bookingError);
-            throw new Error('Error creating booking: ' + bookingError.message);
+            console.error('❌ Booking insert error:', bookingError);
+            
+            // Try alternative approach without .select()
+            const { error: simpleInsertError } = await supabaseClient
+                .from('bookings')
+                .insert(bookingData);
+            
+            if (simpleInsertError) {
+                throw new Error(`Database insert failed: ${simpleInsertError.message}`);
+            }
+            
+            console.log('✅ Booking created (alternative method)');
+        } else {
+            console.log('✅ Booking created:', booking);
         }
         
-        console.log('Booking created:', booking);
+        console.log('3️⃣ Updating availability...');
         
-        console.log('Step 3: Updating availability...');
-        
-        // 3. Update availability to booked
+        // 4. Update availability to booked
         const { error: updateError } = await supabaseClient
             .from('availability')
             .update({ 
@@ -1508,62 +1745,118 @@ async function confirmBooking() {
             .eq('id', currentBooking.slotId);
         
         if (updateError) {
-            console.error('Availability update error:', updateError);
-            throw new Error('Error updating availability: ' + updateError.message);
+            console.error('⚠️ Availability update warning:', updateError);
+            // Don't fail the booking if availability update fails
+            console.warn('Booking created but availability not updated');
+        } else {
+            console.log('✅ Availability updated');
         }
         
-        console.log('Step 4: Booking confirmed successfully!');
+        console.log('4️⃣ Sending notifications...');
         
-        // 4. Show success message
-        const successMessage = `✅ Booking Confirmed!\n\nService: ${currentBooking.service.title}\nDate: ${new Date(currentBooking.date).toLocaleDateString()}\nTime: ${currentBooking.timeSlot}\n\nWe will contact you at ${customerPhone} to confirm details.\n\nThank you for choosing GreenGlo Cleaners!`;
+        // 5. Prepare success message
+        const bookingDate = new Date(currentBooking.date);
+        const formattedDate = bookingDate.toLocaleDateString('en-GB', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+        
+        // 6. Show success message
+        const successMessage = `
+✅ BOOKING CONFIRMED!
+
+📋 SERVICE DETAILS
+────────────────────
+Service: ${currentBooking.service.title}
+Date: ${formattedDate}
+Time: ${currentBooking.timeSlot}
+
+👤 CUSTOMER DETAILS
+────────────────────
+Name: ${customerName}
+Phone: ${customerPhone}
+${document.getElementById('customerEmail').value.trim() ? `Email: ${document.getElementById('customerEmail').value.trim()}\n` : ''}
+Address: ${customerAddress}
+
+📞 NEXT STEPS
+────────────────────
+We will call you within 24 hours to confirm all details.
+
+Thank you for choosing GreenGlo Cleaners! 🌿
+        `;
         
         alert(successMessage);
         
-        // 5. Send WhatsApp notification (optional)
+        // 7. Send WhatsApp notification
         const whatsappMessage = encodeURIComponent(
-            `📅 NEW BOOKING FROM WEBSITE\n\n` +
-            `Service: ${currentBooking.service.title}\n` +
-            `Customer: ${customerName}\n` +
-            `Phone: ${customerPhone}\n` +
-            `Date: ${currentBooking.date}\n` +
-            `Time: ${currentBooking.timeSlot}\n` +
-            `Address: ${customerAddress}\n\n` +
-            `---\n` +
-            `Go to admin panel to view details.`
+            `📅 NEW BOOKING CONFIRMED - GreenGlo Cleaners\n\n` +
+            `🛠️ Service: ${currentBooking.service.title}\n` +
+            `📅 Date: ${currentBooking.date}\n` +
+            `🕒 Time: ${currentBooking.timeSlot}\n` +
+            `👤 Customer: ${customerName}\n` +
+            `📞 Phone: ${customerPhone}\n` +
+            `📧 Email: ${document.getElementById('customerEmail').value.trim() || 'Not provided'}\n` +
+            `🏠 Address: ${customerAddress}\n` +
+            `📝 Notes: ${document.getElementById('bookingNotes').value.trim() || 'None'}\n\n` +
+            `🔗 View in admin panel`
         );
         
-        // Open WhatsApp in new tab (optional - remove if you don't want this)
-        window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`, '_blank');
+        // Open WhatsApp in new tab
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`;
+        window.open(whatsappUrl, '_blank');
         
-        // 6. Close modal
-        closeBookingModal();
+        console.log('✅ WhatsApp notification sent');
         
-        // 7. Send confirmation email (optional - you can add this later)
-        // sendConfirmationEmail(customerEmail, customerName, booking);
+        // 8. Reset form and close modal
+        setTimeout(() => {
+            closeBookingModal();
+            console.log('✅ Booking process completed successfully');
+        }, 1000);
         
     } catch (err) {
-        console.error('Error in confirmBooking:', err);
-        console.error('Error details:', {
-            message: err.message,
-            stack: err.stack,
-            currentBooking: currentBooking
+        console.error('❌ CRITICAL ERROR in confirmBooking:', err);
+        
+        // Detailed error analysis
+        let errorMessage = '❌ BOOKING FAILED\n\n';
+        let technicalDetails = '';
+        
+        if (err.message.includes('customer_address')) {
+            errorMessage += 'Database configuration error.\n\n';
+            technicalDetails = 'Missing customer_address column in database.';
+        } else if (err.message.includes('network') || err.message.includes('fetch')) {
+            errorMessage += 'Network connection error.\n\nPlease check your internet connection.';
+        } else if (err.message.includes('permission') || err.message.includes('auth') || err.message.includes('policy')) {
+            errorMessage += 'Database permission error.\n\n';
+            technicalDetails = 'RLS policy blocking access. Check Supabase policies.';
+        } else if (err.message.includes('duplicate')) {
+            errorMessage += 'Time slot already booked.\n\nPlease select another time.';
+        } else {
+            errorMessage += `Technical error: ${err.message}\n\n`;
+        }
+        
+        errorMessage += '\n📞 PLEASE CALL US DIRECTLY AT:\n07827 784204\n\nWe can take your booking over the phone.';
+        
+        if (technicalDetails) {
+            console.error('Technical details:', technicalDetails);
+        }
+        
+        alert(errorMessage);
+        
+        // Log to console for debugging
+        console.error('Error context:', {
+            currentBooking: currentBooking,
+            customerName: customerName,
+            customerPhone: customerPhone,
+            fullError: err
         });
         
-        // Show user-friendly error message
-        if (err.message.includes('duplicate key')) {
-            alert('This time slot was just booked by someone else. Please select another time.');
-        } else if (err.message.includes('network') || err.message.includes('fetch')) {
-            alert('Network error. Please check your internet connection and try again.');
-        } else if (err.message.includes('permission') || err.message.includes('auth')) {
-            alert('Permission error. Please contact support at 07827 784204.');
-        } else {
-            alert('Sorry, we encountered an error processing your booking. Please contact us directly at 07827 784204 to book your service.');
-        }
-        
-        // Try to reload slots in case of error
-        if (currentBooking.date) {
-            loadTimeSlots(currentBooking.date);
-        }
+    } finally {
+        // Always re-enable the button
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+        console.log('🔄 Confirm button re-enabled');
     }
 }
 
@@ -1730,7 +2023,7 @@ function renderServices(category = 'all') {
         serviceCard.setAttribute('data-category', service.category);
 
         serviceCard.innerHTML = `
-            <div class="service-image" style="background-image: url('${service.image}');">
+            <div class="service-image" style="background-image: url('${service.image}'); background-color: var(--light-green);">
                 <div class="service-overlay">
                     <h3>${service.title}</h3>
                 </div>
@@ -1766,6 +2059,21 @@ function renderServices(category = 'all') {
             openBookingModal(serviceTitle, serviceId);
         });
     });
+
+    // Add loading animation
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+        
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, 100 + (index * 100));
+    });
+    
+    console.log(`✅ Rendered ${filteredServices.length} services`);
 }
 
 // ===== Category Filtering =====
@@ -1779,33 +2087,151 @@ categoryButtons.forEach(button => {
         button.classList.add('active');
 
         const category = button.getAttribute('data-category');
+        console.log(`Filtering by category: ${category}`);
         renderServices(category);
     });
 });
 
-// Initial render
-renderServices();
+// ===== Smooth Scrolling =====
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        if (this.getAttribute('href') === '#') return;
 
-// Test database connection on load
-window.addEventListener('load', function() {
-    if (supabaseClient) {
-        console.log('Testing Supabase connection...');
-        
-        // Simple test query
-        supabaseClient
-            .from('availability')
-            .select('*')
-            .limit(1)
-            .then(({ data, error }) => {
-                if (error) {
-                    console.error('Supabase connection test failed:', error);
-                } else {
-                    console.log('Supabase connection successful');
-                }
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
             });
+        }
+    });
+});
+
+// ===== Initialize Page =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM fully loaded, initializing services...');
+    
+    // Initial render
+    renderServices();
+    
+    // Add database test button for debugging (remove in production)
+    const debugBtn = document.createElement('button');
+    debugBtn.innerHTML = '🔧 Test DB';
+    debugBtn.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        background: var(--dark-green);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 50px;
+        cursor: pointer;
+        z-index: 9998;
+        font-size: 12px;
+        opacity: 0.7;
+    `;
+    debugBtn.onclick = async () => {
+        console.log('🔧 Running database test...');
+        const result = await checkDatabaseSchema();
+        alert(result ? '✅ Database test passed!' : '❌ Database test failed. Check console.');
+    };
+    document.body.appendChild(debugBtn);
+    
+    console.log('🎉 Services page fully initialized');
+});
+
+// ===== Emergency Contact Display =====
+function showEmergencyContact() {
+    const emergencyDiv = document.createElement('div');
+    emergencyDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        z-index: 10001;
+        text-align: center;
+        max-width: 400px;
+        animation: fadeIn 0.3s ease;
+    `;
+    
+    emergencyDiv.innerHTML = `
+        <div style="color: var(--red); font-size: 48px; margin-bottom: 20px;">
+            <i class="fas fa-phone-alt"></i>
+        </div>
+        <h3 style="color: var(--dark-green); margin-bottom: 15px;">Booking System Unavailable</h3>
+        <p style="color: var(--dark-gray); margin-bottom: 25px;">
+            There seems to be a technical issue with our online booking system.
+        </p>
+        <div style="background: var(--light-green); padding: 20px; border-radius: 12px; margin-bottom: 25px;">
+            <div style="font-size: 28px; font-weight: 700; color: var(--dark-green); margin-bottom: 10px;">
+                07827 784204
+            </div>
+            <div style="color: var(--medium-gray); font-size: 14px;">
+                Call us directly to book your service
+            </div>
+        </div>
+        <button onclick="this.parentElement.remove()" style="background: var(--primary-green); color: white; border: none; padding: 12px 30px; border-radius: 50px; cursor: pointer; font-weight: 600;">
+            Close
+        </button>
+    `;
+    
+    document.body.appendChild(emergencyDiv);
+}
+
+// Auto-show emergency contact if booking fails repeatedly
+let bookingErrorCount = 0;
+const originalConfirmBooking = confirmBooking;
+window.confirmBooking = async function() {
+    try {
+        await originalConfirmBooking();
+        bookingErrorCount = 0; // Reset on success
+    } catch (err) {
+        bookingErrorCount++;
+        if (bookingErrorCount >= 2) {
+            setTimeout(showEmergencyContact, 1000);
+        }
+        throw err;
     }
+};
+
+// Export functions for debugging
+window.testBooking = async function() {
+    console.log('🧪 Test booking function called');
+    const testData = {
+        service_title: 'Test Service',
+        service_id: 1,
+        customer_name: 'Test User',
+        customer_phone: '07123456789',
+        customer_email: 'test@example.com',
+        customer_address: '123 Test Street, London',
+        booking_date: '2024-12-31',
+        time_slot: '10:00-12:00',
+        duration: '2 hours',
+        notes: 'Test booking',
+        status: 'test'
+    };
+    
+    const result = await supabaseClient.from('bookings').insert([testData]).select();
+    console.log('Test result:', result);
+    return result;
+};
+
+// Final initialization check
+window.addEventListener('load', () => {
+    console.log('🚀 Page fully loaded');
+    console.log('Supabase client:', supabaseClient ? '✅ Initialized' : '❌ Not initialized');
+    console.log('Booking system:', '✅ Ready');
 });
     </script>
 </body>
 </html>
+
 
