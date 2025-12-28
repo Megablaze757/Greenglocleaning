@@ -1,1307 +1,739 @@
-<script>
-    // ===== Supabase Configuration =====
-    const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGplbmlvaGV0ZWZxd2NzZWZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzU0ODU0NzEsImV4cCI6MjA1MTA2MTQ3MX0.oFmbUuS8KSHV_5OoXzkC8E4u5-d4f1V7WwZqQg5wqGU';
+<!-- 预订模态框 -->
+<div id="bookingModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: white; border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+        <!-- 模态框头部 -->
+        <div style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--light-gray); display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; color: var(--dark-green);" id="bookingServiceTitle">Book Service</h3>
+            <button onclick="closeBookingModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--medium-gray); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+                &times;
+            </button>
+        </div>
+        
+        <!-- 预订步骤指示器 -->
+        <div style="padding: 1.5rem 2rem; background: var(--off-white);">
+            <div style="display: flex; align-items: center; justify-content: space-between; max-width: 400px; margin: 0 auto;">
+                <div style="text-align: center; flex: 1;">
+                    <div style="width: 32px; height: 32px; background: var(--primary-green); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: bold;">1</div>
+                    <div style="font-size: 0.875rem; color: var(--dark-green); font-weight: 500;">Select Date & Time</div>
+                </div>
+                <div style="height: 2px; background: var(--light-gray); flex: 1; margin: 0 1rem;"></div>
+                <div style="text-align: center; flex: 1;">
+                    <div style="width: 32px; height: 32px; background: var(--light-gray); color: var(--medium-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-weight: bold;">2</div>
+                    <div style="font-size: 0.875rem; color: var(--medium-gray);">Your Details</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 预订内容区域 -->
+        <div style="padding: 2rem;">
+            <div id="step1">
+                <div style="margin-bottom: 2rem;">
+                    <h4 style="color: var(--dark-gray); margin-bottom: 1rem;">Select Date</h4>
+                    <div id="bookingCalendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1.5rem;">
+                        <!-- 日历将通过JavaScript生成 -->
+                    </div>
+                </div>
+                
+                <div id="timeSlotsSection" style="display: none;">
+                    <h4 style="color: var(--dark-gray); margin-bottom: 1rem;">Available Time Slots for <span id="selectedDateText">Selected Date</span></h4>
+                    <div id="availableTimeSlots" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 2rem;">
+                        <!-- 可用时间段将通过JavaScript生成 -->
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between;">
+                    <button onclick="closeBookingModal()" style="padding: 0.875rem 1.5rem; background: var(--light-gray); border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--dark-gray);">
+                        Cancel
+                    </button>
+                    <button onclick="goToStep2()" id="nextStepBtn" style="padding: 0.875rem 1.5rem; background: var(--light-gray); border: none; border-radius: 8px; font-weight: 600; cursor: not-allowed; color: var(--medium-gray);" disabled>
+                        Next: Your Details
+                    </button>
+                </div>
+            </div>
+            
+            <div id="step2" style="display: none;">
+                <form id="bookingForm">
+                    <input type="hidden" id="selectedServiceId">
+                    <input type="hidden" id="selectedSlotId">
+                    <input type="hidden" id="selectedSlotDate">
+                    <input type="hidden" id="selectedSlotTime">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark-gray);">First Name *</label>
+                            <input type="text" id="firstName" required style="width: 100%; padding: 0.875rem; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 1rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark-gray);">Last Name *</label>
+                            <input type="text" id="lastName" required style="width: 100%; padding: 0.875rem; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 1rem;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark-gray);">Email Address *</label>
+                        <input type="email" id="email" required style="width: 100%; padding: 0.875rem; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark-gray);">Phone Number *</label>
+                        <input type="tel" id="phone" required style="width: 100%; padding: 0.875rem; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark-gray);">Address</label>
+                        <textarea id="address" rows="3" style="width: 100%; padding: 0.875rem; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 1rem; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--dark-gray);">Special Instructions</label>
+                        <textarea id="instructions" rows="3" placeholder="Any specific requirements or notes for our team..." style="width: 100%; padding: 0.875rem; border: 2px solid var(--light-gray); border-radius: 8px; font-size: 1rem; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between;">
+                        <button type="button" onclick="goToStep1()" style="padding: 0.875rem 1.5rem; background: var(--light-gray); border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--dark-gray);">
+                            ← Back
+                        </button>
+                        <button type="submit" style="padding: 0.875rem 1.5rem; background: var(--primary-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-calendar-check"></i>
+                            Confirm Booking
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="step3" style="display: none; text-align: center; padding: 3rem 1rem;">
+                <div style="width: 80px; height: 80px; background: var(--light-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: var(--primary-green); font-size: 2rem;">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h3 style="color: var(--dark-green); margin-bottom: 1rem;">Booking Confirmed!</h3>
+                <p style="color: var(--medium-gray); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    Thank you for booking with GreenGlo Cleaners. We have sent a confirmation to your email.
+                    Our team will contact you shortly to confirm the details.
+                </p>
+                <div style="background: var(--off-white); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; text-align: left;">
+                    <h4 style="color: var(--dark-green); margin-bottom: 0.5rem;">Booking Summary</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <div style="color: var(--medium-gray);">Service:</div>
+                        <div style="font-weight: 600;" id="bookingSummaryService"></div>
+                        
+                        <div style="color: var(--medium-gray);">Date:</div>
+                        <div style="font-weight: 600;" id="bookingSummaryDate"></div>
+                        
+                        <div style="color: var(--medium-gray);">Time:</div>
+                        <div style="font-weight: 600;" id="bookingSummaryTime"></div>
+                        
+                        <div style="color: var(--medium-gray);">Reference:</div>
+                        <div style="font-weight: 600;" id="bookingReference"></div>
+                    </div>
+                </div>
+                <button onclick="closeBookingModal()" style="padding: 0.875rem 1.5rem; background: var(--primary-green); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* 预订模态框样式 */
+    #bookingModal {
+        font-family: 'Montserrat', sans-serif;
+    }
     
-    // Create Supabase client
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    #bookingModal button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    
+    /* 时间槽位样式 */
+    .time-slot-option {
+        padding: 1rem;
+        border: 2px solid var(--light-gray);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        background: white;
+    }
+    
+    .time-slot-option:hover {
+        border-color: var(--primary-green);
+        background: var(--light-green);
+    }
+    
+    .time-slot-option.selected {
+        background: var(--primary-green);
+        color: white;
+        border-color: var(--primary-green);
+    }
+    
+    .time-slot-option.unavailable {
+        background: var(--off-white);
+        color: var(--medium-gray);
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    
+    /* 日历样式 */
+    .calendar-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--light-gray);
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    
+    .calendar-day:hover {
+        border-color: var(--primary-green);
+    }
+    
+    .calendar-day.selected {
+        background: var(--primary-green);
+        color: white;
+        border-color: var(--primary-green);
+    }
+    
+    .calendar-day.unavailable {
+        background: var(--off-white);
+        color: var(--medium-gray);
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+    
+    .calendar-day.today {
+        border-color: var(--primary-green);
+    }
+    
+    /* 加载动画 */
+    .loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        color: var(--medium-gray);
+    }
+    
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--light-gray);
+        border-top: 3px solid var(--primary-green);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+<script> // ===== Supabase配置 =====
+const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
 
-    // ===== Global State =====
-    let currentBookingId = null;
-    let currentView = 'dashboard';
-    let bookingsData = [];
-    let currentPage = 1;
-    const itemsPerPage = 10;
-    let totalBookings = 0;
-    let currentMonth = new Date().getMonth();
-    let currentYear = new Date().getFullYear();
+// 初始化Supabase客户端
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-    // ===== DOM Elements =====
-    const elements = {
-        // Sections
-        dashboardSection: document.getElementById('dashboardSection'),
-        bookingsSection: document.getElementById('bookingsSection'),
-        availabilitySection: document.getElementById('availabilitySection'),
-        
-        // Navigation
-        navDashboard: document.getElementById('navDashboard'),
-        navBookings: document.getElementById('navBookings'),
-        navAvailability: document.getElementById('navAvailability'),
-        
-        // Stats
-        totalBookings: document.getElementById('totalBookings'),
-        pendingBookings: document.getElementById('pendingBookings'),
-        totalRevenue: document.getElementById('totalRevenue'),
-        activeCustomers: document.getElementById('activeCustomers'),
-        
-        // Tables
-        recentBookingsBody: document.getElementById('recentBookingsBody'),
-        recentLoading: document.getElementById('recentLoading'),
-        recentNoData: document.getElementById('recentNoData'),
-        bookingsBody: document.getElementById('bookingsBody'),
-        bookingsLoading: document.getElementById('bookingsLoading'),
-        bookingsNoData: document.getElementById('bookingsNoData'),
-        bookingsPagination: document.getElementById('bookingsPagination'),
-        
-        // Calendar
-        calendarTitle: document.getElementById('calendarTitle'),
-        prevMonth: document.getElementById('prevMonth'),
-        nextMonth: document.getElementById('nextMonth'),
-        availabilityCalendar: document.getElementById('availabilityCalendar'),
-        
-        // Search & Filters
-        bookingSearch: document.getElementById('bookingSearch'),
-        statusFilter: document.getElementById('statusFilter'),
-        dateFilter: document.getElementById('dateFilter'),
-        recentFilter: document.getElementById('recentFilter'),
-        
-        // Buttons
-        refreshBtn: document.getElementById('refreshBtn'),
-        newBookingBtn: document.getElementById('newBookingBtn'),
-        addSlotsBtn: document.getElementById('addSlotsBtn'),
-        setWorkingHoursBtn: document.getElementById('setWorkingHoursBtn'),
-        bulkBlockBtn: document.getElementById('bulkBlockBtn'),
-        mobileMenuToggle: document.getElementById('mobileMenuToggle'),
-        sidebar: document.getElementById('sidebar')
-    };
+// ===== 预订系统全局变量 =====
+let currentBookingService = null;
+let selectedSlot = null;
+let selectedDate = null;
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
 
-    // ===== Initialize Admin Panel =====
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Admin panel loading...');
-        
-        // Check authentication
-        const isAuthenticated = localStorage.getItem('greenglo_admin_auth') === 'authenticated';
-        
-        if (!isAuthenticated) {
-            showLoginModal();
-        } else {
-            setupNavigation();
-            setupEventListeners();
-            loadDashboardData();
-            
-            // Set current date
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-GB', options);
-            
-            // Set default dates in forms
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('newDate').value = tomorrow.toISOString().split('T')[0];
-            document.getElementById('editDate').value = tomorrow.toISOString().split('T')[0];
-            document.getElementById('slotStartDate').value = now.toISOString().split('T')[0];
-            document.getElementById('slotEndDate').value = tomorrow.toISOString().split('T')[0];
-            document.getElementById('blockStartDate').value = now.toISOString().split('T')[0];
-            document.getElementById('blockEndDate').value = tomorrow.toISOString().split('T')[0];
-            
-            // Load dashboard by default
-            switchView('dashboard');
+// ===== 预订模态框函数 =====
+function openBookingModal(serviceId) {
+    currentBookingService = servicesData.find(s => s.id === serviceId);
+    if (!currentBookingService) return;
+    
+    document.getElementById('bookingServiceTitle').textContent = `Book: ${currentBookingService.title}`;
+    document.getElementById('selectedServiceId').value = serviceId;
+    
+    // 重置步骤
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'none';
+    document.getElementById('timeSlotsSection').style.display = 'none';
+    document.getElementById('nextStepBtn').disabled = true;
+    document.getElementById('nextStepBtn').style.background = 'var(--light-gray)';
+    document.getElementById('nextStepBtn').style.color = 'var(--medium-gray)';
+    document.getElementById('nextStepBtn').style.cursor = 'not-allowed';
+    
+    // 生成日历
+    renderBookingCalendar();
+    
+    // 显示模态框
+    document.getElementById('bookingModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeBookingModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+    document.body.style.overflow = '';
+    currentBookingService = null;
+    selectedSlot = null;
+    selectedDate = null;
+}
+
+function goToStep2() {
+    if (!selectedSlot) return;
+    
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    
+    // 更新步骤指示器
+    document.querySelectorAll('.step-indicator').forEach((el, index) => {
+        if (index === 0) {
+            el.style.background = 'var(--light-green)';
+            el.querySelector('div').style.color = 'var(--primary-green)';
+        } else if (index === 1) {
+            el.style.background = 'var(--primary-green)';
+            el.querySelector('div').style.color = 'white';
         }
     });
+}
 
-    function showLoginModal() {
-        // Create login modal
-        const loginModal = document.createElement('div');
-        loginModal.className = 'modal-overlay active';
-        loginModal.style.zIndex = '9999';
-        loginModal.innerHTML = `
-            <div class="modal" style="max-width: 400px;">
-                <div class="modal-header">
-                    <h3>Admin Login</h3>
-                </div>
-                <div class="modal-content">
-                    <form id="loginForm">
-                        <div class="form-group">
-                            <label for="adminPassword">Admin Password</label>
-                            <input type="password" id="adminPassword" placeholder="Enter admin password" required>
-                            <p style="font-size: 0.875rem; color: var(--medium-gray); margin-top: 0.5rem;">
-                                Default password: admin123
-                            </p>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn" id="loginBtn">Login</button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(loginModal);
-        
-        // Add login functionality
-        document.getElementById('loginBtn').addEventListener('click', function() {
-            const password = document.getElementById('adminPassword').value;
-            
-            if (password === 'admin123') {
-                localStorage.setItem('greenglo_admin_auth', 'authenticated');
-                loginModal.remove();
-                showNotification('Login successful!', 'Welcome to GreenGlo Admin Panel');
-                setupNavigation();
-                setupEventListeners();
-                loadDashboardData();
-                switchView('dashboard');
-            } else {
-                alert('Incorrect password. Try: admin123');
-            }
-        });
-    }
+function goToStep1() {
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('step2').style.display = 'none';
+    
+    // 更新步骤指示器
+    document.querySelectorAll('.step-indicator').forEach((el, index) => {
+        if (index === 0) {
+            el.style.background = 'var(--primary-green)';
+            el.querySelector('div').style.color = 'white';
+        } else if (index === 1) {
+            el.style.background = 'var(--light-gray)';
+            el.querySelector('div').style.color = 'var(--medium-gray)';
+        }
+    });
+}
 
-    function setupNavigation() {
-        console.log('Setting up navigation...');
+// ===== 日历渲染 =====
+async function renderBookingCalendar() {
+    const calendar = document.getElementById('bookingCalendar');
+    calendar.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading availability...</p></div>';
+    
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    
+    // 获取这个月的可用日期
+    const startDate = firstDay.toISOString().split('T')[0];
+    const endDate = lastDay.toISOString().split('T')[0];
+    
+    try {
+        const { data: availableDates, error } = await supabase
+            .from('availability_slots')
+            .select('slot_date')
+            .eq('is_available', true)
+            .gte('slot_date', startDate)
+            .lte('slot_date', endDate)
+            .lt('current_bookings', supabase.raw('max_capacity'));
         
-        // Navigation click handlers
-        elements.navDashboard.addEventListener('click', function(e) {
-            e.preventDefault();
-            switchView('dashboard');
+        if (error) throw error;
+        
+        // 创建唯一日期列表
+        const availableDatesSet = new Set(availableDates.map(d => d.slot_date));
+        
+        calendar.innerHTML = '';
+        
+        // 添加星期几的标题
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        weekdays.forEach(day => {
+            const dayElement = document.createElement('div');
+            dayElement.style.textAlign = 'center';
+            dayElement.style.fontWeight = '600';
+            dayElement.style.color = 'var(--dark-gray)';
+            dayElement.style.padding = '0.5rem';
+            dayElement.textContent = day;
+            calendar.appendChild(dayElement);
         });
         
-        elements.navBookings.addEventListener('click', function(e) {
-            e.preventDefault();
-            switchView('bookings');
-        });
-        
-        elements.navAvailability.addEventListener('click', function(e) {
-            e.preventDefault();
-            switchView('availability');
-        });
-        
-        // Mobile menu toggle
-        elements.mobileMenuToggle.addEventListener('click', function() {
-            elements.sidebar.classList.toggle('active');
-        });
-        
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(e) {
-            if (window.innerWidth <= 1200) {
-                if (!elements.sidebar.contains(e.target) && 
-                    !elements.mobileMenuToggle.contains(e.target) &&
-                    elements.sidebar.classList.contains('active')) {
-                    elements.sidebar.classList.remove('active');
-                }
-            }
-        });
-    }
-
-    function switchView(view) {
-        console.log('Switching to view:', view);
-        
-        // Hide all sections
-        elements.dashboardSection.style.display = 'none';
-        elements.bookingsSection.style.display = 'none';
-        elements.availabilitySection.style.display = 'none';
-        
-        // Remove active class from all nav items
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.classList.remove('active');
-        });
-        
-        // Show selected section and update active nav
-        currentView = view;
-        switch(view) {
-            case 'dashboard':
-                elements.dashboardSection.style.display = 'block';
-                elements.navDashboard.classList.add('active');
-                loadDashboardData();
-                break;
-            case 'bookings':
-                elements.bookingsSection.style.display = 'block';
-                elements.navBookings.classList.add('active');
-                loadBookings();
-                break;
-            case 'availability':
-                elements.availabilitySection.style.display = 'block';
-                elements.navAvailability.classList.add('active');
-                loadAvailabilityCalendar();
-                break;
+        // 添加空白天数
+        for (let i = 0; i < startingDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'calendar-day unavailable';
+            calendar.appendChild(emptyDay);
         }
         
-        // Close mobile sidebar
-        if (window.innerWidth <= 1200) {
-            elements.sidebar.classList.remove('active');
-        }
-    }
-
-    function setupEventListeners() {
-        console.log('Setting up event listeners...');
+        // 添加月份天数
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0];
         
-        // Refresh button
-        elements.refreshBtn.addEventListener('click', function() {
-            refreshCurrentView();
-        });
-        
-        // New booking button
-        elements.newBookingBtn.addEventListener('click', function() {
-            showNewBookingModal();
-        });
-        
-        // Availability management buttons
-        elements.addSlotsBtn.addEventListener('click', function() {
-            showAddSlotsModal();
-        });
-        
-        elements.setWorkingHoursBtn.addEventListener('click', function() {
-            showWorkingHoursModal();
-        });
-        
-        elements.bulkBlockBtn.addEventListener('click', function() {
-            showBulkBlockModal();
-        });
-        
-        // Calendar navigation
-        elements.prevMonth.addEventListener('click', function() {
-            prevMonth();
-        });
-        
-        elements.nextMonth.addEventListener('click', function() {
-            nextMonth();
-        });
-        
-        // Search and filter events
-        elements.bookingSearch.addEventListener('input', function() {
-            debounceSearch();
-        });
-        
-        elements.statusFilter.addEventListener('change', function() {
-            loadBookings();
-        });
-        
-        elements.dateFilter.addEventListener('change', function() {
-            loadBookings();
-        });
-        
-        elements.recentFilter.addEventListener('change', function() {
-            loadRecentBookings();
-        });
-        
-        // Modal close buttons
-        document.getElementById('closeDetailsModal').addEventListener('click', closeBookingDetails);
-        document.getElementById('closeEditModal').addEventListener('click', closeEditBooking);
-        document.getElementById('closeNewModal').addEventListener('click', closeNewBooking);
-        document.getElementById('closeAddSlotsModal').addEventListener('click', closeAddSlotsModal);
-        document.getElementById('closeWorkingHoursModal').addEventListener('click', closeWorkingHoursModal);
-        document.getElementById('closeBulkBlockModal').addEventListener('click', closeBulkBlockModal);
-        document.getElementById('closeConfirmModal').addEventListener('click', closeConfirmModal);
-        document.getElementById('closeSlotDetailsModal').addEventListener('click', closeSlotDetailsModal);
-        
-        // Modal cancel buttons
-        document.getElementById('closeDetailsBtn').addEventListener('click', closeBookingDetails);
-        document.getElementById('cancelEditBtn').addEventListener('click', closeEditBooking);
-        document.getElementById('cancelNewBtn').addEventListener('click', closeNewBooking);
-        document.getElementById('cancelAddSlotsBtn').addEventListener('click', closeAddSlotsModal);
-        document.getElementById('cancelWorkingHoursBtn').addEventListener('click', closeWorkingHoursModal);
-        document.getElementById('cancelBulkBlockBtn').addEventListener('click', closeBulkBlockModal);
-        document.getElementById('cancelConfirmBtn').addEventListener('click', closeConfirmModal);
-        document.getElementById('closeSlotDetailsBtn').addEventListener('click', closeSlotDetailsModal);
-        
-        // Save buttons
-        document.getElementById('saveBookingBtn').addEventListener('click', saveBookingChanges);
-        document.getElementById('createBookingBtn').addEventListener('click', createNewBooking);
-        document.getElementById('saveSlotsBtn').addEventListener('click', saveTimeSlots);
-        document.getElementById('saveWorkingHoursBtn').addEventListener('click', saveWorkingHours);
-        document.getElementById('saveBulkBlockBtn').addEventListener('click', saveBulkBlock);
-        
-        // Edit booking button in details modal
-        document.getElementById('editBookingBtn').addEventListener('click', function() {
-            closeBookingDetails();
-            showEditBookingModal(currentBookingId);
-        });
-        
-        // Cancel booking button
-        document.getElementById('cancelBookingBtn').addEventListener('click', function() {
-            if (currentBookingId) {
-                showCancelBookingConfirmation(currentBookingId);
-            }
-        });
-        
-        // Confirm action button
-        document.getElementById('confirmActionBtn').addEventListener('click', function() {
-            const action = document.getElementById('confirmActionBtn').dataset.action;
-            if (action === 'cancel') {
-                cancelBooking(currentBookingId);
-            } else if (action === 'delete') {
-                deleteBooking(currentBookingId);
-            }
-        });
-        
-        // Special date button
-        document.getElementById('addSpecialDateBtn').addEventListener('click', addSpecialDate);
-        
-        // Slot action buttons
-        document.getElementById('editSlotBtn').addEventListener('click', editSlot);
-        document.getElementById('deleteSlotBtn').addEventListener('click', deleteSlot);
-        
-        // Price calculation
-        document.getElementById('newServiceType').addEventListener('change', calculateNewPrice);
-        document.getElementById('newDuration').addEventListener('change', calculateNewPrice);
-        document.getElementById('editServiceType').addEventListener('change', calculateEditPrice);
-        document.getElementById('editDuration').addEventListener('change', calculateEditPrice);
-        
-        console.log('Event listeners setup complete');
-    }
-
-    // ===== Calendar Functions =====
-    function loadAvailabilityCalendar() {
-        console.log('Loading availability calendar...');
-        
-        const monthNames = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        
-        elements.calendarTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
-        
-        // Get first day of month
-        const firstDay = new Date(currentYear, currentMonth, 1);
-        const lastDay = new Date(currentYear, currentMonth + 1, 0);
-        const daysInMonth = lastDay.getDate();
-        
-        // Get day of week for first day (0 = Sunday)
-        let startingDay = firstDay.getDay();
-        
-        // Create calendar grid
-        let calendarHTML = '';
-        
-        // Day headers
-        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        dayNames.forEach(day => {
-            calendarHTML += `<div class="calendar-day-header">${day}</div>`;
-        });
-        
-        // Previous month days
-        const prevMonthLastDay = new Date(currentYear, currentMonth, 0).getDate();
-        for (let i = startingDay - 1; i >= 0; i--) {
-            const day = prevMonthLastDay - i;
-            const date = new Date(currentYear, currentMonth - 1, day);
-            calendarHTML += createDayCell(date, true);
-        }
-        
-        // Current month days
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(currentYear, currentMonth, day);
-            calendarHTML += createDayCell(date, false);
-        }
-        
-        // Next month days
-        const totalCells = 42; // 6 weeks * 7 days
-        const cellsUsed = startingDay + daysInMonth;
-        const nextMonthDays = totalCells - cellsUsed;
-        
-        for (let day = 1; day <= nextMonthDays; day++) {
-            const date = new Date(currentYear, currentMonth + 1, day);
-            calendarHTML += createDayCell(date, true);
-        }
-        
-        elements.availabilityCalendar.innerHTML = calendarHTML;
-        
-        // Load bookings for this month
-        loadBookingsForCalendar();
-    }
-
-    function createDayCell(date, isOtherMonth) {
-        const day = date.getDate();
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-        
-        const today = new Date();
-        const isToday = date.getDate() === today.getDate() && 
-                       date.getMonth() === today.getMonth() && 
-                       date.getFullYear() === today.getFullYear();
-        
-        let dayClass = 'calendar-day';
-        if (isOtherMonth) dayClass += ' other-month';
-        if (isToday) dayClass += ' today';
-        
-        return `
-            <div class="${dayClass}" data-date="${dateString}">
-                <div class="day-number">${day}</div>
-                <div class="calendar-slots" id="slots-${dateString}">
-                    <!-- Slots will be loaded dynamically -->
-                </div>
-            </div>
-        `;
-    }
-
-    async function loadBookingsForCalendar() {
-        try {
-            // Calculate date range for current month view
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            const startDate = firstDay.toISOString().split('T')[0];
-            const endDate = lastDay.toISOString().split('T')[0];
+            const dateString = date.toISOString().split('T')[0];
             
-            // Get all bookings for this month
-            const { data: bookings, error } = await supabase
-                .from('bookings')
-                .select('*')
-                .gte('date', startDate)
-                .lte('date', endDate)
-                .neq('status', 'cancelled');
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.textContent = day;
+            dayElement.dataset.date = dateString;
             
-            if (error) throw error;
-            
-            // Group bookings by date
-            const bookingsByDate = {};
-            bookings.forEach(booking => {
-                if (!bookingsByDate[booking.date]) {
-                    bookingsByDate[booking.date] = [];
-                }
-                bookingsByDate[booking.date].push(booking);
-            });
-            
-            // Generate time slots (9 AM to 6 PM)
-            const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-            
-            // Render slots for each day
-            for (let i = 0; i < 42; i++) {
-                const dayCell = elements.availabilityCalendar.children[i + 7]; // Skip header row
-                if (dayCell && dayCell.dataset.date) {
-                    const date = dayCell.dataset.date;
-                    const daySlots = document.getElementById(`slots-${date}`);
-                    
-                    if (daySlots) {
-                        // Check if date is in the past
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        const cellDate = new Date(date);
-                        cellDate.setHours(0, 0, 0, 0);
-                        
-                        if (cellDate < today) {
-                            daySlots.innerHTML = '<div style="font-size: 0.75rem; color: var(--medium-gray); padding: 0.25rem;">Past Date</div>';
-                            continue;
-                        }
-                        
-                        // Get bookings for this date
-                        const dateBookings = bookingsByDate[date] || [];
-                        const bookedTimes = dateBookings.map(b => b.time);
-                        
-                        let slotsHTML = '';
-                        timeSlots.forEach(slot => {
-                            const isBooked = bookedTimes.includes(slot);
-                            const slotClass = isBooked ? 'slot-booked' : 'slot-available';
-                            slotsHTML += `
-                                <div class="slot-item ${slotClass}" 
-                                     onclick="window.showSlotDetails('${date}', '${slot}')"
-                                     title="${slot} - ${isBooked ? 'Booked' : 'Available'}">
-                                    ${slot}
-                                </div>
-                            `;
-                        });
-                        
-                        daySlots.innerHTML = slotsHTML;
-                    }
-                }
+            // 检查是否是今天
+            if (dateString === todayString) {
+                dayElement.classList.add('today');
             }
             
-        } catch (error) {
-            console.error('Error loading calendar bookings:', error);
-            showNotification('Error loading calendar data', 'error');
-        }
-    }
-
-    function prevMonth() {
-        currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
-        loadAvailabilityCalendar();
-    }
-
-    function nextMonth() {
-        currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
-        loadAvailabilityCalendar();
-    }
-
-    // ===== Modal Functions =====
-    function showAddSlotsModal() {
-        console.log('Showing add slots modal');
-        document.getElementById('addSlotsModal').classList.add('active');
-    }
-
-    function showWorkingHoursModal() {
-        console.log('Showing working hours modal');
-        document.getElementById('workingHoursModal').classList.add('active');
-    }
-
-    function showBulkBlockModal() {
-        console.log('Showing bulk block modal');
-        document.getElementById('bulkBlockModal').classList.add('active');
-    }
-
-    function closeAddSlotsModal() {
-        document.getElementById('addSlotsModal').classList.remove('active');
-    }
-
-    function closeWorkingHoursModal() {
-        document.getElementById('workingHoursModal').classList.remove('active');
-    }
-
-    function closeBulkBlockModal() {
-        document.getElementById('bulkBlockModal').classList.remove('active');
-    }
-
-    function closeBookingDetails() {
-        document.getElementById('bookingDetailsModal').classList.remove('active');
-        currentBookingId = null;
-    }
-
-    function closeEditBooking() {
-        document.getElementById('editBookingModal').classList.remove('active');
-        currentBookingId = null;
-    }
-
-    function closeNewBooking() {
-        document.getElementById('newBookingModal').classList.remove('active');
-    }
-
-    function closeConfirmModal() {
-        document.getElementById('confirmModal').classList.remove('active');
-        currentBookingId = null;
-    }
-
-    function closeSlotDetailsModal() {
-        document.getElementById('slotDetailsModal').classList.remove('active');
-    }
-
-    // ===== Slot Management =====
-    async function saveTimeSlots() {
-        try {
-            const startDate = document.getElementById('slotStartDate').value;
-            const endDate = document.getElementById('slotEndDate').value;
-            const slotType = document.getElementById('slotType').value;
-            
-            if (!startDate || !endDate) {
-                showNotification('Please select start and end dates', 'error');
-                return;
-            }
-            
-            // Get selected time slots
-            const selectedTimes = [];
-            document.querySelectorAll('.slot-time:checked').forEach(cb => {
-                selectedTimes.push(cb.value);
-            });
-            
-            if (selectedTimes.length === 0) {
-                showNotification('Please select at least one time slot', 'error');
-                return;
-            }
-            
-            // Generate dates between start and end
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const dates = [];
-            
-            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-                dates.push(d.toISOString().split('T')[0]);
-            }
-            
-            // Create slots
-            const slotsToInsert = [];
-            dates.forEach(date => {
-                selectedTimes.forEach(time => {
-                    slotsToInsert.push({
-                        date: date,
-                        time: time,
-                        is_available: slotType === 'available',
-                        created_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString()
-                    });
+            // 检查日期是否可用
+            if (!availableDatesSet.has(dateString) || date < today) {
+                dayElement.classList.add('unavailable');
+            } else {
+                dayElement.addEventListener('click', () => {
+                    selectBookingDate(date);
                 });
-            });
-            
-            // Insert slots into database (you'll need an 'availability' table)
-            showNotification('This feature requires an "availability" table in Supabase', 'info');
-            console.log('Slots to insert:', slotsToInsert);
-            
-            closeAddSlotsModal();
-            showNotification('Time slots configuration saved!', 'success');
-            
-        } catch (error) {
-            console.error('Error saving time slots:', error);
-            showNotification('Error saving time slots', 'error');
-        }
-    }
-
-    async function saveWorkingHours() {
-        try {
-            showNotification('Working hours saved!', 'success');
-            closeWorkingHoursModal();
-        } catch (error) {
-            console.error('Error saving working hours:', error);
-            showNotification('Error saving working hours', 'error');
-        }
-    }
-
-    async function saveBulkBlock() {
-        try {
-            const startDate = document.getElementById('blockStartDate').value;
-            const endDate = document.getElementById('blockEndDate').value;
-            const reason = document.getElementById('blockReason').value || 'Admin Blocked';
-            
-            if (!startDate || !endDate) {
-                showNotification('Please select start and end dates', 'error');
-                return;
             }
             
-            showNotification(`Dates from ${startDate} to ${endDate} blocked!`, 'success');
-            closeBulkBlockModal();
-            
-        } catch (error) {
-            console.error('Error saving bulk block:', error);
-            showNotification('Error blocking dates', 'error');
+            calendar.appendChild(dayElement);
         }
-    }
-
-    // ===== Booking Management =====
-    async function loadDashboardData() {
-        try {
-            await loadDashboardStats();
-            await loadRecentBookings();
-        } catch (error) {
-            console.error('Error loading dashboard data:', error);
-            showNotification('Error loading dashboard data', 'error');
-        }
-    }
-
-    async function loadDashboardStats() {
-        try {
-            const { data: allBookings, error } = await supabase
-                .from('bookings')
-                .select('*');
-            
-            if (error) throw error;
-            
-            const { data: pendingBookings } = await supabase
-                .from('bookings')
-                .select('*')
-                .eq('status', 'pending');
-            
-            // Calculate totals
-            const totalRevenue = allBookings.reduce((sum, booking) => {
-                return sum + (parseFloat(booking.total_price) || 0);
-            }, 0);
-            
-            const uniqueCustomers = [...new Set(allBookings.map(b => b.phone))].length;
-            
-            // Update UI
-            elements.totalBookings.textContent = allBookings.length;
-            elements.pendingBookings.textContent = pendingBookings ? pendingBookings.length : 0;
-            elements.totalRevenue.textContent = `£${totalRevenue.toFixed(2)}`;
-            elements.activeCustomers.textContent = uniqueCustomers;
-            
-        } catch (error) {
-            console.error('Error loading stats:', error);
-            showNotification('Error loading statistics', 'error');
-        }
-    }
-
-    async function loadRecentBookings() {
-        try {
-            elements.recentLoading.style.display = 'flex';
-            elements.recentNoData.style.display = 'none';
-            
-            const days = parseInt(elements.recentFilter.value);
-            const dateLimit = new Date();
-            dateLimit.setDate(dateLimit.getDate() - days);
-            
-            const { data: bookings, error } = await supabase
-                .from('bookings')
-                .select('*')
-                .gte('created_at', dateLimit.toISOString())
-                .order('created_at', { ascending: false })
-                .limit(10);
-            
-            if (error) throw error;
-            
-            elements.recentLoading.style.display = 'none';
-            
-            if (!bookings || bookings.length === 0) {
-                elements.recentNoData.style.display = 'block';
-                return;
-            }
-            
-            // Clear table
-            elements.recentBookingsBody.innerHTML = '';
-            
-            // Populate table
-            bookings.forEach(booking => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${booking.id}</strong></td>
-                    <td>${formatDate(booking.date)}<br><small>${booking.time}</small></td>
-                    <td>${booking.name}<br><small>${booking.phone}</small></td>
-                    <td>${getServiceName(booking.service_type)}</td>
-                    <td>£${parseFloat(booking.total_price).toFixed(2)}</td>
-                    <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn view" onclick="window.showBookingDetails('${booking.id}')" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn edit" onclick="window.showEditBookingModal('${booking.id}')" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                elements.recentBookingsBody.appendChild(row);
-            });
-            
-        } catch (error) {
-            console.error('Error loading recent bookings:', error);
-            elements.recentLoading.style.display = 'none';
-            showNotification('Error loading recent bookings', 'error');
-        }
-    }
-
-    async function loadBookings(page = 1) {
-        try {
-            currentPage = page;
-            elements.bookingsLoading.style.display = 'flex';
-            elements.bookingsNoData.style.display = 'none';
-            
-            // Build query
-            let query = supabase.from('bookings').select('*', { count: 'exact' });
-            
-            // Apply search filter
-            const searchTerm = elements.bookingSearch.value.trim();
-            if (searchTerm) {
-                query = query.or(`name.ilike.%${searchTerm}%,phone.ilike.%${searchTerm}%,id.ilike.%${searchTerm}%`);
-            }
-            
-            // Apply status filter
-            const status = elements.statusFilter.value;
-            if (status !== 'all') {
-                query = query.eq('status', status);
-            }
-            
-            // Apply pagination
-            const from = (page - 1) * itemsPerPage;
-            const to = from + itemsPerPage - 1;
-            
-            query = query.order('date', { ascending: false })
-                        .order('time', { ascending: true })
-                        .range(from, to);
-            
-            const { data: bookings, error, count } = await query;
-            
-            if (error) throw error;
-            
-            elements.bookingsLoading.style.display = 'none';
-            bookingsData = bookings || [];
-            totalBookings = count || 0;
-            
-            if (!bookings || bookings.length === 0) {
-                elements.bookingsNoData.style.display = 'block';
-                elements.bookingsPagination.innerHTML = '';
-                return;
-            }
-            
-            // Clear table
-            elements.bookingsBody.innerHTML = '';
-            
-            // Populate table
-            bookings.forEach(booking => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td><strong>${booking.id}</strong></td>
-                    <td>${formatDate(booking.date)}</td>
-                    <td>${booking.time}</td>
-                    <td>
-                        ${booking.name}<br>
-                        <small style="color: var(--medium-gray);">${booking.phone}</small>
-                    </td>
-                    <td>${getServiceName(booking.service_type)}</td>
-                    <td>${booking.duration} hours</td>
-                    <td>£${parseFloat(booking.total_price).toFixed(2)}</td>
-                    <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn view" onclick="window.showBookingDetails('${booking.id}')" title="View">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="action-btn edit" onclick="window.showEditBookingModal('${booking.id}')" title="Edit">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="action-btn delete" onclick="window.showDeleteConfirmation('${booking.id}')" title="Delete">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                `;
-                elements.bookingsBody.appendChild(row);
-            });
-            
-            // Update pagination
-            updatePagination();
-            
-        } catch (error) {
-            console.error('Error loading bookings:', error);
-            elements.bookingsLoading.style.display = 'none';
-            showNotification('Error loading bookings', 'error');
-        }
-    }
-
-    function updatePagination() {
-        const totalPages = Math.ceil(totalBookings / itemsPerPage);
         
-        if (totalPages <= 1) {
-            elements.bookingsPagination.innerHTML = '';
+    } catch (error) {
+        console.error('Error loading calendar:', error);
+        calendar.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--medium-gray);">Unable to load calendar. Please try again later.</div>';
+    }
+}
+
+async function selectBookingDate(date) {
+    selectedDate = date;
+    const dateString = date.toISOString().split('T')[0];
+    
+    // 清除之前的选择
+    document.querySelectorAll('.calendar-day').forEach(day => {
+        day.classList.remove('selected');
+    });
+    
+    // 标记选中的日期
+    const selectedDay = document.querySelector(`.calendar-day[data-date="${dateString}"]`);
+    if (selectedDay) {
+        selectedDay.classList.add('selected');
+    }
+    
+    // 更新日期显示
+    const dateText = date.toLocaleDateString('en-GB', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    document.getElementById('selectedDateText').textContent = dateText;
+    
+    // 加载可用时间段
+    await loadAvailableTimeSlots(dateString);
+    
+    // 显示时间段部分
+    document.getElementById('timeSlotsSection').style.display = 'block';
+}
+
+async function loadAvailableTimeSlots(date) {
+    const container = document.getElementById('availableTimeSlots');
+    container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading time slots...</p></div>';
+    
+    try {
+        const { data: slots, error } = await supabase
+            .from('availability_slots')
+            .select('*')
+            .eq('slot_date', date)
+            .eq('is_available', true)
+            .lt('current_bookings', supabase.raw('max_capacity'))
+            .order('start_time', { ascending: true });
+        
+        if (error) throw error;
+        
+        if (!slots || slots.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--medium-gray);">
+                    <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p>No time slots available for this date</p>
+                </div>
+            `;
             return;
         }
         
-        let paginationHTML = '';
+        container.innerHTML = '';
         
-        // Previous button
-        paginationHTML += `
-            <button class="page-btn" onclick="window.loadBookings(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-        `;
-        
-        // Page numbers
-        const maxVisiblePages = 5;
-        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-        
-        if (endPage - startPage + 1 < maxVisiblePages) {
-            startPage = Math.max(1, endPage - maxVisiblePages + 1);
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-            paginationHTML += `
-                <button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="window.loadBookings(${i})">
-                    ${i}
-                </button>
-            `;
-        }
-        
-        // Next button
-        paginationHTML += `
-            <button class="page-btn" onclick="window.loadBookings(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        `;
-        
-        elements.bookingsPagination.innerHTML = paginationHTML;
-    }
-
-    async function showBookingDetails(bookingId) {
-        try {
-            currentBookingId = bookingId;
+        slots.forEach(slot => {
+            const slotElement = document.createElement('div');
+            slotElement.className = 'time-slot-option';
+            slotElement.dataset.slotId = slot.id;
             
-            const { data: booking, error } = await supabase
-                .from('bookings')
-                .select('*')
-                .eq('id', bookingId)
-                .single();
+            const startTime = slot.start_time.substring(0, 5);
+            const endTime = slot.end_time.substring(0, 5);
             
-            if (error) throw error;
-            
-            const detailsHTML = `
-                <div class="detail-row">
-                    <span class="detail-label">Booking ID:</span>
-                    <span class="detail-value">${booking.id}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Date & Time:</span>
-                    <span class="detail-value">${formatDate(booking.date)} at ${booking.time}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Customer:</span>
-                    <span class="detail-value">${booking.name}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Phone:</span>
-                    <span class="detail-value">${booking.phone}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Email:</span>
-                    <span class="detail-value">${booking.email || 'N/A'}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Address:</span>
-                    <span class="detail-value">${booking.address}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Service:</span>
-                    <span class="detail-value">${getServiceName(booking.service_type)}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Duration:</span>
-                    <span class="detail-value">${booking.duration} hours</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Status:</span>
-                    <span class="detail-value badge status-${booking.status}">${booking.status}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Price:</span>
-                    <span class="detail-value">£${parseFloat(booking.total_price).toFixed(2)}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Special Instructions:</span>
-                    <span class="detail-value">${booking.special_instructions || 'None'}</span>
+            slotElement.innerHTML = `
+                <div style="font-weight: 600; margin-bottom: 0.25rem;">${startTime} - ${endTime}</div>
+                <div style="font-size: 0.75rem; color: var(--primary-green);">
+                    ${slot.current_bookings}/${slot.max_capacity} booked
                 </div>
             `;
             
-            document.getElementById('bookingDetailsContent').innerHTML = detailsHTML;
-            document.getElementById('bookingDetailsModal').classList.add('active');
+            slotElement.addEventListener('click', () => {
+                selectTimeSlot(slot.id, `${startTime} - ${endTime}`, date);
+            });
             
-        } catch (error) {
-            console.error('Error loading booking details:', error);
-            showNotification('Error loading booking details', 'error');
-        }
-    }
-
-    async function showEditBookingModal(bookingId) {
-        try {
-            currentBookingId = bookingId;
-            
-            const { data: booking, error } = await supabase
-                .from('bookings')
-                .select('*')
-                .eq('id', bookingId)
-                .single();
-            
-            if (error) throw error;
-            
-            // Populate form
-            document.getElementById('editDate').value = booking.date;
-            document.getElementById('editTime').value = booking.time;
-            document.getElementById('editServiceType').value = booking.service_type;
-            document.getElementById('editDuration').value = booking.duration;
-            document.getElementById('editCustomerName').value = booking.name;
-            document.getElementById('editCustomerPhone').value = booking.phone;
-            document.getElementById('editCustomerEmail').value = booking.email || '';
-            document.getElementById('editStatus').value = booking.status;
-            document.getElementById('editAddress').value = booking.address;
-            document.getElementById('editInstructions').value = booking.special_instructions || '';
-            document.getElementById('editPrice').value = booking.total_price;
-            document.getElementById('editAmountPaid').value = booking.amount_paid || '0';
-            
-            calculateEditPrice();
-            document.getElementById('editBookingModal').classList.add('active');
-            
-        } catch (error) {
-            console.error('Error loading booking for edit:', error);
-            showNotification('Error loading booking', 'error');
-        }
-    }
-
-    function showNewBookingModal() {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
+            container.appendChild(slotElement);
+        });
         
-        document.getElementById('newDate').value = tomorrow.toISOString().split('T')[0];
-        document.getElementById('newTime').value = '09:00';
-        document.getElementById('newServiceType').value = 'regular';
-        document.getElementById('newDuration').value = '3';
-        document.getElementById('newCustomerName').value = '';
-        document.getElementById('newCustomerPhone').value = '';
-        document.getElementById('newCustomerEmail').value = '';
-        document.getElementById('newStatus').value = 'confirmed';
-        document.getElementById('newAddress').value = '';
-        document.getElementById('newInstructions').value = '';
-        
-        calculateNewPrice();
-        document.getElementById('newBookingModal').classList.add('active');
-    }
-
-    function showCancelBookingConfirmation(bookingId) {
-        currentBookingId = bookingId;
-        document.getElementById('confirmMessage').textContent = `Are you sure you want to cancel booking ${bookingId}?`;
-        document.getElementById('confirmActionBtn').textContent = 'Cancel Booking';
-        document.getElementById('confirmActionBtn').dataset.action = 'cancel';
-        document.getElementById('confirmModal').classList.add('active');
-    }
-
-    function showDeleteConfirmation(bookingId) {
-        currentBookingId = bookingId;
-        document.getElementById('confirmMessage').textContent = `Are you sure you want to delete booking ${bookingId}? This action cannot be undone.`;
-        document.getElementById('confirmActionBtn').textContent = 'Delete Booking';
-        document.getElementById('confirmActionBtn').dataset.action = 'delete';
-        document.getElementById('confirmModal').classList.add('active');
-    }
-
-    async function saveBookingChanges() {
-        try {
-            const updatedData = {
-                date: document.getElementById('editDate').value,
-                time: document.getElementById('editTime').value,
-                service_type: document.getElementById('editServiceType').value,
-                duration: parseInt(document.getElementById('editDuration').value),
-                name: document.getElementById('editCustomerName').value,
-                phone: document.getElementById('editCustomerPhone').value,
-                email: document.getElementById('editCustomerEmail').value,
-                status: document.getElementById('editStatus').value,
-                address: document.getElementById('editAddress').value,
-                special_instructions: document.getElementById('editInstructions').value,
-                total_price: parseFloat(document.getElementById('editPrice').value),
-                amount_paid: parseFloat(document.getElementById('editAmountPaid').value) || 0,
-                updated_at: new Date().toISOString()
-            };
-            
-            const { error } = await supabase
-                .from('bookings')
-                .update(updatedData)
-                .eq('id', currentBookingId);
-            
-            if (error) throw error;
-            
-            closeEditBooking();
-            showNotification('Booking updated successfully!');
-            refreshCurrentView();
-            
-        } catch (error) {
-            console.error('Error updating booking:', error);
-            showNotification('Error updating booking', 'error');
-        }
-    }
-
-    async function createNewBooking() {
-        try {
-            const bookingData = {
-                id: 'GG-' + Date.now().toString().slice(-6),
-                date: document.getElementById('newDate').value,
-                time: document.getElementById('newTime').value,
-                service_type: document.getElementById('newServiceType').value,
-                duration: parseInt(document.getElementById('newDuration').value),
-                name: document.getElementById('newCustomerName').value,
-                phone: document.getElementById('newCustomerPhone').value,
-                email: document.getElementById('newCustomerEmail').value,
-                status: document.getElementById('newStatus').value,
-                address: document.getElementById('newAddress').value,
-                special_instructions: document.getElementById('newInstructions').value,
-                total_price: parseFloat(document.getElementById('newPrice').value),
-                amount_paid: parseFloat(document.getElementById('newAmountPaid').value) || 0,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString()
-            };
-            
-            const { error } = await supabase
-                .from('bookings')
-                .insert([bookingData]);
-            
-            if (error) throw error;
-            
-            closeNewBooking();
-            showNotification('Booking created successfully!');
-            refreshCurrentView();
-            
-        } catch (error) {
-            console.error('Error creating booking:', error);
-            showNotification('Error creating booking', 'error');
-        }
-    }
-
-    async function cancelBooking(bookingId) {
-        try {
-            const { error } = await supabase
-                .from('bookings')
-                .update({ 
-                    status: 'cancelled',
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', bookingId);
-            
-            if (error) throw error;
-            
-            closeConfirmModal();
-            showNotification('Booking cancelled successfully!');
-            refreshCurrentView();
-            
-        } catch (error) {
-            console.error('Error cancelling booking:', error);
-            showNotification('Error cancelling booking', 'error');
-        }
-    }
-
-    async function deleteBooking(bookingId) {
-        try {
-            const { error } = await supabase
-                .from('bookings')
-                .delete()
-                .eq('id', bookingId);
-            
-            if (error) throw error;
-            
-            closeConfirmModal();
-            showNotification('Booking deleted successfully!');
-            refreshCurrentView();
-            
-        } catch (error) {
-            console.error('Error deleting booking:', error);
-            showNotification('Error deleting booking', 'error');
-        }
-    }
-
-    function showSlotDetails(date, time) {
-        const detailsHTML = `
-            <div class="detail-row">
-                <span class="detail-label">Date:</span>
-                <span class="detail-value">${formatDate(date)}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Time:</span>
-                <span class="detail-value">${time}</span>
-            </div>
-            <div class="detail-row">
-                <span class="detail-label">Status:</span>
-                <span class="detail-value badge status-confirmed">Available</span>
+    } catch (error) {
+        console.error('Error loading time slots:', error);
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--red);">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Unable to load time slots</p>
             </div>
         `;
+    }
+}
+
+function selectTimeSlot(slotId, timeRange, date) {
+    selectedSlot = slotId;
+    
+    // 清除之前的选择
+    document.querySelectorAll('.time-slot-option').forEach(slot => {
+        slot.classList.remove('selected');
+    });
+    
+    // 标记选中的时间段
+    const selectedSlotElement = document.querySelector(`.time-slot-option[data-slot-id="${slotId}"]`);
+    if (selectedSlotElement) {
+        selectedSlotElement.classList.add('selected');
+    }
+    
+    // 启用下一步按钮
+    const nextStepBtn = document.getElementById('nextStepBtn');
+    nextStepBtn.disabled = false;
+    nextStepBtn.style.background = 'var(--primary-green)';
+    nextStepBtn.style.color = 'white';
+    nextStepBtn.style.cursor = 'pointer';
+    
+    // 保存选中的信息
+    document.getElementById('selectedSlotId').value = slotId;
+    document.getElementById('selectedSlotDate').value = date;
+    document.getElementById('selectedSlotTime').value = timeRange;
+}
+
+// ===== 预订表单提交 =====
+document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        service_id: document.getElementById('selectedServiceId').value,
+        slot_id: document.getElementById('selectedSlotId').value,
+        customer_name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+        customer_email: document.getElementById('email').value,
+        customer_phone: document.getElementById('phone').value,
+        customer_address: document.getElementById('address').value,
+        booking_date: document.getElementById('selectedSlotDate').value,
+        start_time: document.getElementById('selectedSlotTime').value.split(' - ')[0] + ':00',
+        end_time: document.getElementById('selectedSlotTime').value.split(' - ')[1] + ':00',
+        special_instructions: document.getElementById('instructions').value,
+        status: 'pending'
+    };
+    
+    try {
+        // 首先检查时间段是否仍然可用
+        const { data: slot, error: slotError } = await supabase
+            .from('availability_slots')
+            .select('*')
+            .eq('id', formData.slot_id)
+            .single();
         
-        document.getElementById('slotDetailsContent').innerHTML = detailsHTML;
-        document.getElementById('slotDetailsModal').classList.add('active');
-    }
-
-    function editSlot() {
-        showNotification('Edit slot feature coming soon!', 'info');
-        closeSlotDetailsModal();
-    }
-
-    function deleteSlot() {
-        showNotification('Slot deleted!', 'success');
-        closeSlotDetailsModal();
-        loadAvailabilityCalendar();
-    }
-
-    function addSpecialDate() {
-        const date = document.getElementById('specialDate').value;
-        const type = document.getElementById('specialDateType').value;
+        if (slotError) throw slotError;
         
-        if (!date) {
-            showNotification('Please select a date', 'error');
+        if (slot.current_bookings >= slot.max_capacity) {
+            alert('Sorry, this time slot has just been booked by someone else. Please select another time.');
             return;
         }
         
-        showNotification(`Special date added: ${date} (${type})`, 'success');
-        document.getElementById('specialDate').value = '';
+        // 创建预订
+        const { data: booking, error: bookingError } = await supabase
+            .from('customer_bookings')
+            .insert([{
+                service_id: formData.service_id,
+                customer_name: formData.customer_name,
+                customer_email: formData.customer_email,
+                customer_phone: formData.customer_phone,
+                customer_address: formData.customer_address,
+                booking_date: formData.booking_date,
+                start_time: formData.start_time,
+                end_time: formData.end_time,
+                special_instructions: formData.special_instructions,
+                status: 'pending'
+            }])
+            .select();
+        
+        if (bookingError) throw bookingError;
+        
+        // 更新时间段的预订数量
+        const { error: updateError } = await supabase
+            .from('availability_slots')
+            .update({
+                current_bookings: slot.current_bookings + 1,
+                is_available: (slot.current_bookings + 1) < slot.max_capacity
+            })
+            .eq('id', formData.slot_id);
+        
+        if (updateError) throw updateError;
+        
+        // 显示确认页面
+        showBookingConfirmation(booking[0]);
+        
+    } catch (error) {
+        console.error('Booking error:', error);
+        alert('Sorry, there was an error processing your booking. Please try again or contact us directly.');
     }
+});
 
-    // ===== Utility Functions =====
-    function refreshCurrentView() {
-        switch(currentView) {
-            case 'dashboard':
-                loadDashboardData();
-                break;
-            case 'bookings':
-                loadBookings(currentPage);
-                break;
-            case 'availability':
-                loadAvailabilityCalendar();
-                break;
-        }
-        showNotification('Data refreshed!', 'success');
+function showBookingConfirmation(booking) {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
+    
+    // 更新确认信息
+    document.getElementById('bookingSummaryService').textContent = currentBookingService.title;
+    document.getElementById('bookingSummaryDate').textContent = 
+        new Date(booking.booking_date).toLocaleDateString('en-GB');
+    document.getElementById('bookingSummaryTime').textContent = 
+        `${booking.start_time.substring(0, 5)} - ${booking.end_time.substring(0, 5)}`;
+    document.getElementById('bookingReference').textContent = 
+        booking.id.substring(0, 8).toUpperCase();
+    
+    // 发送确认邮件（可选）
+    sendConfirmationEmail(booking);
+}
+
+async function sendConfirmationEmail(booking) {
+    // 这里可以添加发送确认邮件的代码
+    // 您可以使用Supabase Edge Functions或第三方服务
+    console.log('Booking confirmed:', booking);
+}
+
+// ===== 修改服务卡片，添加预订按钮 =====
+function renderServices(category = 'all') {
+    const servicesGrid = document.getElementById('servicesGrid');
+    servicesGrid.innerHTML = '';
+
+    const filteredServices = category === 'all'
+        ? servicesData
+        : servicesData.filter(service => service.category === category);
+
+    filteredServices.forEach(service => {
+        const serviceCard = document.createElement('div');
+        serviceCard.className = 'service-card';
+        serviceCard.setAttribute('data-category', service.category);
+
+        serviceCard.innerHTML = `
+            <div class="service-image" style="background-image: url('${service.image}');">
+                <div class="service-overlay">
+                    <h3>${service.title}</h3>
+                </div>
+            </div>
+            <div class="service-content">
+                <p class="service-description">${service.description}</p>
+                <ul class="service-features">
+                    ${service.features.map(feature => `
+                        <li><i class="fas fa-check"></i>${feature}</li>
+                    `).join('')}
+                </ul>
+                <div class="service-meta">
+                    <div class="service-duration">
+                        <i class="far fa-clock"></i>
+                        <span>${service.duration}</span>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn" onclick="openBookingModal(${service.id})" style="padding: 0.75rem 1.5rem;">
+                            <i class="fas fa-calendar-alt"></i>
+                            Book Now
+                        </button>
+                        <a class="btn btn-outline" href="https://api.whatsapp.com/send?phone=447827784204&text=Hello, I'm interested in your ${service.title} service. Can you provide more information?" style="padding: 0.75rem 1.5rem;">
+                            <i class="fab fa-whatsapp"></i>
+                            Inquire
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        servicesGrid.appendChild(serviceCard);
+    });
+
+    // 添加加载动画
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+    });
+
+    const elementObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    serviceCards.forEach(el => elementObserver.observe(el));
+}
+
+// ===== 修改导航栏，添加管理面板链接 =====
+// 在现有的导航菜单中添加管理面板链接
+document.addEventListener('DOMContentLoaded', function() {
+    // 找到导航菜单
+    const navMenu = document.getElementById('navMenu');
+    
+    // 创建管理面板链接
+    const adminNavItem = document.createElement('li');
+    adminNavItem.className = 'nav-item';
+    adminNavItem.innerHTML = `
+        <a href="admin.html" class="nav-link" style="color: var(--primary-green); font-weight: bold;">
+            <i class="fas fa-user-shield"></i>
+            Admin Panel
+        </a>
+    `;
+    
+    // 将管理面板链接添加到导航菜单中（在联系链接之前）
+    const contactItem = document.querySelector('.nav-item:last-child');
+    navMenu.insertBefore(adminNavItem, contactItem);
+    
+    // 对于移动菜单也做同样的处理
+    const mobileNavMenu = document.getElementById('navMenu');
+    if (mobileNavMenu) {
+        const mobileAdminItem = document.createElement('li');
+        mobileAdminItem.className = 'nav-item';
+        mobileAdminItem.innerHTML = `
+            <a href="admin.html" class="nav-link" style="color: var(--primary-green); font-weight: bold;">
+                <i class="fas fa-user-shield"></i>
+                Admin Panel
+            </a>
+        `;
+        
+        const mobileContactItem = mobileNavMenu.querySelector('.nav-item:last-child');
+        mobileNavMenu.insertBefore(mobileAdminItem, mobileContactItem);
     }
+});
 
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
+// ===== 初始化 =====
+document.addEventListener('DOMContentLoaded', function() {
+    // 检查用户是否在移动设备上
+    if (window.innerWidth <= 768) {
+        // 移动设备上的优化
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.style.padding = '0.75rem 1rem';
         });
     }
-
-    function getServiceName(serviceType) {
-        const services = {
-            'regular': 'Regular Cleaning',
-            'deep': 'Deep Cleaning',
-            'end_tenancy': 'End of Tenancy',
-            'carpet': 'Carpet Cleaning',
-            'oven': 'Oven Cleaning',
-            'office': 'Office Cleaning'
-        };
-        return services[serviceType] || serviceType;
-    }
-
-    function calculateNewPrice() {
-        const serviceType = document.getElementById('newServiceType').value;
-        const duration = parseInt(document.getElementById('newDuration').value);
-        let price = 0;
-        
-        switch(serviceType) {
-            case 'regular': price = duration * 18; break;
-            case 'deep': price = duration * 25; break;
-            case 'end_tenancy': price = duration * 30; break;
-            case 'carpet': price = duration * 25; break;
-            case 'oven': price = 45; break;
-            case 'office': price = duration * 25; break;
+    
+    // 添加键盘快捷键
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeBookingModal();
         }
-        
-        document.getElementById('newPrice').value = price.toFixed(2);
-        document.getElementById('newAmountPaid').value = '0';
-    }
-
-    function calculateEditPrice() {
-        const serviceType = document.getElementById('editServiceType').value;
-        const duration = parseInt(document.getElementById('editDuration').value);
-        let price = 0;
-        
-        switch(serviceType) {
-            case 'regular': price = duration * 18; break;
-            case 'deep': price = duration * 25; break;
-            case 'end_tenancy': price = duration * 30; break;
-            case 'carpet': price = duration * 25; break;
-            case 'oven': price = 45; break;
-            case 'office': price = duration * 25; break;
-        }
-        
-        document.getElementById('editPrice').value = price.toFixed(2);
-    }
-
-    function showNotification(message, type = 'success') {
-        const toast = document.getElementById('notificationToast');
-        const title = document.getElementById('notificationTitle');
-        const msg = document.getElementById('notificationMessage');
-        
-        let borderColor = 'var(--primary-green)';
-        if (type === 'error') {
-            borderColor = 'var(--red)';
-            title.textContent = 'Error';
-        } else if (type === 'warning') {
-            borderColor = 'var(--orange)';
-            title.textContent = 'Warning';
-        } else if (type === 'info') {
-            borderColor = 'var(--blue)';
-            title.textContent = 'Info';
-        } else {
-            title.textContent = 'Success';
-        }
-        
-        toast.style.borderLeftColor = borderColor;
-        msg.textContent = message;
-        toast.style.display = 'block';
-        
-        setTimeout(hideNotification, 5000);
-    }
-
-    function hideNotification() {
-        document.getElementById('notificationToast').style.display = 'none';
-    }
-
-    let searchTimeout;
-    function debounceSearch() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            loadBookings(1);
-        }, 500);
-    }
-
-    // ===== Make functions available globally =====
-    window.showBookingDetails = showBookingDetails;
-    window.showEditBookingModal = showEditBookingModal;
-    window.showDeleteConfirmation = showDeleteConfirmation;
-    window.showSlotDetails = showSlotDetails;
-    window.loadBookings = loadBookings;
-    window.prevMonth = prevMonth;
-    window.nextMonth = nextMonth;
-    window.hideNotification = hideNotification;
-</script>
+    });
+});</script>
