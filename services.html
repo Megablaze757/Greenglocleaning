@@ -28,6 +28,9 @@
             --dark-gray: #4B5563;
             --black: #111827;
             --gold: #FBBF24;
+            --ruby: #DC2626;
+            --sapphire: #2563EB;
+            --amethyst: #7C3AED;
             --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
             --shadow-lg: 0 25px 50px rgba(16, 185, 129, 0.15);
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -35,6 +38,9 @@
             --border-radius-lg: 24px;
             --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--teal));
             --gradient-dark: linear-gradient(135deg, var(--dark-green), var(--teal));
+            --gradient-gold: linear-gradient(135deg, #FBBF24, #F59E0B);
+            --gradient-silver: linear-gradient(135deg, #9CA3AF, #6B7280);
+            --gradient-bronze: linear-gradient(135deg, #92400E, #B45309);
         }
 
         * {
@@ -459,7 +465,7 @@
             position: absolute;
             top: 20px;
             right: -35px;
-            background: linear-gradient(135deg, var(--gold), #F59E0B);
+            background: var(--gradient-gold);
             color: var(--black);
             padding: 8px 40px;
             font-size: 11px;
@@ -500,40 +506,110 @@
             padding: 2rem;
         }
 
-        /* Price badge styling */
-        .service-price-badge {
+        /* Enhanced Price Display */
+        .service-price-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
             margin-bottom: 1.5rem;
-            padding: 0.75rem 1rem;
-            background: linear-gradient(135deg, var(--light-green), var(--mint));
-            border-radius: 12px;
-            border: 2px solid var(--secondary-green);
         }
 
-        .price-tag {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--dark-green);
-            background: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            border: 2px solid var(--primary-green);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        .price-tag-main {
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            line-height: 1;
+            padding: 0.5rem;
+            position: relative;
+            display: inline-block;
         }
 
-        .duration-tag {
+        .price-tag-main::before {
+            content: 'FROM';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--medium-gray);
+            letter-spacing: 2px;
+        }
+
+        .price-tier-container {
             display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .price-tier {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 12px;
+            background: var(--light-green);
+            min-width: 80px;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .price-tier:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-green);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .tier-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .tier-badge.gold {
+            background: var(--gradient-gold);
+        }
+
+        .tier-badge.silver {
+            background: var(--gradient-silver);
+        }
+
+        .tier-badge.bronze {
+            background: var(--gradient-bronze);
+        }
+
+        .tier-bedrooms {
+            font-size: 0.9rem;
             color: var(--dark-gray);
             font-weight: 600;
-            font-size: 0.9rem;
-            background: var(--white);
+        }
+
+        .tier-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--dark-green);
+            margin-top: 0.25rem;
+        }
+
+        .service-duration-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--light-green);
+            color: var(--dark-green);
             padding: 0.5rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--medium-gray);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin: 0 auto;
+            border: 1px solid var(--secondary-green);
         }
 
         .service-description {
@@ -569,22 +645,22 @@
 
         .service-meta {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 1rem;
             margin-top: 1.5rem;
             padding-top: 1.5rem;
             border-top: 2px solid var(--light-green);
         }
 
-        .service-duration {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--medium-gray);
-        }
-
         .service-cta {
             width: 100%;
+        }
+
+        .service-card .btn {
+            width: 100%;
+            justify-content: center;
+            font-size: 1.125rem;
+            padding: 1rem 2rem;
         }
 
         /* ===== Services CTA ===== */
@@ -717,6 +793,75 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
+        /* Bedroom Selector */
+        .bedroom-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .bedroom-option {
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 15px 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+        }
+
+        .bedroom-option:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .bedroom-option.selected {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .bedroom-icon {
+            font-size: 24px;
+            color: var(--dark-green);
+            margin-bottom: 5px;
+        }
+
+        .bedroom-label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 3px;
+        }
+
+        .bedroom-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        /* Price Display in Modal */
+        .price-display {
+            text-align: center;
+            padding: 15px;
+            background: var(--light-green);
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid var(--secondary-green);
+        }
+
+        .selected-price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--dark-green);
+            margin: 10px 0;
+        }
+
+        .price-breakdown {
+            font-size: 14px;
+            color: var(--medium-gray);
+        }
+
         .time-slots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -755,10 +900,11 @@
         }
 
         .booking-summary {
-            background: var(--light-green);
+            background: linear-gradient(135deg, var(--light-green), var(--mint));
             padding: 20px;
             border-radius: 12px;
             margin: 20px 0;
+            border: 2px solid var(--secondary-green);
         }
 
         /* ===== Premium Footer ===== */
@@ -957,22 +1103,23 @@
                 flex-shrink: 0;
             }
 
-            .service-price-badge {
-                flex-direction: column;
-                gap: 0.75rem;
-                text-align: center;
+            .price-tag-main {
+                font-size: 2rem;
             }
-            
-            .price-tag {
-                font-size: 1.25rem;
-                width: 100%;
+
+            .price-tier-container {
+                flex-wrap: wrap;
             }
-            
-            .duration-tag {
-                width: 100%;
-                justify-content: center;
+
+            .price-tier {
+                min-width: 70px;
+                padding: 0.5rem;
             }
-            
+
+            .tier-price {
+                font-size: 1.1rem;
+            }
+
             .service-card::after {
                 font-size: 10px;
                 padding: 6px 30px;
@@ -1007,6 +1154,10 @@
             .time-slots-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .bedroom-selector {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         @media (max-width: 480px) {
@@ -1028,6 +1179,14 @@
 
             .time-slots-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .bedroom-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .selected-price {
+                font-size: 2rem;
             }
         }
     </style>
@@ -1094,6 +1253,18 @@
             </div>
             <div class="modal-body">
                 <div id="bookingStep1">
+                    <div class="form-group" id="bedroomSelectionGroup" style="display: none;">
+                        <label>Select Number of Bedrooms</label>
+                        <div id="bedroomSelector" class="bedroom-selector">
+                            <!-- Bedroom options will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <div class="price-display" id="priceDisplay" style="display: none;">
+                        <div class="selected-price" id="selectedPrice">£0</div>
+                        <div class="price-breakdown" id="priceBreakdown">Select number of bedrooms to see price</div>
+                    </div>
+                    
                     <div class="form-group">
                         <label>Select Date</label>
                         <input type="date" id="bookingDate" class="form-control" min="" required>
@@ -1360,6 +1531,8 @@ let currentBooking = {
     date: null,
     timeSlot: null,
     slotId: null,
+    bedrooms: 1,
+    calculatedPrice: 0,
     customer: {}
 };
 
@@ -1475,7 +1648,8 @@ function logBookingState() {
         date: currentBooking.date,
         timeSlot: currentBooking.timeSlot,
         slotId: currentBooking.slotId,
-        slotIdType: typeof currentBooking.slotId
+        bedrooms: currentBooking.bedrooms,
+        calculatedPrice: currentBooking.calculatedPrice
     });
 }
 
@@ -1526,6 +1700,7 @@ async function sendConfirmationEmail(customerEmail, bookingDetails) {
                         <p><strong>Date:</strong> ${new Date(bookingDetails.date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                         <p><strong>Time:</strong> ${bookingDetails.timeSlot}</p>
                         <p><strong>Duration:</strong> ${bookingDetails.duration}</p>
+                        <p><strong>Bedrooms:</strong> ${bookingDetails.bedrooms}</p>
                         <p><strong>Price:</strong> <span class="price-badge">${bookingDetails.price}</span></p>
                     </div>
                     
@@ -1574,6 +1749,7 @@ async function sendConfirmationEmail(customerEmail, bookingDetails) {
             Date: ${bookingDetails.date}
             Time: ${bookingDetails.timeSlot}
             Duration: ${bookingDetails.duration}
+            Bedrooms: ${bookingDetails.bedrooms}
             Price: ${bookingDetails.price}
             
             CUSTOMER DETAILS:
@@ -1624,16 +1800,34 @@ async function sendConfirmationEmail(customerEmail, bookingDetails) {
 }
 
 // ===== Booking Modal Functions =====
-function openBookingModal(serviceTitle, serviceId, servicePrice) {
-    console.log('📅 Opening booking modal for:', serviceTitle, 'Price:', servicePrice);
+function openBookingModal(serviceTitle, serviceId, serviceData) {
+    console.log('📅 Opening booking modal for:', serviceTitle, 'Data:', serviceData);
     
     currentBooking.service = {
         title: serviceTitle,
         id: serviceId,
-        price: servicePrice
+        data: serviceData
     };
     
     document.getElementById('bookingServiceName').textContent = serviceTitle;
+    
+    // Reset booking details
+    currentBooking.bedrooms = 1;
+    currentBooking.calculatedPrice = 0;
+    
+    // Show/hide bedroom selector based on service type
+    const bedroomGroup = document.getElementById('bedroomSelectionGroup');
+    const priceDisplay = document.getElementById('priceDisplay');
+    
+    if (serviceData.hasBedrooms) {
+        bedroomGroup.style.display = 'block';
+        priceDisplay.style.display = 'block';
+        renderBedroomOptions(serviceData);
+    } else {
+        bedroomGroup.style.display = 'none';
+        priceDisplay.style.display = 'block';
+        updatePriceDisplay(serviceData.basePrice);
+    }
     
     // Set min date to today
     const today = new Date().toISOString().split('T')[0];
@@ -1660,6 +1854,78 @@ function openBookingModal(serviceTitle, serviceId, servicePrice) {
     console.log('✅ Booking modal opened');
 }
 
+function renderBedroomOptions(serviceData) {
+    const container = document.getElementById('bedroomSelector');
+    container.innerHTML = '';
+    
+    const bedroomOptions = [
+        { value: 1, label: '1 Bed', icon: 'bed', price: serviceData.basePrice },
+        { value: 2, label: '2 Bed', icon: 'bed', price: serviceData.basePrice + serviceData.perBedroomPrice },
+        { value: 3, label: '3 Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 2) },
+        { value: 4, label: '4 Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 3) },
+        { value: 5, label: '5+ Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 4) }
+    ];
+    
+    bedroomOptions.forEach(option => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'bedroom-option';
+        optionElement.dataset.bedrooms = option.value;
+        optionElement.dataset.price = option.price;
+        
+        optionElement.innerHTML = `
+            <div class="bedroom-icon">
+                <i class="fas fa-${option.icon}"></i>
+            </div>
+            <div class="bedroom-label">${option.label}</div>
+            <div class="bedroom-price">£${option.price}</div>
+        `;
+        
+        optionElement.addEventListener('click', function() {
+            // Deselect all
+            document.querySelectorAll('.bedroom-option').forEach(o => {
+                o.classList.remove('selected');
+            });
+            
+            // Select this one
+            this.classList.add('selected');
+            
+            // Update booking
+            currentBooking.bedrooms = option.value;
+            currentBooking.calculatedPrice = option.price;
+            
+            updatePriceDisplay(option.price);
+            console.log('✅ Selected bedrooms:', option.value, 'Price: £' + option.price);
+        });
+        
+        container.appendChild(optionElement);
+    });
+    
+    // Select first option by default
+    const firstOption = container.querySelector('.bedroom-option');
+    if (firstOption) {
+        firstOption.classList.add('selected');
+        currentBooking.bedrooms = 1;
+        currentBooking.calculatedPrice = bedroomOptions[0].price;
+        updatePriceDisplay(bedroomOptions[0].price);
+    }
+}
+
+function updatePriceDisplay(price) {
+    document.getElementById('selectedPrice').textContent = `£${price}`;
+    
+    if (currentBooking.service.data.hasBedrooms) {
+        const basePrice = currentBooking.service.data.basePrice;
+        const perBedroom = currentBooking.service.data.perBedroomPrice;
+        const breakdown = currentBooking.bedrooms > 1 
+            ? `Base: £${basePrice} + £${perBedroom} × ${currentBooking.bedrooms - 1} bedroom(s)`
+            : 'Standard 1 bedroom rate';
+        
+        document.getElementById('priceBreakdown').textContent = breakdown;
+    } else {
+        document.getElementById('priceBreakdown').textContent = 'Fixed price service';
+    }
+}
+
 function closeBookingModal() {
     document.getElementById('bookingModal').style.display = 'none';
     currentBooking = {
@@ -1667,6 +1933,8 @@ function closeBookingModal() {
         date: null,
         timeSlot: null,
         slotId: null,
+        bedrooms: 1,
+        calculatedPrice: 0,
         customer: {}
     };
     console.log('📅 Booking modal closed');
@@ -1802,6 +2070,12 @@ function formatTime(time) {
 }
 
 function nextBookingStep() {
+    // Validate price calculation
+    if (currentBooking.service.data.hasBedrooms && currentBooking.calculatedPrice <= 0) {
+        alert('⚠️ Please select number of bedrooms');
+        return;
+    }
+    
     if (!currentBooking.timeSlot) {
         alert('⚠️ Please select a time slot');
         return;
@@ -1842,14 +2116,29 @@ function updateBookingSummary() {
     // Convert slotId to string to avoid substring error
     const slotIdStr = String(currentBooking.slotId || '');
     
+    let priceDisplay = currentBooking.calculatedPrice 
+        ? `£${currentBooking.calculatedPrice}`
+        : currentBooking.service.data.displayPrice;
+    
+    let bedroomInfo = '';
+    if (currentBooking.service.data.hasBedrooms) {
+        bedroomInfo = `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+                <span style="color: var(--dark-gray); font-weight: 600;">Bedrooms:</span>
+                <span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms > 1 ? 's' : ''}</span>
+            </div>
+        `;
+    }
+    
     summary.innerHTML = `
         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
             <span style="color: var(--dark-gray); font-weight: 600;">Service:</span>
             <span style="font-weight: 700; color: var(--dark-green);">${currentBooking.service.title}</span>
         </div>
+        ${bedroomInfo}
         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
             <span style="color: var(--dark-gray); font-weight: 600;">Price:</span>
-            <span style="font-weight: 700; color: var(--primary-green);">${currentBooking.service.price}</span>
+            <span style="font-weight: 700; color: var(--primary-green); font-size: 1.25rem;">${priceDisplay}</span>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
             <span style="color: var(--dark-gray); font-weight: 600;">Date:</span>
@@ -1914,11 +2203,14 @@ async function confirmBooking() {
         console.log('2️⃣ Creating booking record...');
         
         // Find service duration
-        const serviceData = servicesData.find(s => s.id == currentBooking.service.id);
-        const serviceDuration = serviceData ? serviceData.duration : '2-3 hours';
+        const serviceData = currentBooking.service.data;
+        const serviceDuration = serviceData.duration;
         
         // Generate booking reference
         const bookingRef = 'GG' + Date.now().toString().slice(-8);
+        
+        // Calculate final price
+        const finalPrice = currentBooking.calculatedPrice || serviceData.basePrice;
         
         // 2. Prepare booking data
         const bookingData = {
@@ -1931,7 +2223,9 @@ async function confirmBooking() {
             booking_date: currentBooking.date,
             time_slot: currentBooking.timeSlot,
             duration: serviceDuration,
-            price: currentBooking.service.price,
+            bedrooms: currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : null,
+            price: `£${finalPrice}`,
+            calculated_price: finalPrice,
             notes: document.getElementById('bookingNotes').value.trim() || null,
             status: 'confirmed',
             booking_reference: bookingRef,
@@ -1964,7 +2258,7 @@ async function confirmBooking() {
                     customer_address: customerAddress,
                     booking_date: currentBooking.date,
                     time_slot: currentBooking.timeSlot,
-                    price: currentBooking.service.price,
+                    price: `£${finalPrice}`,
                     status: 'confirmed',
                     booking_reference: bookingRef
                 };
@@ -2010,7 +2304,8 @@ async function confirmBooking() {
             date: currentBooking.date,
             timeSlot: currentBooking.timeSlot,
             duration: serviceDuration,
-            price: currentBooking.service.price,
+            bedrooms: currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : 'N/A',
+            price: `£${finalPrice}`,
             customerName: customerName,
             customerPhone: customerPhone,
             customerEmail: customerEmail,
@@ -2040,7 +2335,8 @@ async function confirmBooking() {
         const whatsappMessage = encodeURIComponent(
             `📅 NEW BOOKING CONFIRMED - GreenGlo Cleaners\n\n` +
             `🛠️ Service: ${currentBooking.service.title}\n` +
-            `💰 Price: ${currentBooking.service.price}\n` +
+            `💰 Price: £${finalPrice}\n` +
+            `🛏️ Bedrooms: ${currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : 'N/A'}\n` +
             `📅 Date: ${currentBooking.date}\n` +
             `🕒 Time: ${currentBooking.timeSlot}\n` +
             `📞 Customer: ${customerName}\n` +
@@ -2050,7 +2346,7 @@ async function confirmBooking() {
             `📝 Notes: ${document.getElementById('bookingNotes').value.trim() || 'None'}\n` +
             `🔗 Booking Ref: ${bookingRef}\n` +
             `📧 Email Status: ${emailSent ? '✅ Sent' : '❌ Not sent'}\n\n` +
-            `💰 Estimated Revenue: ${extractPriceNumber(currentBooking.service.price)}`
+            `💰 Revenue: £${finalPrice}`
         );
         
         const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`;
@@ -2074,7 +2370,8 @@ async function confirmBooking() {
 📋 SERVICE DETAILS
 ────────────────────
 Service: ${currentBooking.service.title}
-Price: ${currentBooking.service.price}
+${currentBooking.service.data.hasBedrooms ? `Bedrooms: ${currentBooking.bedrooms}\n` : ''}
+Price: £${finalPrice}
 Date: ${formattedDate}
 Time: ${currentBooking.timeSlot}
 Booking Ref: ${bookingRef}
@@ -2150,7 +2447,7 @@ function extractPriceNumber(priceString) {
 // Close booking modal button
 document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
 
-// ===== Services Data with Competitive Pricing =====
+// ===== Services Data with Enhanced Pricing =====
 const servicesData = [
     {
         id: 1,
@@ -2159,7 +2456,9 @@ const servicesData = [
         description: "Complete living room cleaning and organization with eco-friendly products.",
         features: ["Complete dust removal", "Furniture cleaning", "Floor sanitization", "Window sills"],
         duration: "2-3 hours",
-        price: "£75",
+        hasBedrooms: false,
+        basePrice: 75,
+        displayPrice: "£75",
         image: "livingroom.png"
     },
     {
@@ -2169,7 +2468,9 @@ const servicesData = [
         description: "Professional office cleaning for businesses and startups.",
         features: ["Workstation sanitization", "Meeting room cleaning", "Kitchenette cleaning", "Floor care"],
         duration: "2-6 hours",
-        price: "£18/hour",
+        hasBedrooms: false,
+        basePrice: 18,
+        displayPrice: "£18/hour",
         image: "office.png"
     },
     {
@@ -2179,7 +2480,9 @@ const servicesData = [
         description: "Complete kitchen deep clean including appliances and cabinets.",
         features: ["Oven cleaning included", "Appliance sanitization", "Cabinet cleaning", "Surface degreasing"],
         duration: "2-3 hours",
-        price: "£85",
+        hasBedrooms: false,
+        basePrice: 85,
+        displayPrice: "£85",
         image: "kitchen.png"
     },
     {
@@ -2189,7 +2492,9 @@ const servicesData = [
         description: "Professional oven cleaning for single and double ovens.",
         features: ["Complete interior clean", "Door and glass", "Rack cleaning", "Exterior polish"],
         duration: "1-2 hours",
-        price: "From £40",
+        hasBedrooms: false,
+        basePrice: 40,
+        displayPrice: "From £40",
         image: "ovenafter.png"
     },
     {
@@ -2199,7 +2504,9 @@ const servicesData = [
         description: "Complete bathroom sanitization and deep cleaning.",
         features: ["Tile and grout cleaning", "Sanitization", "Fixture polishing", "Mould treatment"],
         duration: "1-2 hours",
-        price: "£65",
+        hasBedrooms: false,
+        basePrice: 65,
+        displayPrice: "£65",
         image: "bathroom.png"
     },
     {
@@ -2209,7 +2516,10 @@ const servicesData = [
         description: "Professional cleaning to ensure full deposit return.",
         features: ["Inventory check ready", "Complete property clean", "Carpet cleaning available", "Guaranteed satisfaction"],
         duration: "4-8 hours",
-        price: "1 Bed: £220 | 2 Bed: £250",
+        hasBedrooms: true,
+        basePrice: 220,
+        perBedroomPrice: 30,
+        displayPrice: "From £220",
         image: "tenancy.png"
     },
     {
@@ -2219,7 +2529,9 @@ const servicesData = [
         description: "Professional hot water extraction carpet cleaning.",
         features: ["Hot water extraction", "Stain removal", "Quick drying", "Deodorizing"],
         duration: "1-3 hours",
-        price: "From £15/room",
+        hasBedrooms: false,
+        basePrice: 15,
+        displayPrice: "From £15/room",
         image: "carpet.png"
     },
     {
@@ -2229,7 +2541,9 @@ const servicesData = [
         description: "Weekly or fortnightly cleaning service.",
         features: ["Dusting & vacuuming", "Kitchen & bathroom", "Surface cleaning", "Floor mopping"],
         duration: "2-4 hours",
-        price: "£18/hour",
+        hasBedrooms: false,
+        basePrice: 18,
+        displayPrice: "£18/hour",
         image: "domestic.png"
     },
     {
@@ -2239,7 +2553,10 @@ const servicesData = [
         description: "Thorough one-time cleaning for your entire home.",
         features: ["Complete home clean", "Inside cabinets", "Appliance cleaning", "Detailed attention"],
         duration: "4-8 hours",
-        price: "£23/hour",
+        hasBedrooms: true,
+        basePrice: 150,
+        perBedroomPrice: 35,
+        displayPrice: "From £150",
         image: "deepclean.png"
     },
     {
@@ -2249,7 +2566,9 @@ const servicesData = [
         description: "Interior and exterior window cleaning service.",
         features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment"],
         duration: "1-3 hours",
-        price: "Flat: £30 | House: £45",
+        hasBedrooms: false,
+        basePrice: 30,
+        displayPrice: "Flat: £30 | House: £45",
         image: "window.png"
     },
     {
@@ -2259,7 +2578,9 @@ const servicesData = [
         description: "Sofa, armchair, and car seat deep cleaning.",
         features: ["Stain removal", "Fabric protection", "Deodorizing", "Professional equipment"],
         duration: "1-2 hours",
-        price: "Sofa 3-seater: £55",
+        hasBedrooms: false,
+        basePrice: 55,
+        displayPrice: "Sofa 3-seater: £55",
         image: "upholstery.png"
     },
     {
@@ -2269,7 +2590,10 @@ const servicesData = [
         description: "Post-construction cleanup for renovation projects.",
         features: ["Debris removal", "Dust elimination", "Surface cleaning", "Final touch-up"],
         duration: "4-8 hours",
-        price: "£25/hour",
+        hasBedrooms: true,
+        basePrice: 200,
+        perBedroomPrice: 40,
+        displayPrice: "From £200",
         image: "builders.png"
     },
     {
@@ -2279,7 +2603,9 @@ const servicesData = [
         description: "Professional hard floor scrubbing and polishing.",
         features: ["Scrubbing & cleaning", "Polishing", "Sealing available", "Protective coating"],
         duration: "2-4 hours",
-        price: "£3.50/m²",
+        hasBedrooms: false,
+        basePrice: 3.5,
+        displayPrice: "£3.50/m²",
         image: "hardfloor.png"
     },
     {
@@ -2289,7 +2615,9 @@ const servicesData = [
         description: "Gutter clearing and downpipe unblocking service.",
         features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first"],
         duration: "1-3 hours",
-        price: "Terraced house: £75",
+        hasBedrooms: false,
+        basePrice: 75,
+        displayPrice: "Terraced house: £75",
         image: "gutter.png"
     },
     {
@@ -2299,7 +2627,10 @@ const servicesData = [
         description: "Professional sanitisation against germs and viruses.",
         features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage"],
         duration: "1-2 hours",
-        price: "Starting at £120",
+        hasBedrooms: true,
+        basePrice: 120,
+        perBedroomPrice: 25,
+        displayPrice: "From £120",
         image: "sanitisation.png"
     },
     {
@@ -2309,7 +2640,9 @@ const servicesData = [
         description: "Deep cleaning of BBQs and outdoor cooking equipment.",
         features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
         duration: "1-2 hours",
-        price: "Small BBQ: £45",
+        hasBedrooms: false,
+        basePrice: 45,
+        displayPrice: "Small BBQ: £45",
         image: "bbq.png"
     },
     {
@@ -2319,7 +2652,9 @@ const servicesData = [
         description: "Regular commercial cleaning for businesses.",
         features: ["Daily/weekly service", "Floor maintenance", "Restroom cleaning", "Waste removal"],
         duration: "2-8 hours",
-        price: "£25/hour",
+        hasBedrooms: false,
+        basePrice: 25,
+        displayPrice: "£25/hour",
         image: "commercial.png"
     },
     {
@@ -2329,7 +2664,10 @@ const servicesData = [
         description: "Complete cleaning for moving properties.",
         features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround"],
         duration: "3-6 hours",
-        price: "Starting at £180",
+        hasBedrooms: true,
+        basePrice: 180,
+        perBedroomPrice: 40,
+        displayPrice: "From £180",
         image: "moveclean.png"
     },
     {
@@ -2339,7 +2677,9 @@ const servicesData = [
         description: "Pressure washing for patios and decking areas.",
         features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration"],
         duration: "2-4 hours",
-        price: "From £70",
+        hasBedrooms: false,
+        basePrice: 70,
+        displayPrice: "From £70",
         image: "patio.png"
     },
     {
@@ -2349,7 +2689,10 @@ const servicesData = [
         description: "Seasonal deep cleaning service.",
         features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help"],
         duration: "4-8 hours",
-        price: "£25/hour",
+        hasBedrooms: true,
+        basePrice: 175,
+        perBedroomPrice: 35,
+        displayPrice: "From £175",
         image: "spring.png"
     },
     {
@@ -2359,7 +2702,9 @@ const servicesData = [
         description: "Specialized treatment for stubborn carpet stains.",
         features: ["Professional treatment", "Odor removal", "Color restoration", "Guaranteed results"],
         duration: "1-2 hours",
-        price: "From £35/stain",
+        hasBedrooms: false,
+        basePrice: 35,
+        displayPrice: "From £35/stain",
         image: "stain.png"
     },
     {
@@ -2369,12 +2714,14 @@ const servicesData = [
         description: "24/7 emergency cleaning services.",
         features: ["24/7 availability", "Fast response", "Flood cleanup", "Accident cleanup"],
         duration: "2-6 hours",
-        price: "£35/hour",
+        hasBedrooms: false,
+        basePrice: 35,
+        displayPrice: "£35/hour",
         image: "emergency.png"
     }
 ];
 
-// ===== Render Services =====
+// ===== Render Services with Enhanced Price Display =====
 const servicesGrid = document.getElementById('servicesGrid');
 
 function renderServices(category = 'all') {
@@ -2389,6 +2736,37 @@ function renderServices(category = 'all') {
         serviceCard.className = 'service-card';
         serviceCard.setAttribute('data-category', service.category);
 
+        // Generate price tiers for bedroom-based services
+        let priceContent = '';
+        if (service.hasBedrooms) {
+            const tiers = [
+                { bedrooms: 1, price: service.basePrice, badge: 'gold' },
+                { bedrooms: 2, price: service.basePrice + service.perBedroomPrice, badge: 'silver' },
+                { bedrooms: 3, price: service.basePrice + (service.perBedroomPrice * 2), badge: 'bronze' }
+            ];
+            
+            priceContent = `
+                <div class="service-price-container">
+                    <div class="price-tag-main">£${service.basePrice}</div>
+                    <div class="price-tier-container">
+                        ${tiers.map(tier => `
+                            <div class="price-tier">
+                                <div class="tier-badge ${tier.badge}">${tier.bedrooms} BED</div>
+                                <div class="tier-bedrooms">${tier.bedrooms} Bedroom${tier.bedrooms > 1 ? 's' : ''}</div>
+                                <div class="tier-price">£${tier.price}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        } else {
+            priceContent = `
+                <div class="service-price-container" style="text-align: center;">
+                    <div class="price-tag-main">${service.displayPrice}</div>
+                </div>
+            `;
+        }
+
         serviceCard.innerHTML = `
             <div class="service-image" style="background-image: url('${service.image}'); background-color: var(--light-green);">
                 <div class="service-overlay">
@@ -2396,10 +2774,14 @@ function renderServices(category = 'all') {
                 </div>
             </div>
             <div class="service-content">
-                <div class="service-price-badge">
-                    <span class="price-tag">${service.price}</span>
-                    <span class="duration-tag"><i class="far fa-clock"></i> ${service.duration}</span>
+                ${priceContent}
+                
+                <div style="text-align: center; margin: 1rem 0;">
+                    <span class="service-duration-badge">
+                        <i class="far fa-clock"></i> ${service.duration}
+                    </span>
                 </div>
+                
                 <p class="service-description">${service.description}</p>
                 <ul class="service-features">
                     ${service.features.map(feature => `
@@ -2408,9 +2790,12 @@ function renderServices(category = 'all') {
                 </ul>
                 <div class="service-meta">
                     <div class="service-cta">
-                        <button class="btn book-service-btn" data-service-id="${service.id}" data-service-title="${service.title}" data-service-price="${service.price}" style="padding: 0.75rem 1.5rem; width: 100%;">
+                        <button class="btn book-service-btn" 
+                                data-service-id="${service.id}" 
+                                data-service-title="${service.title}"
+                                style="padding: 1rem 2rem; font-size: 1.125rem; background: var(--gradient-primary);">
                             <i class="fas fa-calendar-check"></i>
-                            Book Now - ${service.price}
+                            Book Now
                         </button>
                     </div>
                 </div>
@@ -2425,8 +2810,8 @@ function renderServices(category = 'all') {
         button.addEventListener('click', function() {
             const serviceId = this.getAttribute('data-service-id');
             const serviceTitle = this.getAttribute('data-service-title');
-            const servicePrice = this.getAttribute('data-service-price');
-            openBookingModal(serviceTitle, serviceId, servicePrice);
+            const serviceData = servicesData.find(s => s.id == serviceId);
+            openBookingModal(serviceTitle, serviceId, serviceData);
         });
     });
 
@@ -2621,7 +3006,7 @@ window.addEventListener('load', () => {
     console.log('🚀 Page fully loaded');
     console.log('Supabase client:', supabaseClient ? '✅ Initialized' : '❌ Not initialized');
     console.log('Resend API:', '✅ Ready for email confirmation');
-    console.log('Booking system:', '✅ Fully operational with email support');
+    console.log('Booking system:', '✅ Fully operational with bedroom selection');
 });
     </script>
 </body>
