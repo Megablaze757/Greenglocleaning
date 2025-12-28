@@ -28,6 +28,7 @@
             --dark-gray: #4B5563;
             --black: #111827;
             --gold: #FBBF24;
+            --red: #EF4444;
             --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
             --shadow-lg: 0 25px 50px rgba(16, 185, 129, 0.15);
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -444,6 +445,22 @@
             box-shadow: var(--shadow);
             transition: var(--transition);
             border: 1px solid rgba(16, 185, 129, 0.1);
+            position: relative;
+        }
+
+        .service-card::before {
+            content: 'Competitive Price';
+            position: absolute;
+            top: 15px;
+            right: -35px;
+            background: var(--gold);
+            color: var(--black);
+            padding: 5px 40px;
+            font-size: 12px;
+            font-weight: 700;
+            transform: rotate(45deg);
+            z-index: 2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .service-card:hover {
@@ -515,6 +532,8 @@
 
         .service-meta {
             display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
             justify-content: space-between;
             align-items: center;
             margin-top: 1.5rem;
@@ -522,11 +541,33 @@
             border-top: 2px solid var(--light-green);
         }
 
+        /* Price styling */
+        .service-price {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: var(--light-green);
+            border-radius: 8px;
+            border: 2px solid var(--secondary-green);
+            flex: 1;
+        }
+
+        .service-price i {
+            color: var(--dark-green);
+            font-size: 1rem;
+        }
+
         .service-duration {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             color: var(--medium-gray);
+            font-weight: 500;
         }
 
         /* ===== Services CTA ===== */
@@ -919,6 +960,22 @@
             .time-slots-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .service-card::before {
+                font-size: 10px;
+                right: -40px;
+                padding: 4px 35px;
+            }
+
+            .service-meta {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .service-price {
+                order: -1;
+                margin-bottom: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -940,6 +997,25 @@
 
             .time-slots-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .service-card::before {
+                display: none;
+            }
+
+            .service-card::after {
+                content: 'Competitive Price';
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                background: var(--gold);
+                color: var(--black);
+                padding: 4px 12px;
+                font-size: 11px;
+                font-weight: 700;
+                border-radius: 4px;
+                z-index: 2;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             }
         }
     </style>
@@ -1066,8 +1142,7 @@
         <div class="container">
             <div class="services-hero-content">
                 <h1>Our Complete Cleaning Services</h1>
-                <p>Explore our comprehensive range of professional cleaning services, all using eco-friendly products
-                    and performed by our vetted, background-checked professionals.</p>
+                <p>Explore our comprehensive range of professional cleaning services with competitive pricing. All services use eco-friendly products and performed by our vetted professionals.</p>
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                     <a href="#servicesGrid" class="btn btn-large">
                         <i class="fas fa-broom"></i>
@@ -1087,7 +1162,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Browse by Category</h2>
-                <p>Find the perfect cleaning service for your needs</p>
+                <p>Find the perfect cleaning service for your needs at competitive prices</p>
             </div>
             <div class="category-filters">
                 <button class="category-btn active" data-category="all">All Services</button>
@@ -1113,8 +1188,7 @@
         <div class="container">
             <div class="services-cta">
                 <h2>Need Help Choosing the Right Service?</h2>
-                <p>Our cleaning experts are ready to help you select the perfect service for your needs. Get a
-                    personalized quote or book a consultation today.</p>
+                <p>Our cleaning experts are ready to help you select the perfect service for your needs. Get a personalized quote or book a consultation today.</p>
                 <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
                     <a href="https://api.whatsapp.com/send?phone=447827784204&text=" class="btn btn-large"
                         style="background: var(--white); color: var(--primary-green);">
@@ -1683,6 +1757,7 @@ async function confirmBooking() {
         // Find service duration
         const serviceData = servicesData.find(s => s.id == currentBooking.service.id);
         const serviceDuration = serviceData ? serviceData.duration : '2-3 hours';
+        const servicePrice = serviceData ? serviceData.price : 'Starting at £75';
         
         // 2. Prepare booking data
         const bookingData = {
@@ -1695,6 +1770,7 @@ async function confirmBooking() {
             booking_date: currentBooking.date,
             time_slot: currentBooking.timeSlot,
             duration: serviceDuration,
+            price: servicePrice,
             notes: document.getElementById('bookingNotes').value.trim() || null,
             status: 'confirmed',
             created_at: new Date().toISOString()
@@ -1781,6 +1857,7 @@ async function confirmBooking() {
 📋 SERVICE DETAILS
 ────────────────────
 Service: ${currentBooking.service.title}
+Price: ${servicePrice}
 Date: ${formattedDate}
 Time: ${currentBooking.timeSlot}
 
@@ -1804,6 +1881,7 @@ Thank you for choosing GreenGlo Cleaners! 🌿
         const whatsappMessage = encodeURIComponent(
             `📅 NEW BOOKING CONFIRMED - GreenGlo Cleaners\n\n` +
             `🛠️ Service: ${currentBooking.service.title}\n` +
+            `💰 Price: ${servicePrice}\n` +
             `📅 Date: ${currentBooking.date}\n` +
             `🕒 Time: ${currentBooking.timeSlot}\n` +
             `👤 Customer: ${customerName}\n` +
@@ -1876,145 +1954,228 @@ document.getElementById('closeBookingModal').addEventListener('click', closeBook
 
 // ===== Services Data =====
 const servicesData = [
+    // Original services with added prices
     {
         id: 1,
         title: "Living Room Transformation",
         category: "domestic",
-        description: "Complete living room cleaning and organization after a renovation project. We removed all construction dust and debris, leaving the space spotless and ready for furniture.",
-        features: [
-            "Complete dust and debris removal",
-            "Post-construction cleanup",
-            "Furniture arrangement preparation",
-            "Eco-friendly product usage"
-        ],
+        description: "Complete living room cleaning and organization after a renovation project.",
+        features: ["Complete dust and debris removal", "Post-construction cleanup", "Furniture arrangement preparation", "Eco-friendly product usage"],
         duration: "2-4 hours",
+        price: "Starting at £85",
         image: "livingroom.png"
     },
     {
         id: 2,
         title: "Office Space Deep Clean",
         category: "office",
-        description: "Professional office cleaning for a tech startup in Shoreditch. We cleaned all workstations, meeting rooms, and common areas using eco-friendly products.",
-        features: [
-            "Workstation sanitization",
-            "Meeting room cleaning",
-            "Common area maintenance",
-            "Eco-friendly product usage"
-        ],
+        description: "Professional office cleaning for tech startups and businesses.",
+        features: ["Workstation sanitization", "Meeting room cleaning", "Common area maintenance", "Eco-friendly product usage"],
         duration: "3-6 hours",
+        price: "£18/hour",
         image: "office.png"
     },
     {
         id: 3,
         title: "Kitchen Deep Cleaning",
         category: "domestic",
-        description: "Kitchen deep clean including oven cleaning, cabinet organization, and appliance sanitization. All surfaces were cleaned with our non-toxic eco-friendly solutions.",
-        features: [
-            "Oven deep cleaning",
-            "Cabinet organization",
-            "Appliance sanitization",
-            "Non-toxic eco-friendly solutions"
-        ],
+        description: "Kitchen deep clean including oven cleaning, cabinet organization, and appliance sanitization.",
+        features: ["Oven deep cleaning", "Cabinet organization", "Appliance sanitization", "Non-toxic eco-friendly solutions"],
         duration: "2-3 hours",
+        price: "Starting at £75",
         image: "kitchen.png"
     },
     {
         id: 4,
         title: "Oven Deep Clean",
         category: "deep",
-        description: "Professional oven cleaning service. Interior, door, and racks deep-cleaned to a pristine, as-new condition.",
-        features: [
-            "Complete interior cleaning",
-            "Door and glass cleaning",
-            "Rack deep-cleaning",
-            "As-new condition restoration"
-        ],
+        description: "Professional oven cleaning service. Interior, door, and racks deep-cleaned.",
+        features: ["Complete interior cleaning", "Door and glass cleaning", "Rack deep-cleaning", "As-new condition restoration"],
         duration: "1-2 hours",
+        price: "From £40 (Single oven)",
         image: "ovenafter.png"
     },
     {
         id: 5,
         title: "Bathroom Makeover",
         category: "deep",
-        description: "Complete bathroom cleaning and sanitization. We removed hard water stains, mildew, and thoroughly cleaned all fixtures to like-new condition.",
-        features: [
-            "Hard water stain removal",
-            "Mildew treatment",
-            "Fixture deep cleaning",
-            "Complete sanitization"
-        ],
+        description: "Complete bathroom cleaning and sanitization.",
+        features: ["Hard water stain removal", "Mildew treatment", "Fixture deep cleaning", "Complete sanitization"],
         duration: "1-2 hours",
+        price: "Starting at £65",
         image: "bathroom.png"
     },
     {
         id: 6,
         title: "Garden Maintenance",
         category: "special",
-        description: "Expert turf laying, featuring ground levelling, premium turf, and expert installation for an instant, lush transformation.",
-        features: [
-            "Ground levelling",
-            "Premium turf installation",
-            "Expert installation",
-            "Instant transformation"
-        ],
+        description: "Expert turf laying, featuring ground levelling and premium turf installation.",
+        features: ["Ground levelling", "Premium turf installation", "Expert installation", "Instant transformation"],
         duration: "4-8 hours",
+        price: "Call for quote",
         image: "turf.png"
     },
     {
         id: 7,
         title: "Carpet Restoration",
         category: "deep",
-        description: "Deep carpet cleaning and stain removal for a family home in Chelsea. We removed pet stains and restored the original color of the carpets.",
-        features: [
-            "Deep carpet cleaning",
-            "Pet stain removal",
-            "Color restoration",
-            "Professional equipment use"
-        ],
+        description: "Deep carpet cleaning and stain removal for family homes.",
+        features: ["Deep carpet cleaning", "Pet stain removal", "Color restoration", "Professional equipment use"],
         duration: "2-4 hours",
+        price: "From £15 per room",
         image: "carpet.png"
     },
     {
         id: 8,
         title: "Patio Cleaning",
         category: "special",
-        description: "Professional patio cleaning featuring pressure washing and moss treatment for a restored, spotless surface.",
-        features: [
-            "Pressure washing",
-            "Moss treatment",
-            "Surface restoration",
-            "Spotless finish"
-        ],
+        description: "Professional patio cleaning featuring pressure washing and moss treatment.",
+        features: ["Pressure washing", "Moss treatment", "Surface restoration", "Spotless finish"],
         duration: "2-3 hours",
+        price: "Starting at £70",
         image: "patio.png"
     },
     {
         id: 9,
         title: "End of Tenancy Clean",
         category: "domestic",
-        description: "Complete apartment cleaning for move-out inspection. Met all landlord requirements and ensured the full deposit was returned to the tenant.",
-        features: [
-            "Complete apartment cleaning",
-            "Landlord requirement compliance",
-            "Move-out inspection ready",
-            "Deposit return guarantee"
-        ],
+        description: "Complete apartment cleaning for move-out inspection.",
+        features: ["Complete apartment cleaning", "Landlord requirement compliance", "Move-out inspection ready", "Deposit return guarantee"],
         duration: "3-5 hours",
+        price: "1 Bedroom: £220",
         image: "tenancy.png"
     },
     {
         id: 10,
         title: "Property Maintenance",
         category: "special",
-        description: "Professional flooring installation featuring precise measurement and expert fitting for a seamless, durable finish.",
-        features: [
-            "Precise measurement",
-            "Expert fitting",
-            "Seamless finish",
-            "Durable installation"
-        ],
+        description: "Professional flooring installation featuring precise measurement and expert fitting.",
+        features: ["Precise measurement", "Expert fitting", "Seamless finish", "Durable installation"],
         duration: "4-6 hours",
+        price: "Call for quote",
         image: "flooring.png"
+    },
+    
+    // New services from Fantastic Cleaners with competitive pricing
+    {
+        id: 11,
+        title: "End of Tenancy Cleaning",
+        category: "deep",
+        description: "Professional end of tenancy cleaning to ensure full deposit return.",
+        features: ["Full property deep clean", "Carpet cleaning available", "Inventory check support", "Landlord approved"],
+        duration: "3-6 hours",
+        price: "1 Bedroom: £220 | 2 Bedrooms: £250",
+        image: "tenancy.png"
+    },
+    {
+        id: 12,
+        title: "Regular Domestic Cleaning",
+        category: "domestic",
+        description: "Weekly or fortnightly cleaning service for maintained homes.",
+        features: ["Dusting & vacuuming", "Surface cleaning", "Kitchen & bathroom focus", "Eco-friendly products"],
+        duration: "2-4 hours",
+        price: "£18/hour",
+        image: "domestic.png"
+    },
+    {
+        id: 13,
+        title: "One-Off Deep Clean",
+        category: "deep",
+        description: "Thorough one-time cleaning for homes needing refresh.",
+        features: ["Complete home deep clean", "Appliance cleaning", "Inside cabinets", "Window sills"],
+        duration: "4-8 hours",
+        price: "£23/hour",
+        image: "deepclean.png"
+    },
+    {
+        id: 14,
+        title: "Carpet Cleaning",
+        category: "deep",
+        description: "Professional hot water extraction carpet cleaning.",
+        features: ["Hot water extraction", "Stain protection", "Antiviral sanitization", "Quick drying"],
+        duration: "1-3 hours",
+        price: "From £15 per room",
+        image: "carpet.png"
+    },
+    {
+        id: 15,
+        title: "Window Cleaning",
+        category: "special",
+        description: "Interior and exterior window cleaning for all property types.",
+        features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment"],
+        duration: "1-2 hours",
+        price: "Flat: £30 | House: £45",
+        image: "window.png"
+    },
+    {
+        id: 16,
+        title: "Oven & Cooker Cleaning",
+        category: "deep",
+        description: "Professional oven, range cooker, and AGA cleaning.",
+        features: ["Degreasing", "Rack cleaning", "Interior & exterior", "Eco-friendly solutions"],
+        duration: "1-2 hours",
+        price: "Single oven: £40 | Double: £58",
+        image: "oven.png"
+    },
+    {
+        id: 17,
+        title: "Upholstery Cleaning",
+        category: "deep",
+        description: "Sofa, armchair, and car seat deep cleaning.",
+        features: ["Hot water extraction", "Stain removal", "Fabric protection", "Deodorizing"],
+        duration: "1-2 hours",
+        price: "Armchair: £10 | 3-seater sofa: £55",
+        image: "upholstery.png"
+    },
+    {
+        id: 18,
+        title: "After Builders Cleaning",
+        category: "deep",
+        description: "Post-construction cleanup for renovation projects.",
+        features: ["Debris removal", "Dust elimination", "Surface cleaning", "Final touch-up"],
+        duration: "4-8 hours",
+        price: "£25/hour",
+        image: "builders.png"
+    },
+    {
+        id: 19,
+        title: "Hard Floor Cleaning",
+        category: "deep",
+        description: "Professional hard floor scrubbing and polishing.",
+        features: ["Scrubbing & cleaning", "Polishing", "Sealing available", "Protective coating"],
+        duration: "2-4 hours",
+        price: "£3.50/m²",
+        image: "hardfloor.png"
+    },
+    {
+        id: 20,
+        title: "Gutter Cleaning",
+        category: "special",
+        description: "Gutter clearing and downpipe unblocking service.",
+        features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first"],
+        duration: "1-3 hours",
+        price: "Terraced house: £30",
+        image: "gutter.png"
+    },
+    {
+        id: 21,
+        title: "Antiviral Sanitisation",
+        category: "special",
+        description: "Professional sanitisation against germs and viruses.",
+        features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage"],
+        duration: "1-2 hours",
+        price: "Starting at £50",
+        image: "sanitisation.png"
+    },
+    {
+        id: 22,
+        title: "BBQ Cleaning",
+        category: "special",
+        description: "Deep cleaning of BBQs and outdoor cooking equipment.",
+        features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
+        duration: "1-2 hours",
+        price: "Small BBQ: £40",
+        image: "bbq.png"
     }
 ];
 
@@ -2047,6 +2208,10 @@ function renderServices(category = 'all') {
                     `).join('')}
                 </ul>
                 <div class="service-meta">
+                    <div class="service-price">
+                        <i class="fas fa-tag"></i>
+                        <span>${service.price}</span>
+                    </div>
                     <div class="service-duration">
                         <i class="far fa-clock"></i>
                         <span>${service.duration}</span>
@@ -2226,6 +2391,7 @@ window.testBooking = async function() {
         booking_date: '2024-12-31',
         time_slot: '10:00-12:00',
         duration: '2 hours',
+        price: '£75',
         notes: 'Test booking',
         status: 'test'
     };
@@ -2244,6 +2410,3 @@ window.addEventListener('load', () => {
     </script>
 </body>
 </html>
-
-
-
