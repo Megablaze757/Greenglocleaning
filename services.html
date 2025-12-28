@@ -1199,631 +1199,613 @@
 
     <!-- JavaScript -->
     <script>
-        // ===== Mobile Navigation =====
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const navMenu = document.getElementById('navMenu');
-        const navbar = document.getElementById('navbar');
-        const navLinks = document.querySelectorAll('.nav-link');
+// ===== Booking System =====
+const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
 
-        // Function to open mobile menu
-        const openMobileMenu = () => {
-            navMenu.classList.add('active');
-            mobileMenuOverlay.classList.add('active');
-            mobileMenuBtn.classList.add('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-            document.body.style.overflow = 'hidden';
-        };
+let supabaseClient = null;
+let currentBooking = {
+    service: null,
+    date: null,
+    timeSlot: null,
+    slotId: null,
+    customer: {}
+};
 
-        // Function to close mobile menu
-        const closeMobileMenu = () => {
-            navMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            document.body.style.overflow = '';
-        };
+// Initialize Supabase
+if (typeof supabase !== 'undefined') {
+    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase initialized');
+} else {
+    console.error('Supabase SDK not loaded');
+}
 
-        // Toggle Mobile Menu
-        mobileMenuBtn.addEventListener('click', () => {
-            if (navMenu.classList.contains('active')) {
-                closeMobileMenu();
-            } else {
-                openMobileMenu();
-            }
-        });
+// Booking Modal Functions
+function openBookingModal(serviceTitle, serviceId) {
+    currentBooking.service = {
+        title: serviceTitle,
+        id: serviceId
+    };
+    
+    document.getElementById('bookingServiceName').textContent = serviceTitle;
+    
+    // Set min date to today
+    const today = new Date().toISOString().split('T')[0];
+    const dateInput = document.getElementById('bookingDate');
+    dateInput.min = today;
+    dateInput.value = today;
+    currentBooking.date = today;
+    
+    // Load time slots
+    loadTimeSlots(today);
+    
+    // Show modal
+    document.getElementById('bookingModal').style.display = 'flex';
+    document.getElementById('bookingStep1').style.display = 'block';
+    document.getElementById('bookingStep2').style.display = 'none';
+    
+    // Reset form
+    document.getElementById('customerName').value = '';
+    document.getElementById('customerPhone').value = '';
+    document.getElementById('customerEmail').value = '';
+    document.getElementById('customerAddress').value = '';
+    document.getElementById('bookingNotes').value = '';
+}
 
-        // Close Mobile Menu with Close Button
-        mobileCloseBtn.addEventListener('click', closeMobileMenu);
+function closeBookingModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+    currentBooking = {
+        service: null,
+        date: null,
+        timeSlot: null,
+        slotId: null,
+        customer: {}
+    };
+}
 
-        // Close Mobile Menu with Overlay Click
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+// Close modal when clicking outside
+document.getElementById('bookingModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeBookingModal();
+    }
+});
 
-        // Close Mobile Menu on Link Click
-        navLinks.forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
+// Close modal with ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('bookingModal').style.display === 'flex') {
+        closeBookingModal();
+    }
+});
 
-        // Close menu on Escape key press
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-                closeMobileMenu();
-            }
-        });
+// Date change handler
+document.getElementById('bookingDate').addEventListener('change', function() {
+    currentBooking.date = this.value;
+    loadTimeSlots(this.value);
+});
 
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // ===== Booking System =====
-        const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
+async function loadTimeSlots(date) {
+    const container = document.getElementById('timeSlotsContainer');
+    container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin"></i> Loading available time slots...</div>';
+    
+    if (!supabaseClient) {
+        console.error('Supabase client not initialized');
+        container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--red);">Error: Cannot connect to booking system</div>';
+        return;
+    }
+    
+    try {
+        console.log('Loading time slots for date:', date);
         
-        let supabaseClient = null;
-        let currentBooking = {
-            service: null,
-            date: null,
-            timeSlot: null,
-            customer: {}
-        };
-
-        // Initialize Supabase
-        if (typeof supabase !== 'undefined') {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('Supabase connected for bookings');
+        const { data: availability, error } = await supabaseClient
+            .from('availability')
+            .select('*')
+            .eq('date', date)
+            .eq('is_available', true)
+            .order('time_slot');
+        
+        if (error) {
+            console.error('Supabase error:', error);
+            throw error;
         }
-
-        // Booking Modal Functions
-        function openBookingModal(serviceTitle, serviceId) {
-            currentBooking.service = {
-                title: serviceTitle,
-                id: serviceId
-            };
-            
-            document.getElementById('bookingServiceName').textContent = serviceTitle;
-            
-            // Set min date to today
-            const today = new Date().toISOString().split('T')[0];
-            const dateInput = document.getElementById('bookingDate');
-            dateInput.min = today;
-            dateInput.value = today;
-            currentBooking.date = today;
-            
-            // Load time slots
-            loadTimeSlots(today);
-            
-            // Show modal
-            document.getElementById('bookingModal').style.display = 'flex';
-            document.getElementById('bookingStep1').style.display = 'block';
-            document.getElementById('bookingStep2').style.display = 'none';
-            
-            // Reset form
-            document.getElementById('customerName').value = '';
-            document.getElementById('customerPhone').value = '';
-            document.getElementById('customerEmail').value = '';
-            document.getElementById('customerAddress').value = '';
-            document.getElementById('bookingNotes').value = '';
+        
+        console.log('Available slots:', availability);
+        
+        container.innerHTML = '';
+        
+        if (!availability || availability.length === 0) {
+            container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);">No available slots for this date. Please select another date.</div>';
+            return;
         }
-
-        function closeBookingModal() {
-            document.getElementById('bookingModal').style.display = 'none';
-            currentBooking = {
-                service: null,
-                date: null,
-                timeSlot: null,
-                customer: {}
-            };
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('bookingModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeBookingModal();
-            }
-        });
-
-        // Close modal with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.getElementById('bookingModal').style.display === 'flex') {
-                closeBookingModal();
-            }
-        });
-
-        // Date change handler
-        document.getElementById('bookingDate').addEventListener('change', function() {
-            currentBooking.date = this.value;
-            loadTimeSlots(this.value);
-        });
-
-        async function loadTimeSlots(date) {
-            const container = document.getElementById('timeSlotsContainer');
-            container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin"></i> Loading available time slots...</div>';
+        
+        // Clear any previously selected time slot
+        currentBooking.timeSlot = null;
+        currentBooking.slotId = null;
+        
+        availability.forEach(slot => {
+            const slotElement = document.createElement('div');
+            slotElement.className = 'time-slot-option';
+            slotElement.dataset.slotId = slot.id;
+            slotElement.dataset.timeSlot = slot.time_slot;
             
-            if (!supabaseClient) {
-                container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--red);">Error: Cannot connect to booking system</div>';
-                return;
-            }
+            const [start, end] = slot.time_slot.split('-');
+            const formattedTime = `${formatTime(start)} - ${formatTime(end)}`;
             
-            try {
-                const { data: availability, error } = await supabaseClient
-                    .from('availability')
-                    .select('*')
-                    .eq('date', date)
-                    .eq('is_available', true)
-                    .order('time_slot');
-                
-                if (error) throw error;
-                
-                container.innerHTML = '';
-                
-                if (!availability || availability.length === 0) {
-                    container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);">No available slots for this date. Please select another date.</div>';
-                    return;
-                }
-                
-                // Clear any previously selected time slot
-                currentBooking.timeSlot = null;
-                
-                availability.forEach(slot => {
-                    const slotElement = document.createElement('div');
-                    slotElement.className = 'time-slot-option';
-                    slotElement.dataset.slotId = slot.id;
-                    slotElement.dataset.timeSlot = slot.time_slot;
-                    
-                    const [start, end] = slot.time_slot.split('-');
-                    const formattedTime = `${formatTime(start)} - ${formatTime(end)}`;
-                    
-                    slotElement.innerHTML = `
-                        <div style="font-weight: 600; color: var(--dark-green); margin-bottom: 5px;">${formatTime(start)}</div>
-                        <div style="font-size: 13px; color: var(--medium-gray);">to ${formatTime(end)}</div>
-                    `;
-                    
-                    slotElement.addEventListener('click', function() {
-                        // Deselect all
-                        document.querySelectorAll('.time-slot-option').forEach(s => {
-                            s.classList.remove('selected');
-                        });
-                        
-                        // Select this one
-                        this.classList.add('selected');
-                        
-                        // Update booking
-                        currentBooking.timeSlot = slot.time_slot;
-                        currentBooking.slotId = slot.id;
-                    });
-                    
-                    container.appendChild(slotElement);
-                });
-                
-            } catch (err) {
-                console.error('Error loading time slots:', err);
-                container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--red);">Error loading time slots. Please try again.</div>';
-            }
-        }
-
-        function formatTime(time) {
-            const [hour, minute] = time.split(':');
-            const hourNum = parseInt(hour);
-            const suffix = hourNum >= 12 ? 'PM' : 'AM';
-            const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
-            return `${displayHour}:${minute} ${suffix}`;
-        }
-
-        function nextBookingStep() {
-            if (!currentBooking.timeSlot) {
-                alert('Please select a time slot');
-                return;
-            }
-            
-            // Update summary
-            updateBookingSummary();
-            
-            // Show step 2
-            document.getElementById('bookingStep1').style.display = 'none';
-            document.getElementById('bookingStep2').style.display = 'block';
-        }
-
-        function prevBookingStep() {
-            document.getElementById('bookingStep2').style.display = 'none';
-            document.getElementById('bookingStep1').style.display = 'block';
-        }
-
-        function updateBookingSummary() {
-            const summary = document.getElementById('summaryDetails');
-            const [start, end] = currentBooking.timeSlot.split('-');
-            const bookingDate = new Date(currentBooking.date);
-            
-            summary.innerHTML = `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: var(--dark-gray);">Service:</span>
-                    <span style="font-weight: 600;">${currentBooking.service.title}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: var(--dark-gray);">Date:</span>
-                    <span>${bookingDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: var(--dark-gray);">Time:</span>
-                    <span>${formatTime(start)} - ${formatTime(end)}</span>
-                </div>
+            slotElement.innerHTML = `
+                <div style="font-weight: 600; color: var(--dark-green); margin-bottom: 5px;">${formatTime(start)}</div>
+                <div style="font-size: 13px; color: var(--medium-gray);">to ${formatTime(end)}</div>
             `;
-        }
-
-        async function confirmBooking() {
-            // Validate form
-            const customerName = document.getElementById('customerName').value.trim();
-            const customerPhone = document.getElementById('customerPhone').value.trim();
-            const customerAddress = document.getElementById('customerAddress').value.trim();
             
-            if (!customerName || !customerPhone || !customerAddress) {
-                alert('Please fill in all required fields (Name, Phone, and Address)');
-                return;
-            }
-            
-            if (!currentBooking.timeSlot) {
-                alert('Please select a time slot');
-                return;
-            }
-            
-            if (!supabaseClient) {
-                alert('Cannot connect to booking system. Please contact us directly.');
-                return;
-            }
-            
-            try {
-                // 1. Check if slot is still available
-                const { data: slotCheck, error: checkError } = await supabaseClient
-                    .from('availability')
-                    .select('*')
-                    .eq('id', currentBooking.slotId)
-                    .eq('is_available', true)
-                    .single();
-                
-                if (checkError || !slotCheck) {
-                    alert('This time slot is no longer available. Please select another.');
-                    loadTimeSlots(currentBooking.date);
-                    return;
-                }
-                
-                // 2. Create booking record
-                const bookingData = {
-                    service_title: currentBooking.service.title,
-                    service_id: currentBooking.service.id,
-                    customer_name: customerName,
-                    customer_phone: customerPhone,
-                    customer_email: document.getElementById('customerEmail').value.trim(),
-                    customer_address: customerAddress,
-                    booking_date: currentBooking.date,
-                    time_slot: currentBooking.timeSlot,
-                    notes: document.getElementById('bookingNotes').value.trim(),
-                    status: 'confirmed'
-                };
-                
-                const { data: booking, error: bookingError } = await supabaseClient
-                    .from('bookings')
-                    .insert([bookingData])
-                    .select()
-                    .single();
-                
-                if (bookingError) throw bookingError;
-                
-                // 3. Update availability to booked
-                const { error: updateError } = await supabaseClient
-                    .from('availability')
-                    .update({ is_available: false })
-                    .eq('id', currentBooking.slotId);
-                
-                if (updateError) throw updateError;
-                
-                // 4. Show success message
-                const successMessage = `
-                    ✅ Booking Confirmed!
-                    
-                    Service: ${currentBooking.service.title}
-                    Date: ${new Date(currentBooking.date).toLocaleDateString()}
-                    Time: ${currentBooking.timeSlot}
-                    
-                    We will contact you at ${customerPhone} to confirm details.
-                    
-                    Thank you for choosing GreenGlo Cleaners!
-                `;
-                
-                alert(successMessage);
-                
-                // 5. Send WhatsApp notification
-                const whatsappMessage = encodeURIComponent(
-                    `📅 NEW BOOKING FROM WEBSITE\n\n` +
-                    `Service: ${currentBooking.service.title}\n` +
-                    `Customer: ${customerName}\n` +
-                    `Phone: ${customerPhone}\n` +
-                    `Date: ${currentBooking.date}\n` +
-                    `Time: ${currentBooking.timeSlot}\n` +
-                    `Address: ${customerAddress}\n\n` +
-                    `---\n` +
-                    `Go to admin panel to view details.`
-                );
-                
-                window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`, '_blank');
-                
-                // 6. Close modal
-                closeBookingModal();
-                
-            } catch (err) {
-                console.error('Error confirming booking:', err);
-                alert('Error processing booking. Please try again or contact us directly at 07827 784204');
-            }
-        }
-
-        // Close booking modal button
-        document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
-
-        // ===== Services Data =====
-        const servicesData = [
-            {
-                id: 1,
-                title: "Living Room Transformation",
-                category: "domestic",
-                description: "Complete living room cleaning and organization after a renovation project. We removed all construction dust and debris, leaving the space spotless and ready for furniture.",
-                features: [
-                    "Complete dust and debris removal",
-                    "Post-construction cleanup",
-                    "Furniture arrangement preparation",
-                    "Eco-friendly product usage"
-                ],
-                duration: "2-4 hours",
-                image: "livingroom.png"
-            },
-            {
-                id: 2,
-                title: "Office Space Deep Clean",
-                category: "office",
-                description: "Professional office cleaning for a tech startup in Shoreditch. We cleaned all workstations, meeting rooms, and common areas using eco-friendly products.",
-                features: [
-                    "Workstation sanitization",
-                    "Meeting room cleaning",
-                    "Common area maintenance",
-                    "Eco-friendly product usage"
-                ],
-                duration: "3-6 hours",
-                image: "office.png"
-            },
-            {
-                id: 3,
-                title: "Kitchen Deep Cleaning",
-                category: "domestic",
-                description: "Kitchen deep clean including oven cleaning, cabinet organization, and appliance sanitization. All surfaces were cleaned with our non-toxic eco-friendly solutions.",
-                features: [
-                    "Oven deep cleaning",
-                    "Cabinet organization",
-                    "Appliance sanitization",
-                    "Non-toxic eco-friendly solutions"
-                ],
-                duration: "2-3 hours",
-                image: "kitchen.png"
-            },
-            {
-                id: 4,
-                title: "Oven Deep Clean",
-                category: "deep",
-                description: "Professional oven cleaning service. Interior, door, and racks deep-cleaned to a pristine, as-new condition.",
-                features: [
-                    "Complete interior cleaning",
-                    "Door and glass cleaning",
-                    "Rack deep-cleaning",
-                    "As-new condition restoration"
-                ],
-                duration: "1-2 hours",
-                image: "ovenafter.png"
-            },
-            {
-                id: 5,
-                title: "Bathroom Makeover",
-                category: "deep",
-                description: "Complete bathroom cleaning and sanitization. We removed hard water stains, mildew, and thoroughly cleaned all fixtures to like-new condition.",
-                features: [
-                    "Hard water stain removal",
-                    "Mildew treatment",
-                    "Fixture deep cleaning",
-                    "Complete sanitization"
-                ],
-                duration: "1-2 hours",
-                image: "bathroom.png"
-            },
-            {
-                id: 6,
-                title: "Garden Maintenance",
-                category: "special",
-                description: "Expert turf laying, featuring ground levelling, premium turf, and expert installation for an instant, lush transformation.",
-                features: [
-                    "Ground levelling",
-                    "Premium turf installation",
-                    "Expert installation",
-                    "Instant transformation"
-                ],
-                duration: "4-8 hours",
-                image: "turf.png"
-            },
-            {
-                id: 7,
-                title: "Carpet Restoration",
-                category: "deep",
-                description: "Deep carpet cleaning and stain removal for a family home in Chelsea. We removed pet stains and restored the original color of the carpets.",
-                features: [
-                    "Deep carpet cleaning",
-                    "Pet stain removal",
-                    "Color restoration",
-                    "Professional equipment use"
-                ],
-                duration: "2-4 hours",
-                image: "carpet.png"
-            },
-            {
-                id: 8,
-                title: "Patio Cleaning",
-                category: "special",
-                description: "Professional patio cleaning featuring pressure washing and moss treatment for a restored, spotless surface.",
-                features: [
-                    "Pressure washing",
-                    "Moss treatment",
-                    "Surface restoration",
-                    "Spotless finish"
-                ],
-                duration: "2-3 hours",
-                image: "patio.png"
-            },
-            {
-                id: 9,
-                title: "End of Tenancy Clean",
-                category: "domestic",
-                description: "Complete apartment cleaning for move-out inspection. Met all landlord requirements and ensured the full deposit was returned to the tenant.",
-                features: [
-                    "Complete apartment cleaning",
-                    "Landlord requirement compliance",
-                    "Move-out inspection ready",
-                    "Deposit return guarantee"
-                ],
-                duration: "3-5 hours",
-                image: "tenancy.png"
-            },
-            {
-                id: 10,
-                title: "Property Maintenance",
-                category: "special",
-                description: "Professional flooring installation featuring precise measurement and expert fitting for a seamless, durable finish.",
-                features: [
-                    "Precise measurement",
-                    "Expert fitting",
-                    "Seamless finish",
-                    "Durable installation"
-                ],
-                duration: "4-6 hours",
-                image: "flooring.png"
-            }
-        ];
-
-        // ===== Render Services =====
-        const servicesGrid = document.getElementById('servicesGrid');
-
-        function renderServices(category = 'all') {
-            servicesGrid.innerHTML = '';
-
-            const filteredServices = category === 'all'
-                ? servicesData
-                : servicesData.filter(service => service.category === category);
-
-            filteredServices.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card';
-                serviceCard.setAttribute('data-category', service.category);
-
-                serviceCard.innerHTML = `
-                    <div class="service-image" style="background-image: url('${service.image}');">
-                        <div class="service-overlay">
-                            <h3>${service.title}</h3>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <p class="service-description">${service.description}</p>
-                        <ul class="service-features">
-                            ${service.features.map(feature => `
-                                <li><i class="fas fa-check"></i>${feature}</li>
-                            `).join('')}
-                        </ul>
-                        <div class="service-meta">
-                            <div class="service-duration">
-                                <i class="far fa-clock"></i>
-                                <span>${service.duration}</span>
-                            </div>
-                            <button class="btn book-service-btn" data-service-id="${service.id}" data-service-title="${service.title}" style="padding: 0.75rem 1.5rem;">
-                                <i class="fas fa-calendar-check"></i>
-                                Book Now
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                servicesGrid.appendChild(serviceCard);
-            });
-
-            // Add event listeners to booking buttons
-            document.querySelectorAll('.book-service-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const serviceId = this.getAttribute('data-service-id');
-                    const serviceTitle = this.getAttribute('data-service-title');
-                    openBookingModal(serviceTitle, serviceId);
+            slotElement.addEventListener('click', function() {
+                // Deselect all
+                document.querySelectorAll('.time-slot-option').forEach(s => {
+                    s.classList.remove('selected');
                 });
-            });
-
-            // Add loading animation
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
                 
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, 100 + (index * 100));
+                // Select this one
+                this.classList.add('selected');
+                
+                // Update booking
+                currentBooking.timeSlot = slot.time_slot;
+                currentBooking.slotId = slot.id;
+                console.log('Selected slot:', slot);
             });
-        }
-
-        // ===== Category Filtering =====
-        const categoryButtons = document.querySelectorAll('.category-btn');
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
-                // Add active class to clicked button
-                button.classList.add('active');
-
-                const category = button.getAttribute('data-category');
-                renderServices(category);
-            });
+            
+            container.appendChild(slotElement);
         });
+        
+    } catch (err) {
+        console.error('Error loading time slots:', err);
+        container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--red);">Error loading time slots. Please try again.</div>';
+    }
+}
 
-        // ===== Smooth Scrolling =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.getAttribute('href') === '#') return;
+function formatTime(time) {
+    const [hour, minute] = time.split(':');
+    const hourNum = parseInt(hour);
+    const suffix = hourNum >= 12 ? 'PM' : 'AM';
+    const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
+    return `${displayHour}:${minute} ${suffix}`;
+}
 
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
+function nextBookingStep() {
+    if (!currentBooking.timeSlot) {
+        alert('Please select a time slot');
+        return;
+    }
+    
+    if (!currentBooking.slotId) {
+        alert('Error: No slot ID selected. Please select a time slot again.');
+        return;
+    }
+    
+    // Update summary
+    updateBookingSummary();
+    
+    // Show step 2
+    document.getElementById('bookingStep1').style.display = 'none';
+    document.getElementById('bookingStep2').style.display = 'block';
+}
 
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+function prevBookingStep() {
+    document.getElementById('bookingStep2').style.display = 'none';
+    document.getElementById('bookingStep1').style.display = 'block';
+}
+
+function updateBookingSummary() {
+    const summary = document.getElementById('summaryDetails');
+    const [start, end] = currentBooking.timeSlot.split('-');
+    const bookingDate = new Date(currentBooking.date);
+    
+    summary.innerHTML = `
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="color: var(--dark-gray);">Service:</span>
+            <span style="font-weight: 600;">${currentBooking.service.title}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="color: var(--dark-gray);">Date:</span>
+            <span>${bookingDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span style="color: var(--dark-gray);">Time:</span>
+            <span>${formatTime(start)} - ${formatTime(end)}</span>
+        </div>
+    `;
+}
+
+async function confirmBooking() {
+    console.log('Starting booking confirmation...');
+    
+    // Validate form
+    const customerName = document.getElementById('customerName').value.trim();
+    const customerPhone = document.getElementById('customerPhone').value.trim();
+    const customerAddress = document.getElementById('customerAddress').value.trim();
+    
+    if (!customerName || !customerPhone || !customerAddress) {
+        alert('Please fill in all required fields (Name, Phone, and Address)');
+        return;
+    }
+    
+    if (!currentBooking.timeSlot || !currentBooking.slotId) {
+        alert('Please select a time slot');
+        return;
+    }
+    
+    if (!supabaseClient) {
+        alert('Cannot connect to booking system. Please contact us directly.');
+        return;
+    }
+    
+    try {
+        console.log('Step 1: Checking slot availability...');
+        console.log('Slot ID:', currentBooking.slotId);
+        
+        // 1. Check if slot is still available
+        const { data: slotCheck, error: checkError } = await supabaseClient
+            .from('availability')
+            .select('*')
+            .eq('id', currentBooking.slotId)
+            .eq('is_available', true)
+            .single();
+        
+        console.log('Slot check result:', slotCheck);
+        
+        if (checkError) {
+            console.error('Slot check error:', checkError);
+            throw new Error('Error checking slot availability: ' + checkError.message);
+        }
+        
+        if (!slotCheck) {
+            alert('This time slot is no longer available. Please select another.');
+            loadTimeSlots(currentBooking.date);
+            return;
+        }
+        
+        console.log('Step 2: Creating booking record...');
+        
+        // Find service duration from servicesData
+        const serviceData = servicesData.find(s => s.id == currentBooking.service.id);
+        const serviceDuration = serviceData ? serviceData.duration : '2-3 hours';
+        
+        // 2. Create booking record
+        const bookingData = {
+            service_title: currentBooking.service.title,
+            service_id: parseInt(currentBooking.service.id),
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            customer_email: document.getElementById('customerEmail').value.trim() || null,
+            customer_address: customerAddress,
+            booking_date: currentBooking.date,
+            time_slot: currentBooking.timeSlot,
+            duration: serviceDuration,
+            notes: document.getElementById('bookingNotes').value.trim() || null,
+            status: 'confirmed'
+        };
+        
+        console.log('Booking data:', bookingData);
+        
+        const { data: booking, error: bookingError } = await supabaseClient
+            .from('bookings')
+            .insert([bookingData])
+            .select()
+            .single();
+        
+        if (bookingError) {
+            console.error('Booking insert error:', bookingError);
+            throw new Error('Error creating booking: ' + bookingError.message);
+        }
+        
+        console.log('Booking created:', booking);
+        
+        console.log('Step 3: Updating availability...');
+        
+        // 3. Update availability to booked
+        const { error: updateError } = await supabaseClient
+            .from('availability')
+            .update({ 
+                is_available: false,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', currentBooking.slotId);
+        
+        if (updateError) {
+            console.error('Availability update error:', updateError);
+            throw new Error('Error updating availability: ' + updateError.message);
+        }
+        
+        console.log('Step 4: Booking confirmed successfully!');
+        
+        // 4. Show success message
+        const successMessage = `✅ Booking Confirmed!\n\nService: ${currentBooking.service.title}\nDate: ${new Date(currentBooking.date).toLocaleDateString()}\nTime: ${currentBooking.timeSlot}\n\nWe will contact you at ${customerPhone} to confirm details.\n\nThank you for choosing GreenGlo Cleaners!`;
+        
+        alert(successMessage);
+        
+        // 5. Send WhatsApp notification (optional)
+        const whatsappMessage = encodeURIComponent(
+            `📅 NEW BOOKING FROM WEBSITE\n\n` +
+            `Service: ${currentBooking.service.title}\n` +
+            `Customer: ${customerName}\n` +
+            `Phone: ${customerPhone}\n` +
+            `Date: ${currentBooking.date}\n` +
+            `Time: ${currentBooking.timeSlot}\n` +
+            `Address: ${customerAddress}\n\n` +
+            `---\n` +
+            `Go to admin panel to view details.`
+        );
+        
+        // Open WhatsApp in new tab (optional - remove if you don't want this)
+        window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`, '_blank');
+        
+        // 6. Close modal
+        closeBookingModal();
+        
+        // 7. Send confirmation email (optional - you can add this later)
+        // sendConfirmationEmail(customerEmail, customerName, booking);
+        
+    } catch (err) {
+        console.error('Error in confirmBooking:', err);
+        console.error('Error details:', {
+            message: err.message,
+            stack: err.stack,
+            currentBooking: currentBooking
+        });
+        
+        // Show user-friendly error message
+        if (err.message.includes('duplicate key')) {
+            alert('This time slot was just booked by someone else. Please select another time.');
+        } else if (err.message.includes('network') || err.message.includes('fetch')) {
+            alert('Network error. Please check your internet connection and try again.');
+        } else if (err.message.includes('permission') || err.message.includes('auth')) {
+            alert('Permission error. Please contact support at 07827 784204.');
+        } else {
+            alert('Sorry, we encountered an error processing your booking. Please contact us directly at 07827 784204 to book your service.');
+        }
+        
+        // Try to reload slots in case of error
+        if (currentBooking.date) {
+            loadTimeSlots(currentBooking.date);
+        }
+    }
+}
+
+// Close booking modal button
+document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
+
+// ===== Services Data =====
+const servicesData = [
+    {
+        id: 1,
+        title: "Living Room Transformation",
+        category: "domestic",
+        description: "Complete living room cleaning and organization after a renovation project. We removed all construction dust and debris, leaving the space spotless and ready for furniture.",
+        features: [
+            "Complete dust and debris removal",
+            "Post-construction cleanup",
+            "Furniture arrangement preparation",
+            "Eco-friendly product usage"
+        ],
+        duration: "2-4 hours",
+        image: "livingroom.png"
+    },
+    {
+        id: 2,
+        title: "Office Space Deep Clean",
+        category: "office",
+        description: "Professional office cleaning for a tech startup in Shoreditch. We cleaned all workstations, meeting rooms, and common areas using eco-friendly products.",
+        features: [
+            "Workstation sanitization",
+            "Meeting room cleaning",
+            "Common area maintenance",
+            "Eco-friendly product usage"
+        ],
+        duration: "3-6 hours",
+        image: "office.png"
+    },
+    {
+        id: 3,
+        title: "Kitchen Deep Cleaning",
+        category: "domestic",
+        description: "Kitchen deep clean including oven cleaning, cabinet organization, and appliance sanitization. All surfaces were cleaned with our non-toxic eco-friendly solutions.",
+        features: [
+            "Oven deep cleaning",
+            "Cabinet organization",
+            "Appliance sanitization",
+            "Non-toxic eco-friendly solutions"
+        ],
+        duration: "2-3 hours",
+        image: "kitchen.png"
+    },
+    {
+        id: 4,
+        title: "Oven Deep Clean",
+        category: "deep",
+        description: "Professional oven cleaning service. Interior, door, and racks deep-cleaned to a pristine, as-new condition.",
+        features: [
+            "Complete interior cleaning",
+            "Door and glass cleaning",
+            "Rack deep-cleaning",
+            "As-new condition restoration"
+        ],
+        duration: "1-2 hours",
+        image: "ovenafter.png"
+    },
+    {
+        id: 5,
+        title: "Bathroom Makeover",
+        category: "deep",
+        description: "Complete bathroom cleaning and sanitization. We removed hard water stains, mildew, and thoroughly cleaned all fixtures to like-new condition.",
+        features: [
+            "Hard water stain removal",
+            "Mildew treatment",
+            "Fixture deep cleaning",
+            "Complete sanitization"
+        ],
+        duration: "1-2 hours",
+        image: "bathroom.png"
+    },
+    {
+        id: 6,
+        title: "Garden Maintenance",
+        category: "special",
+        description: "Expert turf laying, featuring ground levelling, premium turf, and expert installation for an instant, lush transformation.",
+        features: [
+            "Ground levelling",
+            "Premium turf installation",
+            "Expert installation",
+            "Instant transformation"
+        ],
+        duration: "4-8 hours",
+        image: "turf.png"
+    },
+    {
+        id: 7,
+        title: "Carpet Restoration",
+        category: "deep",
+        description: "Deep carpet cleaning and stain removal for a family home in Chelsea. We removed pet stains and restored the original color of the carpets.",
+        features: [
+            "Deep carpet cleaning",
+            "Pet stain removal",
+            "Color restoration",
+            "Professional equipment use"
+        ],
+        duration: "2-4 hours",
+        image: "carpet.png"
+    },
+    {
+        id: 8,
+        title: "Patio Cleaning",
+        category: "special",
+        description: "Professional patio cleaning featuring pressure washing and moss treatment for a restored, spotless surface.",
+        features: [
+            "Pressure washing",
+            "Moss treatment",
+            "Surface restoration",
+            "Spotless finish"
+        ],
+        duration: "2-3 hours",
+        image: "patio.png"
+    },
+    {
+        id: 9,
+        title: "End of Tenancy Clean",
+        category: "domestic",
+        description: "Complete apartment cleaning for move-out inspection. Met all landlord requirements and ensured the full deposit was returned to the tenant.",
+        features: [
+            "Complete apartment cleaning",
+            "Landlord requirement compliance",
+            "Move-out inspection ready",
+            "Deposit return guarantee"
+        ],
+        duration: "3-5 hours",
+        image: "tenancy.png"
+    },
+    {
+        id: 10,
+        title: "Property Maintenance",
+        category: "special",
+        description: "Professional flooring installation featuring precise measurement and expert fitting for a seamless, durable finish.",
+        features: [
+            "Precise measurement",
+            "Expert fitting",
+            "Seamless finish",
+            "Durable installation"
+        ],
+        duration: "4-6 hours",
+        image: "flooring.png"
+    }
+];
+
+// ===== Render Services =====
+const servicesGrid = document.getElementById('servicesGrid');
+
+function renderServices(category = 'all') {
+    servicesGrid.innerHTML = '';
+
+    const filteredServices = category === 'all'
+        ? servicesData
+        : servicesData.filter(service => service.category === category);
+
+    filteredServices.forEach(service => {
+        const serviceCard = document.createElement('div');
+        serviceCard.className = 'service-card';
+        serviceCard.setAttribute('data-category', service.category);
+
+        serviceCard.innerHTML = `
+            <div class="service-image" style="background-image: url('${service.image}');">
+                <div class="service-overlay">
+                    <h3>${service.title}</h3>
+                </div>
+            </div>
+            <div class="service-content">
+                <p class="service-description">${service.description}</p>
+                <ul class="service-features">
+                    ${service.features.map(feature => `
+                        <li><i class="fas fa-check"></i>${feature}</li>
+                    `).join('')}
+                </ul>
+                <div class="service-meta">
+                    <div class="service-duration">
+                        <i class="far fa-clock"></i>
+                        <span>${service.duration}</span>
+                    </div>
+                    <button class="btn book-service-btn" data-service-id="${service.id}" data-service-title="${service.title}" style="padding: 0.75rem 1.5rem;">
+                        <i class="fas fa-calendar-check"></i>
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        `;
+
+        servicesGrid.appendChild(serviceCard);
+    });
+
+    // Add event listeners to booking buttons
+    document.querySelectorAll('.book-service-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const serviceId = this.getAttribute('data-service-id');
+            const serviceTitle = this.getAttribute('data-service-title');
+            openBookingModal(serviceTitle, serviceId);
+        });
+    });
+}
+
+// ===== Category Filtering =====
+const categoryButtons = document.querySelectorAll('.category-btn');
+
+categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        button.classList.add('active');
+
+        const category = button.getAttribute('data-category');
+        renderServices(category);
+    });
+});
+
+// Initial render
+renderServices();
+
+// Test database connection on load
+window.addEventListener('load', function() {
+    if (supabaseClient) {
+        console.log('Testing Supabase connection...');
+        
+        // Simple test query
+        supabaseClient
+            .from('availability')
+            .select('*')
+            .limit(1)
+            .then(({ data, error }) => {
+                if (error) {
+                    console.error('Supabase connection test failed:', error);
+                } else {
+                    console.log('Supabase connection successful');
                 }
             });
-        });
-
-        // Initial render
-        renderServices();
-
-        // Test Supabase connection
-        if (supabaseClient) {
-            supabaseClient
-                .from('services')
-                .select('*')
-                .then(({ data, error }) => {
-                    if (!error && data && data.length > 0) {
-                        console.log('Connected to Supabase successfully');
-                    }
-                })
-                .catch(err => {
-                    console.log('Note: Using local services data');
-                });
-        }
+    }
+});
     </script>
 </body>
 </html>
+
