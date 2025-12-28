@@ -1,7 +1,4 @@
-
-
-
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,8 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-        <style>
- /* ===== CSS Variables ===== */
+  
+  <style>
+    /* ===== CSS Variables ===== */
 :root {
     --primary-green: #10B981;
     --secondary-green: #34D399;
@@ -548,6 +546,7 @@ h1, h2, h3 {
     gap: 1rem;
 }
 
+/* ADD THIS FOR TIME SLOTS GRID */
 .time-slots-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -708,7 +707,7 @@ h1, h2, h3 {
         margin: 0 1rem;
     }
 }
-    </style>
+  </style>
 </head>
 <body>
     <div class="container">
@@ -936,7 +935,7 @@ h1, h2, h3 {
         </div>
     </div>
 
-    <!-- Add Slots Modal -->
+    <!-- ADD THIS NEW MODAL FOR ADDING SLOTS -->
     <div class="modal-overlay" id="addSlotsModal">
         <div class="modal">
             <div class="modal-header">
@@ -951,39 +950,8 @@ h1, h2, h3 {
                 
                 <div class="form-group">
                     <label>Select Time Slots</label>
-                    <div class="time-slots-grid">
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="09:00">
-                            09:00 AM
-                        </label>
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="10:00">
-                            10:00 AM
-                        </label>
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="11:00">
-                            11:00 AM
-                        </label>
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="12:00">
-                            12:00 PM
-                        </label>
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="13:00">
-                            01:00 PM
-                        </label>
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="14:00">
-                            02:00 PM
-                        </label>
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="15:00">
-                            03:00 PM
-                        </label>
-                        <label class="time-slot-checkbox">
-                            <input type="checkbox" value="16:00">
-                            04:00 PM
-                        </label>
+                    <div class="time-slots-grid" id="timeSlotsGrid">
+                        <!-- Time slots will be generated here -->
                     </div>
                 </div>
             </div>
@@ -1021,7 +989,9 @@ h1, h2, h3 {
             <p id="notificationMessage">Operation completed successfully.</p>
         </div>
     </div>
-<script>// ===== Supabase Configuration =====
+
+    <script>
+      // ===== Supabase Configuration =====
 const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
 
@@ -1072,7 +1042,7 @@ function initAdminPanel() {
         loadAvailability();
     });
     
-    // Add slots button
+    // Add slots button - FIXED THIS LINE
     document.getElementById('addSlotsBtn').addEventListener('click', function() {
         showAddSlotsModal();
     });
@@ -1080,14 +1050,13 @@ function initAdminPanel() {
     // Save booking button
     document.getElementById('saveBookingBtn').addEventListener('click', saveBooking);
     
-    // Save slots button
+    // Save slots button - ADDED THIS EVENT LISTENER
     document.getElementById('saveSlotsBtn').addEventListener('click', saveSlots);
     
     // Set default date for new booking
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     document.getElementById('bookingDate').value = tomorrow.toISOString().split('T')[0];
-    document.getElementById('addSlotsDate').value = tomorrow.toISOString().split('T')[0];
     
     // Set default price based on service type
     document.getElementById('serviceType').addEventListener('change', updatePrice);
@@ -1101,6 +1070,9 @@ function initAdminPanel() {
             }
         });
     });
+    
+    // Initialize price
+    updatePrice();
 }
 
 // ===== Data Loading Functions =====
@@ -1310,7 +1282,7 @@ async function toggleSlot(date, time, currentAvailability) {
             .select('*')
             .eq('date', date)
             .eq('time', time)
-            .single();
+            .maybeSingle();
         
         if (existingSlot) {
             // Update existing slot
@@ -1333,7 +1305,8 @@ async function toggleSlot(date, time, currentAvailability) {
                     date: date,
                     time: time,
                     available: true,
-                    created_at: new Date().toISOString()
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
                 }]);
             
             if (error) throw error;
@@ -1348,10 +1321,35 @@ async function toggleSlot(date, time, currentAvailability) {
     }
 }
 
+// ADD THIS NEW FUNCTION FOR ADDING SLOTS
+async function showAddSlotsModal() {
+    // Set default date to today
+    const today = new Date();
+    document.getElementById('addSlotsDate').value = today.toISOString().split('T')[0];
+    
+    // Generate time slot checkboxes
+    const timeSlots = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+    const timeSlotsGrid = document.getElementById('timeSlotsGrid');
+    timeSlotsGrid.innerHTML = '';
+    
+    timeSlots.forEach(time => {
+        const label = document.createElement('label');
+        label.className = 'time-slot-checkbox';
+        label.innerHTML = `
+            <input type="checkbox" value="${time}">
+            ${time}
+        `;
+        timeSlotsGrid.appendChild(label);
+    });
+    
+    showModal('addSlotsModal');
+}
+
+// ADD THIS NEW FUNCTION FOR SAVING SLOTS
 async function saveSlots() {
     try {
         const date = document.getElementById('addSlotsDate').value;
-        const checkboxes = document.querySelectorAll('.time-slot-checkbox input[type="checkbox"]:checked');
+        const checkboxes = document.querySelectorAll('#timeSlotsGrid input[type="checkbox"]:checked');
         
         if (!date) {
             showNotification('Please select a date', 'error');
@@ -1363,21 +1361,27 @@ async function saveSlots() {
             return;
         }
         
+        // Create array of slots to add
         const slots = Array.from(checkboxes).map(cb => ({
             date: date,
             time: cb.value,
             available: true,
-            created_at: new Date().toISOString()
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
         }));
         
+        // Use upsert to add or update slots
         const { error } = await supabase
             .from('availability')
-            .upsert(slots, { onConflict: 'date,time' });
+            .upsert(slots, {
+                onConflict: 'date,time',
+                ignoreDuplicates: false
+            });
         
         if (error) throw error;
         
-        closeModal('addSlotsModal');
         showNotification(`${slots.length} slots added successfully`);
+        closeModal('addSlotsModal');
         loadAvailability();
         
     } catch (error) {
@@ -1541,7 +1545,7 @@ async function saveBooking() {
                 .select('*')
                 .eq('date', bookingData.date)
                 .eq('time', bookingData.time)
-                .single();
+                .maybeSingle();
             
             if (!slot || !slot.available) {
                 showNotification('Selected time slot is not available', 'error');
@@ -1662,20 +1666,6 @@ function showModal(modalId) {
 
 function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
-}
-
-function showAddSlotsModal() {
-    // Set default date to tomorrow
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    document.getElementById('addSlotsDate').value = tomorrow.toISOString().split('T')[0];
-    
-    // Uncheck all checkboxes
-    document.querySelectorAll('.time-slot-checkbox input[type="checkbox"]').forEach(cb => {
-        cb.checked = false;
-    });
-    
-    showModal('addSlotsModal');
 }
 
 // ===== Utility Functions =====
@@ -1800,10 +1790,7 @@ animationStyle.textContent = `
         to { transform: translateX(100%); opacity: 0; }
     }
 `;
-document.head.appendChild(animationStyle);</script>
-    <body/>
-</html> 
-
-
-
-    
+document.head.appendChild(animationStyle);
+    </script>
+</body>
+</html>
