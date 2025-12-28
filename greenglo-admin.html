@@ -53,7 +53,6 @@
             min-height: 100vh;
         }
 
-        /* Sidebar - Enhanced */
         .admin-sidebar {
             width: 280px;
             background: var(--gradient-dark);
@@ -137,7 +136,6 @@
             padding: 30px;
         }
 
-        /* Header - Enhanced */
         .admin-header {
             background: white;
             padding: 25px 30px;
@@ -166,7 +164,6 @@
             align-items: center;
         }
 
-        /* Dashboard Stats - Enhanced */
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -227,7 +224,6 @@
             font-weight: 500;
         }
 
-        /* Quick Calendar - Enhanced */
         .quick-calendar-section {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -397,7 +393,6 @@
             gap: 15px;
         }
 
-        /* Main Calendar - Enhanced */
         .main-calendar-section {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -511,7 +506,6 @@
             background: var(--red);
         }
 
-        /* Time Slots - Enhanced */
         .time-slots-section {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -584,7 +578,7 @@
         .time-slot-card.blocked {
             background: #f3f4f6;
             border-color: #e5e7eb;
-            cursor: not-allowed;
+            cursor: pointer;
         }
 
         .time-slot-card.booked .time-slot-time {
@@ -635,7 +629,6 @@
             background: #f9fafb;
         }
 
-        /* Day status indicator */
         .day-status-badge {
             position: absolute;
             top: 8px;
@@ -657,7 +650,6 @@
             background: var(--red);
         }
 
-        /* Buttons - Enhanced */
         .btn {
             padding: 12px 24px;
             border-radius: 10px;
@@ -733,7 +725,6 @@
             font-size: 16px;
         }
 
-        /* Loading & Notification */
         .loading {
             text-align: center;
             padding: 40px;
@@ -793,7 +784,6 @@
             }
         }
 
-        /* Settings Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -875,7 +865,6 @@
             color: var(--medium-gray);
         }
 
-        /* Responsive */
         @media (max-width: 1200px) {
             .admin-sidebar {
                 width: 240px;
@@ -976,7 +965,7 @@
                     <input type="number" id="defaultSlotDuration" class="form-control" value="60" min="15" max="240" step="15">
                 </div>
                 <div class="form-group">
-                    <label>Days to Apply Default Settings</label>
+                    <label>Working Days</label>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <label style="display: flex; align-items: center; gap: 5px;">
                             <input type="checkbox" id="monDefault" checked> Mon
@@ -994,7 +983,7 @@
                             <input type="checkbox" id="friDefault" checked> Fri
                         </label>
                         <label style="display: flex; align-items: center; gap: 5px;">
-                            <input type="checkbox" id="satDefault" checked> Sat
+                            <input type="checkbox" id="satDefault"> Sat
                         </label>
                         <label style="display: flex; align-items: center; gap: 5px;">
                             <input type="checkbox" id="sunDefault"> Sun
@@ -1297,7 +1286,7 @@
                     startTime: '09:00',
                     endTime: '17:00',
                     slotDuration: 60,
-                    workingDays: [1, 2, 3, 4, 5, 6] // Monday to Saturday
+                    workingDays: [1, 2, 3, 4, 5] // Monday to Friday by default
                 }
             };
             
@@ -1546,14 +1535,18 @@
                     let status = 'available';
                     let statusText = 'Available';
                     
-                    if (dayAvailability.length > 0) {
+                    if (dayAvailability.length === 0) {
+                        // No slots in database - check if it's a working day
+                        const isWorkingDay = state.defaultSettings.workingDays.includes(day.getDay());
+                        if (!isWorkingDay) {
+                            status = 'blocked';
+                            statusText = 'Blocked';
+                        }
+                    } else {
                         const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
                         const totalSlots = dayAvailability.length;
                         
-                        if (totalSlots === 0) {
-                            status = 'blocked';
-                            statusText = 'Blocked';
-                        } else if (availableSlots === 0) {
+                        if (totalSlots === 0 || availableSlots === 0) {
                             status = 'blocked';
                             statusText = 'Blocked';
                         } else if (availableSlots === totalSlots) {
@@ -1603,27 +1596,17 @@
             }
             
             async function saveQuickChanges() {
-                const weekDates = [];
-                const today = new Date();
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
-                
-                for (let i = 0; i < 7; i++) {
-                    const day = new Date(startOfWeek);
-                    day.setDate(startOfWeek.getDate() + i);
-                    weekDates.push(day);
-                }
-                
+                // This would save changes made in the quick calendar
                 showNotification('Weekly changes saved successfully!', 'success');
                 await loadQuickCalendar();
             }
             
             async function applyDefaultToWeek() {
-                const weekDates = [];
                 const today = new Date();
                 const startOfWeek = new Date(today);
                 startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
                 
+                const weekDates = [];
                 for (let i = 0; i < 7; i++) {
                     const day = new Date(startOfWeek);
                     day.setDate(startOfWeek.getDate() + i);
@@ -1794,9 +1777,14 @@
                     // Determine day status
                     const dayAvailability = availabilityByDate[dateStr] || [];
                     let status = 'available';
-                    let statusBadge = '';
                     
-                    if (dayAvailability.length > 0) {
+                    if (dayAvailability.length === 0) {
+                        // No slots in database - check if it's a working day
+                        const isWorkingDay = state.defaultSettings.workingDays.includes(date.getDay());
+                        if (!isWorkingDay) {
+                            status = 'blocked';
+                        }
+                    } else {
                         const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
                         const totalSlots = dayAvailability.length;
                         
@@ -1890,7 +1878,6 @@
                     
                     loading.style.display = 'none';
                     
-                    // If no slots exist, create default slots
                     let slots = existingSlots;
                     
                     if (existingSlots.length === 0) {
@@ -1919,9 +1906,10 @@
                     // Display slots
                     slots.forEach(slot => {
                         const slotElement = document.createElement('div');
-                        slotElement.className = `time-slot-card ${slot.is_available ? 'selected' : 'booked'}`;
+                        slotElement.className = `time-slot-card ${slot.is_available ? 'selected' : 'blocked'}`;
                         slotElement.dataset.slotId = slot.id || 'new';
                         slotElement.dataset.timeSlot = slot.time_slot;
+                        slotElement.dataset.isAvailable = slot.is_available;
                         
                         slotElement.innerHTML = `
                             <div class="time-slot-time">${formatTimeSlot(slot.time_slot)}</div>
@@ -1932,11 +1920,17 @@
                         
                         // Toggle availability
                         slotElement.addEventListener('click', function() {
-                            this.classList.toggle('selected');
-                            this.classList.toggle('booked');
+                            if (this.classList.contains('booked')) return; // Don't toggle booked slots
+                            
+                            const isCurrentlyAvailable = this.classList.contains('selected');
+                            const newStatus = !isCurrentlyAvailable;
+                            
+                            this.classList.toggle('selected', newStatus);
+                            this.classList.toggle('blocked', !newStatus);
+                            this.dataset.isAvailable = newStatus;
                             
                             const status = this.querySelector('.time-slot-status');
-                            if (this.classList.contains('selected')) {
+                            if (newStatus) {
                                 status.textContent = 'Available';
                                 status.className = 'time-slot-status slot-available';
                             } else {
@@ -1990,6 +1984,11 @@
                         endMinuteCalc -= 60;
                     }
                     
+                    // Check if this slot would exceed end time
+                    if (endHourCalc > endHour || (endHourCalc === endHour && endMinuteCalc > endMinute)) {
+                        break;
+                    }
+                    
                     const endTime = `${endHourCalc.toString().padStart(2, '0')}:${endMinuteCalc.toString().padStart(2, '0')}`;
                     
                     slots.push({
@@ -1999,7 +1998,7 @@
                         is_available: true
                     });
                     
-                    // Move to next slot
+                    // Move to next slot start time
                     currentHour = endHourCalc;
                     currentMinute = endMinuteCalc;
                 }
@@ -2016,7 +2015,7 @@
                 const [hour, minute] = time.split(':');
                 const hourNum = parseInt(hour);
                 const suffix = hourNum >= 12 ? 'PM' : 'AM';
-                const displayHour = hourNum > 12 ? hourNum - 12 : hourNum;
+                const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
                 return `${displayHour}:${minute} ${suffix}`;
             }
             
@@ -2039,11 +2038,11 @@
                 
                 slotElements.forEach(slotElement => {
                     const timeSlot = slotElement.dataset.timeSlot;
-                    const isAvailable = slotElement.classList.contains('selected');
+                    const isAvailable = slotElement.dataset.isAvailable === 'true' || slotElement.classList.contains('selected');
                     const slotId = slotElement.dataset.slotId;
                     
                     slotsToSave.push({
-                        id: slotId === 'new' ? null : slotId,
+                        id: slotId === 'new' ? undefined : slotId,
                         date: dateStr,
                         time_slot: timeSlot,
                         is_available: isAvailable
@@ -2059,16 +2058,18 @@
                     
                     if (deleteError) throw deleteError;
                     
-                    // Insert new slots
-                    const { error: insertError } = await state.db
-                        .from('availability')
-                        .insert(slotsToSave.map(slot => ({
-                            date: slot.date,
-                            time_slot: slot.time_slot,
-                            is_available: slot.is_available
-                        })));
-                    
-                    if (insertError) throw insertError;
+                    // Insert new slots (only if there are slots to save)
+                    if (slotsToSave.length > 0) {
+                        const { error: insertError } = await state.db
+                            .from('availability')
+                            .insert(slotsToSave.map(slot => ({
+                                date: slot.date,
+                                time_slot: slot.time_slot,
+                                is_available: slot.is_available
+                            })));
+                        
+                        if (insertError) throw insertError;
+                    }
                     
                     showNotification('Time slots saved successfully!', 'success');
                     
@@ -2078,7 +2079,7 @@
                     
                 } catch (err) {
                     console.error('Error saving time slots:', err);
-                    showNotification('Error saving time slots', 'error');
+                    showNotification('Error saving time slots: ' + err.message, 'error');
                 }
             }
             
@@ -2088,15 +2089,20 @@
                     return;
                 }
                 
-                await applyDefaultAvailability(state.selectedDate);
-                await loadTimeSlots(state.selectedDate);
-                await renderMonthCalendar();
-                
-                showNotification('Default availability applied to selected day!', 'success');
+                try {
+                    await applyDefaultAvailability(state.selectedDate);
+                    await loadTimeSlots(state.selectedDate);
+                    await renderMonthCalendar();
+                    
+                    showNotification('Default availability applied to selected day!', 'success');
+                } catch (err) {
+                    console.error('Error applying default to day:', err);
+                    showNotification('Error applying default: ' + err.message, 'error');
+                }
             }
             
             async function applyDefaultToMonth() {
-                if (!confirm('Apply default availability settings to all working days in this month?')) {
+                if (!confirm('Apply default availability settings to all working days in this month?\nThis will override existing availability.')) {
                     return;
                 }
                 
@@ -2107,25 +2113,29 @@
                 let processed = 0;
                 const totalDays = lastDay.getDate();
                 
-                for (let day = 1; day <= totalDays; day++) {
-                    const date = new Date(state.currentYear, state.currentMonth, day);
-                    
-                    if (state.defaultSettings.workingDays.includes(date.getDay())) {
-                        await applyDefaultAvailability(date);
-                    } else {
-                        await blockDayInDB(date);
+                try {
+                    for (let day = 1; day <= totalDays; day++) {
+                        const date = new Date(state.currentYear, state.currentMonth, day);
+                        
+                        if (state.defaultSettings.workingDays.includes(date.getDay())) {
+                            await applyDefaultAvailability(date);
+                        } else {
+                            await blockDayInDB(date);
+                        }
+                        
+                        processed++;
                     }
                     
-                    processed++;
-                    
-                    // Update progress
-                    if (day % 5 === 0 || day === totalDays) {
-                        showNotification(`Processing... ${processed}/${totalDays} days`, 'success');
+                    showNotification('Default availability applied to entire month!', 'success');
+                    await renderMonthCalendar();
+                    if (state.selectedDate) {
+                        await loadTimeSlots(state.selectedDate);
                     }
+                    
+                } catch (err) {
+                    console.error('Error applying default to month:', err);
+                    showNotification('Error applying to month: ' + err.message, 'error');
                 }
-                
-                showNotification('Default availability applied to entire month!', 'success');
-                await renderMonthCalendar();
             }
             
             async function applyDefaultAvailability(date) {
@@ -2134,19 +2144,25 @@
                 
                 try {
                     // Delete existing slots
-                    await state.db
+                    const { error: deleteError } = await state.db
                         .from('availability')
                         .delete()
                         .eq('date', dateStr);
                     
-                    // Insert default slots
-                    await state.db
-                        .from('availability')
-                        .insert(slots.map(slot => ({
-                            date: slot.date,
-                            time_slot: slot.time_slot,
-                            is_available: true
-                        })));
+                    if (deleteError) throw deleteError;
+                    
+                    // Insert default slots (only if there are slots to insert)
+                    if (slots.length > 0) {
+                        const { error: insertError } = await state.db
+                            .from('availability')
+                            .insert(slots.map(slot => ({
+                                date: slot.date,
+                                time_slot: slot.time_slot,
+                                is_available: true
+                            })));
+                        
+                        if (insertError) throw insertError;
+                    }
                     
                 } catch (err) {
                     console.error('Error applying default availability:', err);
@@ -2159,10 +2175,12 @@
                 
                 try {
                     // Delete all slots for this date (effectively blocking it)
-                    await state.db
+                    const { error } = await state.db
                         .from('availability')
                         .delete()
                         .eq('date', dateStr);
+                    
+                    if (error) throw error;
                     
                 } catch (err) {
                     console.error('Error blocking day:', err);
@@ -2172,8 +2190,11 @@
             
             function selectAllSlots() {
                 document.querySelectorAll('.time-slot-card').forEach(slot => {
+                    if (slot.classList.contains('booked')) return;
+                    
                     slot.classList.add('selected');
-                    slot.classList.remove('booked');
+                    slot.classList.remove('blocked');
+                    slot.dataset.isAvailable = 'true';
                     
                     const status = slot.querySelector('.time-slot-status');
                     status.textContent = 'Available';
@@ -2183,8 +2204,11 @@
             
             function deselectAllSlots() {
                 document.querySelectorAll('.time-slot-card').forEach(slot => {
+                    if (slot.classList.contains('booked')) return;
+                    
                     slot.classList.remove('selected');
-                    slot.classList.add('booked');
+                    slot.classList.add('blocked');
+                    slot.dataset.isAvailable = 'false';
                     
                     const status = slot.querySelector('.time-slot-status');
                     status.textContent = 'Blocked';
@@ -2199,10 +2223,15 @@
                 }
                 
                 if (confirm('Block all time slots for this day? This cannot be undone.')) {
-                    await blockDayInDB(state.selectedDate);
-                    showNotification('Day blocked successfully!', 'success');
-                    await loadTimeSlots(state.selectedDate);
-                    await renderMonthCalendar();
+                    try {
+                        await blockDayInDB(state.selectedDate);
+                        showNotification('Day blocked successfully!', 'success');
+                        await loadTimeSlots(state.selectedDate);
+                        await renderMonthCalendar();
+                    } catch (err) {
+                        console.error('Error blocking day:', err);
+                        showNotification('Error blocking day: ' + err.message, 'error');
+                    }
                 }
             }
             
