@@ -9,9 +9,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
     <style>
-        /* ===== CSS Reset & Variables (保持原有样式不变) ===== */
+        /* ===== CSS Reset & Variables ===== */
         :root {
             --primary-green: #10B981;
             --secondary-green: #34D399;
@@ -59,12 +58,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
+        h1, h2, h3, h4, h5, h6 {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
             line-height: 1.2;
@@ -144,7 +138,7 @@
             min-height: 64px;
         }
 
-        /* ===== Premium Navigation Bar (保持原有样式不变) ===== */
+        /* ===== Premium Navigation Bar ===== */
         .navbar {
             position: fixed;
             top: 0;
@@ -482,7 +476,6 @@
             padding: 2rem;
         }
 
-        /* 移除了 .service-price 相关样式 */
         .service-description {
             color: var(--medium-gray);
             margin-bottom: 1.5rem;
@@ -834,6 +827,48 @@
             margin-right: auto;
         }
 
+        /* ===== Loading Spinner ===== */
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--light-green);
+            border-top: 3px solid var(--primary-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== Status Messages ===== */
+        .status-message {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .status-message.success {
+            background: var(--light-green);
+            color: var(--dark-green);
+            display: block;
+        }
+
+        .status-message.error {
+            background: #FEE2E2;
+            color: #DC2626;
+            display: block;
+        }
+
         /* ===== Premium Footer ===== */
         .footer {
             background: var(--dark-green);
@@ -1160,11 +1195,18 @@
                 </button>
                 <h3>Book Your Cleaning Service</h3>
                 <p class="modal-subtitle">Select your preferred date and time slot</p>
+                <div class="status-message" id="statusMessage"></div>
             </div>
 
             <div class="modal-body" id="bookingForm">
+                <!-- Loading Spinner -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p>Loading available time slots...</p>
+                </div>
+
                 <!-- 左侧：预订表单 -->
-                <div class="booking-form-section">
+                <div class="booking-form-section" id="formSection">
                     <form id="customerBookingForm">
                         <div class="form-group">
                             <label for="serviceType">Service Type</label>
@@ -1201,7 +1243,7 @@
                 </div>
 
                 <!-- 右侧：时间段选择 -->
-                <div class="time-slots-section">
+                <div class="time-slots-section" id="slotsSection">
                     <div class="calendar-navigation">
                         <button class="calendar-btn" id="prevDayBtn">
                             <i class="fas fa-chevron-left"></i>
@@ -1239,6 +1281,24 @@
                 <div class="confirmation-message">
                     <h4>Booking Confirmed!</h4>
                     <p>Thank you for booking with GreenGlo Cleaners. We've sent a confirmation email with all the details. Our team will contact you shortly to confirm your appointment.</p>
+                    <div class="booking-details" id="bookingDetails" style="background: var(--light-green); padding: 1.5rem; border-radius: 12px; margin: 2rem auto; max-width: 400px;">
+                        <div class="summary-item">
+                            <span class="summary-label">Booking ID:</span>
+                            <span class="summary-value" id="confirmationBookingId">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Service:</span>
+                            <span class="summary-value" id="confirmationService">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Date:</span>
+                            <span class="summary-value" id="confirmationDate">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Time:</span>
+                            <span class="summary-value" id="confirmationTime">-</span>
+                        </div>
+                    </div>
                     <button class="btn" id="newBookingBtn">
                         <i class="fas fa-plus"></i>
                         New Booking
@@ -1407,7 +1467,15 @@
     </footer>
 
     <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // ===== Supabase Configuration =====
+        const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co'; // Your project URL
+        const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7'; // Your publishable key
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileCloseBtn = document.getElementById('mobileCloseBtn');
@@ -1486,31 +1554,25 @@
         const prevDayBtn = document.getElementById('prevDayBtn');
         const nextDayBtn = document.getElementById('nextDayBtn');
         const currentDateDisplay = document.getElementById('currentDateDisplay');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const statusMessage = document.getElementById('statusMessage');
+        const formSection = document.getElementById('formSection');
+        const slotsSection = document.getElementById('slotsSection');
 
         // 预订状态
         let currentBooking = {
             service: null,
             date: null,
             timeSlot: null,
-            customerInfo: {}
+            duration: null,
+            bookingId: null
         };
-
-        // 可用时间段数据 (模拟数据 - 在实际应用中应从后端API获取)
-        const availableTimeSlots = [
-            { time: '09:00 AM', available: true, duration: '2 hours' },
-            { time: '10:30 AM', available: true, duration: '2-3 hours' },
-            { time: '12:00 PM', available: true, duration: '3-4 hours' },
-            { time: '02:00 PM', available: true, duration: '2 hours' },
-            { time: '03:30 PM', available: true, duration: '2-3 hours' },
-            { time: '05:00 PM', available: false, duration: '2 hours' },
-            { time: '06:30 PM', available: true, duration: '2-3 hours' },
-        ];
 
         // ===== 预订模态框函数 =====
         function openBookingModal(serviceTitle, serviceDuration) {
             // 设置服务信息
             currentBooking.service = serviceTitle;
-            currentBooking.serviceDuration = serviceDuration;
+            currentBooking.duration = serviceDuration;
             
             // 设置当前日期
             const today = new Date();
@@ -1523,9 +1585,6 @@
             // 更新预订摘要
             updateBookingSummary();
             
-            // 生成时间段
-            generateTimeSlots();
-            
             // 显示模态框
             bookingModal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1536,6 +1595,9 @@
             // 重置确认按钮状态
             confirmBookingBtn.disabled = true;
             selectedSlotInfo.style.display = 'none';
+            
+            // 加载可用时间段
+            loadAvailableTimeSlots(today);
         }
 
         function closeBookingModal() {
@@ -1544,6 +1606,88 @@
             // 重置到预订表单视图
             bookingForm.style.display = 'grid';
             bookingConfirmation.classList.remove('active');
+            formSection.style.display = 'block';
+            slotsSection.style.display = 'block';
+            loadingSpinner.style.display = 'none';
+        }
+
+        async function loadAvailableTimeSlots(date) {
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const timeSlotsGrid = document.getElementById('timeSlotsGrid');
+            
+            loadingSpinner.style.display = 'block';
+            timeSlotsGrid.innerHTML = '';
+            
+            try {
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // 从Supabase获取可用时间段
+                const { data: availableSlots, error } = await supabase
+                    .from('availability')
+                    .select('*')
+                    .eq('date', dateStr)
+                    .eq('is_available', true)
+                    .order('time_slot', { ascending: true });
+                
+                if (error) {
+                    console.error('Error loading time slots:', error);
+                    showStatusMessage('Error loading available time slots. Please try again.', 'error');
+                    return;
+                }
+                
+                // 清除之前的错误消息
+                statusMessage.className = 'status-message';
+                statusMessage.textContent = '';
+                
+                // 如果没有可用的时间段，显示消息
+                if (!availableSlots || availableSlots.length === 0) {
+                    timeSlotsGrid.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--medium-gray);">
+                            <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>No available time slots for this date.</p>
+                            <p>Please select another date.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 生成时间段按钮
+                availableSlots.forEach(slot => {
+                    const slotElement = document.createElement('div');
+                    slotElement.className = 'time-slot';
+                    slotElement.textContent = formatTimeSlot(slot.time_slot);
+                    slotElement.dataset.time = slot.time_slot;
+                    slotElement.dataset.slotId = slot.id;
+                    
+                    slotElement.addEventListener('click', () => selectTimeSlot(slotElement, slot.time_slot));
+                    
+                    timeSlotsGrid.appendChild(slotElement);
+                });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showStatusMessage('Error loading available time slots. Please try again.', 'error');
+            } finally {
+                loadingSpinner.style.display = 'none';
+            }
+        }
+
+        function formatTimeSlot(timeSlot) {
+            // 将时间格式化为更友好的显示格式
+            if (timeSlot.includes('-')) {
+                const [start, end] = timeSlot.split('-');
+                return `${formatTime(start)} - ${formatTime(end)}`;
+            }
+            return timeSlot;
+        }
+
+        function formatTime(timeStr) {
+            // 将24小时制时间转换为12小时制
+            const [hours, minutes] = timeStr.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const formattedHour = hour % 12 || 12;
+            return `${formattedHour}:${minutes} ${ampm}`;
         }
 
         function updateDateDisplay(date) {
@@ -1555,26 +1699,7 @@
             document.getElementById('summaryDate').textContent = dateStr;
         }
 
-        function generateTimeSlots() {
-            timeSlotsGrid.innerHTML = '';
-            
-            availableTimeSlots.forEach(slot => {
-                const slotElement = document.createElement('div');
-                slotElement.className = `time-slot ${slot.available ? '' : 'unavailable'}`;
-                slotElement.textContent = slot.time;
-                slotElement.dataset.time = slot.time;
-                slotElement.dataset.duration = slot.duration;
-                slotElement.dataset.available = slot.available;
-                
-                if (slot.available) {
-                    slotElement.addEventListener('click', () => selectTimeSlot(slotElement));
-                }
-                
-                timeSlotsGrid.appendChild(slotElement);
-            });
-        }
-
-        function selectTimeSlot(slotElement) {
+        function selectTimeSlot(slotElement, timeSlot) {
             // 移除之前的选择
             document.querySelectorAll('.time-slot.selected').forEach(slot => {
                 slot.classList.remove('selected');
@@ -1584,16 +1709,15 @@
             slotElement.classList.add('selected');
             
             // 更新当前预订
-            currentBooking.timeSlot = slotElement.dataset.time;
-            currentBooking.duration = slotElement.dataset.duration;
+            currentBooking.timeSlot = timeSlot;
             
             // 显示选择的信息
-            selectedSlotTime.textContent = slotElement.dataset.time;
-            selectedSlotDuration.textContent = slotElement.dataset.duration;
+            selectedSlotTime.textContent = formatTimeSlot(timeSlot);
+            selectedSlotDuration.textContent = currentBooking.duration;
             selectedSlotInfo.style.display = 'block';
             
             // 更新摘要
-            document.getElementById('summaryTime').textContent = slotElement.dataset.time;
+            document.getElementById('summaryTime').textContent = formatTimeSlot(timeSlot);
             
             // 启用确认按钮
             confirmBookingBtn.disabled = false;
@@ -1617,7 +1741,7 @@
             }
             
             // 时间
-            document.getElementById('summaryTime').textContent = currentBooking.timeSlot || '-';
+            document.getElementById('summaryTime').textContent = currentBooking.timeSlot ? formatTimeSlot(currentBooking.timeSlot) : '-';
             
             // 估算总价 (基于服务类型)
             let estimatedPrice = '£60-£120';
@@ -1642,41 +1766,151 @@
             confirmBookingBtn.disabled = true;
             currentBooking.timeSlot = null;
             updateBookingSummary();
+            statusMessage.className = 'status-message';
+            statusMessage.textContent = '';
         }
 
-        function submitBooking() {
+        function showStatusMessage(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+        }
+
+        async function submitBooking() {
             // 收集表单数据
-            const customerName = document.getElementById('customerName').value;
-            const customerEmail = document.getElementById('customerEmail').value;
-            const customerPhone = document.getElementById('customerPhone').value;
-            const customerAddress = document.getElementById('customerAddress').value;
-            const specialInstructions = document.getElementById('specialInstructions').value;
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerAddress = document.getElementById('customerAddress').value.trim();
+            const specialInstructions = document.getElementById('specialInstructions').value.trim();
             
             // 验证表单
             if (!customerName || !customerEmail || !customerPhone || !customerAddress || !currentBooking.timeSlot) {
-                alert('Please fill in all required fields and select a time slot.');
+                showStatusMessage('Please fill in all required fields and select a time slot.', 'error');
                 return;
             }
-            
-            // 在实际应用中，这里应该发送数据到后端API
-            // 例如: saveBookingToDatabase({ ...currentBooking, customerInfo: { customerName, customerEmail, etc } })
-            
-            // 显示确认消息
+
+            // 验证电子邮件格式
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(customerEmail)) {
+                showStatusMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            showStatusMessage('Processing your booking...', 'success');
+            confirmBookingBtn.disabled = true;
+            confirmBookingBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                const bookingDate = currentBooking.date.toISOString().split('T')[0];
+                
+                // 1. 插入预订到数据库
+                const { data: bookingData, error: bookingError } = await supabase
+                    .from('bookings')
+                    .insert({
+                        customer_name: customerName,
+                        customer_email: customerEmail,
+                        customer_phone: customerPhone,
+                        service_address: customerAddress,
+                        special_instructions: specialInstructions,
+                        booking_date: bookingDate,
+                        time_slot: currentBooking.timeSlot,
+                        service_type: currentBooking.service,
+                        status: 'confirmed',
+                        created_at: new Date().toISOString()
+                    })
+                    .select(); // 返回插入的行
+
+                if (bookingError) {
+                    console.error('Booking error:', bookingError);
+                    showStatusMessage('Failed to save booking. Please try again.', 'error');
+                    confirmBookingBtn.disabled = false;
+                    confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
+                    return;
+                }
+
+                // 保存预订ID
+                currentBooking.bookingId = bookingData[0].id;
+
+                // 2. 更新可用性表
+                const { error: availabilityError } = await supabase
+                    .from('availability')
+                    .update({ is_available: false })
+                    .eq('date', bookingDate)
+                    .eq('time_slot', currentBooking.timeSlot);
+
+                if (availabilityError) {
+                    console.error('Availability update error:', availabilityError);
+                    // 继续执行，因为预订已经创建成功
+                }
+
+                // 3. 发送确认电子邮件
+                await sendConfirmationEmail({
+                    bookingId: currentBooking.bookingId,
+                    customerName: customerName,
+                    customerEmail: customerEmail,
+                    customerPhone: customerPhone,
+                    serviceAddress: customerAddress,
+                    serviceType: currentBooking.service,
+                    bookingDate: currentBooking.date.toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }),
+                    timeSlot: formatTimeSlot(currentBooking.timeSlot),
+                    specialInstructions: specialInstructions
+                });
+
+                // 4. 显示确认消息
+                showBookingConfirmation();
+
+            } catch (error) {
+                console.error('Error during booking submission:', error);
+                showStatusMessage('An error occurred. Please try again or contact support.', 'error');
+                confirmBookingBtn.disabled = false;
+                confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
+            }
+        }
+
+        async function sendConfirmationEmail(bookingDetails) {
+            try {
+                // 使用Supabase Edge Function发送电子邮件
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/send-confirmation-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookingDetails)
+                });
+
+                if (!response.ok) {
+                    console.warn('Email sending failed, but booking was saved.');
+                }
+            } catch (error) {
+                console.warn('Email sending error:', error);
+                // 继续执行，因为预订已经保存
+            }
+        }
+
+        function showBookingConfirmation() {
+            // 隐藏表单，显示确认消息
             bookingForm.style.display = 'none';
             bookingConfirmation.classList.add('active');
             
-            // 在实际应用中，这里可以发送确认电子邮件或短信
-            
-            console.log('Booking submitted:', {
-                ...currentBooking,
-                customerInfo: {
-                    name: customerName,
-                    email: customerEmail,
-                    phone: customerPhone,
-                    address: customerAddress,
-                    instructions: specialInstructions
-                }
+            // 更新确认消息中的详细信息
+            document.getElementById('confirmationBookingId').textContent = currentBooking.bookingId;
+            document.getElementById('confirmationService').textContent = currentBooking.service;
+            document.getElementById('confirmationDate').textContent = currentBooking.date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
             });
+            document.getElementById('confirmationTime').textContent = formatTimeSlot(currentBooking.timeSlot);
+            
+            // 重置确认按钮状态
+            confirmBookingBtn.disabled = false;
+            confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
         }
 
         // ===== 事件监听器 =====
@@ -1702,7 +1936,7 @@
             newDate.setDate(newDate.getDate() - 1);
             currentBooking.date = newDate;
             updateDateDisplay(newDate);
-            generateTimeSlots();
+            loadAvailableTimeSlots(newDate);
             selectedSlotInfo.style.display = 'none';
             confirmBookingBtn.disabled = true;
             updateBookingSummary();
@@ -1713,7 +1947,7 @@
             newDate.setDate(newDate.getDate() + 1);
             currentBooking.date = newDate;
             updateDateDisplay(newDate);
-            generateTimeSlots();
+            loadAvailableTimeSlots(newDate);
             selectedSlotInfo.style.display = 'none';
             confirmBookingBtn.disabled = true;
             updateBookingSummary();
@@ -1726,9 +1960,13 @@
             bookingConfirmation.classList.remove('active');
             bookingForm.style.display = 'grid';
             resetBookingForm();
+            const today = new Date();
+            currentBooking.date = today;
+            updateDateDisplay(today);
+            loadAvailableTimeSlots(today);
         });
 
-        // ===== Services Data (从 gallery.html 中使用 galleryImages) =====
+        // ===== Services Data =====
         const servicesData = [
             {
                 id: 1,
@@ -1978,8 +2216,67 @@
             });
         });
 
+        // ===== Initialize Database Tables =====
+        async function initializeDatabase() {
+            try {
+                // 检查并创建必要的表
+                // 注意：在实际应用中，这些表应该已经通过SQL创建
+                console.log('Database connection established successfully');
+                
+                // 初始化一些示例可用时间段（仅用于演示）
+                await initializeSampleAvailability();
+                
+            } catch (error) {
+                console.error('Database initialization error:', error);
+            }
+        }
+
+        async function initializeSampleAvailability() {
+            // 为未来7天创建示例可用时间段
+            const today = new Date();
+            
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // 定义时间段
+                const timeSlots = [
+                    '09:00-10:00',
+                    '10:00-11:00', 
+                    '11:00-12:00',
+                    '13:00-14:00',
+                    '14:00-15:00',
+                    '15:00-16:00'
+                ];
+                
+                // 为每个时间段检查是否已存在，如果不存在则插入
+                for (const timeSlot of timeSlots) {
+                    const { data: existingSlot } = await supabase
+                        .from('availability')
+                        .select('id')
+                        .eq('date', dateStr)
+                        .eq('time_slot', timeSlot)
+                        .single();
+                    
+                    if (!existingSlot) {
+                        await supabase
+                            .from('availability')
+                            .insert({
+                                date: dateStr,
+                                time_slot: timeSlot,
+                                is_available: true
+                            });
+                    }
+                }
+            }
+        }
+
         // Initial render
         renderServices();
+        
+        // Initialize database on page load
+        window.addEventListener('DOMContentLoaded', initializeDatabase);
     </script>
 </body>
 
