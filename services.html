@@ -1,1285 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>All Services | GreenGlo Cleaners</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        /* ===== CSS Reset & Variables ===== */
-        :root {
-            --primary-green: #10B981;
-            --secondary-green: #34D399;
-            --dark-green: #065F46;
-            --light-green: #D1FAE5;
-            --accent-green: #059669;
-            --emerald: #10B981;
-            --teal: #0D9488;
-            --mint: #A7F3D0;
-            --white: #FFFFFF;
-            --off-white: #F9FAFB;
-            --light-gray: #F3F4F6;
-            --medium-gray: #9CA3AF;
-            --dark-gray: #4B5563;
-            --black: #111827;
-            --gold: #FBBF24;
-            --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
-            --shadow-lg: 0 25px 50px rgba(16, 185, 129, 0.15);
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --border-radius: 16px;
-            --border-radius-lg: 24px;
-            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--teal));
-            --gradient-dark: linear-gradient(135deg, var(--dark-green), var(--teal));
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.7;
-            color: var(--dark-gray);
-            background-color: var(--off-white);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            line-height: 1.2;
-            color: var(--dark-green);
-            letter-spacing: -0.5px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem 2.5rem;
-            background: var(--gradient-primary);
-            color: var(--white);
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            box-shadow: var(--shadow);
-            gap: 0.75rem;
-            min-height: 56px;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-dark);
-            opacity: 0;
-            transition: var(--transition);
-            z-index: -1;
-        }
-
-        .btn:hover::before {
-            opacity: 1;
-        }
-
-        .btn:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn:active {
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary-green);
-            color: var(--primary-green);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary-green);
-            color: var(--white);
-        }
-
-        .btn-large {
-            padding: 1.25rem 3rem;
-            font-size: 1.125rem;
-            min-height: 64px;
-        }
-
-        /* ===== Premium Navigation Bar ===== */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled {
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.1);
-            padding: 0.5rem 0;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .nav-logo:hover {
-            transform: translateY(-2px);
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gradient-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo-text h1 {
-            font-size: 1.75rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-            line-height: 1;
-        }
-
-        .logo-text span {
-            font-size: 0.75rem;
-            color: var(--medium-gray);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-top: 0.25rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--dark-gray);
-            font-weight: 600;
-            font-size: 1rem;
-            padding: 0.5rem 0;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-primary);
-            transition: var(--transition);
-        }
-
-        .nav-link:hover {
-            color: var(--primary-green);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .nav-cta {
-            margin-left: 1rem;
-        }
-
-        .nav-cta .btn {
-            padding: 0.75rem 1.75rem;
-            min-height: auto;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            width: 48px;
-            height: 48px;
-            background: var(--light-green);
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-green);
-            font-size: 1.5rem;
-            transition: var(--transition);
-        }
-
-        .mobile-menu-btn:hover {
-            background: var(--mint);
-            transform: rotate(90deg);
-        }
-
-        .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-        }
-
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* ===== Modern Section Styles ===== */
-        .section {
-            padding: 6rem 0;
-            position: relative;
-        }
-
-        .section-light {
-            background: var(--white);
-        }
-
-        .section-gray {
-            background: var(--off-white);
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-title h2 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--gradient-primary);
-            border-radius: 2px;
-        }
-
-        .section-title p {
-            font-size: 1.125rem;
-            color: var(--medium-gray);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* ===== Services Hero Section ===== */
-        .services-hero {
-            min-height: 60vh;
-            padding: 160px 0 80px;
-            background: linear-gradient(135deg, rgba(209, 250, 229, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            text-align: center;
-        }
-
-        .services-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--light-green) 0%, transparent 70%);
-            z-index: 0;
-        }
-
-        .services-hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .services-hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-            background: linear-gradient(to right, var(--dark-green), var(--teal));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .services-hero p {
-            font-size: clamp(1.125rem, 3vw, 1.375rem);
-            color: var(--dark-gray);
-            margin-bottom: 3rem;
-            line-height: 1.6;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* ===== Service Categories ===== */
-        .category-filters {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .category-btn {
-            padding: 0.875rem 1.75rem;
-            background: var(--white);
-            border: 2px solid var(--primary-green);
-            border-radius: 50px;
-            color: var(--primary-green);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 1rem;
-            box-shadow: var(--shadow);
-        }
-
-        .category-btn:hover,
-        .category-btn.active {
-            background: var(--gradient-primary);
-            color: var(--white);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* ===== Services Grid ===== */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .service-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border: 1px solid rgba(16, 185, 129, 0.1);
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-green);
-        }
-
-        .service-image {
-            height: 220px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            background-color: var(--light-green);
-        }
-
-        .service-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent 50%, rgba(6, 95, 70, 0.8) 100%);
-            display: flex;
-            align-items: flex-end;
-            padding: 2rem;
-        }
-
-        .service-overlay h3 {
-            color: var(--white);
-            font-size: 1.5rem;
-            margin: 0;
-        }
-
-        .service-content {
-            padding: 2rem;
-        }
-
-        .service-description {
-            color: var(--medium-gray);
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .service-features {
-            list-style: none;
-            margin-bottom: 2rem;
-        }
-
-        .service-features li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            display: flex;
-            align-items: center;
-            color: var(--dark-gray);
-        }
-
-        .service-features li:last-child {
-            border-bottom: none;
-        }
-
-        .service-features li i {
-            color: var(--secondary-green);
-            margin-right: 0.75rem;
-            font-size: 0.875rem;
-            min-width: 20px;
-        }
-
-        .service-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 2px solid var(--light-green);
-        }
-
-        .service-duration {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--medium-gray);
-        }
-
-        /* ===== Services CTA ===== */
-        .services-cta {
-            background: var(--gradient-dark);
-            color: var(--white);
-            text-align: center;
-            padding: 6rem 0;
-            border-radius: var(--border-radius-lg);
-            margin: 4rem auto;
-            max-width: 1200px;
-        }
-
-        .services-cta h2 {
-            color: var(--white);
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1.5rem;
-        }
-
-        .services-cta p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto 3rem;
-        }
-
-        /* ===== Booking Modal Styles ===== */
-        .booking-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            padding: 1rem;
-        }
-
-        .booking-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            width: 100%;
-            max-width: 900px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-xl);
-            transform: translateY(30px);
-            transition: transform 0.4s ease;
-        }
-
-        .booking-modal.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            padding: 2rem 2rem 1rem;
-            border-bottom: 1px solid var(--light-gray);
-            position: relative;
-        }
-
-        .modal-header h3 {
-            font-size: 1.75rem;
-            color: var(--dark-green);
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-subtitle {
-            color: var(--medium-gray);
-            font-size: 1rem;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: var(--light-green);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-green);
-            font-size: 1.25rem;
-            transition: var(--transition);
-        }
-
-        .close-modal:hover {
-            background: var(--mint);
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        @media (max-width: 768px) {
-            .modal-body {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .booking-form-section,
-        .time-slots-section {
-            padding: 1.5rem;
-            background: var(--off-white);
-            border-radius: var(--border-radius);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-gray);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            transition: var(--transition);
-            background: var(--white);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-
-        .service-select {
-            background-color: var(--light-green);
-            font-weight: 600;
-            color: var(--dark-green);
-        }
-
-        .time-slots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 0.5rem;
-        }
-
-        .time-slot {
-            padding: 1rem;
-            background: var(--white);
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-            color: var(--dark-gray);
-        }
-
-        .time-slot:hover {
-            border-color: var(--primary-green);
-            transform: translateY(-2px);
-        }
-
-        .time-slot.selected {
-            background: var(--gradient-primary);
-            color: var(--white);
-            border-color: var(--primary-green);
-            box-shadow: var(--shadow);
-        }
-
-        .time-slot.unavailable {
-            background: var(--light-gray);
-            color: var(--medium-gray);
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        .modal-footer {
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--off-white);
-        }
-
-        .booking-summary {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-        }
-
-        .summary-label {
-            color: var(--medium-gray);
-        }
-
-        .summary-value {
-            font-weight: 600;
-            color: var(--dark-green);
-        }
-
-        /* ===== Booking Confirmation ===== */
-        .booking-confirmation {
-            display: none;
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-
-        .booking-confirmation.active {
-            display: block;
-        }
-
-        .confirmation-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2rem;
-            font-size: 2.5rem;
-            color: var(--white);
-        }
-
-        .confirmation-message h4 {
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
-            color: var(--dark-green);
-        }
-
-        .confirmation-message p {
-            color: var(--medium-gray);
-            margin-bottom: 2rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* ===== Status Messages ===== */
-        .status-message {
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .status-message.success {
-            background: var(--light-green);
-            color: var(--dark-green);
-            display: block;
-        }
-
-        .status-message.error {
-            background: #FEE2E2;
-            color: #DC2626;
-            display: block;
-        }
-
-        .status-message.info {
-            background: #DBEAFE;
-            color: #1E40AF;
-            display: block;
-        }
-
-        /* ===== Loading Spinner ===== */
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--light-green);
-            border-top: 3px solid var(--primary-green);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ===== Premium Footer ===== */
-        .footer {
-            background: var(--dark-green);
-            color: var(--white);
-            padding: 6rem 0 2rem;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 4rem;
-            margin-bottom: 4rem;
-        }
-
-        .footer-col h3 {
-            color: var(--white);
-            font-size: 1.25rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.75rem;
-        }
-
-        .footer-col h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: var(--primary-green);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-block;
-        }
-
-        .footer-links a:hover {
-            color: var(--white);
-            transform: translateX(5px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-link {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--primary-green);
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.875rem;
-        }
-
-        .footer-bottom a {
-            color: var(--primary-green);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-bottom a:hover {
-            color: var(--secondary-green);
-            text-decoration: underline;
-        }
-
-        /* ===== Responsive Design ===== */
-        @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 300px;
-                height: 100vh;
-                background: var(--white);
-                flex-direction: column;
-                padding: 100px 2rem 2rem;
-                gap: 0;
-                transition: var(--transition);
-                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
-                z-index: 1001;
-                overflow-y: auto;
-            }
-
-            .nav-menu.active {
-                right: 0;
-            }
-
-            .nav-item {
-                width: 100%;
-            }
-
-            .nav-link {
-                display: block;
-                padding: 1.25rem 1rem;
-                border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-                font-size: 1.1rem;
-            }
-
-            .nav-cta {
-                margin: 2rem 0 0;
-                width: 100%;
-            }
-
-            .nav-cta .btn {
-                width: 100%;
-                justify-content: center;
-                padding: 1rem 2rem;
-            }
-
-            .mobile-menu-btn {
-                display: flex;
-                z-index: 1002;
-                position: relative;
-            }
-
-            .mobile-menu-btn.active {
-                background: var(--primary-green);
-                color: var(--white);
-            }
-
-            .services-hero {
-                padding: 140px 0 4rem;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .section {
-                padding: 4rem 0;
-            }
-
-            .category-filters {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 1rem;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .category-btn {
-                flex-shrink: 0;
-            }
-
-            .mobile-menu-close {
-                position: absolute;
-                top: 1.5rem;
-                right: 1.5rem;
-                width: 44px;
-                height: 44px;
-                background: var(--light-green);
-                border-radius: 12px;
-                border: none;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: var(--primary-green);
-                font-size: 1.25rem;
-                transition: var(--transition);
-                z-index: 1003;
-            }
-
-            .mobile-menu-close:hover {
-                background: var(--mint);
-                transform: rotate(90deg);
-            }
-
-            .modal-content {
-                max-height: 95vh;
-            }
-
-            .modal-body {
-                padding: 1.5rem;
-            }
-
-            .modal-footer {
-                padding: 1.5rem;
-                flex-direction: column;
-                gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .nav-menu {
-                width: 85%;
-            }
-
-            .service-card {
-                margin-bottom: 1.5rem;
-            }
-
-            .service-content {
-                padding: 1.5rem;
-            }
-
-            .modal-header {
-                padding: 1.5rem 1.5rem 1rem;
-            }
-
-            .modal-body {
-                padding: 1rem;
-                gap: 1rem;
-            }
-
-            .booking-form-section,
-            .time-slots-section {
-                padding: 1rem;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-
-    <!-- Premium Navigation Bar -->
-    <nav class="navbar" id="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="nav-logo">
-                <div class="logo-icon">
-                    <span style="color: white; font-weight: bold; font-size: 1.2rem;">GG</span>
-                </div>
-                <div class="logo-text">
-                    <h1>GreenGlo</h1>
-                    <span>Cleaners</span>
-                </div>
-            </a>
-
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <ul class="nav-menu" id="navMenu">
-                <button class="mobile-menu-close" id="mobileCloseBtn">
-                    <i class="fas fa-times"></i>
-                </button>
-
-                <li class="nav-item">
-                    <a href="index.html" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="services.html" class="nav-link active">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a href="index.html#about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="gallery.html" class="nav-link">Gallery</a>
-                </li>
-                <li class="nav-item">
-                    <a href="index.html#testimonials" class="nav-link">Testimonials</a>
-                </li>
-                <li class="nav-item">
-                    <a href="index.html#contact" class="nav-link">Contact</a>
-                </li>
-                <li class="nav-item nav-cta">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=" class="btn">Get Quote</a>
-                </li>
-            </ul>
+<!-- Booking Modal for Services Page -->
+<div id="serviceBookingModal" class="modal-overlay" style="display: none;">
+    <div class="modal" style="max-width: 600px;">
+        <div class="modal-header" style="background: var(--gradient-primary); color: white;">
+            <h3>Book <span id="bookingServiceName"></span></h3>
+            <button class="modal-close" onclick="closeServiceBookingModal()">&times;</button>
         </div>
-    </nav>
-
-    <!-- Booking Modal -->
-    <div class="booking-modal" id="bookingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close-modal" id="closeModalBtn">
-                    <i class="fas fa-times"></i>
+        <div class="modal-body">
+            <div id="bookingStep1">
+                <div class="form-group">
+                    <label>Select Date</label>
+                    <input type="date" id="serviceBookingDate" class="form-control" min="">
+                </div>
+                <div class="form-group">
+                    <label>Available Time Slots</label>
+                    <div id="serviceTimeSlots" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+                        <!-- Time slots will be loaded here -->
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextToCustomerDetails()" style="width: 100%; margin-top: 20px;">
+                    Next: Customer Details
                 </button>
-                <h3>Book Your Cleaning Service</h3>
-                <p class="modal-subtitle">Select your preferred date and time slot</p>
-                <div class="status-message" id="statusMessage"></div>
             </div>
-
-            <div class="modal-body" id="bookingForm">
-                <!-- Loading Spinner -->
-                <div class="loading-spinner" id="loadingSpinner">
-                    <div class="spinner"></div>
-                    <p>Loading available time slots...</p>
+            
+            <div id="bookingStep2" style="display: none;">
+                <div class="form-group">
+                    <label>Your Name *</label>
+                    <input type="text" id="customerName" class="form-control" required>
                 </div>
-
-                <!-- Left: Booking Form -->
-                <div class="booking-form-section" id="formSection">
-                    <form id="customerBookingForm">
-                        <div class="form-group">
-                            <label for="serviceType">Service Type</label>
-                            <select id="serviceType" class="form-control service-select" disabled>
-                                <option value="">Select a service</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="customerName">Full Name *</label>
-                            <input type="text" id="customerName" class="form-control" placeholder="Enter your full name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="customerEmail">Email Address *</label>
-                            <input type="email" id="customerEmail" class="form-control" placeholder="Enter your email" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="customerPhone">Phone Number *</label>
-                            <input type="tel" id="customerPhone" class="form-control" placeholder="Enter your phone number" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="customerAddress">Service Address *</label>
-                            <textarea id="customerAddress" class="form-control" rows="3" placeholder="Enter full address for service" required></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="specialInstructions">Special Instructions</label>
-                            <textarea id="specialInstructions" class="form-control" rows="3" placeholder="Any special requirements or instructions"></textarea>
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <label>Phone Number *</label>
+                    <input type="tel" id="customerPhone" class="form-control" required>
                 </div>
-
-                <!-- Right: Time Slot Selection -->
-                <div class="time-slots-section" id="slotsSection">
-                    <div class="calendar-navigation">
-                        <button class="calendar-btn" id="prevDayBtn">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <div class="current-date" id="currentDateDisplay">Today</div>
-                        <button class="calendar-btn" id="nextDayBtn">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-
-                    <div class="time-slots-grid" id="timeSlotsGrid">
-                        <!-- Time slots will be generated by JavaScript -->
-                    </div>
-
-                    <div class="selected-slot-info" id="selectedSlotInfo" style="display: none;">
-                        <div style="background: var(--light-green); padding: 1rem; border-radius: 12px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                                <strong>Selected Slot:</strong>
-                                <span id="selectedSlotTime">No slot selected</span>
-                            </div>
-                            <div style="font-size: 0.9rem; color: var(--dark-gray);">
-                                <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
-                                Duration: <span id="selectedSlotDuration">2-4 hours</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="customerEmail" class="form-control">
                 </div>
-            </div>
-
-            <!-- Booking Confirmation -->
-            <div class="booking-confirmation" id="bookingConfirmation">
-                <div class="confirmation-icon">
-                    <i class="fas fa-check"></i>
+                <div class="form-group">
+                    <label>Service Address *</label>
+                    <textarea id="customerAddress" class="form-control" rows="2" required></textarea>
                 </div>
-                <div class="confirmation-message">
-                    <h4>Booking Confirmed!</h4>
-                    <p>Thank you for booking with GreenGlo Cleaners. Your booking has been saved to our database with the following details:</p>
-                    <div class="booking-details" id="bookingDetails" style="background: var(--light-green); padding: 1.5rem; border-radius: 12px; margin: 2rem auto; max-width: 400px;">
-                        <div class="summary-item">
-                            <span class="summary-label">Booking ID:</span>
-                            <span class="summary-value" id="confirmationBookingId">-</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">Service:</span>
-                            <span class="summary-value" id="confirmationService">-</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">Date:</span>
-                            <span class="summary-value" id="confirmationDate">-</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">Time:</span>
-                            <span class="summary-value" id="confirmationTime">-</span>
-                        </div>
-                    </div>
-                    <button class="btn" id="newBookingBtn">
-                        <i class="fas fa-plus"></i>
-                        New Booking
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea id="serviceNotes" class="form-control" rows="3" placeholder="Any special requirements or instructions..."></textarea>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button class="btn btn-secondary" onclick="backToDateSelection()" style="flex: 1;">
+                        Back
                     </button>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <div class="booking-summary" id="bookingSummary">
-                    <div class="summary-item">
-                        <span class="summary-label">Service:</span>
-                        <span class="summary-value" id="summaryService">-</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Date:</span>
-                        <span class="summary-value" id="summaryDate">-</span>
-                    </div>
-                    <div class="summary-item">
-                        <span class="summary-label">Time:</span>
-                        <span class="summary-value" id="summaryTime">-</span>
-                    </div>
-                    <div class="summary-item" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--light-gray);">
-                        <span class="summary-label" style="font-weight: 700;">Estimated Total:</span>
-                        <span class="summary-value" style="font-size: 1.2rem; color: var(--primary-green);" id="summaryTotal">-</span>
-                    </div>
-                </div>
-                <div>
-                    <button class="btn btn-outline" id="cancelBookingBtn">
-                        Cancel
-                    </button>
-                    <button class="btn" id="confirmBookingBtn" disabled>
+                    <button class="btn btn-success" onclick="confirmServiceBooking()" style="flex: 2;">
                         <i class="fas fa-calendar-check"></i>
                         Confirm Booking
                     </button>
@@ -1287,976 +56,285 @@
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Services Hero Section -->
-    <section class="services-hero">
-        <div class="container">
-            <div class="services-hero-content">
-                <h1>Our Complete Cleaning Services</h1>
-                <p>Explore our comprehensive range of professional cleaning services, all using eco-friendly products
-                    and performed by our vetted, background-checked professionals.</p>
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=" class="btn btn-large">
-                        <i class="fas fa-comment"></i>
-                        Get a Quote
-                    </a>
-                    <a href="index.html" class="btn btn-outline btn-large">
-                        <i class="fas fa-home"></i>
-                        Back to Home
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+<script>
+// Services Page Booking System
+let currentBookingService = null;
 
-    <!-- Service Categories -->
-    <section class="section section-light">
-        <div class="container">
-            <div class="section-title">
-                <h2>Browse by Category</h2>
-                <p>Find the perfect cleaning service for your needs</p>
-            </div>
-            <div class="category-filters">
-                <button class="category-btn active" data-category="all">All Services</button>
-                <button class="category-btn" data-category="domestic">Domestic Cleaning</button>
-                <button class="category-btn" data-category="office">Office Cleaning</button>
-                <button class="category-btn" data-category="deep">Deep Cleaning</button>
-                <button class="category-btn" data-category="special">Specialized Services</button>
-            </div>
-        </div>
-    </section>
+// Function to open booking modal for a service
+function openServiceBooking(serviceId, serviceTitle) {
+    currentBookingService = {
+        id: serviceId,
+        title: serviceTitle
+    };
+    
+    // Set modal title
+    document.getElementById('bookingServiceName').textContent = serviceTitle;
+    
+    // Set min date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('serviceBookingDate').min = today;
+    document.getElementById('serviceBookingDate').value = today;
+    
+    // Load available time slots
+    loadServiceTimeSlots(today);
+    
+    // Show modal
+    document.getElementById('serviceBookingModal').style.display = 'flex';
+}
 
-    <!-- Services Grid -->
-    <section class="section section-gray">
-        <div class="container">
-            <div class="services-grid" id="servicesGrid">
-                <!-- Service cards will be inserted here by JavaScript -->
-            </div>
-        </div>
-    </section>
+function closeServiceBookingModal() {
+    document.getElementById('serviceBookingModal').style.display = 'none';
+    resetBookingForm();
+}
 
-    <!-- Services CTA -->
-    <section class="section">
-        <div class="container">
-            <div class="services-cta">
-                <h2>Need Help Choosing the Right Service?</h2>
-                <p>Our cleaning experts are ready to help you select the perfect service for your needs. Get a
-                    personalized quote or book a consultation today.</p>
-                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=" class="btn btn-large"
-                        style="background: var(--white); color: var(--primary-green);">
-                        <i class="fas fa-comments"></i>
-                        Chat for Free Quote
-                    </a>
-                    <a href="tel:+447827784204" class="btn btn-outline btn-large" style="color: var(--white);">
-                        <i class="fas fa-phone"></i>
-                        Call: 07827 784204
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+function resetBookingForm() {
+    document.getElementById('bookingStep1').style.display = 'block';
+    document.getElementById('bookingStep2').style.display = 'none';
+    document.getElementById('customerName').value = '';
+    document.getElementById('customerPhone').value = '';
+    document.getElementById('customerEmail').value = '';
+    document.getElementById('customerAddress').value = '';
+    document.getElementById('serviceNotes').value = '';
+}
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>GreenGlo Cleaners</h3>
-                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
-                        Professional eco-friendly cleaning services for homes and offices across London.
-                    </p>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="https://instagram.com/greenglocleaningco" class="social-link"><i
-                                class="fab fa-instagram"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Our Services</h3>
-                    <ul class="footer-links">
-                        <li><a href="services.html">Domestic cleaning</a></li>
-                        <li><a href="services.html">One-off cleaning</a></li>
-                        <li><a href="services.html">End of tenancy cleaning</a></li>
-                        <li><a href="services.html">Carpet cleaning</a></li>
-                        <li><a href="services.html">Office cleaning</a></li>
-                        <li><a href="services.html">View all services</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
-                        <li><a href="index.html#faq">FAQ</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Contact Us</h3>
-                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
-                        <i class="fas fa-phone" style="margin-right: 0.5rem;"></i> 07827 784204
-                    </p>
-                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
-                        <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> greenglocleaning@gmail.com
-                    </p>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>GreenGlo Cleaners London © 2025. All rights reserved | <a href="#">Privacy Policy</a> | <a
-                        href="#">Terms of Service</a></p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript -->
-    <script>
-        // ===== Supabase Configuration =====
-        // Replace with your actual Supabase URL and Anon Key from your admin page
+// Load available time slots from Supabase
+async function loadServiceTimeSlots(date) {
+    const container = document.getElementById('serviceTimeSlots');
+    container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin"></i> Loading available slots...</div>';
+    
+    try {
+        // Use the same Supabase configuration as admin
         const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // ===== Mobile Navigation =====
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const navMenu = document.getElementById('navMenu');
-        const navbar = document.getElementById('navbar');
-        const navLinks = document.querySelectorAll('.nav-link');
-
-        // Function to open mobile menu
-        const openMobileMenu = () => {
-            navMenu.classList.add('active');
-            mobileMenuOverlay.classList.add('active');
-            mobileMenuBtn.classList.add('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-            document.body.style.overflow = 'hidden';
-        };
-
-        // Function to close mobile menu
-        const closeMobileMenu = () => {
-            navMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-            mobileMenuBtn.classList.remove('active');
-            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            document.body.style.overflow = '';
-        };
-
-        // Toggle Mobile Menu
-        mobileMenuBtn.addEventListener('click', () => {
-            if (navMenu.classList.contains('active')) {
-                closeMobileMenu();
-            } else {
-                openMobileMenu();
-            }
-        });
-
-        // Close Mobile Menu with Close Button
-        mobileCloseBtn.addEventListener('click', closeMobileMenu);
-
-        // Close Mobile Menu with Overlay Click
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-
-        // Close Mobile Menu on Link Click
-        navLinks.forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
-
-        // Close menu on Escape key press
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-                closeMobileMenu();
-            }
-        });
-
-        // Navbar Scroll Effect
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // ===== Booking System Variables =====
-        const bookingModal = document.getElementById('bookingModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
-        const confirmBookingBtn = document.getElementById('confirmBookingBtn');
-        const bookingForm = document.getElementById('bookingForm');
-        const bookingConfirmation = document.getElementById('bookingConfirmation');
-        const newBookingBtn = document.getElementById('newBookingBtn');
-        const serviceTypeSelect = document.getElementById('serviceType');
-        const timeSlotsGrid = document.getElementById('timeSlotsGrid');
-        const selectedSlotInfo = document.getElementById('selectedSlotInfo');
-        const selectedSlotTime = document.getElementById('selectedSlotTime');
-        const selectedSlotDuration = document.getElementById('selectedSlotDuration');
-        const prevDayBtn = document.getElementById('prevDayBtn');
-        const nextDayBtn = document.getElementById('nextDayBtn');
-        const currentDateDisplay = document.getElementById('currentDateDisplay');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const statusMessage = document.getElementById('statusMessage');
-        const formSection = document.getElementById('formSection');
-        const slotsSection = document.getElementById('slotsSection');
-
-        // Booking state
-        let currentBooking = {
-            service: null,
-            date: null,
-            timeSlot: null,
-            duration: null,
-            bookingId: null
-        };
-
-        // ===== Booking Modal Functions =====
-        function openBookingModal(serviceTitle, serviceDuration) {
-            // Set service information
-            currentBooking.service = serviceTitle;
-            currentBooking.duration = serviceDuration;
-            
-            // Set current date
-            const today = new Date();
-            currentBooking.date = today;
-            updateDateDisplay(today);
-            
-            // Set service type dropdown
-            serviceTypeSelect.innerHTML = `<option value="${serviceTitle}" selected>${serviceTitle}</option>`;
-            
-            // Update booking summary
-            updateBookingSummary();
-            
-            // Show modal
-            bookingModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            // Reset form
-            resetBookingForm();
-            
-            // Reset confirm button state
-            confirmBookingBtn.disabled = true;
-            selectedSlotInfo.style.display = 'none';
-            statusMessage.className = 'status-message';
-            statusMessage.textContent = '';
-            
-            // Load available time slots from database
-            loadAvailableTimeSlotsFromDB(today);
-        }
-
-        function closeBookingModal() {
-            bookingModal.classList.remove('active');
-            document.body.style.overflow = '';
-            // Reset to booking form view
-            bookingForm.style.display = 'grid';
-            bookingConfirmation.classList.remove('active');
-            formSection.style.display = 'block';
-            slotsSection.style.display = 'block';
-            loadingSpinner.style.display = 'none';
-        }
-
-        async function loadAvailableTimeSlotsFromDB(date) {
-            loadingSpinner.style.display = 'block';
-            timeSlotsGrid.innerHTML = '';
-            
-            try {
-                const dateStr = date.toISOString().split('T')[0];
-                
-                // Load available time slots from Supabase
-                const { data: availableSlots, error } = await supabase
-                    .from('availability')
-                    .select('*')
-                    .eq('date', dateStr)
-                    .eq('is_available', true)
-                    .order('time_slot', { ascending: true });
-                
-                if (error) {
-                    console.error('Error loading time slots from database:', error);
-                    showStatusMessage('Error loading available time slots. Please try again.', 'error');
-                    // Fallback to sample slots if database error
-                    generateSampleTimeSlots();
-                    return;
-                }
-                
-                // Clear previous error message
-                statusMessage.className = 'status-message';
-                statusMessage.textContent = '';
-                
-                // If no slots in database, insert sample slots
-                if (!availableSlots || availableSlots.length === 0) {
-                    await initializeSampleAvailability(date);
-                    // Reload slots after initialization
-                    await loadAvailableTimeSlotsFromDB(date);
-                    return;
-                }
-                
-                // Generate time slot buttons from database
-                generateTimeSlotsFromDB(availableSlots);
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showStatusMessage('Error loading available time slots. Please try again.', 'error');
-                // Fallback to sample slots
-                generateSampleTimeSlots();
-            } finally {
-                loadingSpinner.style.display = 'none';
-            }
-        }
-
-        async function initializeSampleAvailability(date) {
-            const dateStr = date.toISOString().split('T')[0];
-            
-            // Sample time slots
-            const sampleTimeSlots = [
-                '09:00-10:00',
-                '10:00-11:00',
-                '11:00-12:00',
-                '13:00-14:00',
-                '14:00-15:00',
-                '15:00-16:00',
-                '16:00-17:00'
-            ];
-            
-            try {
-                // Insert sample slots into database
-                const slotsToInsert = sampleTimeSlots.map(timeSlot => ({
-                    date: dateStr,
-                    time_slot: timeSlot,
-                    is_available: true
-                }));
-                
-                const { error } = await supabase
-                    .from('availability')
-                    .insert(slotsToInsert);
-                
-                if (error) {
-                    console.error('Error initializing sample availability:', error);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-
-        function generateTimeSlotsFromDB(availableSlots) {
-            timeSlotsGrid.innerHTML = '';
-            
-            if (!availableSlots || availableSlots.length === 0) {
-                timeSlotsGrid.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--medium-gray); grid-column: 1 / -1;">
-                        <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                        <p>No available time slots for this date.</p>
-                        <p>Please select another date.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            availableSlots.forEach(slot => {
-                const slotElement = document.createElement('div');
-                slotElement.className = 'time-slot';
-                slotElement.textContent = formatTimeSlot(slot.time_slot);
-                slotElement.dataset.time = slot.time_slot;
-                slotElement.dataset.slotId = slot.id;
-                
-                slotElement.addEventListener('click', () => selectTimeSlot(slotElement, slot.time_slot));
-                
-                timeSlotsGrid.appendChild(slotElement);
-            });
-        }
-
-        function generateSampleTimeSlots() {
-            timeSlotsGrid.innerHTML = '';
-            
-            // Sample time slots for fallback
-            const sampleSlots = [
-                '09:00 AM - 11:00 AM',
-                '11:00 AM - 01:00 PM',
-                '01:00 PM - 03:00 PM',
-                '03:00 PM - 05:00 PM',
-                '05:00 PM - 07:00 PM'
-            ];
-            
-            sampleSlots.forEach(slot => {
-                const slotElement = document.createElement('div');
-                slotElement.className = 'time-slot';
-                slotElement.textContent = slot;
-                slotElement.dataset.time = slot;
-                
-                slotElement.addEventListener('click', () => selectTimeSlot(slotElement, slot));
-                
-                timeSlotsGrid.appendChild(slotElement);
-            });
-            
-            showStatusMessage('Using sample time slots. Database connection issue.', 'info');
-        }
-
-        function formatTimeSlot(timeSlot) {
-            // Convert 24-hour format to 12-hour format for display
-            if (timeSlot.includes('-')) {
-                const [start, end] = timeSlot.split('-');
-                return `${formatTime(start)} - ${formatTime(end)}`;
-            }
-            return timeSlot;
-        }
-
-        function formatTime(timeStr) {
-            // Convert 24-hour time to 12-hour format
-            const [hours, minutes] = timeStr.split(':');
-            const hour = parseInt(hours);
-            const ampm = hour >= 12 ? 'PM' : 'AM';
-            const formattedHour = hour % 12 || 12;
-            return `${formattedHour}:${minutes} ${ampm}`;
-        }
-
-        function updateDateDisplay(date) {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            currentDateDisplay.textContent = date.toLocaleDateString('en-US', options);
-            
-            // Update summary
-            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            document.getElementById('summaryDate').textContent = dateStr;
-        }
-
-        function selectTimeSlot(slotElement, timeSlot) {
-            // Remove previous selection
-            document.querySelectorAll('.time-slot.selected').forEach(slot => {
-                slot.classList.remove('selected');
-            });
-            
-            // Set new selection
-            slotElement.classList.add('selected');
-            
-            // Update current booking
-            currentBooking.timeSlot = timeSlot;
-            
-            // Show selection info
-            selectedSlotTime.textContent = formatTimeSlot(timeSlot);
-            selectedSlotDuration.textContent = currentBooking.duration;
-            selectedSlotInfo.style.display = 'block';
-            
-            // Update summary
-            document.getElementById('summaryTime').textContent = formatTimeSlot(timeSlot);
-            
-            // Enable confirm button
-            confirmBookingBtn.disabled = false;
-            
-            // Update booking summary
-            updateBookingSummary();
-        }
-
-        function updateBookingSummary() {
-            // Service
-            document.getElementById('summaryService').textContent = currentBooking.service || '-';
-            
-            // Date
-            if (currentBooking.date) {
-                const dateStr = currentBooking.date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                });
-                document.getElementById('summaryDate').textContent = dateStr;
-            }
-            
-            // Time
-            document.getElementById('summaryTime').textContent = currentBooking.timeSlot ? formatTimeSlot(currentBooking.timeSlot) : '-';
-            
-            // Estimated price (based on service type)
-            let estimatedPrice = '£60-£120';
-            if (currentBooking.service) {
-                if (currentBooking.service.includes('Deep') || currentBooking.service.includes('Oven')) {
-                    estimatedPrice = '£80-£150';
-                } else if (currentBooking.service.includes('Office')) {
-                    estimatedPrice = '£120-£300';
-                } else if (currentBooking.service.includes('Carpet') || currentBooking.service.includes('Patio')) {
-                    estimatedPrice = '£100-£200';
-                }
-            }
-            document.getElementById('summaryTotal').textContent = estimatedPrice;
-        }
-
-        function resetBookingForm() {
-            document.getElementById('customerBookingForm').reset();
-            document.querySelectorAll('.time-slot.selected').forEach(slot => {
-                slot.classList.remove('selected');
-            });
-            selectedSlotInfo.style.display = 'none';
-            confirmBookingBtn.disabled = true;
-            currentBooking.timeSlot = null;
-            updateBookingSummary();
-            statusMessage.className = 'status-message';
-            statusMessage.textContent = '';
-        }
-
-        function showStatusMessage(message, type) {
-            statusMessage.textContent = message;
-            statusMessage.className = `status-message ${type}`;
-        }
-
-        async function submitBooking() {
-            // Collect form data
-            const customerName = document.getElementById('customerName').value.trim();
-            const customerEmail = document.getElementById('customerEmail').value.trim();
-            const customerPhone = document.getElementById('customerPhone').value.trim();
-            const customerAddress = document.getElementById('customerAddress').value.trim();
-            const specialInstructions = document.getElementById('specialInstructions').value.trim();
-            
-            // Validate form
-            if (!customerName || !customerEmail || !customerPhone || !customerAddress || !currentBooking.timeSlot) {
-                showStatusMessage('Please fill in all required fields and select a time slot.', 'error');
-                return;
-            }
-
-            // Validate email format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(customerEmail)) {
-                showStatusMessage('Please enter a valid email address.', 'error');
-                return;
-            }
-
-            showStatusMessage('Processing your booking...', 'success');
-            confirmBookingBtn.disabled = true;
-            confirmBookingBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-            try {
-                const bookingDate = currentBooking.date.toISOString().split('T')[0];
-                
-                // 1. Insert booking into database
-                const { data: bookingData, error: bookingError } = await supabase
-                    .from('bookings')
-                    .insert({
-                        customer_name: customerName,
-                        customer_email: customerEmail,
-                        customer_phone: customerPhone,
-                        service_address: customerAddress,
-                        special_instructions: specialInstructions,
-                        booking_date: bookingDate,
-                        time_slot: currentBooking.timeSlot,
-                        service_type: currentBooking.service,
-                        status: 'confirmed'
-                    })
-                    .select(); // Returns the inserted row
-
-                if (bookingError) {
-                    console.error('Booking error:', bookingError);
-                    showStatusMessage('Failed to save booking to database. Please try again.', 'error');
-                    confirmBookingBtn.disabled = false;
-                    confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
-                    return;
-                }
-
-                // Save booking ID
-                currentBooking.bookingId = bookingData[0].id;
-
-                // 2. Update availability table
-                const { error: availabilityError } = await supabase
-                    .from('availability')
-                    .update({ is_available: false })
-                    .eq('date', bookingDate)
-                    .eq('time_slot', currentBooking.timeSlot);
-
-                if (availabilityError) {
-                    console.error('Availability update error:', availabilityError);
-                    // Continue anyway since booking was successful
-                }
-
-                // 3. Show confirmation with database ID
-                showBookingConfirmation();
-
-            } catch (error) {
-                console.error('Error during booking submission:', error);
-                showStatusMessage('An error occurred. Please try again or contact support.', 'error');
-                confirmBookingBtn.disabled = false;
-                confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
-            }
-        }
-
-        function showBookingConfirmation() {
-            // Hide form, show confirmation message
-            bookingForm.style.display = 'none';
-            bookingConfirmation.classList.add('active');
-            
-            // Update confirmation details
-            document.getElementById('confirmationBookingId').textContent = currentBooking.bookingId;
-            document.getElementById('confirmationService').textContent = currentBooking.service;
-            document.getElementById('confirmationDate').textContent = currentBooking.date.toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
-            });
-            document.getElementById('confirmationTime').textContent = formatTimeSlot(currentBooking.timeSlot);
-            
-            // Reset confirm button state
-            confirmBookingBtn.disabled = false;
-            confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
-        }
-
-        // ===== Event Listeners =====
-        closeModalBtn.addEventListener('click', closeBookingModal);
-        cancelBookingBtn.addEventListener('click', closeBookingModal);
-
-        // Close modal when clicking outside
-        bookingModal.addEventListener('click', (e) => {
-            if (e.target === bookingModal) {
-                closeBookingModal();
-            }
-        });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && bookingModal.classList.contains('active')) {
-                closeBookingModal();
-            }
-        });
-
-        prevDayBtn.addEventListener('click', () => {
-            const newDate = new Date(currentBooking.date);
-            newDate.setDate(newDate.getDate() - 1);
-            currentBooking.date = newDate;
-            updateDateDisplay(newDate);
-            loadAvailableTimeSlotsFromDB(newDate);
-            selectedSlotInfo.style.display = 'none';
-            confirmBookingBtn.disabled = true;
-            updateBookingSummary();
-        });
-
-        nextDayBtn.addEventListener('click', () => {
-            const newDate = new Date(currentBooking.date);
-            newDate.setDate(newDate.getDate() + 1);
-            currentBooking.date = newDate;
-            updateDateDisplay(newDate);
-            loadAvailableTimeSlotsFromDB(newDate);
-            selectedSlotInfo.style.display = 'none';
-            confirmBookingBtn.disabled = true;
-            updateBookingSummary();
-        });
-
-        confirmBookingBtn.addEventListener('click', submitBooking);
-
-        newBookingBtn.addEventListener('click', () => {
-            // Reset for new booking
-            bookingConfirmation.classList.remove('active');
-            bookingForm.style.display = 'grid';
-            resetBookingForm();
-            const today = new Date();
-            currentBooking.date = today;
-            updateDateDisplay(today);
-            loadAvailableTimeSlotsFromDB(today);
-        });
-
-        // ===== Services Data =====
-        const servicesData = [
-            {
-                id: 1,
-                title: "Living Room Transformation",
-                category: "domestic",
-                description: "Complete living room cleaning and organization after a renovation project. We removed all construction dust and debris, leaving the space spotless and ready for furniture.",
-                features: [
-                    "Complete dust and debris removal",
-                    "Post-construction cleanup",
-                    "Furniture arrangement preparation",
-                    "Eco-friendly product usage"
-                ],
-                duration: "2-4 hours",
-                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 2,
-                title: "Office Space Deep Clean",
-                category: "office",
-                description: "Professional office cleaning for a tech startup in Shoreditch. We cleaned all workstations, meeting rooms, and common areas using eco-friendly products.",
-                features: [
-                    "Workstation sanitization",
-                    "Meeting room cleaning",
-                    "Common area maintenance",
-                    "Eco-friendly product usage"
-                ],
-                duration: "3-6 hours",
-                image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 3,
-                title: "Kitchen Deep Cleaning",
-                category: "domestic",
-                description: "Kitchen deep clean including oven cleaning, cabinet organization, and appliance sanitization. All surfaces were cleaned with our non-toxic eco-friendly solutions.",
-                features: [
-                    "Oven deep cleaning",
-                    "Cabinet organization",
-                    "Appliance sanitization",
-                    "Non-toxic eco-friendly solutions"
-                ],
-                duration: "2-3 hours",
-                image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 4,
-                title: "Oven Deep Clean",
-                category: "deep",
-                description: "Professional oven cleaning service. Interior, door, and racks deep-cleaned to a pristine, as-new condition.",
-                features: [
-                    "Complete interior cleaning",
-                    "Door and glass cleaning",
-                    "Rack deep-cleaning",
-                    "As-new condition restoration"
-                ],
-                duration: "1-2 hours",
-                image: "https://images.unsplash.com/photo-1584132915807-fd1f5fbc078f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 5,
-                title: "Bathroom Makeover",
-                category: "deep",
-                description: "Complete bathroom cleaning and sanitization. We removed hard water stains, mildew, and thoroughly cleaned all fixtures to like-new condition.",
-                features: [
-                    "Hard water stain removal",
-                    "Mildew treatment",
-                    "Fixture deep cleaning",
-                    "Complete sanitization"
-                ],
-                duration: "1-2 hours",
-                image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 6,
-                title: "Garden Maintenance",
-                category: "special",
-                description: "Expert turf laying, featuring ground levelling, premium turf, and expert installation for an instant, lush transformation.",
-                features: [
-                    "Ground levelling",
-                    "Premium turf installation",
-                    "Expert installation",
-                    "Instant transformation"
-                ],
-                duration: "4-8 hours",
-                image: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 7,
-                title: "Carpet Restoration",
-                category: "deep",
-                description: "Deep carpet cleaning and stain removal for a family home in Chelsea. We removed pet stains and restored the original color of the carpets.",
-                features: [
-                    "Deep carpet cleaning",
-                    "Pet stain removal",
-                    "Color restoration",
-                    "Professional equipment use"
-                ],
-                duration: "2-4 hours",
-                image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 8,
-                title: "Patio Cleaning",
-                category: "special",
-                description: "Professional patio cleaning featuring pressure washing and moss treatment for a restored, spotless surface.",
-                features: [
-                    "Pressure washing",
-                    "Moss treatment",
-                    "Surface restoration",
-                    "Spotless finish"
-                ],
-                duration: "2-3 hours",
-                image: "https://images.unsplash.com/photo-1560493676-04071c5f467b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 9,
-                title: "End of Tenancy Clean",
-                category: "domestic",
-                description: "Complete apartment cleaning for move-out inspection. Met all landlord requirements and ensured the full deposit was returned to the tenant.",
-                features: [
-                    "Complete apartment cleaning",
-                    "Landlord requirement compliance",
-                    "Move-out inspection ready",
-                    "Deposit return guarantee"
-                ],
-                duration: "3-5 hours",
-                image: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            },
-            {
-                id: 10,
-                title: "Property Maintenance",
-                category: "special",
-                description: "Professional flooring installation featuring precise measurement and expert fitting for a seamless, durable finish.",
-                features: [
-                    "Precise measurement",
-                    "Expert fitting",
-                    "Seamless finish",
-                    "Durable installation"
-                ],
-                duration: "4-6 hours",
-                image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-            }
-        ];
-
-        // ===== Render Services =====
-        const servicesGrid = document.getElementById('servicesGrid');
-
-        function renderServices(category = 'all') {
-            servicesGrid.innerHTML = '';
-
-            const filteredServices = category === 'all'
-                ? servicesData
-                : servicesData.filter(service => service.category === category);
-
-            filteredServices.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card';
-                serviceCard.setAttribute('data-category', service.category);
-
-                serviceCard.innerHTML = `
-                    <div class="service-image" style="background-image: url('${service.image}');">
-                        <div class="service-overlay">
-                            <h3>${service.title}</h3>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        <p class="service-description">${service.description}</p>
-                        <ul class="service-features">
-                            ${service.features.map(feature => `
-                                <li><i class="fas fa-check"></i>${feature}</li>
-                            `).join('')}
-                        </ul>
-                        <div class="service-meta">
-                            <div class="service-duration">
-                                <i class="far fa-clock"></i>
-                                <span>${service.duration}</span>
-                            </div>
-                            <button class="btn book-now-btn" data-service="${service.title}" data-duration="${service.duration}" style="padding: 0.75rem 1.5rem;">
-                                <i class="fas fa-calendar-check"></i>
-                                Book Now
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                servicesGrid.appendChild(serviceCard);
-            });
-
-            // Add event listeners to all "Book Now" buttons
-            document.querySelectorAll('.book-now-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const serviceTitle = this.getAttribute('data-service');
-                    const serviceDuration = this.getAttribute('data-duration');
-                    openBookingModal(serviceTitle, serviceDuration);
-                });
-            });
-
-            // Add loading animation
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-            });
-
-            const elementObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            serviceCards.forEach(el => elementObserver.observe(el));
-        }
-
-        // ===== Category Filtering =====
-        const categoryButtons = document.querySelectorAll('.category-btn');
-
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
-                // Add active class to clicked button
-                button.classList.add('active');
-
-                const category = button.getAttribute('data-category');
-                renderServices(category);
-            });
-        });
-
-        // ===== Smooth Scrolling =====
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                if (this.getAttribute('href') === '#') return;
-
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-
-        // ===== Initialize Database Connection =====
-        async function initializeDatabase() {
-            try {
-                // Test database connection
-                const { data, error } = await supabase
-                    .from('availability')
-                    .select('count')
-                    .limit(1);
-                
-                if (error) {
-                    console.warn('Database connection issue:', error.message);
-                    showGlobalStatus('Database connection issue. Some features may be limited.', 'info');
-                } else {
-                    console.log('Database connection successful');
-                }
-            } catch (error) {
-                console.error('Database initialization error:', error);
-            }
-        }
-
-        function showGlobalStatus(message, type) {
-            // Create a global status message if needed
-            const existingStatus = document.getElementById('globalStatusMessage');
-            if (existingStatus) {
-                existingStatus.remove();
-            }
-            
-            const statusDiv = document.createElement('div');
-            statusDiv.id = 'globalStatusMessage';
-            statusDiv.className = `status-message ${type}`;
-            statusDiv.style.position = 'fixed';
-            statusDiv.style.top = '80px';
-            statusDiv.style.left = '50%';
-            statusDiv.style.transform = 'translateX(-50%)';
-            statusDiv.style.zIndex = '1000';
-            statusDiv.style.width = '90%';
-            statusDiv.style.maxWidth = '500px';
-            statusDiv.textContent = message;
-            
-            document.body.appendChild(statusDiv);
-            
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                if (statusDiv.parentNode) {
-                    statusDiv.parentNode.removeChild(statusDiv);
-                }
-            }, 5000);
-        }
-
-        // Initial render
-        renderServices();
+        const { data: availability, error } = await db
+            .from('availability')
+            .select('*')
+            .eq('date', date)
+            .eq('is_available', true)
+            .order('time_slot');
         
-        // Initialize database connection on page load
-        window.addEventListener('DOMContentLoaded', initializeDatabase);
-    </script>
-</body>
+        if (error) throw error;
+        
+        container.innerHTML = '';
+        
+        if (!availability || availability.length === 0) {
+            container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--medium-gray);">No available slots for this date. Please select another date.</div>';
+            return;
+        }
+        
+        availability.forEach(slot => {
+            const [start, end] = slot.time_slot.split('-');
+            const slotElement = document.createElement('div');
+            slotElement.className = 'time-slot-option';
+            slotElement.dataset.slotId = slot.id;
+            slotElement.dataset.timeSlot = slot.time_slot;
+            slotElement.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-weight: 600; color: var(--dark-green);">${formatTime(start)}</div>
+                    <div style="font-size: 12px; color: var(--medium-gray);">to ${formatTime(end)}</div>
+                </div>
+            `;
+            
+            slotElement.addEventListener('click', function() {
+                document.querySelectorAll('.time-slot-option').forEach(s => {
+                    s.style.border = '2px solid #e5e7eb';
+                    s.style.background = 'white';
+                });
+                this.style.border = '2px solid var(--primary-green)';
+                this.style.background = 'var(--light-green)';
+                currentBookingService.timeSlot = slot.time_slot;
+                currentBookingService.slotId = slot.id;
+            });
+            
+            container.appendChild(slotElement);
+        });
+        
+    } catch (err) {
+        console.error('Error loading time slots:', err);
+        container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 20px; color: var(--red);">Error loading time slots. Please try again.</div>';
+    }
+}
 
-</html>
+// Date change listener
+document.getElementById('serviceBookingDate').addEventListener('change', function() {
+    loadServiceTimeSlots(this.value);
+    currentBookingService.date = this.value;
+});
+
+function formatTime(time) {
+    const [hour, minute] = time.split(':');
+    const hourNum = parseInt(hour);
+    const suffix = hourNum >= 12 ? 'PM' : 'AM';
+    const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
+    return `${displayHour}:${minute} ${suffix}`;
+}
+
+function nextToCustomerDetails() {
+    if (!currentBookingService.timeSlot) {
+        alert('Please select a time slot');
+        return;
+    }
+    
+    document.getElementById('bookingStep1').style.display = 'none';
+    document.getElementById('bookingStep2').style.display = 'block';
+}
+
+function backToDateSelection() {
+    document.getElementById('bookingStep2').style.display = 'none';
+    document.getElementById('bookingStep1').style.display = 'block';
+}
+
+async function confirmServiceBooking() {
+    const customerName = document.getElementById('customerName').value.trim();
+    const customerPhone = document.getElementById('customerPhone').value.trim();
+    const customerEmail = document.getElementById('customerEmail').value.trim();
+    const customerAddress = document.getElementById('customerAddress').value.trim();
+    
+    if (!customerName || !customerPhone || !customerAddress) {
+        alert('Please fill in all required fields (Name, Phone, and Address)');
+        return;
+    }
+    
+    if (!currentBookingService.timeSlot) {
+        alert('Please select a time slot');
+        return;
+    }
+    
+    try {
+        const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // 1. Check if slot is still available
+        const { data: slotCheck, error: checkError } = await db
+            .from('availability')
+            .select('*')
+            .eq('id', currentBookingService.slotId)
+            .eq('is_available', true)
+            .single();
+        
+        if (checkError || !slotCheck) {
+            alert('This time slot is no longer available. Please select another.');
+            loadServiceTimeSlots(currentBookingService.date);
+            return;
+        }
+        
+        // 2. Create booking
+        const bookingData = {
+            service_title: currentBookingService.title,
+            service_id: currentBookingService.id,
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            customer_email: customerEmail,
+            customer_address: customerAddress,
+            booking_date: currentBookingService.date,
+            time_slot: currentBookingService.timeSlot,
+            notes: document.getElementById('serviceNotes').value.trim(),
+            status: 'confirmed',
+            created_at: new Date().toISOString()
+        };
+        
+        const { data: booking, error: bookingError } = await db
+            .from('bookings')
+            .insert([bookingData])
+            .select()
+            .single();
+        
+        if (bookingError) throw bookingError;
+        
+        // 3. Update availability
+        const { error: updateError } = await db
+            .from('availability')
+            .update({ is_available: false })
+            .eq('id', currentBookingService.slotId);
+        
+        if (updateError) throw updateError;
+        
+        // 4. Show success and send WhatsApp notification
+        alert(`✅ Booking confirmed!\n\nService: ${currentBookingService.title}\nDate: ${currentBookingService.date}\nTime: ${currentBookingService.timeSlot}\n\nWe'll contact you at ${customerPhone} to confirm details.`);
+        
+        // Send WhatsApp notification
+        const message = encodeURIComponent(
+            `📅 NEW BOOKING FROM WEBSITE\n\n` +
+            `Service: ${currentBookingService.title}\n` +
+            `Customer: ${customerName}\n` +
+            `Phone: ${customerPhone}\n` +
+            `Date: ${currentBookingService.date}\n` +
+            `Time: ${currentBookingService.timeSlot}\n` +
+            `Address: ${customerAddress}`
+        );
+        
+        window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${message}`, '_blank');
+        
+        // Close modal
+        closeServiceBookingModal();
+        
+    } catch (err) {
+        console.error('Error confirming booking:', err);
+        alert('Error processing booking. Please try again or contact us directly.');
+    }
+}
+
+// Update the services page button to open booking modal
+// Replace the existing "Inquire Now" button code in services.html with:
+function updateServiceButtons() {
+    document.querySelectorAll('.service-card .btn').forEach(button => {
+        const serviceTitle = button.closest('.service-card').querySelector('h3').textContent;
+        const serviceId = button.closest('.service-card').dataset.category || '1';
+        
+        button.onclick = function(e) {
+            e.preventDefault();
+            openServiceBooking(serviceId, serviceTitle);
+        };
+        
+        button.innerHTML = '<i class="fas fa-calendar-check"></i> Book Now';
+    });
+}
+
+// Run when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    updateServiceButtons();
+    
+    // Add modal styles
+    const modalStyles = `
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        .modal {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .time-slot-option {
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .time-slot-option:hover {
+            border-color: var(--primary-green);
+        }
+    `;
+    
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = modalStyles;
+    document.head.appendChild(styleSheet);
+});
+</script>
