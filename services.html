@@ -554,6 +554,286 @@
             margin: 0 auto 3rem;
         }
 
+        /* ===== 预订模态框样式 ===== */
+        .booking-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 1rem;
+        }
+
+        .booking-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            transform: translateY(30px);
+            transition: transform 0.4s ease;
+        }
+
+        .booking-modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            position: relative;
+        }
+
+        .modal-header h3 {
+            font-size: 1.75rem;
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            color: var(--medium-gray);
+            font-size: 1rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--light-green);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background: var(--mint);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .booking-form-section,
+        .time-slots-section {
+            padding: 1.5rem;
+            background: var(--off-white);
+            border-radius: var(--border-radius);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .service-select {
+            background-color: var(--light-green);
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        .calendar-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-btn {
+            background: var(--white);
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .calendar-btn:hover {
+            background: var(--primary-green);
+            color: var(--white);
+        }
+
+        .current-date {
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1.1rem;
+        }
+
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .time-slot {
+            padding: 1rem;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .time-slot:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .time-slot.selected {
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow);
+        }
+
+        .time-slot.unavailable {
+            background: var(--light-gray);
+            color: var(--medium-gray);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .time-slot.unavailable:hover {
+            transform: none;
+            border-color: var(--light-gray);
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--off-white);
+        }
+
+        .booking-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .summary-label {
+            color: var(--medium-gray);
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--dark-green);
+        }
+
+        /* ===== 预订确认消息 ===== */
+        .booking-confirmation {
+            display: none;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .booking-confirmation.active {
+            display: block;
+        }
+
+        .confirmation-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.5rem;
+            color: var(--white);
+        }
+
+        .confirmation-message h4 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: var(--dark-green);
+        }
+
+        .confirmation-message p {
+            color: var(--medium-gray);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         /* ===== Premium Footer ===== */
         .footer {
             background: var(--dark-green);
@@ -769,6 +1049,20 @@
                 background: var(--mint);
                 transform: rotate(90deg);
             }
+
+            .modal-content {
+                max-height: 95vh;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .modal-footer {
+                padding: 1.5rem;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -786,6 +1080,20 @@
 
             .service-content {
                 padding: 1.5rem;
+            }
+
+            .modal-header {
+                padding: 1.5rem 1.5rem 1rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .booking-form-section,
+            .time-slots-section {
+                padding: 1rem;
             }
         }
     </style>
@@ -842,460 +1150,134 @@
             </ul>
         </div>
     </nav>
-    <div class="whatsapp-float">
-        <div class="whatsapp-message-bubble" id="whatsappBubble">
-            <button class="close-bubble" onclick="closeBubble()">×</button>
-            <div class="message-header">
-                <div class="message-avatar">GG</div>
-                <div class="message-info">
-                    <h4>Green Glo Cleaning Co</h4>
-                    <p id="statusText">Typically replies in 24 hours</p>
+
+    <!-- 预订模态框 -->
+    <div class="booking-modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-modal" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h3>Book Your Cleaning Service</h3>
+                <p class="modal-subtitle">Select your preferred date and time slot</p>
+            </div>
+
+            <div class="modal-body" id="bookingForm">
+                <!-- 左侧：预订表单 -->
+                <div class="booking-form-section">
+                    <form id="customerBookingForm">
+                        <div class="form-group">
+                            <label for="serviceType">Service Type</label>
+                            <select id="serviceType" class="form-control service-select" disabled>
+                                <option value="">Select a service</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerName">Full Name *</label>
+                            <input type="text" id="customerName" class="form-control" placeholder="Enter your full name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerEmail">Email Address *</label>
+                            <input type="email" id="customerEmail" class="form-control" placeholder="Enter your email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerPhone">Phone Number *</label>
+                            <input type="tel" id="customerPhone" class="form-control" placeholder="Enter your phone number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customerAddress">Service Address *</label>
+                            <textarea id="customerAddress" class="form-control" rows="3" placeholder="Enter full address for service" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="specialInstructions">Special Instructions</label>
+                            <textarea id="specialInstructions" class="form-control" rows="3" placeholder="Any special requirements or instructions"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 右侧：时间段选择 -->
+                <div class="time-slots-section">
+                    <div class="calendar-navigation">
+                        <button class="calendar-btn" id="prevDayBtn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="current-date" id="currentDateDisplay">Today</div>
+                        <button class="calendar-btn" id="nextDayBtn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="time-slots-grid" id="timeSlotsGrid">
+                        <!-- 时间段将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div class="selected-slot-info" id="selectedSlotInfo" style="display: none;">
+                        <div style="background: var(--light-green); padding: 1rem; border-radius: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                <strong>Selected Slot:</strong>
+                                <span id="selectedSlotTime">No slot selected</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: var(--dark-gray);">
+                                <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
+                                Duration: <span id="selectedSlotDuration">2-4 hours</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="message-content">
-                Hello! 👋 Need a professional clean? Message us for a free quote or to book a service. We're here to
-                help!
-            </div>
-            <input type="text" class="message-input" id="whatsappMessage" placeholder="Type your message here..."
-                maxlength="200">
-            <button class="send-button" onclick="sendWhatsAppMessage()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z" />
-                </svg>
-                Send to WhatsApp
-            </button>
-        </div>
 
-        <button class="whatsapp-button" id="whatsappButton" onclick="toggleBubble()">
-            <div class="whatsapp-notification" id="whatsappNotification">1</div>
-            <div class="whatsapp-icon-container">
-                <!-- Optimized WhatsApp Logo -->
-                <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
-                    <path
-                        d="M12 0a12 12 0 1 0 12 12A12 12 0 0 0 12 0Zm6.49 15.387l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0-8.858-.416l-1.21 1.21a6.9 6.9 0 0 0-.416 8.858l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0 .416-8.858l1.21-1.21a6.9 6.9 0 0 0 8.858-.416l1.745-1.745a.374.374 0 0 1 .531 0l1.93 1.93a.374.374 0 0 1 0 .53l-1.745 1.745a6.9 6.9 0 0 0 .416 8.858Z" />
-                </svg>
-            </div>
-        </button>
-        <span class="whatsapp-tooltip">Chat with Green Glo Cleaning</span>
-    </div>
-
-    <!-- Floating WhatsApp Button for Green Glo Cleaning Co -->
-    <style>
-        /* WhatsApp Button Core Styles */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 9999;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
-
-        .whatsapp-button {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
-        }
-
-        .whatsapp-button:active {
-            transform: scale(0.95);
-        }
-
-        /* Improved WhatsApp Logo */
-        .whatsapp-icon-container {
-            position: relative;
-            width: 30px;
-            height: 30px;
-        }
-
-        .whatsapp-icon {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            transition: all 0.3s ease;
-        }
-
-        .whatsapp-button:hover .whatsapp-icon {
-            transform: translateY(-2px);
-        }
-
-        /* Notification Badge */
-        .whatsapp-notification {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: linear-gradient(135deg, #FF5252 0%, #FF1744 100%);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: notificationPulse 2s infinite;
-            border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(255, 23, 68, 0.4);
-            z-index: 1;
-        }
-
-        @keyframes notificationPulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
-            }
-
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
-            }
-        }
-
-        /* Message Bubble */
-        .whatsapp-message-bubble {
-            position: absolute;
-            bottom: 75px;
-            right: 0;
-            background: white;
-            border-radius: 18px 18px 0 18px;
-            padding: 15px;
-            width: 280px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: -1;
-        }
-
-        .whatsapp-message-bubble.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .message-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .message-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .message-info h4 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .message-info p {
-            margin: 2px 0 0;
-            font-size: 12px;
-            color: #25D366;
-            font-weight: 500;
-        }
-
-        .message-content {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.4;
-            margin-bottom: 15px;
-        }
-
-        .message-input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 13px;
-            margin-bottom: 10px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .message-input:focus {
-            border-color: #25D366;
-        }
-
-        .send-button {
-            width: 100%;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .send-button:hover {
-            background: linear-gradient(135deg, #22c55e 0%, #0d8a71 100%);
-        }
-
-        .close-bubble {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #999;
-            font-size: 20px;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .close-bubble:hover {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        /* Tooltip */
-        .whatsapp-tooltip {
-            position: absolute;
-            right: 75px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            color: #333;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: -1;
-        }
-
-        .whatsapp-button:hover+.whatsapp-tooltip {
-            opacity: 1;
-            visibility: visible;
-            right: 70px;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .whatsapp-float {
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .whatsapp-button {
-                width: 56px;
-                height: 56px;
-            }
-
-            .whatsapp-message-bubble {
-                width: calc(100vw - 40px);
-                max-width: 320px;
-                right: 0;
-            }
-
-            .whatsapp-tooltip {
-                display: none;
-            }
-        }
-    </style>
-
-    <div class="whatsapp-float">
-        <div class="whatsapp-message-bubble" id="whatsappBubble">
-            <button class="close-bubble" onclick="closeBubble()">×</button>
-            <div class="message-header">
-                <div class="message-avatar">GG</div>
-                <div class="message-info">
-                    <h4>Green Glo Cleaning Co</h4>
-                    <p id="statusText">Typically replies in 24 hours</p>
+            <!-- 预订确认消息 -->
+            <div class="booking-confirmation" id="bookingConfirmation">
+                <div class="confirmation-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="confirmation-message">
+                    <h4>Booking Confirmed!</h4>
+                    <p>Thank you for booking with GreenGlo Cleaners. We've sent a confirmation email with all the details. Our team will contact you shortly to confirm your appointment.</p>
+                    <button class="btn" id="newBookingBtn">
+                        <i class="fas fa-plus"></i>
+                        New Booking
+                    </button>
                 </div>
             </div>
-            <div class="message-content">
-                Hello! 👋 Need a professional clean? Message us for a free quote or to book a service. We're here to
-                help!
-            </div>
-            <input type="text" class="message-input" id="whatsappMessage" placeholder="Type your message here..."
-                maxlength="200">
-            <button class="send-button" onclick="sendWhatsAppMessage()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z" />
-                </svg>
-                Send to WhatsApp
-            </button>
-        </div>
 
-        <button class="whatsapp-button" id="whatsappButton" onclick="toggleBubble()">
-            <div class="whatsapp-notification" id="whatsappNotification">1</div>
-            <div class="whatsapp-icon-container">
-                <!-- Optimized WhatsApp Logo -->
-                <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
-                    <path
-                        d="M12 0a12 12 0 1 0 12 12A12 12 0 0 0 12 0Zm6.49 15.387l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0-8.858-.416l-1.21 1.21a6.9 6.9 0 0 0-.416 8.858l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0 .416-8.858l1.21-1.21a6.9 6.9 0 0 0 8.858-.416l1.745-1.745a.374.374 0 0 1 .531 0l1.93 1.93a.374.374 0 0 1 0 .53l-1.745 1.745a6.9 6.9 0 0 0 .416 8.858Z" />
-                </svg>
+            <div class="modal-footer">
+                <div class="booking-summary" id="bookingSummary">
+                    <div class="summary-item">
+                        <span class="summary-label">Service:</span>
+                        <span class="summary-value" id="summaryService">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Date:</span>
+                        <span class="summary-value" id="summaryDate">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Time:</span>
+                        <span class="summary-value" id="summaryTime">-</span>
+                    </div>
+                    <div class="summary-item" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--light-gray);">
+                        <span class="summary-label" style="font-weight: 700;">Estimated Total:</span>
+                        <span class="summary-value" style="font-size: 1.2rem; color: var(--primary-green);" id="summaryTotal">-</span>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-outline" id="cancelBookingBtn">
+                        Cancel
+                    </button>
+                    <button class="btn" id="confirmBookingBtn" disabled>
+                        <i class="fas fa-calendar-check"></i>
+                        Confirm Booking
+                    </button>
+                </div>
             </div>
-        </button>
-        <span class="whatsapp-tooltip">Chat with Green Glo Cleaning</span>
+        </div>
     </div>
 
-    <script>
-        // Configuration for Green Glo Cleaning Co
-        const whatsappConfig = {
-            phoneNumber: "447827784204", // Your WhatsApp number from the link
-            companyName: "Green Glo Cleaning Co",
-            defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
-        };
-
-        // DOM Elements
-        const whatsappButton = document.getElementById('whatsappButton');
-        const whatsappBubble = document.getElementById('whatsappBubble');
-        const whatsappNotification = document.getElementById('whatsappNotification');
-        const whatsappMessageInput = document.getElementById('whatsappMessage');
-        const statusText = document.getElementById('statusText');
-
-        // Toggle message bubble
-        function toggleBubble() {
-            whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
-        }
-
-        function openBubble() {
-            whatsappBubble.classList.add('active');
-            whatsappMessageInput.focus();
-            whatsappNotification.style.display = 'none';
-            localStorage.setItem('whatsappNotificationRead', 'true');
-        }
-
-        function closeBubble() {
-            whatsappBubble.classList.remove('active');
-        }
-
-        // Send WhatsApp message using your specific link format
-        function sendWhatsAppMessage() {
-            let message = whatsappMessageInput.value.trim();
-            if (!message) message = whatsappConfig.defaultMessage;
-
-            // Encode the message for URL
-            const encodedMessage = encodeURIComponent(message);
-
-            // Construct the URL using your exact WhatsApp API link format
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-
-            // Open the chat in a new tab
-            window.open(whatsappUrl, 'https://api.whatsapp.com/send?phone=447827784204&text=');
-
-            // Close bubble and reset
-            closeBubble();
-            whatsappMessageInput.value = '';
-
-            // Optional: Track the event (for analytics)
-            console.log('WhatsApp message initiated for:', whatsappConfig.companyName);
-        }
-
-        // Manage notifications
-        function checkNotificationStatus() {
-            const notificationRead = localStorage.getItem('whatsappNotificationRead');
-            const lastVisit = localStorage.getItem('lastWhatsAppVisit');
-            const now = new Date().getTime();
-
-            if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
-                whatsappNotification.style.display = 'flex';
-            } else {
-                whatsappNotification.style.display = 'none';
-            }
-            localStorage.setItem('lastWhatsAppVisit', now.toString());
-        }
-
-        // Update status based on working hours
-        function updateWorkingStatus() {
-            const now = new Date();
-            const day = now.getDay(); // 0 = Sunday
-            const hour = now.getHours();
-
-            // Set working hours: Mon-Fri 8am-8pm, Sat 9am-6pm
-            const isWorkingHours = (
-                (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
-                (day === 6 && hour >= 9 && hour < 18)
-            );
-
-            if (statusText) {
-                statusText.textContent = isWorkingHours
-                    ? "Typically replies instantly"
-                    : "Will reply during working hours";
-                statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
-            }
-        }
-
-        // Close bubble when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!whatsappButton.contains(event.target) &&
-                !whatsappBubble.contains(event.target) &&
-                whatsappBubble.classList.contains('active')) {
-                closeBubble();
-            }
-        });
-
-        // Send message on Enter key
-        whatsappMessageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendWhatsAppMessage();
-            }
-        });
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            checkNotificationStatus();
-            updateWorkingStatus();
-
-            // Update status every minute
-            setInterval(updateWorkingStatus, 60000);
-        });
-    </script>
     <!-- Services Hero Section -->
     <section class="services-hero">
         <div class="container">
@@ -1425,7 +1407,6 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
     <script>
         // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1487,6 +1468,264 @@
             } else {
                 navbar.classList.remove('scrolled');
             }
+        });
+
+        // ===== 预订系统变量 =====
+        const bookingModal = document.getElementById('bookingModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBookingBtn = document.getElementById('cancelBookingBtn');
+        const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingConfirmation = document.getElementById('bookingConfirmation');
+        const newBookingBtn = document.getElementById('newBookingBtn');
+        const serviceTypeSelect = document.getElementById('serviceType');
+        const timeSlotsGrid = document.getElementById('timeSlotsGrid');
+        const selectedSlotInfo = document.getElementById('selectedSlotInfo');
+        const selectedSlotTime = document.getElementById('selectedSlotTime');
+        const selectedSlotDuration = document.getElementById('selectedSlotDuration');
+        const prevDayBtn = document.getElementById('prevDayBtn');
+        const nextDayBtn = document.getElementById('nextDayBtn');
+        const currentDateDisplay = document.getElementById('currentDateDisplay');
+
+        // 预订状态
+        let currentBooking = {
+            service: null,
+            date: null,
+            timeSlot: null,
+            customerInfo: {}
+        };
+
+        // 可用时间段数据 (模拟数据 - 在实际应用中应从后端API获取)
+        const availableTimeSlots = [
+            { time: '09:00 AM', available: true, duration: '2 hours' },
+            { time: '10:30 AM', available: true, duration: '2-3 hours' },
+            { time: '12:00 PM', available: true, duration: '3-4 hours' },
+            { time: '02:00 PM', available: true, duration: '2 hours' },
+            { time: '03:30 PM', available: true, duration: '2-3 hours' },
+            { time: '05:00 PM', available: false, duration: '2 hours' },
+            { time: '06:30 PM', available: true, duration: '2-3 hours' },
+        ];
+
+        // ===== 预订模态框函数 =====
+        function openBookingModal(serviceTitle, serviceDuration) {
+            // 设置服务信息
+            currentBooking.service = serviceTitle;
+            currentBooking.serviceDuration = serviceDuration;
+            
+            // 设置当前日期
+            const today = new Date();
+            currentBooking.date = today;
+            updateDateDisplay(today);
+            
+            // 设置服务类型下拉框
+            serviceTypeSelect.innerHTML = `<option value="${serviceTitle}" selected>${serviceTitle}</option>`;
+            
+            // 更新预订摘要
+            updateBookingSummary();
+            
+            // 生成时间段
+            generateTimeSlots();
+            
+            // 显示模态框
+            bookingModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // 重置表单
+            resetBookingForm();
+            
+            // 重置确认按钮状态
+            confirmBookingBtn.disabled = true;
+            selectedSlotInfo.style.display = 'none';
+        }
+
+        function closeBookingModal() {
+            bookingModal.classList.remove('active');
+            document.body.style.overflow = '';
+            // 重置到预订表单视图
+            bookingForm.style.display = 'grid';
+            bookingConfirmation.classList.remove('active');
+        }
+
+        function updateDateDisplay(date) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateDisplay.textContent = date.toLocaleDateString('en-US', options);
+            
+            // 更新摘要
+            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            document.getElementById('summaryDate').textContent = dateStr;
+        }
+
+        function generateTimeSlots() {
+            timeSlotsGrid.innerHTML = '';
+            
+            availableTimeSlots.forEach(slot => {
+                const slotElement = document.createElement('div');
+                slotElement.className = `time-slot ${slot.available ? '' : 'unavailable'}`;
+                slotElement.textContent = slot.time;
+                slotElement.dataset.time = slot.time;
+                slotElement.dataset.duration = slot.duration;
+                slotElement.dataset.available = slot.available;
+                
+                if (slot.available) {
+                    slotElement.addEventListener('click', () => selectTimeSlot(slotElement));
+                }
+                
+                timeSlotsGrid.appendChild(slotElement);
+            });
+        }
+
+        function selectTimeSlot(slotElement) {
+            // 移除之前的选择
+            document.querySelectorAll('.time-slot.selected').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // 设置新选择
+            slotElement.classList.add('selected');
+            
+            // 更新当前预订
+            currentBooking.timeSlot = slotElement.dataset.time;
+            currentBooking.duration = slotElement.dataset.duration;
+            
+            // 显示选择的信息
+            selectedSlotTime.textContent = slotElement.dataset.time;
+            selectedSlotDuration.textContent = slotElement.dataset.duration;
+            selectedSlotInfo.style.display = 'block';
+            
+            // 更新摘要
+            document.getElementById('summaryTime').textContent = slotElement.dataset.time;
+            
+            // 启用确认按钮
+            confirmBookingBtn.disabled = false;
+            
+            // 更新预订摘要
+            updateBookingSummary();
+        }
+
+        function updateBookingSummary() {
+            // 服务
+            document.getElementById('summaryService').textContent = currentBooking.service || '-';
+            
+            // 日期
+            if (currentBooking.date) {
+                const dateStr = currentBooking.date.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+                document.getElementById('summaryDate').textContent = dateStr;
+            }
+            
+            // 时间
+            document.getElementById('summaryTime').textContent = currentBooking.timeSlot || '-';
+            
+            // 估算总价 (基于服务类型)
+            let estimatedPrice = '£60-£120';
+            if (currentBooking.service) {
+                if (currentBooking.service.includes('Deep') || currentBooking.service.includes('Oven')) {
+                    estimatedPrice = '£80-£150';
+                } else if (currentBooking.service.includes('Office')) {
+                    estimatedPrice = '£120-£300';
+                } else if (currentBooking.service.includes('Carpet') || currentBooking.service.includes('Patio')) {
+                    estimatedPrice = '£100-£200';
+                }
+            }
+            document.getElementById('summaryTotal').textContent = estimatedPrice;
+        }
+
+        function resetBookingForm() {
+            document.getElementById('customerBookingForm').reset();
+            document.querySelectorAll('.time-slot.selected').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            selectedSlotInfo.style.display = 'none';
+            confirmBookingBtn.disabled = true;
+            currentBooking.timeSlot = null;
+            updateBookingSummary();
+        }
+
+        function submitBooking() {
+            // 收集表单数据
+            const customerName = document.getElementById('customerName').value;
+            const customerEmail = document.getElementById('customerEmail').value;
+            const customerPhone = document.getElementById('customerPhone').value;
+            const customerAddress = document.getElementById('customerAddress').value;
+            const specialInstructions = document.getElementById('specialInstructions').value;
+            
+            // 验证表单
+            if (!customerName || !customerEmail || !customerPhone || !customerAddress || !currentBooking.timeSlot) {
+                alert('Please fill in all required fields and select a time slot.');
+                return;
+            }
+            
+            // 在实际应用中，这里应该发送数据到后端API
+            // 例如: saveBookingToDatabase({ ...currentBooking, customerInfo: { customerName, customerEmail, etc } })
+            
+            // 显示确认消息
+            bookingForm.style.display = 'none';
+            bookingConfirmation.classList.add('active');
+            
+            // 在实际应用中，这里可以发送确认电子邮件或短信
+            
+            console.log('Booking submitted:', {
+                ...currentBooking,
+                customerInfo: {
+                    name: customerName,
+                    email: customerEmail,
+                    phone: customerPhone,
+                    address: customerAddress,
+                    instructions: specialInstructions
+                }
+            });
+        }
+
+        // ===== 事件监听器 =====
+        closeModalBtn.addEventListener('click', closeBookingModal);
+        cancelBookingBtn.addEventListener('click', closeBookingModal);
+
+        // 点击模态框外部关闭
+        bookingModal.addEventListener('click', (e) => {
+            if (e.target === bookingModal) {
+                closeBookingModal();
+            }
+        });
+
+        // 按ESC键关闭模态框
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && bookingModal.classList.contains('active')) {
+                closeBookingModal();
+            }
+        });
+
+        prevDayBtn.addEventListener('click', () => {
+            const newDate = new Date(currentBooking.date);
+            newDate.setDate(newDate.getDate() - 1);
+            currentBooking.date = newDate;
+            updateDateDisplay(newDate);
+            generateTimeSlots();
+            selectedSlotInfo.style.display = 'none';
+            confirmBookingBtn.disabled = true;
+            updateBookingSummary();
+        });
+
+        nextDayBtn.addEventListener('click', () => {
+            const newDate = new Date(currentBooking.date);
+            newDate.setDate(newDate.getDate() + 1);
+            currentBooking.date = newDate;
+            updateDateDisplay(newDate);
+            generateTimeSlots();
+            selectedSlotInfo.style.display = 'none';
+            confirmBookingBtn.disabled = true;
+            updateBookingSummary();
+        });
+
+        confirmBookingBtn.addEventListener('click', submitBooking);
+
+        newBookingBtn.addEventListener('click', () => {
+            // 重置为新预订
+            bookingConfirmation.classList.remove('active');
+            bookingForm.style.display = 'grid';
+            resetBookingForm();
         });
 
         // ===== Services Data (从 gallery.html 中使用 galleryImages) =====
@@ -1666,15 +1905,24 @@
                                 <i class="far fa-clock"></i>
                                 <span>${service.duration}</span>
                             </div>
-                            <a class="btn" href="https://api.whatsapp.com/send?phone=447827784204&text=Hello, I'm interested in your ${service.title} service. Can you provide more information?" style="padding: 0.75rem 1.5rem;">
-                                <i class="fab fa-whatsapp"></i>
-                                Inquire Now
-                            </a>
+                            <button class="btn book-now-btn" data-service="${service.title}" data-duration="${service.duration}" style="padding: 0.75rem 1.5rem;">
+                                <i class="fas fa-calendar-check"></i>
+                                Book Now
+                            </button>
                         </div>
                     </div>
                 `;
 
                 servicesGrid.appendChild(serviceCard);
+            });
+
+            // 为所有"Book Now"按钮添加事件监听器
+            document.querySelectorAll('.book-now-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const serviceTitle = this.getAttribute('data-service');
+                    const serviceDuration = this.getAttribute('data-duration');
+                    openBookingModal(serviceTitle, serviceDuration);
+                });
             });
 
             // 添加加载动画
