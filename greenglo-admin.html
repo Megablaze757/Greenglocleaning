@@ -384,6 +384,11 @@
             color: var(--red);
         }
 
+        .status-blocked {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--dark-gray);
+        }
+
         .quick-calendar-actions {
             padding: 20px 30px;
             border-top: 1px solid #e5e7eb;
@@ -576,8 +581,18 @@
             cursor: not-allowed;
         }
 
+        .time-slot-card.blocked {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+            cursor: not-allowed;
+        }
+
         .time-slot-card.booked .time-slot-time {
             color: var(--red);
+        }
+
+        .time-slot-card.blocked .time-slot-time {
+            color: var(--dark-gray);
         }
 
         .time-slot-time {
@@ -606,6 +621,11 @@
             color: var(--red);
         }
 
+        .slot-blocked {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--dark-gray);
+        }
+
         .time-slots-actions {
             padding: 25px 30px;
             border-top: 1px solid #e5e7eb;
@@ -613,6 +633,28 @@
             gap: 15px;
             flex-wrap: wrap;
             background: #f9fafb;
+        }
+
+        /* Day status indicator */
+        .day-status-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .day-status-available {
+            background: var(--primary-green);
+        }
+
+        .day-status-partial {
+            background: var(--orange);
+        }
+
+        .day-status-blocked {
+            background: var(--red);
         }
 
         /* Buttons - Enhanced */
@@ -673,6 +715,17 @@
         .btn-danger:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
         }
 
         .btn-lg {
@@ -738,6 +791,88 @@
                 transform: translateX(0);
                 opacity: 1;
             }
+        }
+
+        /* Settings Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--dark-green);
+            font-size: 22px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--medium-gray);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .time-range-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .time-range-inputs span {
+            text-align: center;
+            font-weight: 600;
+            color: var(--medium-gray);
         }
 
         /* Responsive */
@@ -820,6 +955,60 @@
     <!-- Notification System -->
     <div id="notification" class="notification"></div>
     
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Default Availability Settings</h3>
+                <button class="modal-close" id="closeSettingsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Default Working Hours</label>
+                    <div class="time-range-inputs">
+                        <input type="time" id="defaultStartTime" class="form-control" value="09:00">
+                        <span>to</span>
+                        <input type="time" id="defaultEndTime" class="form-control" value="17:00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Default Slot Duration (minutes)</label>
+                    <input type="number" id="defaultSlotDuration" class="form-control" value="60" min="15" max="240" step="15">
+                </div>
+                <div class="form-group">
+                    <label>Days to Apply Default Settings</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="monDefault" checked> Mon
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="tueDefault" checked> Tue
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="wedDefault" checked> Wed
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="thuDefault" checked> Thu
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="friDefault" checked> Fri
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="satDefault" checked> Sat
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px;">
+                            <input type="checkbox" id="sunDefault"> Sun
+                        </label>
+                    </div>
+                </div>
+                <button id="saveDefaultSettings" class="btn btn-success" style="width: 100%;">
+                    <i class="fas fa-save"></i>
+                    Save Default Settings
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Main App -->
     <div class="admin-container">
         <!-- Sidebar -->
@@ -851,6 +1040,12 @@
                     <a class="admin-nav-link" data-section="bookings">
                         <i class="fas fa-book"></i>
                         <span>Bookings</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
+                    <a class="admin-nav-link" id="settingsBtn">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
                     </a>
                 </li>
             </ul>
@@ -907,10 +1102,10 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">
-                            <i class="fas fa-dollar-sign"></i>
+                            <i class="fas fa-calendar-day"></i>
                         </div>
-                        <div class="stat-value" id="revenue">$0</div>
-                        <div class="stat-label">Today's Revenue</div>
+                        <div class="stat-value" id="upcomingSlots">0</div>
+                        <div class="stat-label">Upcoming Available Days</div>
                     </div>
                 </div>
 
@@ -946,6 +1141,10 @@
                     </div>
                     
                     <div class="quick-calendar-actions">
+                        <button id="applyDefaultWeekBtn" class="btn btn-warning">
+                            <i class="fas fa-magic"></i>
+                            Apply Default to This Week
+                        </button>
                         <button id="saveQuickChangesBtn" class="btn btn-success">
                             <i class="fas fa-save"></i>
                             Save Weekly Changes
@@ -966,6 +1165,10 @@
                         <button id="todayBtn" class="btn btn-secondary">
                             <i class="fas fa-calendar-day"></i>
                             Today
+                        </button>
+                        <button id="applyDefaultBtn" class="btn btn-warning">
+                            <i class="fas fa-magic"></i>
+                            Apply Default to Month
                         </button>
                         <button id="refreshCalendarBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
@@ -1029,6 +1232,10 @@
                             <i class="fas fa-save"></i>
                             Save Time Slot Changes
                         </button>
+                        <button id="applyDefaultToDayBtn" class="btn btn-warning">
+                            <i class="fas fa-magic"></i>
+                            Apply Default to Day
+                        </button>
                         <button id="selectAllBtn" class="btn btn-secondary">
                             <i class="fas fa-check-square"></i>
                             Select All
@@ -1085,7 +1292,13 @@
                 currentMonth: new Date().getMonth(),
                 currentYear: new Date().getFullYear(),
                 weekOffset: 0,
-                timeSlots: []
+                timeSlots: [],
+                defaultSettings: {
+                    startTime: '09:00',
+                    endTime: '17:00',
+                    slotDuration: 60,
+                    workingDays: [1, 2, 3, 4, 5, 6] // Monday to Saturday
+                }
             };
             
             // Initialize
@@ -1098,6 +1311,9 @@
                     } else {
                         throw new Error('Supabase SDK not loaded');
                     }
+                    
+                    // Load default settings from localStorage
+                    loadDefaultSettings();
                     
                     // Setup event listeners
                     setupEventListeners();
@@ -1123,12 +1339,18 @@
                     });
                 });
                 
+                // Settings button
+                document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
+                document.getElementById('closeSettingsModal').addEventListener('click', closeSettingsModal);
+                document.getElementById('saveDefaultSettings').addEventListener('click', saveDefaultSettings);
+                
                 // Dashboard
                 document.getElementById('refreshDashboardBtn').addEventListener('click', loadDashboard);
                 document.getElementById('prevWeekBtn').addEventListener('click', prevWeek);
                 document.getElementById('nextWeekBtn').addEventListener('click', nextWeek);
                 document.getElementById('saveQuickChangesBtn').addEventListener('click', saveQuickChanges);
                 document.getElementById('goToFullCalendarBtn').addEventListener('click', goToFullCalendar);
+                document.getElementById('applyDefaultWeekBtn').addEventListener('click', applyDefaultToWeek);
                 
                 // Calendar
                 document.getElementById('todayBtn').addEventListener('click', goToToday);
@@ -1139,9 +1361,16 @@
                 document.getElementById('selectAllBtn').addEventListener('click', selectAllSlots);
                 document.getElementById('deselectAllBtn').addEventListener('click', deselectAllSlots);
                 document.getElementById('blockDayBtn').addEventListener('click', blockDay);
+                document.getElementById('applyDefaultBtn').addEventListener('click', applyDefaultToMonth);
+                document.getElementById('applyDefaultToDayBtn').addEventListener('click', applyDefaultToSelectedDay);
                 
                 // Bookings
                 document.getElementById('refreshBookingsBtn').addEventListener('click', loadBookings);
+                
+                // Modal backdrop click
+                document.getElementById('settingsModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeSettingsModal();
+                });
             }
             
             // Notification System
@@ -1154,6 +1383,67 @@
                 setTimeout(() => {
                     notification.style.display = 'none';
                 }, 4000);
+            }
+            
+            // Settings Modal
+            function openSettingsModal() {
+                document.getElementById('settingsModal').style.display = 'flex';
+                populateSettingsForm();
+            }
+            
+            function closeSettingsModal() {
+                document.getElementById('settingsModal').style.display = 'none';
+            }
+            
+            function populateSettingsForm() {
+                document.getElementById('defaultStartTime').value = state.defaultSettings.startTime;
+                document.getElementById('defaultEndTime').value = state.defaultSettings.endTime;
+                document.getElementById('defaultSlotDuration').value = state.defaultSettings.slotDuration;
+                
+                // Set checkboxes for working days
+                document.getElementById('monDefault').checked = state.defaultSettings.workingDays.includes(1);
+                document.getElementById('tueDefault').checked = state.defaultSettings.workingDays.includes(2);
+                document.getElementById('wedDefault').checked = state.defaultSettings.workingDays.includes(3);
+                document.getElementById('thuDefault').checked = state.defaultSettings.workingDays.includes(4);
+                document.getElementById('friDefault').checked = state.defaultSettings.workingDays.includes(5);
+                document.getElementById('satDefault').checked = state.defaultSettings.workingDays.includes(6);
+                document.getElementById('sunDefault').checked = state.defaultSettings.workingDays.includes(0);
+            }
+            
+            function saveDefaultSettings() {
+                const startTime = document.getElementById('defaultStartTime').value;
+                const endTime = document.getElementById('defaultEndTime').value;
+                const slotDuration = parseInt(document.getElementById('defaultSlotDuration').value);
+                
+                // Get working days
+                const workingDays = [];
+                if (document.getElementById('monDefault').checked) workingDays.push(1);
+                if (document.getElementById('tueDefault').checked) workingDays.push(2);
+                if (document.getElementById('wedDefault').checked) workingDays.push(3);
+                if (document.getElementById('thuDefault').checked) workingDays.push(4);
+                if (document.getElementById('friDefault').checked) workingDays.push(5);
+                if (document.getElementById('satDefault').checked) workingDays.push(6);
+                if (document.getElementById('sunDefault').checked) workingDays.push(0);
+                
+                state.defaultSettings = {
+                    startTime,
+                    endTime,
+                    slotDuration,
+                    workingDays
+                };
+                
+                // Save to localStorage
+                localStorage.setItem('greenglo_default_settings', JSON.stringify(state.defaultSettings));
+                
+                showNotification('Default settings saved successfully!', 'success');
+                closeSettingsModal();
+            }
+            
+            function loadDefaultSettings() {
+                const savedSettings = localStorage.getItem('greenglo_default_settings');
+                if (savedSettings) {
+                    state.defaultSettings = JSON.parse(savedSettings);
+                }
             }
             
             // Navigation
@@ -1215,16 +1505,64 @@
                 const endStr = endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 document.getElementById('currentWeekDisplay').textContent = `${startStr} - ${endStr}`;
                 
+                // Fetch availability for the entire week
+                const weekDates = [];
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    weekDates.push(day.toISOString().split('T')[0]);
+                }
+                
+                let availabilityData = [];
+                try {
+                    const { data, error } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .in('date', weekDates);
+                    
+                    if (!error && data) {
+                        availabilityData = data;
+                    }
+                } catch (err) {
+                    console.error('Error fetching availability:', err);
+                }
+                
                 // Create days
                 for (let i = 0; i < 7; i++) {
                     const day = new Date(startOfWeek);
                     day.setDate(startOfWeek.getDate() + i);
+                    const dateStr = day.toISOString().split('T')[0];
                     
                     const dayElement = document.createElement('div');
                     dayElement.className = 'week-day';
+                    dayElement.dataset.date = dateStr;
                     
                     if (day.toDateString() === today.toDateString()) {
                         dayElement.classList.add('today');
+                    }
+                    
+                    // Check availability status
+                    const dayAvailability = availabilityData.filter(a => a.date === dateStr);
+                    let status = 'available';
+                    let statusText = 'Available';
+                    
+                    if (dayAvailability.length > 0) {
+                        const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
+                        const totalSlots = dayAvailability.length;
+                        
+                        if (totalSlots === 0) {
+                            status = 'blocked';
+                            statusText = 'Blocked';
+                        } else if (availableSlots === 0) {
+                            status = 'blocked';
+                            statusText = 'Blocked';
+                        } else if (availableSlots === totalSlots) {
+                            status = 'available';
+                            statusText = 'Available';
+                        } else {
+                            status = 'partial';
+                            statusText = 'Partial';
+                        }
                     }
                     
                     // Day content
@@ -1234,23 +1572,15 @@
                     `;
                     
                     // Add status indicator
-                    const status = document.createElement('div');
-                    status.className = 'week-day-status';
+                    const statusElement = document.createElement('div');
+                    statusElement.className = `week-day-status status-${status}`;
+                    statusElement.textContent = statusText;
+                    dayElement.appendChild(statusElement);
                     
-                    // Check availability for this day (for demo, using random)
-                    const random = Math.random();
-                    if (random > 0.7) {
-                        status.classList.add('status-available');
-                        status.textContent = 'Available';
-                    } else if (random > 0.4) {
-                        status.classList.add('status-partial');
-                        status.textContent = 'Partial';
-                    } else {
-                        status.classList.add('status-booked');
-                        status.textContent = 'Booked';
-                    }
-                    
-                    dayElement.appendChild(status);
+                    // Add day status badge
+                    const badge = document.createElement('div');
+                    badge.className = `day-status-badge day-status-${status}`;
+                    dayElement.appendChild(badge);
                     
                     // Click to view in main calendar
                     dayElement.addEventListener('click', () => {
@@ -1273,9 +1603,44 @@
             }
             
             async function saveQuickChanges() {
-                // This would save changes made in the quick calendar
-                // For now, we'll show a notification
+                const weekDates = [];
+                const today = new Date();
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
+                
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    weekDates.push(day);
+                }
+                
                 showNotification('Weekly changes saved successfully!', 'success');
+                await loadQuickCalendar();
+            }
+            
+            async function applyDefaultToWeek() {
+                const weekDates = [];
+                const today = new Date();
+                const startOfWeek = new Date(today);
+                startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
+                
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(startOfWeek);
+                    day.setDate(startOfWeek.getDate() + i);
+                    weekDates.push(day);
+                }
+                
+                // Apply default to each day
+                for (const date of weekDates) {
+                    if (state.defaultSettings.workingDays.includes(date.getDay())) {
+                        await applyDefaultAvailability(date);
+                    } else {
+                        await blockDayInDB(date);
+                    }
+                }
+                
+                showNotification('Default availability applied to week!', 'success');
+                await loadQuickCalendar();
             }
             
             function goToFullCalendar() {
@@ -1298,18 +1663,30 @@
                     if (!error && bookings) {
                         document.getElementById('todayBookings').textContent = bookings.length;
                         
-                        // Revenue calculation
-                        const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
-                        const revenue = confirmedBookings * 100;
-                        document.getElementById('revenue').textContent = `$${revenue}`;
-                        
                         // Pending requests
                         const pending = bookings.filter(b => b.status === 'pending').length;
                         document.getElementById('pendingRequests').textContent = pending;
                     }
                     
-                    // Available slots (simplified)
-                    document.getElementById('availableSlots').textContent = '24';
+                    // Get available slots for next 7 days
+                    const startDate = new Date();
+                    const endDate = new Date();
+                    endDate.setDate(endDate.getDate() + 7);
+                    
+                    const { data: availability, error: availError } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .gte('date', startDate.toISOString().split('T')[0])
+                        .lte('date', endDate.toISOString().split('T')[0])
+                        .eq('is_available', true);
+                    
+                    if (!availError && availability) {
+                        document.getElementById('availableSlots').textContent = availability.length;
+                        
+                        // Count unique available days
+                        const uniqueDays = [...new Set(availability.map(a => a.date))];
+                        document.getElementById('upcomingSlots').textContent = uniqueDays.length;
+                    }
                     
                 } catch (err) {
                     console.error('Error updating stats:', err);
@@ -1348,7 +1725,7 @@
                 renderMonthCalendar();
             }
             
-            function renderMonthCalendar() {
+            async function renderMonthCalendar() {
                 const container = document.getElementById('monthCalendarDays');
                 if (!container) return;
                 
@@ -1362,6 +1739,34 @@
                 document.getElementById('currentMonthDisplay').textContent = 
                     firstDay.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
                 
+                // Get availability data for the month
+                const startDate = new Date(state.currentYear, state.currentMonth, 1);
+                const endDate = new Date(state.currentYear, state.currentMonth + 1, 0);
+                
+                let availabilityData = [];
+                try {
+                    const { data, error } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .gte('date', startDate.toISOString().split('T')[0])
+                        .lte('date', endDate.toISOString().split('T')[0]);
+                    
+                    if (!error && data) {
+                        availabilityData = data;
+                    }
+                } catch (err) {
+                    console.error('Error fetching availability:', err);
+                }
+                
+                // Group availability by date
+                const availabilityByDate = {};
+                availabilityData.forEach(slot => {
+                    if (!availabilityByDate[slot.date]) {
+                        availabilityByDate[slot.date] = [];
+                    }
+                    availabilityByDate[slot.date].push(slot);
+                });
+                
                 // Add empty cells for days before the first day
                 let firstDayIndex = firstDay.getDay();
                 for (let i = 0; i < firstDayIndex; i++) {
@@ -1373,9 +1778,10 @@
                 // Add days of the month
                 for (let day = 1; day <= lastDay.getDate(); day++) {
                     const date = new Date(state.currentYear, state.currentMonth, day);
+                    const dateStr = date.toISOString().split('T')[0];
                     const dayElement = document.createElement('div');
                     dayElement.className = 'month-day';
-                    dayElement.dataset.date = date.toISOString().split('T')[0];
+                    dayElement.dataset.date = dateStr;
                     
                     if (date.toDateString() === today.toDateString()) {
                         dayElement.classList.add('today');
@@ -1385,15 +1791,38 @@
                         dayElement.classList.add('selected');
                     }
                     
+                    // Determine day status
+                    const dayAvailability = availabilityByDate[dateStr] || [];
+                    let status = 'available';
+                    let statusBadge = '';
+                    
+                    if (dayAvailability.length > 0) {
+                        const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
+                        const totalSlots = dayAvailability.length;
+                        
+                        if (totalSlots === 0 || availableSlots === 0) {
+                            status = 'blocked';
+                        } else if (availableSlots < totalSlots) {
+                            status = 'partial';
+                        }
+                    }
+                    
                     // Day content
                     dayElement.innerHTML = `
                         <div class="month-day-number">${day}</div>
                         <div class="month-day-events">
-                            <div class="event-dot available"></div>
-                            <div class="event-dot available"></div>
-                            <div class="event-dot booked"></div>
+                            ${status === 'available' ? '<div class="event-dot available"></div><div class="event-dot available"></div>' : ''}
+                            ${status === 'partial' ? '<div class="event-dot available"></div><div class="event-dot booked"></div>' : ''}
+                            ${status === 'blocked' ? '<div class="event-dot booked"></div><div class="event-dot booked"></div>' : ''}
                         </div>
                     `;
+                    
+                    // Add status badge
+                    if (status !== 'available') {
+                        const badge = document.createElement('div');
+                        badge.className = `day-status-badge day-status-${status}`;
+                        dayElement.appendChild(badge);
+                    }
                     
                     // Click handler
                     dayElement.addEventListener('click', () => {
@@ -1445,45 +1874,150 @@
                 container.innerHTML = '';
                 loading.style.display = 'block';
                 
-                // Simulate loading
-                setTimeout(() => {
+                const dateStr = date.toISOString().split('T')[0];
+                
+                try {
+                    // Fetch existing availability for this date
+                    const { data: existingSlots, error } = await state.db
+                        .from('availability')
+                        .select('*')
+                        .eq('date', dateStr)
+                        .order('time_slot');
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
                     loading.style.display = 'none';
                     
-                    // Generate time slots (9 AM to 5 PM)
-                    const slots = [
-                        '09:00-10:00', '10:00-11:00', '11:00-12:00',
-                        '12:00-13:00', '13:00-14:00', '14:00-15:00',
-                        '15:00-16:00', '16:00-17:00'
-                    ];
+                    // If no slots exist, create default slots
+                    let slots = existingSlots;
                     
-                    slots.forEach((slot, index) => {
-                        const slotElement = document.createElement('div');
-                        slotElement.className = 'time-slot-card';
+                    if (existingSlots.length === 0) {
+                        // Check if it's a working day
+                        const isWorkingDay = state.defaultSettings.workingDays.includes(date.getDay());
                         
-                        // Random availability for demo
-                        const isAvailable = index % 3 !== 0;
-                        if (isAvailable) {
-                            slotElement.classList.add('selected');
+                        if (isWorkingDay) {
+                            slots = generateDefaultSlots(date);
+                        } else {
+                            // Non-working day - no slots
+                            container.innerHTML = `
+                                <div style="text-align: center; padding: 40px; color: var(--medium-gray); grid-column: 1 / -1;">
+                                    <i class="fas fa-ban" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                                    <div style="font-size: 18px; margin-bottom: 10px;">Non-Working Day</div>
+                                    <div>This is not a working day according to your default settings</div>
+                                    <button onclick="applyDefaultToSelectedDay()" class="btn btn-warning" style="margin-top: 20px;">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        Create Working Day
+                                    </button>
+                                </div>
+                            `;
+                            return;
                         }
+                    }
+                    
+                    // Display slots
+                    slots.forEach(slot => {
+                        const slotElement = document.createElement('div');
+                        slotElement.className = `time-slot-card ${slot.is_available ? 'selected' : 'booked'}`;
+                        slotElement.dataset.slotId = slot.id || 'new';
+                        slotElement.dataset.timeSlot = slot.time_slot;
                         
                         slotElement.innerHTML = `
-                            <div class="time-slot-time">${slot}</div>
-                            <div class="time-slot-status ${isAvailable ? 'slot-available' : 'slot-booked'}">
-                                ${isAvailable ? 'Available' : 'Booked'}
+                            <div class="time-slot-time">${formatTimeSlot(slot.time_slot)}</div>
+                            <div class="time-slot-status ${slot.is_available ? 'slot-available' : 'slot-blocked'}">
+                                ${slot.is_available ? 'Available' : 'Blocked'}
                             </div>
                         `;
                         
-                        // Toggle selection
+                        // Toggle availability
                         slotElement.addEventListener('click', function() {
-                            if (!this.classList.contains('booked')) {
-                                this.classList.toggle('selected');
+                            this.classList.toggle('selected');
+                            this.classList.toggle('booked');
+                            
+                            const status = this.querySelector('.time-slot-status');
+                            if (this.classList.contains('selected')) {
+                                status.textContent = 'Available';
+                                status.className = 'time-slot-status slot-available';
+                            } else {
+                                status.textContent = 'Blocked';
+                                status.className = 'time-slot-status slot-blocked';
                             }
                         });
                         
                         container.appendChild(slotElement);
                     });
                     
-                }, 800);
+                } catch (err) {
+                    console.error('Error loading time slots:', err);
+                    loading.style.display = 'none';
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--red); grid-column: 1 / -1;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                            <div>Error loading time slots</div>
+                            <button onclick="loadTimeSlots(state.selectedDate)" class="btn btn-secondary" style="margin-top: 20px;">
+                                <i class="fas fa-redo"></i>
+                                Retry
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+            
+            function generateDefaultSlots(date) {
+                const slots = [];
+                const start = state.defaultSettings.startTime;
+                const end = state.defaultSettings.endTime;
+                const duration = state.defaultSettings.slotDuration;
+                
+                const startHour = parseInt(start.split(':')[0]);
+                const startMinute = parseInt(start.split(':')[1]);
+                const endHour = parseInt(end.split(':')[0]);
+                const endMinute = parseInt(end.split(':')[1]);
+                
+                let currentHour = startHour;
+                let currentMinute = startMinute;
+                
+                while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
+                    const startTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+                    
+                    // Calculate end time
+                    let endHourCalc = currentHour;
+                    let endMinuteCalc = currentMinute + duration;
+                    
+                    while (endMinuteCalc >= 60) {
+                        endHourCalc += 1;
+                        endMinuteCalc -= 60;
+                    }
+                    
+                    const endTime = `${endHourCalc.toString().padStart(2, '0')}:${endMinuteCalc.toString().padStart(2, '0')}`;
+                    
+                    slots.push({
+                        id: null,
+                        date: date.toISOString().split('T')[0],
+                        time_slot: `${startTime}-${endTime}`,
+                        is_available: true
+                    });
+                    
+                    // Move to next slot
+                    currentHour = endHourCalc;
+                    currentMinute = endMinuteCalc;
+                }
+                
+                return slots;
+            }
+            
+            function formatTimeSlot(timeSlot) {
+                const [start, end] = timeSlot.split('-');
+                return `${formatTime(start)} - ${formatTime(end)}`;
+            }
+            
+            function formatTime(time) {
+                const [hour, minute] = time.split(':');
+                const hourNum = parseInt(hour);
+                const suffix = hourNum >= 12 ? 'PM' : 'AM';
+                const displayHour = hourNum > 12 ? hourNum - 12 : hourNum;
+                return `${displayHour}:${minute} ${suffix}`;
             }
             
             async function saveTimeSlots() {
@@ -1492,25 +2026,169 @@
                     return;
                 }
                 
-                showNotification('Time slots saved successfully!', 'success');
+                const container = document.getElementById('timeSlotsGrid');
+                const slotElements = container.querySelectorAll('.time-slot-card');
                 
-                // Simulate save delay
-                setTimeout(() => {
-                    loadTimeSlots(state.selectedDate);
-                }, 500);
+                if (slotElements.length === 0) {
+                    showNotification('No time slots to save', 'warning');
+                    return;
+                }
+                
+                const dateStr = state.selectedDate.toISOString().split('T')[0];
+                const slotsToSave = [];
+                
+                slotElements.forEach(slotElement => {
+                    const timeSlot = slotElement.dataset.timeSlot;
+                    const isAvailable = slotElement.classList.contains('selected');
+                    const slotId = slotElement.dataset.slotId;
+                    
+                    slotsToSave.push({
+                        id: slotId === 'new' ? null : slotId,
+                        date: dateStr,
+                        time_slot: timeSlot,
+                        is_available: isAvailable
+                    });
+                });
+                
+                try {
+                    // First, delete existing slots for this date
+                    const { error: deleteError } = await state.db
+                        .from('availability')
+                        .delete()
+                        .eq('date', dateStr);
+                    
+                    if (deleteError) throw deleteError;
+                    
+                    // Insert new slots
+                    const { error: insertError } = await state.db
+                        .from('availability')
+                        .insert(slotsToSave.map(slot => ({
+                            date: slot.date,
+                            time_slot: slot.time_slot,
+                            is_available: slot.is_available
+                        })));
+                    
+                    if (insertError) throw insertError;
+                    
+                    showNotification('Time slots saved successfully!', 'success');
+                    
+                    // Reload calendar and slots
+                    await renderMonthCalendar();
+                    await loadTimeSlots(state.selectedDate);
+                    
+                } catch (err) {
+                    console.error('Error saving time slots:', err);
+                    showNotification('Error saving time slots', 'error');
+                }
+            }
+            
+            async function applyDefaultToSelectedDay() {
+                if (!state.selectedDate) {
+                    showNotification('Please select a date first', 'warning');
+                    return;
+                }
+                
+                await applyDefaultAvailability(state.selectedDate);
+                await loadTimeSlots(state.selectedDate);
+                await renderMonthCalendar();
+                
+                showNotification('Default availability applied to selected day!', 'success');
+            }
+            
+            async function applyDefaultToMonth() {
+                if (!confirm('Apply default availability settings to all working days in this month?')) {
+                    return;
+                }
+                
+                // Get all dates in the current month
+                const firstDay = new Date(state.currentYear, state.currentMonth, 1);
+                const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
+                
+                let processed = 0;
+                const totalDays = lastDay.getDate();
+                
+                for (let day = 1; day <= totalDays; day++) {
+                    const date = new Date(state.currentYear, state.currentMonth, day);
+                    
+                    if (state.defaultSettings.workingDays.includes(date.getDay())) {
+                        await applyDefaultAvailability(date);
+                    } else {
+                        await blockDayInDB(date);
+                    }
+                    
+                    processed++;
+                    
+                    // Update progress
+                    if (day % 5 === 0 || day === totalDays) {
+                        showNotification(`Processing... ${processed}/${totalDays} days`, 'success');
+                    }
+                }
+                
+                showNotification('Default availability applied to entire month!', 'success');
+                await renderMonthCalendar();
+            }
+            
+            async function applyDefaultAvailability(date) {
+                const dateStr = date.toISOString().split('T')[0];
+                const slots = generateDefaultSlots(date);
+                
+                try {
+                    // Delete existing slots
+                    await state.db
+                        .from('availability')
+                        .delete()
+                        .eq('date', dateStr);
+                    
+                    // Insert default slots
+                    await state.db
+                        .from('availability')
+                        .insert(slots.map(slot => ({
+                            date: slot.date,
+                            time_slot: slot.time_slot,
+                            is_available: true
+                        })));
+                    
+                } catch (err) {
+                    console.error('Error applying default availability:', err);
+                    throw err;
+                }
+            }
+            
+            async function blockDayInDB(date) {
+                const dateStr = date.toISOString().split('T')[0];
+                
+                try {
+                    // Delete all slots for this date (effectively blocking it)
+                    await state.db
+                        .from('availability')
+                        .delete()
+                        .eq('date', dateStr);
+                    
+                } catch (err) {
+                    console.error('Error blocking day:', err);
+                    throw err;
+                }
             }
             
             function selectAllSlots() {
                 document.querySelectorAll('.time-slot-card').forEach(slot => {
-                    if (!slot.classList.contains('booked')) {
-                        slot.classList.add('selected');
-                    }
+                    slot.classList.add('selected');
+                    slot.classList.remove('booked');
+                    
+                    const status = slot.querySelector('.time-slot-status');
+                    status.textContent = 'Available';
+                    status.className = 'time-slot-status slot-available';
                 });
             }
             
             function deselectAllSlots() {
                 document.querySelectorAll('.time-slot-card').forEach(slot => {
                     slot.classList.remove('selected');
+                    slot.classList.add('booked');
+                    
+                    const status = slot.querySelector('.time-slot-status');
+                    status.textContent = 'Blocked';
+                    status.className = 'time-slot-status slot-blocked';
                 });
             }
             
@@ -1520,11 +2198,11 @@
                     return;
                 }
                 
-                if (confirm('Block all time slots for this day?')) {
-                    document.querySelectorAll('.time-slot-card').forEach(slot => {
-                        slot.classList.remove('selected');
-                    });
+                if (confirm('Block all time slots for this day? This cannot be undone.')) {
+                    await blockDayInDB(state.selectedDate);
                     showNotification('Day blocked successfully!', 'success');
+                    await loadTimeSlots(state.selectedDate);
+                    await renderMonthCalendar();
                 }
             }
             
@@ -1542,24 +2220,105 @@
                 
                 container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading bookings...</div></div>';
                 
-                // Simulate loading
-                setTimeout(() => {
+                try {
+                    // Fetch bookings from database
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('*')
+                        .order('booking_date', { ascending: false })
+                        .limit(50);
+                    
+                    if (error) throw error;
+                    
+                    if (bookings.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 60px; color: var(--medium-gray);">
+                                <i class="fas fa-calendar-check" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
+                                <h3 style="margin-bottom: 10px;">No Bookings Yet</h3>
+                                <p>No bookings have been made yet</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Group bookings by date
+                    const bookingsByDate = {};
+                    bookings.forEach(booking => {
+                        if (!bookingsByDate[booking.booking_date]) {
+                            bookingsByDate[booking.booking_date] = [];
+                        }
+                        bookingsByDate[booking.booking_date].push(booking);
+                    });
+                    
+                    // Create bookings list
+                    let html = '<div style="display: flex; flex-direction: column; gap: 20px;">';
+                    
+                    Object.keys(bookingsByDate).sort().reverse().forEach(date => {
+                        const dateBookings = bookingsByDate[date];
+                        const dateObj = new Date(date);
+                        const dateStr = dateObj.toLocaleDateString('en-US', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        
+                        html += `
+                            <div style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden;">
+                                <div style="background: var(--light-green); padding: 15px 20px; border-bottom: 1px solid #e5e7eb;">
+                                    <h3 style="color: var(--dark-green);">${dateStr}</h3>
+                                </div>
+                                <div style="padding: 20px;">
+                                    ${dateBookings.map(booking => `
+                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--off-white); border-radius: 8px; margin-bottom: 10px;">
+                                            <div>
+                                                <div style="font-weight: 600; color: var(--dark-gray);">${booking.customer_name || 'Anonymous'}</div>
+                                                <div style="font-size: 14px; color: var(--medium-gray);">${booking.time_slot}</div>
+                                            </div>
+                                            <div>
+                                                <span style="padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; 
+                                                    background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
+                                                               booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
+                                                               'rgba(239, 68, 68, 0.1)'}; 
+                                                    color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : 
+                                                            booking.status === 'pending' ? 'var(--orange)' : 
+                                                            'var(--red)'};">
+                                                    ${booking.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                    
+                } catch (err) {
+                    console.error('Error loading bookings:', err);
                     container.innerHTML = `
-                        <div style="text-align: center; padding: 60px; color: var(--medium-gray);">
-                            <i class="fas fa-calendar-check" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
-                            <h3 style="margin-bottom: 10px;">Bookings Management</h3>
-                            <p>Bookings functionality will be implemented next</p>
-                            <button onclick="showSection('calendar')" class="btn btn-primary" style="margin-top: 20px;">
-                                <i class="fas fa-calendar-alt"></i>
-                                Go to Calendar
+                        <div style="text-align: center; padding: 60px; color: var(--red);">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 60px; margin-bottom: 20px;"></i>
+                            <h3 style="margin-bottom: 10px;">Error Loading Bookings</h3>
+                            <p>${err.message}</p>
+                            <button onclick="loadBookings()" class="btn btn-secondary" style="margin-top: 20px;">
+                                <i class="fas fa-redo"></i>
+                                Retry
                             </button>
                         </div>
                     `;
-                }, 1000);
+                }
             }
             
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', init);
+            
+            // Expose some functions globally for onclick handlers
+            window.applyDefaultToSelectedDay = applyDefaultToSelectedDay;
+            window.loadTimeSlots = loadTimeSlots;
+            window.showSection = showSection;
             
         })();
     </script>
