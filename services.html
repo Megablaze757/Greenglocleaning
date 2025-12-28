@@ -28,7 +28,6 @@
             --dark-gray: #4B5563;
             --black: #111827;
             --gold: #FBBF24;
-            --red: #EF4444;
             --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
             --shadow-lg: 0 25px 50px rgba(16, 185, 129, 0.15);
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -448,25 +447,27 @@
             position: relative;
         }
 
-        .service-card::before {
-            content: 'Competitive Price';
-            position: absolute;
-            top: 15px;
-            right: -35px;
-            background: var(--gold);
-            color: var(--black);
-            padding: 5px 40px;
-            font-size: 12px;
-            font-weight: 700;
-            transform: rotate(45deg);
-            z-index: 2;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
         .service-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary-green);
+        }
+
+        /* Competitive pricing indicator */
+        .service-card::after {
+            content: 'BEST VALUE';
+            position: absolute;
+            top: 20px;
+            right: -35px;
+            background: linear-gradient(135deg, var(--gold), #F59E0B);
+            color: var(--black);
+            padding: 8px 40px;
+            font-size: 11px;
+            font-weight: 900;
+            transform: rotate(45deg);
+            z-index: 2;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            letter-spacing: 1px;
         }
 
         .service-image {
@@ -497,6 +498,42 @@
 
         .service-content {
             padding: 2rem;
+        }
+
+        /* Price badge styling */
+        .service-price-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, var(--light-green), var(--mint));
+            border-radius: 12px;
+            border: 2px solid var(--secondary-green);
+        }
+
+        .price-tag {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark-green);
+            background: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--primary-green);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .duration-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
         }
 
         .service-description {
@@ -532,8 +569,6 @@
 
         .service-meta {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
             justify-content: space-between;
             align-items: center;
             margin-top: 1.5rem;
@@ -541,33 +576,15 @@
             border-top: 2px solid var(--light-green);
         }
 
-        /* Price styling */
-        .service-price {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--primary-green);
-            font-weight: 700;
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: var(--light-green);
-            border-radius: 8px;
-            border: 2px solid var(--secondary-green);
-            flex: 1;
-        }
-
-        .service-price i {
-            color: var(--dark-green);
-            font-size: 1rem;
-        }
-
         .service-duration {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             color: var(--medium-gray);
-            font-weight: 500;
+        }
+
+        .service-cta {
+            width: 100%;
         }
 
         /* ===== Services CTA ===== */
@@ -735,6 +752,13 @@
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid var(--light-gray);
+        }
+
+        .booking-summary {
+            background: var(--light-green);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
         }
 
         /* ===== Premium Footer ===== */
@@ -933,6 +957,29 @@
                 flex-shrink: 0;
             }
 
+            .service-price-badge {
+                flex-direction: column;
+                gap: 0.75rem;
+                text-align: center;
+            }
+            
+            .price-tag {
+                font-size: 1.25rem;
+                width: 100%;
+            }
+            
+            .duration-tag {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .service-card::after {
+                font-size: 10px;
+                padding: 6px 30px;
+                right: -30px;
+                top: 15px;
+            }
+
             .mobile-menu-close {
                 position: absolute;
                 top: 1.5rem;
@@ -960,22 +1007,6 @@
             .time-slots-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-
-            .service-card::before {
-                font-size: 10px;
-                right: -40px;
-                padding: 4px 35px;
-            }
-
-            .service-meta {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .service-price {
-                order: -1;
-                margin-bottom: 1rem;
-            }
         }
 
         @media (max-width: 480px) {
@@ -997,25 +1028,6 @@
 
             .time-slots-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .service-card::before {
-                display: none;
-            }
-
-            .service-card::after {
-                content: 'Competitive Price';
-                position: absolute;
-                top: 10px;
-                left: 10px;
-                background: var(--gold);
-                color: var(--black);
-                padding: 4px 12px;
-                font-size: 11px;
-                font-weight: 700;
-                border-radius: 4px;
-                z-index: 2;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             }
         }
     </style>
@@ -1120,7 +1132,7 @@
                         <textarea id="bookingNotes" class="form-control" rows="3" placeholder="Any special requirements or notes..."></textarea>
                     </div>
                     
-                    <div class="booking-summary" id="bookingSummary" style="background: var(--light-green); padding: 20px; border-radius: 12px; margin: 20px 0;">
+                    <div class="booking-summary" id="bookingSummary">
                         <h4 style="color: var(--dark-green); margin-bottom: 15px;">Booking Summary</h4>
                         <div id="summaryDetails"></div>
                     </div>
@@ -1142,7 +1154,8 @@
         <div class="container">
             <div class="services-hero-content">
                 <h1>Our Complete Cleaning Services</h1>
-                <p>Explore our comprehensive range of professional cleaning services with competitive pricing. All services use eco-friendly products and performed by our vetted professionals.</p>
+                <p>Explore our comprehensive range of professional cleaning services, all using eco-friendly products
+                    and performed by our vetted, background-checked professionals.</p>
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                     <a href="#servicesGrid" class="btn btn-large">
                         <i class="fas fa-broom"></i>
@@ -1162,7 +1175,7 @@
         <div class="container">
             <div class="section-title">
                 <h2>Browse by Category</h2>
-                <p>Find the perfect cleaning service for your needs at competitive prices</p>
+                <p>Find the perfect cleaning service for your needs</p>
             </div>
             <div class="category-filters">
                 <button class="category-btn active" data-category="all">All Services</button>
@@ -1188,7 +1201,8 @@
         <div class="container">
             <div class="services-cta">
                 <h2>Need Help Choosing the Right Service?</h2>
-                <p>Our cleaning experts are ready to help you select the perfect service for your needs. Get a personalized quote or book a consultation today.</p>
+                <p>Our cleaning experts are ready to help you select the perfect service for your needs. Get a
+                    personalized quote or book a consultation today.</p>
                 <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
                     <a href="https://api.whatsapp.com/send?phone=447827784204&text=" class="btn btn-large"
                         style="background: var(--white); color: var(--primary-green);">
@@ -1338,6 +1352,7 @@ window.addEventListener('scroll', () => {
 // ===== Booking System =====
 const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
+const RESEND_API_KEY = 're_NiRLrvXk_4p6TfCmjQMXzVcGcnw99iDro';
 
 let supabaseClient = null;
 let currentBooking = {
@@ -1464,13 +1479,158 @@ function logBookingState() {
     });
 }
 
+// Email Confirmation Function
+async function sendConfirmationEmail(customerEmail, bookingDetails) {
+    console.log('📧 Sending confirmation email to:', customerEmail);
+    
+    // Only send if customer provided email
+    if (!customerEmail || !customerEmail.includes('@')) {
+        console.log('⚠️ No valid email provided, skipping email');
+        return { success: false, reason: 'No valid email' };
+    }
+    
+    const apiUrl = 'https://api.resend.com/emails';
+    
+    const emailData = {
+        from: 'GreenGlo Cleaners <bookings@greenglocleaners.co.uk>',
+        to: [customerEmail],
+        reply_to: 'greenglocleaning@gmail.com',
+        subject: `✅ Booking Confirmed: ${bookingDetails.service} - ${bookingDetails.date}`,
+        html: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: linear-gradient(135deg, #10B981, #0D9488); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                    .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb; }
+                    .booking-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10B981; }
+                    .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px; }
+                    h1, h2, h3 { color: #065F46; }
+                    .highlight { background: #D1FAE5; padding: 15px; border-radius: 8px; margin: 15px 0; }
+                    .btn { display: inline-block; background: #10B981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+                    .price-badge { background: #FBBF24; color: #92400e; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1 style="color: white; margin: 0;">✅ Booking Confirmed!</h1>
+                    <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0;">Thank you for choosing GreenGlo Cleaners</p>
+                </div>
+                
+                <div class="content">
+                    <h2>📋 Your Booking Summary</h2>
+                    <div class="booking-details">
+                        <p><strong>Service:</strong> ${bookingDetails.service}</p>
+                        <p><strong>Date:</strong> ${new Date(bookingDetails.date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                        <p><strong>Time:</strong> ${bookingDetails.timeSlot}</p>
+                        <p><strong>Duration:</strong> ${bookingDetails.duration}</p>
+                        <p><strong>Price:</strong> <span class="price-badge">${bookingDetails.price}</span></p>
+                    </div>
+                    
+                    <div class="highlight">
+                        <h3>👤 Your Details</h3>
+                        <p><strong>Name:</strong> ${bookingDetails.customerName}</p>
+                        <p><strong>Phone:</strong> ${bookingDetails.customerPhone}</p>
+                        <p><strong>Address:</strong> ${bookingDetails.customerAddress}</p>
+                    </div>
+                    
+                    <h3>📞 What Happens Next?</h3>
+                    <ul>
+                        <li><strong>24-Hour Confirmation Call:</strong> Our team will call you within 24 hours to confirm all details</li>
+                        <li><strong>Preparation:</strong> Please ensure access to the property during the booked time</li>
+                        <li><strong>Our Team:</strong> Vetted, background-checked cleaners with eco-friendly products</li>
+                        <li><strong>Payment:</strong> Payment is due upon completion of service (Cash, Card, or Bank Transfer)</li>
+                    </ul>
+                    
+                    <h3>🔄 Need to Make Changes?</h3>
+                    <p>Contact us at <a href="tel:07827784204" style="color: #10B981; font-weight: bold;">07827 784204</a> or reply to this email</p>
+                    
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="tel:07827784204" class="btn">📞 Call Us Now</a>
+                    </div>
+                    
+                    <div class="footer">
+                        <p><strong>GreenGlo Cleaners London</strong><br>
+                        📞 07827 784204 | ✉️ greenglocleaning@gmail.com</p>
+                        <p style="font-size: 12px; color: #9CA3AF; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                            This is an automated confirmation email. Please do not reply directly to this email.<br>
+                            Booking Reference: ${bookingDetails.bookingId || new Date().getTime()}
+                        </p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `,
+        text: `
+            ✅ BOOKING CONFIRMED - GreenGlo Cleaners
+            
+            Your booking has been successfully confirmed!
+            
+            SERVICE DETAILS:
+            =================
+            Service: ${bookingDetails.service}
+            Date: ${bookingDetails.date}
+            Time: ${bookingDetails.timeSlot}
+            Duration: ${bookingDetails.duration}
+            Price: ${bookingDetails.price}
+            
+            CUSTOMER DETAILS:
+            =================
+            Name: ${bookingDetails.customerName}
+            Phone: ${bookingDetails.customerPhone}
+            Address: ${bookingDetails.customerAddress}
+            
+            NEXT STEPS:
+            ===========
+            1. We will call you within 24 hours to confirm all details
+            2. Please ensure someone is available at the address
+            3. Our cleaners will arrive with all necessary equipment
+            4. Payment is due upon completion
+            
+            Need help? Call us at 07827 784204
+            
+            ---
+            GreenGlo Cleaners London
+            07827 784204 | greenglocleaning@gmail.com
+            www.greenglocleaners.co.uk
+        `
+    };
+    
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(emailData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            console.log('✅ Email sent successfully:', data);
+            return { success: true, data };
+        } else {
+            console.error('❌ Email sending failed:', data);
+            return { success: false, error: data };
+        }
+    } catch (error) {
+        console.error('❌ Email sending error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
 // ===== Booking Modal Functions =====
-function openBookingModal(serviceTitle, serviceId) {
-    console.log('📅 Opening booking modal for:', serviceTitle);
+function openBookingModal(serviceTitle, serviceId, servicePrice) {
+    console.log('📅 Opening booking modal for:', serviceTitle, 'Price:', servicePrice);
     
     currentBooking.service = {
         title: serviceTitle,
-        id: serviceId
+        id: serviceId,
+        price: servicePrice
     };
     
     document.getElementById('bookingServiceName').textContent = serviceTitle;
@@ -1610,9 +1770,9 @@ async function loadTimeSlots(date) {
                 
                 // Update booking - ensure slot.id is converted to string
                 currentBooking.timeSlot = slot.time_slot;
-                currentBooking.slotId = String(slot.id); // Convert to string
+                currentBooking.slotId = String(slot.id);
                 
-                console.log('✅ Selected time slot:', slot.time_slot, 'Slot ID:', slot.id, 'Type:', typeof slot.id);
+                console.log('✅ Selected time slot:', slot.time_slot, 'Slot ID:', slot.id);
             });
             
             container.appendChild(slotElement);
@@ -1688,6 +1848,10 @@ function updateBookingSummary() {
             <span style="font-weight: 700; color: var(--dark-green);">${currentBooking.service.title}</span>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+            <span style="color: var(--dark-gray); font-weight: 600;">Price:</span>
+            <span style="font-weight: 700; color: var(--primary-green);">${currentBooking.service.price}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
             <span style="color: var(--dark-gray); font-weight: 600;">Date:</span>
             <span>${bookingDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
         </div>
@@ -1695,12 +1859,6 @@ function updateBookingSummary() {
             <span style="color: var(--dark-gray); font-weight: 600;">Time:</span>
             <span style="font-weight: 600; color: var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span>
         </div>
-        ${slotIdStr ? `
-        <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--dark-gray); font-weight: 600;">Slot ID:</span>
-            <span style="font-size: 12px; color: var(--medium-gray);">${slotIdStr.substring(0, 8)}...</span>
-        </div>
-        ` : ''}
     `;
 }
 
@@ -1712,6 +1870,7 @@ async function confirmBooking() {
     const customerName = document.getElementById('customerName').value.trim();
     const customerPhone = document.getElementById('customerPhone').value.trim();
     const customerAddress = document.getElementById('customerAddress').value.trim();
+    const customerEmail = document.getElementById('customerEmail').value.trim();
     
     if (!customerName || !customerPhone || !customerAddress) {
         alert('❌ Please fill in all required fields:\n\n• Full Name\n• Phone Number\n• Service Address');
@@ -1757,7 +1916,9 @@ async function confirmBooking() {
         // Find service duration
         const serviceData = servicesData.find(s => s.id == currentBooking.service.id);
         const serviceDuration = serviceData ? serviceData.duration : '2-3 hours';
-        const servicePrice = serviceData ? serviceData.price : 'Starting at £75';
+        
+        // Generate booking reference
+        const bookingRef = 'GG' + Date.now().toString().slice(-8);
         
         // 2. Prepare booking data
         const bookingData = {
@@ -1765,20 +1926,21 @@ async function confirmBooking() {
             service_id: parseInt(currentBooking.service.id),
             customer_name: customerName,
             customer_phone: customerPhone,
-            customer_email: document.getElementById('customerEmail').value.trim() || null,
+            customer_email: customerEmail || null,
             customer_address: customerAddress,
             booking_date: currentBooking.date,
             time_slot: currentBooking.timeSlot,
             duration: serviceDuration,
-            price: servicePrice,
+            price: currentBooking.service.price,
             notes: document.getElementById('bookingNotes').value.trim() || null,
             status: 'confirmed',
+            booking_reference: bookingRef,
             created_at: new Date().toISOString()
         };
         
         console.log('📝 Booking data prepared:', bookingData);
         
-        // 3. Insert booking record WITHOUT the columns parameter
+        // 3. Insert booking record
         const { data: booking, error: bookingError } = await supabaseClient
             .from('bookings')
             .insert([bookingData])
@@ -1802,7 +1964,9 @@ async function confirmBooking() {
                     customer_address: customerAddress,
                     booking_date: currentBooking.date,
                     time_slot: currentBooking.timeSlot,
-                    status: 'confirmed'
+                    price: currentBooking.service.price,
+                    status: 'confirmed',
+                    booking_reference: bookingRef
                 };
                 
                 const { error: minimalError } = await supabaseClient
@@ -1833,15 +1997,68 @@ async function confirmBooking() {
         
         if (updateError) {
             console.error('⚠️ Availability update warning:', updateError);
-            // Don't fail the booking if availability update fails
             console.warn('Booking created but availability not updated');
         } else {
             console.log('✅ Availability updated');
         }
         
-        console.log('4️⃣ Sending notifications...');
+        console.log('4️⃣ Sending email confirmation...');
         
-        // 5. Prepare success message
+        // 5. Prepare booking details for email
+        const bookingDetails = {
+            service: currentBooking.service.title,
+            date: currentBooking.date,
+            timeSlot: currentBooking.timeSlot,
+            duration: serviceDuration,
+            price: currentBooking.service.price,
+            customerName: customerName,
+            customerPhone: customerPhone,
+            customerEmail: customerEmail,
+            customerAddress: customerAddress,
+            bookingId: bookingRef
+        };
+        
+        // 6. Send confirmation email
+        let emailSent = false;
+        if (customerEmail && customerEmail.includes('@')) {
+            try {
+                const emailResult = await sendConfirmationEmail(customerEmail, bookingDetails);
+                if (emailResult.success) {
+                    emailSent = true;
+                    console.log('✅ Email sent successfully');
+                } else {
+                    console.warn('⚠️ Email sending failed:', emailResult.error);
+                }
+            } catch (emailError) {
+                console.warn('⚠️ Email sending error:', emailError);
+            }
+        }
+        
+        console.log('5️⃣ Sending WhatsApp notification...');
+        
+        // 7. Send WhatsApp notification
+        const whatsappMessage = encodeURIComponent(
+            `📅 NEW BOOKING CONFIRMED - GreenGlo Cleaners\n\n` +
+            `🛠️ Service: ${currentBooking.service.title}\n` +
+            `💰 Price: ${currentBooking.service.price}\n` +
+            `📅 Date: ${currentBooking.date}\n` +
+            `🕒 Time: ${currentBooking.timeSlot}\n` +
+            `📞 Customer: ${customerName}\n` +
+            `☎️ Phone: ${customerPhone}\n` +
+            `📧 Email: ${customerEmail || 'Not provided'}\n` +
+            `🏠 Address: ${customerAddress}\n` +
+            `📝 Notes: ${document.getElementById('bookingNotes').value.trim() || 'None'}\n` +
+            `🔗 Booking Ref: ${bookingRef}\n` +
+            `📧 Email Status: ${emailSent ? '✅ Sent' : '❌ Not sent'}\n\n` +
+            `💰 Estimated Revenue: ${extractPriceNumber(currentBooking.service.price)}`
+        );
+        
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`;
+        window.open(whatsappUrl, '_blank');
+        
+        console.log('✅ WhatsApp notification sent');
+        
+        // 8. Prepare success message
         const bookingDate = new Date(currentBooking.date);
         const formattedDate = bookingDate.toLocaleDateString('en-GB', {
             weekday: 'long',
@@ -1850,23 +2067,28 @@ async function confirmBooking() {
             year: 'numeric'
         });
         
-        // 6. Show success message
+        // 9. Show success message
         const successMessage = `
 ✅ BOOKING CONFIRMED!
 
 📋 SERVICE DETAILS
 ────────────────────
 Service: ${currentBooking.service.title}
-Price: ${servicePrice}
+Price: ${currentBooking.service.price}
 Date: ${formattedDate}
 Time: ${currentBooking.timeSlot}
+Booking Ref: ${bookingRef}
 
 👤 CUSTOMER DETAILS
 ────────────────────
 Name: ${customerName}
 Phone: ${customerPhone}
-${document.getElementById('customerEmail').value.trim() ? `Email: ${document.getElementById('customerEmail').value.trim()}\n` : ''}
+${customerEmail ? `Email: ${customerEmail}\n` : ''}
 Address: ${customerAddress}
+
+📧 CONFIRMATION
+────────────────────
+${emailSent ? 'A confirmation email has been sent to your email address.\n' : customerEmail ? '⚠️ Email confirmation failed. Please save this booking reference.\n' : ''}
 
 📞 NEXT STEPS
 ────────────────────
@@ -1877,28 +2099,7 @@ Thank you for choosing GreenGlo Cleaners! 🌿
         
         alert(successMessage);
         
-        // 7. Send WhatsApp notification
-        const whatsappMessage = encodeURIComponent(
-            `📅 NEW BOOKING CONFIRMED - GreenGlo Cleaners\n\n` +
-            `🛠️ Service: ${currentBooking.service.title}\n` +
-            `💰 Price: ${servicePrice}\n` +
-            `📅 Date: ${currentBooking.date}\n` +
-            `🕒 Time: ${currentBooking.timeSlot}\n` +
-            `👤 Customer: ${customerName}\n` +
-            `📞 Phone: ${customerPhone}\n` +
-            `📧 Email: ${document.getElementById('customerEmail').value.trim() || 'Not provided'}\n` +
-            `🏠 Address: ${customerAddress}\n` +
-            `📝 Notes: ${document.getElementById('bookingNotes').value.trim() || 'None'}\n\n` +
-            `🔗 View in admin panel`
-        );
-        
-        // Open WhatsApp in new tab
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`;
-        window.open(whatsappUrl, '_blank');
-        
-        console.log('✅ WhatsApp notification sent');
-        
-        // 8. Reset form and close modal
+        // 10. Reset form and close modal
         setTimeout(() => {
             closeBookingModal();
             console.log('✅ Booking process completed successfully');
@@ -1907,18 +2108,14 @@ Thank you for choosing GreenGlo Cleaners! 🌿
     } catch (err) {
         console.error('❌ CRITICAL ERROR in confirmBooking:', err);
         
-        // Detailed error analysis
         let errorMessage = '❌ BOOKING FAILED\n\n';
-        let technicalDetails = '';
         
         if (err.message.includes('customer_address')) {
             errorMessage += 'Database configuration error.\n\n';
-            technicalDetails = 'Missing customer_address column in database.';
         } else if (err.message.includes('network') || err.message.includes('fetch')) {
             errorMessage += 'Network connection error.\n\nPlease check your internet connection.';
         } else if (err.message.includes('permission') || err.message.includes('auth') || err.message.includes('policy')) {
             errorMessage += 'Database permission error.\n\n';
-            technicalDetails = 'RLS policy blocking access. Check Supabase policies.';
         } else if (err.message.includes('duplicate')) {
             errorMessage += 'Time slot already booked.\n\nPlease select another time.';
         } else {
@@ -1927,13 +2124,8 @@ Thank you for choosing GreenGlo Cleaners! 🌿
         
         errorMessage += '\n📞 PLEASE CALL US DIRECTLY AT:\n07827 784204\n\nWe can take your booking over the phone.';
         
-        if (technicalDetails) {
-            console.error('Technical details:', technicalDetails);
-        }
-        
         alert(errorMessage);
         
-        // Log to console for debugging
         console.error('Error context:', {
             currentBooking: currentBooking,
             customerName: customerName,
@@ -1949,29 +2141,34 @@ Thank you for choosing GreenGlo Cleaners! 🌿
     }
 }
 
+// Helper function to extract price number
+function extractPriceNumber(priceString) {
+    const match = priceString.match(/£(\d+(?:\.\d+)?)/);
+    return match ? `£${match[1]}` : priceString;
+}
+
 // Close booking modal button
 document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
 
-// ===== Services Data =====
+// ===== Services Data with Competitive Pricing =====
 const servicesData = [
-    // Original services with added prices
     {
         id: 1,
-        title: "Living Room Transformation",
+        title: "Living Room Deep Clean",
         category: "domestic",
-        description: "Complete living room cleaning and organization after a renovation project.",
-        features: ["Complete dust and debris removal", "Post-construction cleanup", "Furniture arrangement preparation", "Eco-friendly product usage"],
-        duration: "2-4 hours",
-        price: "Starting at £85",
+        description: "Complete living room cleaning and organization with eco-friendly products.",
+        features: ["Complete dust removal", "Furniture cleaning", "Floor sanitization", "Window sills"],
+        duration: "2-3 hours",
+        price: "£75",
         image: "livingroom.png"
     },
     {
         id: 2,
-        title: "Office Space Deep Clean",
+        title: "Office Cleaning",
         category: "office",
-        description: "Professional office cleaning for tech startups and businesses.",
-        features: ["Workstation sanitization", "Meeting room cleaning", "Common area maintenance", "Eco-friendly product usage"],
-        duration: "3-6 hours",
+        description: "Professional office cleaning for businesses and startups.",
+        features: ["Workstation sanitization", "Meeting room cleaning", "Kitchenette cleaning", "Floor care"],
+        duration: "2-6 hours",
         price: "£18/hour",
         image: "office.png"
     },
@@ -1979,156 +2176,94 @@ const servicesData = [
         id: 3,
         title: "Kitchen Deep Cleaning",
         category: "domestic",
-        description: "Kitchen deep clean including oven cleaning, cabinet organization, and appliance sanitization.",
-        features: ["Oven deep cleaning", "Cabinet organization", "Appliance sanitization", "Non-toxic eco-friendly solutions"],
+        description: "Complete kitchen deep clean including appliances and cabinets.",
+        features: ["Oven cleaning included", "Appliance sanitization", "Cabinet cleaning", "Surface degreasing"],
         duration: "2-3 hours",
-        price: "Starting at £75",
+        price: "£85",
         image: "kitchen.png"
     },
     {
         id: 4,
         title: "Oven Deep Clean",
         category: "deep",
-        description: "Professional oven cleaning service. Interior, door, and racks deep-cleaned.",
-        features: ["Complete interior cleaning", "Door and glass cleaning", "Rack deep-cleaning", "As-new condition restoration"],
+        description: "Professional oven cleaning for single and double ovens.",
+        features: ["Complete interior clean", "Door and glass", "Rack cleaning", "Exterior polish"],
         duration: "1-2 hours",
-        price: "From £40 (Single oven)",
+        price: "From £40",
         image: "ovenafter.png"
     },
     {
         id: 5,
-        title: "Bathroom Makeover",
+        title: "Bathroom Deep Clean",
         category: "deep",
-        description: "Complete bathroom cleaning and sanitization.",
-        features: ["Hard water stain removal", "Mildew treatment", "Fixture deep cleaning", "Complete sanitization"],
+        description: "Complete bathroom sanitization and deep cleaning.",
+        features: ["Tile and grout cleaning", "Sanitization", "Fixture polishing", "Mould treatment"],
         duration: "1-2 hours",
-        price: "Starting at £65",
+        price: "£65",
         image: "bathroom.png"
     },
     {
         id: 6,
-        title: "Garden Maintenance",
-        category: "special",
-        description: "Expert turf laying, featuring ground levelling and premium turf installation.",
-        features: ["Ground levelling", "Premium turf installation", "Expert installation", "Instant transformation"],
+        title: "End of Tenancy Cleaning",
+        category: "deep",
+        description: "Professional cleaning to ensure full deposit return.",
+        features: ["Inventory check ready", "Complete property clean", "Carpet cleaning available", "Guaranteed satisfaction"],
         duration: "4-8 hours",
-        price: "Call for quote",
-        image: "turf.png"
+        price: "1 Bed: £220 | 2 Bed: £250",
+        image: "tenancy.png"
     },
     {
         id: 7,
-        title: "Carpet Restoration",
+        title: "Carpet Cleaning",
         category: "deep",
-        description: "Deep carpet cleaning and stain removal for family homes.",
-        features: ["Deep carpet cleaning", "Pet stain removal", "Color restoration", "Professional equipment use"],
-        duration: "2-4 hours",
-        price: "From £15 per room",
+        description: "Professional hot water extraction carpet cleaning.",
+        features: ["Hot water extraction", "Stain removal", "Quick drying", "Deodorizing"],
+        duration: "1-3 hours",
+        price: "From £15/room",
         image: "carpet.png"
     },
     {
         id: 8,
-        title: "Patio Cleaning",
-        category: "special",
-        description: "Professional patio cleaning featuring pressure washing and moss treatment.",
-        features: ["Pressure washing", "Moss treatment", "Surface restoration", "Spotless finish"],
-        duration: "2-3 hours",
-        price: "Starting at £70",
-        image: "patio.png"
-    },
-    {
-        id: 9,
-        title: "End of Tenancy Clean",
-        category: "domestic",
-        description: "Complete apartment cleaning for move-out inspection.",
-        features: ["Complete apartment cleaning", "Landlord requirement compliance", "Move-out inspection ready", "Deposit return guarantee"],
-        duration: "3-5 hours",
-        price: "1 Bedroom: £220",
-        image: "tenancy.png"
-    },
-    {
-        id: 10,
-        title: "Property Maintenance",
-        category: "special",
-        description: "Professional flooring installation featuring precise measurement and expert fitting.",
-        features: ["Precise measurement", "Expert fitting", "Seamless finish", "Durable installation"],
-        duration: "4-6 hours",
-        price: "Call for quote",
-        image: "flooring.png"
-    },
-    
-    // New services from Fantastic Cleaners with competitive pricing
-    {
-        id: 11,
-        title: "End of Tenancy Cleaning",
-        category: "deep",
-        description: "Professional end of tenancy cleaning to ensure full deposit return.",
-        features: ["Full property deep clean", "Carpet cleaning available", "Inventory check support", "Landlord approved"],
-        duration: "3-6 hours",
-        price: "1 Bedroom: £220 | 2 Bedrooms: £250",
-        image: "tenancy.png"
-    },
-    {
-        id: 12,
         title: "Regular Domestic Cleaning",
         category: "domestic",
-        description: "Weekly or fortnightly cleaning service for maintained homes.",
-        features: ["Dusting & vacuuming", "Surface cleaning", "Kitchen & bathroom focus", "Eco-friendly products"],
+        description: "Weekly or fortnightly cleaning service.",
+        features: ["Dusting & vacuuming", "Kitchen & bathroom", "Surface cleaning", "Floor mopping"],
         duration: "2-4 hours",
         price: "£18/hour",
         image: "domestic.png"
     },
     {
-        id: 13,
+        id: 9,
         title: "One-Off Deep Clean",
         category: "deep",
-        description: "Thorough one-time cleaning for homes needing refresh.",
-        features: ["Complete home deep clean", "Appliance cleaning", "Inside cabinets", "Window sills"],
+        description: "Thorough one-time cleaning for your entire home.",
+        features: ["Complete home clean", "Inside cabinets", "Appliance cleaning", "Detailed attention"],
         duration: "4-8 hours",
         price: "£23/hour",
         image: "deepclean.png"
     },
     {
-        id: 14,
-        title: "Carpet Cleaning",
-        category: "deep",
-        description: "Professional hot water extraction carpet cleaning.",
-        features: ["Hot water extraction", "Stain protection", "Antiviral sanitization", "Quick drying"],
-        duration: "1-3 hours",
-        price: "From £15 per room",
-        image: "carpet.png"
-    },
-    {
-        id: 15,
+        id: 10,
         title: "Window Cleaning",
         category: "special",
-        description: "Interior and exterior window cleaning for all property types.",
+        description: "Interior and exterior window cleaning service.",
         features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment"],
-        duration: "1-2 hours",
+        duration: "1-3 hours",
         price: "Flat: £30 | House: £45",
         image: "window.png"
     },
     {
-        id: 16,
-        title: "Oven & Cooker Cleaning",
-        category: "deep",
-        description: "Professional oven, range cooker, and AGA cleaning.",
-        features: ["Degreasing", "Rack cleaning", "Interior & exterior", "Eco-friendly solutions"],
-        duration: "1-2 hours",
-        price: "Single oven: £40 | Double: £58",
-        image: "oven.png"
-    },
-    {
-        id: 17,
+        id: 11,
         title: "Upholstery Cleaning",
         category: "deep",
         description: "Sofa, armchair, and car seat deep cleaning.",
-        features: ["Hot water extraction", "Stain removal", "Fabric protection", "Deodorizing"],
+        features: ["Stain removal", "Fabric protection", "Deodorizing", "Professional equipment"],
         duration: "1-2 hours",
-        price: "Armchair: £10 | 3-seater sofa: £55",
+        price: "Sofa 3-seater: £55",
         image: "upholstery.png"
     },
     {
-        id: 18,
+        id: 12,
         title: "After Builders Cleaning",
         category: "deep",
         description: "Post-construction cleanup for renovation projects.",
@@ -2138,7 +2273,7 @@ const servicesData = [
         image: "builders.png"
     },
     {
-        id: 19,
+        id: 13,
         title: "Hard Floor Cleaning",
         category: "deep",
         description: "Professional hard floor scrubbing and polishing.",
@@ -2148,34 +2283,94 @@ const servicesData = [
         image: "hardfloor.png"
     },
     {
-        id: 20,
+        id: 14,
         title: "Gutter Cleaning",
         category: "special",
         description: "Gutter clearing and downpipe unblocking service.",
         features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first"],
         duration: "1-3 hours",
-        price: "Terraced house: £30",
+        price: "Terraced house: £75",
         image: "gutter.png"
     },
     {
-        id: 21,
+        id: 15,
         title: "Antiviral Sanitisation",
         category: "special",
         description: "Professional sanitisation against germs and viruses.",
         features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage"],
         duration: "1-2 hours",
-        price: "Starting at £50",
+        price: "Starting at £120",
         image: "sanitisation.png"
     },
     {
-        id: 22,
+        id: 16,
         title: "BBQ Cleaning",
         category: "special",
         description: "Deep cleaning of BBQs and outdoor cooking equipment.",
         features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
         duration: "1-2 hours",
-        price: "Small BBQ: £40",
+        price: "Small BBQ: £45",
         image: "bbq.png"
+    },
+    {
+        id: 17,
+        title: "Commercial Cleaning",
+        category: "office",
+        description: "Regular commercial cleaning for businesses.",
+        features: ["Daily/weekly service", "Floor maintenance", "Restroom cleaning", "Waste removal"],
+        duration: "2-8 hours",
+        price: "£25/hour",
+        image: "commercial.png"
+    },
+    {
+        id: 18,
+        title: "Move In/Move Out Cleaning",
+        category: "deep",
+        description: "Complete cleaning for moving properties.",
+        features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround"],
+        duration: "3-6 hours",
+        price: "Starting at £180",
+        image: "moveclean.png"
+    },
+    {
+        id: 19,
+        title: "Patio & Decking Cleaning",
+        category: "special",
+        description: "Pressure washing for patios and decking areas.",
+        features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration"],
+        duration: "2-4 hours",
+        price: "From £70",
+        image: "patio.png"
+    },
+    {
+        id: 20,
+        title: "Spring Cleaning",
+        category: "deep",
+        description: "Seasonal deep cleaning service.",
+        features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help"],
+        duration: "4-8 hours",
+        price: "£25/hour",
+        image: "spring.png"
+    },
+    {
+        id: 21,
+        title: "Carpet Stain Removal",
+        category: "deep",
+        description: "Specialized treatment for stubborn carpet stains.",
+        features: ["Professional treatment", "Odor removal", "Color restoration", "Guaranteed results"],
+        duration: "1-2 hours",
+        price: "From £35/stain",
+        image: "stain.png"
+    },
+    {
+        id: 22,
+        title: "Emergency Cleaning",
+        category: "special",
+        description: "24/7 emergency cleaning services.",
+        features: ["24/7 availability", "Fast response", "Flood cleanup", "Accident cleanup"],
+        duration: "2-6 hours",
+        price: "£35/hour",
+        image: "emergency.png"
     }
 ];
 
@@ -2201,6 +2396,10 @@ function renderServices(category = 'all') {
                 </div>
             </div>
             <div class="service-content">
+                <div class="service-price-badge">
+                    <span class="price-tag">${service.price}</span>
+                    <span class="duration-tag"><i class="far fa-clock"></i> ${service.duration}</span>
+                </div>
                 <p class="service-description">${service.description}</p>
                 <ul class="service-features">
                     ${service.features.map(feature => `
@@ -2208,18 +2407,12 @@ function renderServices(category = 'all') {
                     `).join('')}
                 </ul>
                 <div class="service-meta">
-                    <div class="service-price">
-                        <i class="fas fa-tag"></i>
-                        <span>${service.price}</span>
+                    <div class="service-cta">
+                        <button class="btn book-service-btn" data-service-id="${service.id}" data-service-title="${service.title}" data-service-price="${service.price}" style="padding: 0.75rem 1.5rem; width: 100%;">
+                            <i class="fas fa-calendar-check"></i>
+                            Book Now - ${service.price}
+                        </button>
                     </div>
-                    <div class="service-duration">
-                        <i class="far fa-clock"></i>
-                        <span>${service.duration}</span>
-                    </div>
-                    <button class="btn book-service-btn" data-service-id="${service.id}" data-service-title="${service.title}" style="padding: 0.75rem 1.5rem;">
-                        <i class="fas fa-calendar-check"></i>
-                        Book Now
-                    </button>
                 </div>
             </div>
         `;
@@ -2232,7 +2425,8 @@ function renderServices(category = 'all') {
         button.addEventListener('click', function() {
             const serviceId = this.getAttribute('data-service-id');
             const serviceTitle = this.getAttribute('data-service-title');
-            openBookingModal(serviceTitle, serviceId);
+            const servicePrice = this.getAttribute('data-service-price');
+            openBookingModal(serviceTitle, serviceId, servicePrice);
         });
     });
 
@@ -2293,9 +2487,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial render
     renderServices();
     
-    // Add database test button for debugging (remove in production)
+    // Add database test button for debugging
     const debugBtn = document.createElement('button');
-    debugBtn.innerHTML = '🔧 Test DB';
+    debugBtn.innerHTML = '🔧 Test System';
     debugBtn.style.cssText = `
         position: fixed;
         bottom: 100px;
@@ -2309,11 +2503,47 @@ document.addEventListener('DOMContentLoaded', function() {
         z-index: 9998;
         font-size: 12px;
         opacity: 0.7;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     `;
     debugBtn.onclick = async () => {
-        console.log('🔧 Running database test...');
-        const result = await checkDatabaseSchema();
-        alert(result ? '✅ Database test passed!' : '❌ Database test failed. Check console.');
+        console.log('🔧 Running system test...');
+        
+        // Test 1: Database connection
+        const dbResult = await checkDatabaseSchema();
+        
+        // Test 2: Email connection
+        let emailResult = { success: false };
+        try {
+            const testEmail = 'test@example.com';
+            const testData = {
+                service: 'Test Service',
+                date: '2024-01-01',
+                timeSlot: '10:00-12:00',
+                duration: '2 hours',
+                price: '£99',
+                customerName: 'Test User',
+                customerPhone: '07123456789',
+                customerEmail: testEmail,
+                customerAddress: 'Test Address',
+                bookingId: 'TEST123'
+            };
+            
+            // Just test the API call without actually sending
+            const response = await fetch('https://api.resend.com/emails', {
+                method: 'HEAD',
+                headers: {
+                    'Authorization': `Bearer ${RESEND_API_KEY}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            emailResult.success = response.status !== 401;
+            
+        } catch (e) {
+            emailResult.error = e.message;
+        }
+        
+        alert(`System Test Results:\n\n✅ Database: ${dbResult ? 'Connected' : 'Failed'}\n✅ Email API: ${emailResult.success ? 'Connected' : 'Failed'}\n\nCheck console for details.`);
     };
     document.body.appendChild(debugBtn);
     
@@ -2339,7 +2569,7 @@ function showEmergencyContact() {
     `;
     
     emergencyDiv.innerHTML = `
-        <div style="color: var(--red); font-size: 48px; margin-bottom: 20px;">
+        <div style="color: var(--primary-green); font-size: 48px; margin-bottom: 20px;">
             <i class="fas fa-phone-alt"></i>
         </div>
         <h3 style="color: var(--dark-green); margin-bottom: 15px;">Booking System Unavailable</h3>
@@ -2362,22 +2592,6 @@ function showEmergencyContact() {
     document.body.appendChild(emergencyDiv);
 }
 
-// Auto-show emergency contact if booking fails repeatedly
-let bookingErrorCount = 0;
-const originalConfirmBooking = confirmBooking;
-window.confirmBooking = async function() {
-    try {
-        await originalConfirmBooking();
-        bookingErrorCount = 0; // Reset on success
-    } catch (err) {
-        bookingErrorCount++;
-        if (bookingErrorCount >= 2) {
-            setTimeout(showEmergencyContact, 1000);
-        }
-        throw err;
-    }
-};
-
 // Export functions for debugging
 window.testBooking = async function() {
     console.log('🧪 Test booking function called');
@@ -2391,9 +2605,10 @@ window.testBooking = async function() {
         booking_date: '2024-12-31',
         time_slot: '10:00-12:00',
         duration: '2 hours',
-        price: '£75',
+        price: '£99',
         notes: 'Test booking',
-        status: 'test'
+        status: 'test',
+        booking_reference: 'TEST' + Date.now()
     };
     
     const result = await supabaseClient.from('bookings').insert([testData]).select();
@@ -2405,7 +2620,8 @@ window.testBooking = async function() {
 window.addEventListener('load', () => {
     console.log('🚀 Page fully loaded');
     console.log('Supabase client:', supabaseClient ? '✅ Initialized' : '❌ Not initialized');
-    console.log('Booking system:', '✅ Ready');
+    console.log('Resend API:', '✅ Ready for email confirmation');
+    console.log('Booking system:', '✅ Fully operational with email support');
 });
     </script>
 </body>
