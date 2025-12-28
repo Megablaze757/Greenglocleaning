@@ -9,6 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ===== CSS Reset & Variables ===== */
         :root {
@@ -547,7 +548,7 @@
             margin: 0 auto 3rem;
         }
 
-        /* ===== 预订模态框样式 ===== */
+        /* ===== Booking Modal Styles ===== */
         .booking-modal {
             position: fixed;
             top: 0;
@@ -681,38 +682,6 @@
             color: var(--dark-green);
         }
 
-        .calendar-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .calendar-btn {
-            background: var(--white);
-            border: 2px solid var(--primary-green);
-            color: var(--primary-green);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .calendar-btn:hover {
-            background: var(--primary-green);
-            color: var(--white);
-        }
-
-        .current-date {
-            font-weight: 600;
-            color: var(--dark-green);
-            font-size: 1.1rem;
-        }
-
         .time-slots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -754,11 +723,6 @@
             opacity: 0.6;
         }
 
-        .time-slot.unavailable:hover {
-            transform: none;
-            border-color: var(--light-gray);
-        }
-
         .modal-footer {
             padding: 1.5rem 2rem;
             border-top: 1px solid var(--light-gray);
@@ -789,7 +753,7 @@
             color: var(--dark-green);
         }
 
-        /* ===== 预订确认消息 ===== */
+        /* ===== Booking Confirmation ===== */
         .booking-confirmation {
             display: none;
             text-align: center;
@@ -827,6 +791,32 @@
             margin-right: auto;
         }
 
+        /* ===== Status Messages ===== */
+        .status-message {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .status-message.success {
+            background: var(--light-green);
+            color: var(--dark-green);
+            display: block;
+        }
+
+        .status-message.error {
+            background: #FEE2E2;
+            color: #DC2626;
+            display: block;
+        }
+
+        .status-message.info {
+            background: #DBEAFE;
+            color: #1E40AF;
+            display: block;
+        }
+
         /* ===== Loading Spinner ===== */
         .loading-spinner {
             display: none;
@@ -847,26 +837,6 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        /* ===== Status Messages ===== */
-        .status-message {
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .status-message.success {
-            background: var(--light-green);
-            color: var(--dark-green);
-            display: block;
-        }
-
-        .status-message.error {
-            background: #FEE2E2;
-            color: #DC2626;
-            display: block;
         }
 
         /* ===== Premium Footer ===== */
@@ -943,25 +913,6 @@
         .social-link:hover {
             background: var(--primary-green);
             transform: translateY(-3px);
-        }
-
-        .newsletter-form {
-            margin-top: 1.5rem;
-        }
-
-        .newsletter-input {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: var(--white);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .newsletter-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
         }
 
         .footer-bottom {
@@ -1143,8 +1094,7 @@
         <div class="container nav-container">
             <a href="index.html" class="nav-logo">
                 <div class="logo-icon">
-                    <img src="logo.png" alt="GreenGlo Cleaners Logo"
-                        style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
+                    <span style="color: white; font-weight: bold; font-size: 1.2rem;">GG</span>
                 </div>
                 <div class="logo-text">
                     <h1>GreenGlo</h1>
@@ -1165,7 +1115,7 @@
                     <a href="index.html" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="services.html" class="nav-link active">Services</a>
                 </li>
                 <li class="nav-item">
                     <a href="index.html#about" class="nav-link">About</a>
@@ -1186,7 +1136,7 @@
         </div>
     </nav>
 
-    <!-- 预订模态框 -->
+    <!-- Booking Modal -->
     <div class="booking-modal" id="bookingModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1205,7 +1155,7 @@
                     <p>Loading available time slots...</p>
                 </div>
 
-                <!-- 左侧：预订表单 -->
+                <!-- Left: Booking Form -->
                 <div class="booking-form-section" id="formSection">
                     <form id="customerBookingForm">
                         <div class="form-group">
@@ -1242,7 +1192,7 @@
                     </form>
                 </div>
 
-                <!-- 右侧：时间段选择 -->
+                <!-- Right: Time Slot Selection -->
                 <div class="time-slots-section" id="slotsSection">
                     <div class="calendar-navigation">
                         <button class="calendar-btn" id="prevDayBtn">
@@ -1255,7 +1205,7 @@
                     </div>
 
                     <div class="time-slots-grid" id="timeSlotsGrid">
-                        <!-- 时间段将通过JavaScript动态生成 -->
+                        <!-- Time slots will be generated by JavaScript -->
                     </div>
 
                     <div class="selected-slot-info" id="selectedSlotInfo" style="display: none;">
@@ -1273,14 +1223,14 @@
                 </div>
             </div>
 
-            <!-- 预订确认消息 -->
+            <!-- Booking Confirmation -->
             <div class="booking-confirmation" id="bookingConfirmation">
                 <div class="confirmation-icon">
                     <i class="fas fa-check"></i>
                 </div>
                 <div class="confirmation-message">
                     <h4>Booking Confirmed!</h4>
-                    <p>Thank you for booking with GreenGlo Cleaners. We've sent a confirmation email with all the details. Our team will contact you shortly to confirm your appointment.</p>
+                    <p>Thank you for booking with GreenGlo Cleaners. Your booking has been saved to our database with the following details:</p>
                     <div class="booking-details" id="bookingDetails" style="background: var(--light-green); padding: 1.5rem; border-radius: 12px; margin: 2rem auto; max-width: 400px;">
                         <div class="summary-item">
                             <span class="summary-label">Booking ID:</span>
@@ -1467,11 +1417,11 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // ===== Supabase Configuration =====
-        const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co'; // Your project URL
-        const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7'; // Your publishable key
+        // Replace with your actual Supabase URL and Anon Key from your admin page
+        const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
         
         // Initialize Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1538,7 +1488,7 @@
             }
         });
 
-        // ===== 预订系统变量 =====
+        // ===== Booking System Variables =====
         const bookingModal = document.getElementById('bookingModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const cancelBookingBtn = document.getElementById('cancelBookingBtn');
@@ -1559,7 +1509,7 @@
         const formSection = document.getElementById('formSection');
         const slotsSection = document.getElementById('slotsSection');
 
-        // 预订状态
+        // Booking state
         let currentBooking = {
             service: null,
             date: null,
@@ -1568,42 +1518,44 @@
             bookingId: null
         };
 
-        // ===== 预订模态框函数 =====
+        // ===== Booking Modal Functions =====
         function openBookingModal(serviceTitle, serviceDuration) {
-            // 设置服务信息
+            // Set service information
             currentBooking.service = serviceTitle;
             currentBooking.duration = serviceDuration;
             
-            // 设置当前日期
+            // Set current date
             const today = new Date();
             currentBooking.date = today;
             updateDateDisplay(today);
             
-            // 设置服务类型下拉框
+            // Set service type dropdown
             serviceTypeSelect.innerHTML = `<option value="${serviceTitle}" selected>${serviceTitle}</option>`;
             
-            // 更新预订摘要
+            // Update booking summary
             updateBookingSummary();
             
-            // 显示模态框
+            // Show modal
             bookingModal.classList.add('active');
             document.body.style.overflow = 'hidden';
             
-            // 重置表单
+            // Reset form
             resetBookingForm();
             
-            // 重置确认按钮状态
+            // Reset confirm button state
             confirmBookingBtn.disabled = true;
             selectedSlotInfo.style.display = 'none';
+            statusMessage.className = 'status-message';
+            statusMessage.textContent = '';
             
-            // 加载可用时间段
-            loadAvailableTimeSlots(today);
+            // Load available time slots from database
+            loadAvailableTimeSlotsFromDB(today);
         }
 
         function closeBookingModal() {
             bookingModal.classList.remove('active');
             document.body.style.overflow = '';
-            // 重置到预订表单视图
+            // Reset to booking form view
             bookingForm.style.display = 'grid';
             bookingConfirmation.classList.remove('active');
             formSection.style.display = 'block';
@@ -1611,17 +1563,14 @@
             loadingSpinner.style.display = 'none';
         }
 
-        async function loadAvailableTimeSlots(date) {
-            const loadingSpinner = document.getElementById('loadingSpinner');
-            const timeSlotsGrid = document.getElementById('timeSlotsGrid');
-            
+        async function loadAvailableTimeSlotsFromDB(date) {
             loadingSpinner.style.display = 'block';
             timeSlotsGrid.innerHTML = '';
             
             try {
                 const dateStr = date.toISOString().split('T')[0];
                 
-                // 从Supabase获取可用时间段
+                // Load available time slots from Supabase
                 const { data: availableSlots, error } = await supabase
                     .from('availability')
                     .select('*')
@@ -1630,50 +1579,127 @@
                     .order('time_slot', { ascending: true });
                 
                 if (error) {
-                    console.error('Error loading time slots:', error);
+                    console.error('Error loading time slots from database:', error);
                     showStatusMessage('Error loading available time slots. Please try again.', 'error');
+                    // Fallback to sample slots if database error
+                    generateSampleTimeSlots();
                     return;
                 }
                 
-                // 清除之前的错误消息
+                // Clear previous error message
                 statusMessage.className = 'status-message';
                 statusMessage.textContent = '';
                 
-                // 如果没有可用的时间段，显示消息
+                // If no slots in database, insert sample slots
                 if (!availableSlots || availableSlots.length === 0) {
-                    timeSlotsGrid.innerHTML = `
-                        <div style="text-align: center; padding: 2rem; color: var(--medium-gray);">
-                            <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                            <p>No available time slots for this date.</p>
-                            <p>Please select another date.</p>
-                        </div>
-                    `;
+                    await initializeSampleAvailability(date);
+                    // Reload slots after initialization
+                    await loadAvailableTimeSlotsFromDB(date);
                     return;
                 }
                 
-                // 生成时间段按钮
-                availableSlots.forEach(slot => {
-                    const slotElement = document.createElement('div');
-                    slotElement.className = 'time-slot';
-                    slotElement.textContent = formatTimeSlot(slot.time_slot);
-                    slotElement.dataset.time = slot.time_slot;
-                    slotElement.dataset.slotId = slot.id;
-                    
-                    slotElement.addEventListener('click', () => selectTimeSlot(slotElement, slot.time_slot));
-                    
-                    timeSlotsGrid.appendChild(slotElement);
-                });
+                // Generate time slot buttons from database
+                generateTimeSlotsFromDB(availableSlots);
                 
             } catch (error) {
                 console.error('Error:', error);
                 showStatusMessage('Error loading available time slots. Please try again.', 'error');
+                // Fallback to sample slots
+                generateSampleTimeSlots();
             } finally {
                 loadingSpinner.style.display = 'none';
             }
         }
 
+        async function initializeSampleAvailability(date) {
+            const dateStr = date.toISOString().split('T')[0];
+            
+            // Sample time slots
+            const sampleTimeSlots = [
+                '09:00-10:00',
+                '10:00-11:00',
+                '11:00-12:00',
+                '13:00-14:00',
+                '14:00-15:00',
+                '15:00-16:00',
+                '16:00-17:00'
+            ];
+            
+            try {
+                // Insert sample slots into database
+                const slotsToInsert = sampleTimeSlots.map(timeSlot => ({
+                    date: dateStr,
+                    time_slot: timeSlot,
+                    is_available: true
+                }));
+                
+                const { error } = await supabase
+                    .from('availability')
+                    .insert(slotsToInsert);
+                
+                if (error) {
+                    console.error('Error initializing sample availability:', error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function generateTimeSlotsFromDB(availableSlots) {
+            timeSlotsGrid.innerHTML = '';
+            
+            if (!availableSlots || availableSlots.length === 0) {
+                timeSlotsGrid.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--medium-gray); grid-column: 1 / -1;">
+                        <i class="fas fa-calendar-times" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>No available time slots for this date.</p>
+                        <p>Please select another date.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            availableSlots.forEach(slot => {
+                const slotElement = document.createElement('div');
+                slotElement.className = 'time-slot';
+                slotElement.textContent = formatTimeSlot(slot.time_slot);
+                slotElement.dataset.time = slot.time_slot;
+                slotElement.dataset.slotId = slot.id;
+                
+                slotElement.addEventListener('click', () => selectTimeSlot(slotElement, slot.time_slot));
+                
+                timeSlotsGrid.appendChild(slotElement);
+            });
+        }
+
+        function generateSampleTimeSlots() {
+            timeSlotsGrid.innerHTML = '';
+            
+            // Sample time slots for fallback
+            const sampleSlots = [
+                '09:00 AM - 11:00 AM',
+                '11:00 AM - 01:00 PM',
+                '01:00 PM - 03:00 PM',
+                '03:00 PM - 05:00 PM',
+                '05:00 PM - 07:00 PM'
+            ];
+            
+            sampleSlots.forEach(slot => {
+                const slotElement = document.createElement('div');
+                slotElement.className = 'time-slot';
+                slotElement.textContent = slot;
+                slotElement.dataset.time = slot;
+                
+                slotElement.addEventListener('click', () => selectTimeSlot(slotElement, slot));
+                
+                timeSlotsGrid.appendChild(slotElement);
+            });
+            
+            showStatusMessage('Using sample time slots. Database connection issue.', 'info');
+        }
+
         function formatTimeSlot(timeSlot) {
-            // 将时间格式化为更友好的显示格式
+            // Convert 24-hour format to 12-hour format for display
             if (timeSlot.includes('-')) {
                 const [start, end] = timeSlot.split('-');
                 return `${formatTime(start)} - ${formatTime(end)}`;
@@ -1682,7 +1708,7 @@
         }
 
         function formatTime(timeStr) {
-            // 将24小时制时间转换为12小时制
+            // Convert 24-hour time to 12-hour format
             const [hours, minutes] = timeStr.split(':');
             const hour = parseInt(hours);
             const ampm = hour >= 12 ? 'PM' : 'AM';
@@ -1694,43 +1720,43 @@
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             currentDateDisplay.textContent = date.toLocaleDateString('en-US', options);
             
-            // 更新摘要
+            // Update summary
             const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             document.getElementById('summaryDate').textContent = dateStr;
         }
 
         function selectTimeSlot(slotElement, timeSlot) {
-            // 移除之前的选择
+            // Remove previous selection
             document.querySelectorAll('.time-slot.selected').forEach(slot => {
                 slot.classList.remove('selected');
             });
             
-            // 设置新选择
+            // Set new selection
             slotElement.classList.add('selected');
             
-            // 更新当前预订
+            // Update current booking
             currentBooking.timeSlot = timeSlot;
             
-            // 显示选择的信息
+            // Show selection info
             selectedSlotTime.textContent = formatTimeSlot(timeSlot);
             selectedSlotDuration.textContent = currentBooking.duration;
             selectedSlotInfo.style.display = 'block';
             
-            // 更新摘要
+            // Update summary
             document.getElementById('summaryTime').textContent = formatTimeSlot(timeSlot);
             
-            // 启用确认按钮
+            // Enable confirm button
             confirmBookingBtn.disabled = false;
             
-            // 更新预订摘要
+            // Update booking summary
             updateBookingSummary();
         }
 
         function updateBookingSummary() {
-            // 服务
+            // Service
             document.getElementById('summaryService').textContent = currentBooking.service || '-';
             
-            // 日期
+            // Date
             if (currentBooking.date) {
                 const dateStr = currentBooking.date.toLocaleDateString('en-US', { 
                     month: 'short', 
@@ -1740,10 +1766,10 @@
                 document.getElementById('summaryDate').textContent = dateStr;
             }
             
-            // 时间
+            // Time
             document.getElementById('summaryTime').textContent = currentBooking.timeSlot ? formatTimeSlot(currentBooking.timeSlot) : '-';
             
-            // 估算总价 (基于服务类型)
+            // Estimated price (based on service type)
             let estimatedPrice = '£60-£120';
             if (currentBooking.service) {
                 if (currentBooking.service.includes('Deep') || currentBooking.service.includes('Oven')) {
@@ -1776,20 +1802,20 @@
         }
 
         async function submitBooking() {
-            // 收集表单数据
+            // Collect form data
             const customerName = document.getElementById('customerName').value.trim();
             const customerEmail = document.getElementById('customerEmail').value.trim();
             const customerPhone = document.getElementById('customerPhone').value.trim();
             const customerAddress = document.getElementById('customerAddress').value.trim();
             const specialInstructions = document.getElementById('specialInstructions').value.trim();
             
-            // 验证表单
+            // Validate form
             if (!customerName || !customerEmail || !customerPhone || !customerAddress || !currentBooking.timeSlot) {
                 showStatusMessage('Please fill in all required fields and select a time slot.', 'error');
                 return;
             }
 
-            // 验证电子邮件格式
+            // Validate email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(customerEmail)) {
                 showStatusMessage('Please enter a valid email address.', 'error');
@@ -1803,7 +1829,7 @@
             try {
                 const bookingDate = currentBooking.date.toISOString().split('T')[0];
                 
-                // 1. 插入预订到数据库
+                // 1. Insert booking into database
                 const { data: bookingData, error: bookingError } = await supabase
                     .from('bookings')
                     .insert({
@@ -1815,23 +1841,22 @@
                         booking_date: bookingDate,
                         time_slot: currentBooking.timeSlot,
                         service_type: currentBooking.service,
-                        status: 'confirmed',
-                        created_at: new Date().toISOString()
+                        status: 'confirmed'
                     })
-                    .select(); // 返回插入的行
+                    .select(); // Returns the inserted row
 
                 if (bookingError) {
                     console.error('Booking error:', bookingError);
-                    showStatusMessage('Failed to save booking. Please try again.', 'error');
+                    showStatusMessage('Failed to save booking to database. Please try again.', 'error');
                     confirmBookingBtn.disabled = false;
                     confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
                     return;
                 }
 
-                // 保存预订ID
+                // Save booking ID
                 currentBooking.bookingId = bookingData[0].id;
 
-                // 2. 更新可用性表
+                // 2. Update availability table
                 const { error: availabilityError } = await supabase
                     .from('availability')
                     .update({ is_available: false })
@@ -1840,28 +1865,10 @@
 
                 if (availabilityError) {
                     console.error('Availability update error:', availabilityError);
-                    // 继续执行，因为预订已经创建成功
+                    // Continue anyway since booking was successful
                 }
 
-                // 3. 发送确认电子邮件
-                await sendConfirmationEmail({
-                    bookingId: currentBooking.bookingId,
-                    customerName: customerName,
-                    customerEmail: customerEmail,
-                    customerPhone: customerPhone,
-                    serviceAddress: customerAddress,
-                    serviceType: currentBooking.service,
-                    bookingDate: currentBooking.date.toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    }),
-                    timeSlot: formatTimeSlot(currentBooking.timeSlot),
-                    specialInstructions: specialInstructions
-                });
-
-                // 4. 显示确认消息
+                // 3. Show confirmation with database ID
                 showBookingConfirmation();
 
             } catch (error) {
@@ -1872,33 +1879,12 @@
             }
         }
 
-        async function sendConfirmationEmail(bookingDetails) {
-            try {
-                // 使用Supabase Edge Function发送电子邮件
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/send-confirmation-email`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(bookingDetails)
-                });
-
-                if (!response.ok) {
-                    console.warn('Email sending failed, but booking was saved.');
-                }
-            } catch (error) {
-                console.warn('Email sending error:', error);
-                // 继续执行，因为预订已经保存
-            }
-        }
-
         function showBookingConfirmation() {
-            // 隐藏表单，显示确认消息
+            // Hide form, show confirmation message
             bookingForm.style.display = 'none';
             bookingConfirmation.classList.add('active');
             
-            // 更新确认消息中的详细信息
+            // Update confirmation details
             document.getElementById('confirmationBookingId').textContent = currentBooking.bookingId;
             document.getElementById('confirmationService').textContent = currentBooking.service;
             document.getElementById('confirmationDate').textContent = currentBooking.date.toLocaleDateString('en-US', { 
@@ -1908,23 +1894,23 @@
             });
             document.getElementById('confirmationTime').textContent = formatTimeSlot(currentBooking.timeSlot);
             
-            // 重置确认按钮状态
+            // Reset confirm button state
             confirmBookingBtn.disabled = false;
             confirmBookingBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Confirm Booking';
         }
 
-        // ===== 事件监听器 =====
+        // ===== Event Listeners =====
         closeModalBtn.addEventListener('click', closeBookingModal);
         cancelBookingBtn.addEventListener('click', closeBookingModal);
 
-        // 点击模态框外部关闭
+        // Close modal when clicking outside
         bookingModal.addEventListener('click', (e) => {
             if (e.target === bookingModal) {
                 closeBookingModal();
             }
         });
 
-        // 按ESC键关闭模态框
+        // Close modal with Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && bookingModal.classList.contains('active')) {
                 closeBookingModal();
@@ -1936,7 +1922,7 @@
             newDate.setDate(newDate.getDate() - 1);
             currentBooking.date = newDate;
             updateDateDisplay(newDate);
-            loadAvailableTimeSlots(newDate);
+            loadAvailableTimeSlotsFromDB(newDate);
             selectedSlotInfo.style.display = 'none';
             confirmBookingBtn.disabled = true;
             updateBookingSummary();
@@ -1947,7 +1933,7 @@
             newDate.setDate(newDate.getDate() + 1);
             currentBooking.date = newDate;
             updateDateDisplay(newDate);
-            loadAvailableTimeSlots(newDate);
+            loadAvailableTimeSlotsFromDB(newDate);
             selectedSlotInfo.style.display = 'none';
             confirmBookingBtn.disabled = true;
             updateBookingSummary();
@@ -1956,14 +1942,14 @@
         confirmBookingBtn.addEventListener('click', submitBooking);
 
         newBookingBtn.addEventListener('click', () => {
-            // 重置为新预订
+            // Reset for new booking
             bookingConfirmation.classList.remove('active');
             bookingForm.style.display = 'grid';
             resetBookingForm();
             const today = new Date();
             currentBooking.date = today;
             updateDateDisplay(today);
-            loadAvailableTimeSlots(today);
+            loadAvailableTimeSlotsFromDB(today);
         });
 
         // ===== Services Data =====
@@ -1980,7 +1966,7 @@
                     "Eco-friendly product usage"
                 ],
                 duration: "2-4 hours",
-                image: "livingroom.png"
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 2,
@@ -1994,7 +1980,7 @@
                     "Eco-friendly product usage"
                 ],
                 duration: "3-6 hours",
-                image: "office.png"
+                image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 3,
@@ -2008,7 +1994,7 @@
                     "Non-toxic eco-friendly solutions"
                 ],
                 duration: "2-3 hours",
-                image: "kitchen.png"
+                image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 4,
@@ -2022,7 +2008,7 @@
                     "As-new condition restoration"
                 ],
                 duration: "1-2 hours",
-                image: "ovenafter.png"
+                image: "https://images.unsplash.com/photo-1584132915807-fd1f5fbc078f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 5,
@@ -2036,7 +2022,7 @@
                     "Complete sanitization"
                 ],
                 duration: "1-2 hours",
-                image: "bathroom.png"
+                image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 6,
@@ -2050,7 +2036,7 @@
                     "Instant transformation"
                 ],
                 duration: "4-8 hours",
-                image: "turf.png"
+                image: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 7,
@@ -2064,7 +2050,7 @@
                     "Professional equipment use"
                 ],
                 duration: "2-4 hours",
-                image: "carpet.png"
+                image: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 8,
@@ -2078,7 +2064,7 @@
                     "Spotless finish"
                 ],
                 duration: "2-3 hours",
-                image: "patio.png"
+                image: "https://images.unsplash.com/photo-1560493676-04071c5f467b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 9,
@@ -2092,7 +2078,7 @@
                     "Deposit return guarantee"
                 ],
                 duration: "3-5 hours",
-                image: "tenancy.png"
+                image: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             },
             {
                 id: 10,
@@ -2106,7 +2092,7 @@
                     "Durable installation"
                 ],
                 duration: "4-6 hours",
-                image: "flooring.png"
+                image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
             }
         ];
 
@@ -2154,7 +2140,7 @@
                 servicesGrid.appendChild(serviceCard);
             });
 
-            // 为所有"Book Now"按钮添加事件监听器
+            // Add event listeners to all "Book Now" buttons
             document.querySelectorAll('.book-now-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const serviceTitle = this.getAttribute('data-service');
@@ -2163,7 +2149,7 @@
                 });
             });
 
-            // 添加加载动画
+            // Add loading animation
             const serviceCards = document.querySelectorAll('.service-card');
             serviceCards.forEach((el, index) => {
                 el.style.opacity = '0';
@@ -2216,66 +2202,59 @@
             });
         });
 
-        // ===== Initialize Database Tables =====
+        // ===== Initialize Database Connection =====
         async function initializeDatabase() {
             try {
-                // 检查并创建必要的表
-                // 注意：在实际应用中，这些表应该已经通过SQL创建
-                console.log('Database connection established successfully');
+                // Test database connection
+                const { data, error } = await supabase
+                    .from('availability')
+                    .select('count')
+                    .limit(1);
                 
-                // 初始化一些示例可用时间段（仅用于演示）
-                await initializeSampleAvailability();
-                
+                if (error) {
+                    console.warn('Database connection issue:', error.message);
+                    showGlobalStatus('Database connection issue. Some features may be limited.', 'info');
+                } else {
+                    console.log('Database connection successful');
+                }
             } catch (error) {
                 console.error('Database initialization error:', error);
             }
         }
 
-        async function initializeSampleAvailability() {
-            // 为未来7天创建示例可用时间段
-            const today = new Date();
-            
-            for (let i = 0; i < 7; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() + i);
-                const dateStr = date.toISOString().split('T')[0];
-                
-                // 定义时间段
-                const timeSlots = [
-                    '09:00-10:00',
-                    '10:00-11:00', 
-                    '11:00-12:00',
-                    '13:00-14:00',
-                    '14:00-15:00',
-                    '15:00-16:00'
-                ];
-                
-                // 为每个时间段检查是否已存在，如果不存在则插入
-                for (const timeSlot of timeSlots) {
-                    const { data: existingSlot } = await supabase
-                        .from('availability')
-                        .select('id')
-                        .eq('date', dateStr)
-                        .eq('time_slot', timeSlot)
-                        .single();
-                    
-                    if (!existingSlot) {
-                        await supabase
-                            .from('availability')
-                            .insert({
-                                date: dateStr,
-                                time_slot: timeSlot,
-                                is_available: true
-                            });
-                    }
-                }
+        function showGlobalStatus(message, type) {
+            // Create a global status message if needed
+            const existingStatus = document.getElementById('globalStatusMessage');
+            if (existingStatus) {
+                existingStatus.remove();
             }
+            
+            const statusDiv = document.createElement('div');
+            statusDiv.id = 'globalStatusMessage';
+            statusDiv.className = `status-message ${type}`;
+            statusDiv.style.position = 'fixed';
+            statusDiv.style.top = '80px';
+            statusDiv.style.left = '50%';
+            statusDiv.style.transform = 'translateX(-50%)';
+            statusDiv.style.zIndex = '1000';
+            statusDiv.style.width = '90%';
+            statusDiv.style.maxWidth = '500px';
+            statusDiv.textContent = message;
+            
+            document.body.appendChild(statusDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (statusDiv.parentNode) {
+                    statusDiv.parentNode.removeChild(statusDiv);
+                }
+            }, 5000);
         }
 
         // Initial render
         renderServices();
         
-        // Initialize database on page load
+        // Initialize database connection on page load
         window.addEventListener('DOMContentLoaded', initializeDatabase);
     </script>
 </body>
