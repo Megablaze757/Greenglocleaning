@@ -865,6 +865,66 @@
             color: var(--medium-gray);
         }
 
+        /* Booking specific styles */
+        .btn-sm {
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+        }
+
+        .booking-card {
+            padding: 20px;
+            background: var(--off-white);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-green);
+            transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .booking-card.pending {
+            border-left-color: var(--orange);
+        }
+
+        .booking-card.cancelled {
+            border-left-color: var(--red);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: var(--medium-gray);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        /* Modal for booking details */
+        .booking-details-modal .modal {
+            max-width: 700px;
+        }
+
         @media (max-width: 1200px) {
             .admin-sidebar {
                 width: 240px;
@@ -955,8 +1015,8 @@
                 <p style="margin-bottom: 20px;">You need to configure your Supabase database to allow the admin panel to work.</p>
                 
                 <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 10px;">Step 1: Create the availability table</h4>
-                    <textarea id="createTableSql" readonly style="width: 100%; height: 120px; font-family: monospace; background: white; border: 1px solid #e5e7eb; padding: 10px; border-radius: 4px; font-size: 12px;">
+                    <h4 style="margin-bottom: 10px;">Step 1: Create the tables</h4>
+                    <textarea id="createTableSql" readonly style="width: 100%; height: 200px; font-family: monospace; background: white; border: 1px solid #e5e7eb; padding: 10px; border-radius: 4px; font-size: 12px;">
 -- Create availability table
 CREATE TABLE IF NOT EXISTS availability (
     id BIGSERIAL PRIMARY KEY,
@@ -965,6 +1025,19 @@ CREATE TABLE IF NOT EXISTS availability (
     is_available BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE(date, time_slot)
+);
+
+-- Create bookings table
+CREATE TABLE IF NOT EXISTS bookings (
+    id BIGSERIAL PRIMARY KEY,
+    booking_date DATE NOT NULL,
+    time_slot TEXT NOT NULL,
+    customer_name TEXT NOT NULL,
+    email TEXT,
+    address TEXT,
+    service TEXT,
+    status TEXT DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT NOW()
 );</textarea>
                     <button onclick="copyToClipboard('createTableSql')" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">
                         <i class="fas fa-copy"></i> Copy SQL
@@ -976,13 +1049,18 @@ CREATE TABLE IF NOT EXISTS availability (
                     <textarea id="fixRlsSql" readonly style="width: 100%; height: 150px; font-family: monospace; background: white; border: 1px solid #e5e7eb; padding: 10px; border-radius: 4px; font-size: 12px;">
 -- Option A: Disable RLS (easiest for development)
 ALTER TABLE availability DISABLE ROW LEVEL SECURITY;
+ALTER TABLE bookings DISABLE ROW LEVEL SECURITY;
 
 -- Option B: Enable RLS with proper policies (recommended)
 -- First, enable RLS
 ALTER TABLE availability ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 
 -- Then create policies
 CREATE POLICY "Allow all operations" ON "public"."availability"
+FOR ALL USING (true);
+
+CREATE POLICY "Allow all operations" ON "public"."bookings"
 FOR ALL USING (true);</textarea>
                     <button onclick="copyToClipboard('fixRlsSql')" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">
                         <i class="fas fa-copy"></i> Copy SQL
@@ -997,6 +1075,27 @@ FOR ALL USING (true);</textarea>
                         <i class="fas fa-times"></i> Close
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Booking Details Modal -->
+    <div id="bookingDetailsModal" class="modal-overlay" style="display: none;">
+        <div class="modal booking-details-modal">
+            <div class="modal-header">
+                <h3>Booking Details</h3>
+                <button class="modal-close" id="closeBookingDetailsModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="bookingDetailsContent">
+                    <!-- Booking details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer" style="padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 10px;">
+                <button id="closeBookingDetailsBtn" class="btn btn-secondary">Close</button>
+                <button id="printBookingBtn" class="btn btn-primary">
+                    <i class="fas fa-print"></i> Print
+                </button>
             </div>
         </div>
     </div>
@@ -1383,6 +1482,14 @@ FOR ALL USING (true);</textarea>
                 // Bookings
                 document.getElementById('refreshBookingsBtn').addEventListener('click', loadBookings);
                 
+                // Booking details modal
+                document.getElementById('closeBookingDetailsModal').addEventListener('click', closeBookingDetailsModal);
+                document.getElementById('closeBookingDetailsBtn').addEventListener('click', closeBookingDetailsModal);
+                document.getElementById('printBookingBtn').addEventListener('click', printBookingDetails);
+                document.getElementById('bookingDetailsModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeBookingDetailsModal();
+                });
+                
                 // Modal backdrop click
                 document.getElementById('databaseSetupModal').addEventListener('click', function(e) {
                     if (e.target === this) closeDatabaseSetupModal();
@@ -1396,6 +1503,50 @@ FOR ALL USING (true);</textarea>
             
             function closeDatabaseSetupModal() {
                 document.getElementById('databaseSetupModal').style.display = 'none';
+            }
+            
+            // Booking Details Modal
+            function openBookingDetailsModal() {
+                document.getElementById('bookingDetailsModal').style.display = 'flex';
+            }
+            
+            function closeBookingDetailsModal() {
+                document.getElementById('bookingDetailsModal').style.display = 'none';
+            }
+            
+            function printBookingDetails() {
+                const content = document.getElementById('bookingDetailsContent').innerHTML;
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Booking Details</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .print-header { text-align: center; margin-bottom: 30px; }
+                            .print-header h1 { color: #065F46; }
+                            .detail-section { margin-bottom: 20px; }
+                            .detail-label { font-weight: bold; color: #666; margin-bottom: 5px; }
+                            .detail-value { margin-bottom: 15px; }
+                            @media print {
+                                .no-print { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="print-header">
+                            <h1>GreenGlo Booking Details</h1>
+                            <p>Printed on ${new Date().toLocaleDateString()}</p>
+                        </div>
+                        ${content}
+                        <div class="no-print" style="margin-top: 30px; text-align: center;">
+                            <button onclick="window.print()" style="padding: 10px 20px; background: #10B981; color: white; border: none; border-radius: 5px; cursor: pointer;">Print</button>
+                            <button onclick="window.close()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">Close</button>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
             }
             
             // Copy to clipboard helper
@@ -2307,7 +2458,7 @@ FOR ALL USING (true);</textarea>
                 container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading bookings...</div></div>';
                 
                 try {
-                    // Fetch bookings from database
+                    // Fetch bookings from database with all fields
                     const { data: bookings, error } = await state.db
                         .from('bookings')
                         .select('*')
@@ -2315,13 +2466,21 @@ FOR ALL USING (true);</textarea>
                         .limit(50);
                     
                     if (error) {
-                        if (error.message.includes('does not exist')) {
-                            // Table doesn't exist yet
+                        if (error.message.includes('does not exist') || error.message.includes('column') || error.message.includes('422')) {
+                            // Table or columns don't exist yet
                             container.innerHTML = `
                                 <div style="text-align: center; padding: 60px; color: var(--medium-gray);">
                                     <i class="fas fa-calendar-check" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
-                                    <h3 style="margin-bottom: 10px;">No Bookings Yet</h3>
-                                    <p>Bookings table doesn't exist yet or has no data</p>
+                                    <h3 style="margin-bottom: 10px;">Bookings Table Setup Required</h3>
+                                    <p style="margin-bottom: 20px;">The bookings table needs to be updated with new fields.</p>
+                                    <button onclick="updateBookingsTableStructure()" class="btn btn-primary" style="margin: 10px;">
+                                        <i class="fas fa-database"></i>
+                                        Update Table Structure
+                                    </button>
+                                    <button onclick="createBookingsTable()" class="btn btn-secondary" style="margin: 10px;">
+                                        <i class="fas fa-plus-circle"></i>
+                                        Create Bookings Table
+                                    </button>
                                 </div>
                             `;
                             return;
@@ -2352,6 +2511,43 @@ FOR ALL USING (true);</textarea>
                     // Create bookings list
                     let html = '<div style="display: flex; flex-direction: column; gap: 20px;">';
                     
+                    // Add search and filter controls
+                    html += `
+                        <div style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); padding: 20px;">
+                            <h3 style="color: var(--dark-green); margin-bottom: 15px;">Filters</h3>
+                            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 200px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 14px;">Search by name, email, or service</label>
+                                    <input type="text" id="bookingSearch" placeholder="Search..." style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif;">
+                                </div>
+                                <div style="min-width: 150px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 14px;">Status</label>
+                                    <select id="bookingStatusFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif;">
+                                        <option value="all">All Status</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="confirmed">Confirmed</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+                                <div style="min-width: 150px;">
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 14px;">Date Range</label>
+                                    <select id="bookingDateFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif;">
+                                        <option value="all">All Dates</option>
+                                        <option value="today">Today</option>
+                                        <option value="week">This Week</option>
+                                        <option value="month">This Month</option>
+                                    </select>
+                                </div>
+                                <div style="align-self: flex-end;">
+                                    <button id="applyBookingFilters" class="btn btn-primary">
+                                        <i class="fas fa-filter"></i>
+                                        Apply Filters
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
                     Object.keys(bookingsByDate).sort().reverse().forEach(date => {
                         const dateBookings = bookingsByDate[date];
                         const dateObj = new Date(date);
@@ -2363,27 +2559,87 @@ FOR ALL USING (true);</textarea>
                         });
                         
                         html += `
-                            <div style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden;">
+                            <div class="booking-date-group" style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden;">
                                 <div style="background: var(--light-green); padding: 15px 20px; border-bottom: 1px solid #e5e7eb;">
-                                    <h3 style="color: var(--dark-green);">${dateStr}</h3>
+                                    <h3 style="color: var(--dark-green); margin: 0;">${dateStr}</h3>
                                 </div>
                                 <div style="padding: 20px;">
                                     ${dateBookings.map(booking => `
-                                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--off-white); border-radius: 8px; margin-bottom: 10px;">
-                                            <div>
-                                                <div style="font-weight: 600; color: var(--dark-gray);">${booking.customer_name || 'Anonymous'}</div>
-                                                <div style="font-size: 14px; color: var(--medium-gray);">${booking.time_slot}</div>
+                                        <div class="booking-card ${booking.status || 'pending'}" style="border-left-color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : booking.status === 'pending' ? 'var(--orange)' : 'var(--red)'};">
+                                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                                                <div style="flex: 1;">
+                                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;">
+                                                        <div style="font-size: 18px; font-weight: 700; color: var(--dark-gray);">
+                                                            ${booking.customer_name || 'Anonymous'}
+                                                        </div>
+                                                        <span style="padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
+                                                            background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
+                                                                       booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
+                                                                       'rgba(239, 68, 68, 0.1)'}; 
+                                                            color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : 
+                                                                    booking.status === 'pending' ? 'var(--orange)' : 
+                                                                    'var(--red)'};">
+                                                            ${booking.status || 'pending'}
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    <div class="details-grid">
+                                                        ${booking.email ? `
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Email</div>
+                                                                <div class="detail-value">
+                                                                    <i class="fas fa-envelope" style="margin-right: 8px; color: var(--primary-green);"></i>
+                                                                    ${booking.email}
+                                                                </div>
+                                                            </div>
+                                                        ` : ''}
+                                                        
+                                                        ${booking.address ? `
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Address</div>
+                                                                <div class="detail-value">
+                                                                    <i class="fas fa-map-marker-alt" style="margin-right: 8px; color: var(--primary-green);"></i>
+                                                                    ${booking.address}
+                                                                </div>
+                                                            </div>
+                                                        ` : ''}
+                                                        
+                                                        ${booking.service ? `
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Service</div>
+                                                                <div class="detail-value">
+                                                                    <i class="fas fa-concierge-bell" style="margin-right: 8px; color: var(--primary-green);"></i>
+                                                                    ${booking.service}
+                                                                </div>
+                                                            </div>
+                                                        ` : ''}
+                                                        
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">Time Slot</div>
+                                                            <div class="detail-value">
+                                                                <i class="fas fa-clock" style="margin-right: 8px; color: var(--primary-green);"></i>
+                                                                ${booking.time_slot}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div style="display: flex; gap: 8px;">
+                                                    <button class="btn btn-sm btn-success booking-action-btn" data-booking-id="${booking.id}" data-action="confirm" style="padding: 6px 12px; font-size: 12px;">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger booking-action-btn" data-booking-id="${booking.id}" data-action="cancel" style="padding: 6px 12px; font-size: 12px;">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-secondary booking-details-btn" data-booking-id="${booking.id}" style="padding: 6px 12px; font-size: 12px;">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <span style="padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; 
-                                                    background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
-                                                               booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
-                                                               'rgba(239, 68, 68, 0.1)'}; 
-                                                    color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : 
-                                                            booking.status === 'pending' ? 'var(--orange)' : 
-                                                            'var(--red)'};">
-                                                    ${booking.status}
-                                                </span>
+                                            
+                                            <div style="font-size: 12px; color: var(--medium-gray); margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05);">
+                                                <i class="fas fa-calendar-plus" style="margin-right: 5px;"></i>
+                                                Booked on ${new Date(booking.created_at).toLocaleDateString()} at ${new Date(booking.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                             </div>
                                         </div>
                                     `).join('')}
@@ -2394,6 +2650,9 @@ FOR ALL USING (true);</textarea>
                     
                     html += '</div>';
                     container.innerHTML = html;
+                    
+                    // Add event listeners for filters and actions
+                    setupBookingEventListeners();
                     
                 } catch (err) {
                     console.error('Error loading bookings:', err);
@@ -2411,6 +2670,268 @@ FOR ALL USING (true);</textarea>
                 }
             }
             
+            // Setup booking event listeners
+            function setupBookingEventListeners() {
+                // Filter button
+                const applyFiltersBtn = document.getElementById('applyBookingFilters');
+                if (applyFiltersBtn) {
+                    applyFiltersBtn.addEventListener('click', applyBookingFilters);
+                }
+                
+                // Booking action buttons
+                document.querySelectorAll('.booking-action-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookingId = this.dataset.bookingId;
+                        const action = this.dataset.action;
+                        updateBookingStatus(bookingId, action);
+                    });
+                });
+                
+                // Booking details buttons
+                document.querySelectorAll('.booking-details-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const bookingId = this.dataset.bookingId;
+                        showBookingDetails(bookingId);
+                    });
+                });
+            }
+            
+            // Filter bookings
+            async function applyBookingFilters() {
+                const searchTerm = document.getElementById('bookingSearch')?.value.toLowerCase() || '';
+                const statusFilter = document.getElementById('bookingStatusFilter')?.value || 'all';
+                const dateFilter = document.getElementById('bookingDateFilter')?.value || 'all';
+                
+                // Hide all booking cards first
+                document.querySelectorAll('.booking-card').forEach(card => {
+                    card.style.display = 'none';
+                });
+                
+                // Filter logic
+                document.querySelectorAll('.booking-card').forEach(card => {
+                    const name = card.querySelector('div[style*="font-size: 18px"]')?.textContent.toLowerCase() || '';
+                    const emailElement = card.querySelector('div[style*="fas fa-envelope"]');
+                    const email = emailElement ? emailElement.parentElement.textContent.toLowerCase() : '';
+                    const serviceElement = card.querySelector('div[style*="fas fa-concierge-bell"]');
+                    const service = serviceElement ? serviceElement.parentElement.textContent.toLowerCase() : '';
+                    const status = card.querySelector('span[style*="padding: 5px 12px"]')?.textContent.toLowerCase() || '';
+                    const date = card.closest('.booking-date-group')?.querySelector('h3')?.textContent.toLowerCase() || '';
+                    
+                    let matchesSearch = !searchTerm || 
+                        name.includes(searchTerm) || 
+                        email.includes(searchTerm) || 
+                        service.includes(searchTerm);
+                    
+                    let matchesStatus = statusFilter === 'all' || status === statusFilter;
+                    
+                    // Simple date filtering (could be enhanced)
+                    let matchesDate = true;
+                    if (dateFilter === 'today') {
+                        const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                        matchesDate = date.includes(today.split(',')[0]); // Check day name
+                    }
+                    
+                    if (matchesSearch && matchesStatus && matchesDate) {
+                        card.style.display = 'block';
+                        // Also show the parent date group
+                        card.closest('.booking-date-group').style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Hide empty date groups
+                document.querySelectorAll('.booking-date-group').forEach(group => {
+                    const visibleCards = group.querySelectorAll('.booking-card[style*="display: block"]').length;
+                    if (visibleCards === 0) {
+                        group.style.display = 'none';
+                    } else {
+                        group.style.display = 'block';
+                    }
+                });
+            }
+            
+            // Update booking status
+            async function updateBookingStatus(bookingId, action) {
+                const statusMap = {
+                    'confirm': 'confirmed',
+                    'cancel': 'cancelled'
+                };
+                
+                const newStatus = statusMap[action];
+                if (!newStatus) return;
+                
+                try {
+                    const { error } = await state.db
+                        .from('bookings')
+                        .update({ status: newStatus })
+                        .eq('id', bookingId);
+                    
+                    if (error) throw error;
+                    
+                    showNotification(`Booking ${newStatus} successfully!`, 'success');
+                    await loadBookings();
+                    
+                } catch (err) {
+                    console.error('Error updating booking:', err);
+                    showNotification('Error updating booking: ' + err.message, 'error');
+                }
+            }
+            
+            // Show booking details
+            async function showBookingDetails(bookingId) {
+                try {
+                    const { data: booking, error } = await state.db
+                        .from('bookings')
+                        .select('*')
+                        .eq('id', bookingId)
+                        .single();
+                    
+                    if (error) throw error;
+                    
+                    const detailsHtml = `
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Customer Name</div>
+                                <div class="detail-value">${booking.customer_name || 'Not specified'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Email</div>
+                                <div class="detail-value">${booking.email || 'Not specified'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Address</div>
+                                <div class="detail-value">${booking.address || 'Not specified'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Service</div>
+                                <div class="detail-value">${booking.service || 'Not specified'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Booking Date</div>
+                                <div class="detail-value">${new Date(booking.booking_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Time Slot</div>
+                                <div class="detail-value">${booking.time_slot}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Status</div>
+                                <div class="detail-value">
+                                    <span style="padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
+                                        background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
+                                                   booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
+                                                   'rgba(239, 68, 68, 0.1)'}; 
+                                        color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : 
+                                                booking.status === 'pending' ? 'var(--orange)' : 
+                                                'var(--red)'};">
+                                        ${booking.status || 'pending'}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Booking Created</div>
+                                <div class="detail-value">${new Date(booking.created_at).toLocaleString()}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: var(--light-green); border-radius: 8px;">
+                            <div style="font-weight: 600; color: var(--dark-green); margin-bottom: 10px;">Quick Actions</div>
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="updateBookingStatus(${booking.id}, 'confirm')" class="btn btn-success btn-sm">
+                                    <i class="fas fa-check"></i> Confirm Booking
+                                </button>
+                                <button onclick="updateBookingStatus(${booking.id}, 'cancel')" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-times"></i> Cancel Booking
+                                </button>
+                                <a href="mailto:${booking.email || ''}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-envelope"></i> Email Customer
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('bookingDetailsContent').innerHTML = detailsHtml;
+                    openBookingDetailsModal();
+                    
+                } catch (err) {
+                    console.error('Error loading booking details:', err);
+                    showNotification('Error loading booking details: ' + err.message, 'error');
+                }
+            }
+            
+            // Function to update bookings table structure
+            async function updateBookingsTableStructure() {
+                try {
+                    showNotification('Updating bookings table structure...', 'info');
+                    
+                    // Add columns if they don't exist
+                    const alterSql = `
+                        ALTER TABLE bookings 
+                        ADD COLUMN IF NOT EXISTS email TEXT,
+                        ADD COLUMN IF NOT EXISTS address TEXT,
+                        ADD COLUMN IF NOT EXISTS service TEXT;
+                    `;
+                    
+                    // You would need to execute this SQL in Supabase SQL Editor
+                    // For now, we'll show the SQL to copy
+                    const sqlTextArea = document.createElement('textarea');
+                    sqlTextArea.value = alterSql;
+                    document.body.appendChild(sqlTextArea);
+                    sqlTextArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(sqlTextArea);
+                    
+                    showNotification('SQL copied to clipboard! Paste in Supabase SQL Editor.', 'success');
+                    openDatabaseSetupModal();
+                    
+                } catch (err) {
+                    console.error('Error updating table:', err);
+                    showNotification('Error: ' + err.message, 'error');
+                }
+            }
+            
+            // Function to create bookings table if it doesn't exist
+            async function createBookingsTable() {
+                try {
+                    // This would be executed in SQL Editor
+                    const createSql = `
+                        CREATE TABLE IF NOT EXISTS bookings (
+                            id BIGSERIAL PRIMARY KEY,
+                            booking_date DATE NOT NULL,
+                            time_slot TEXT NOT NULL,
+                            customer_name TEXT NOT NULL,
+                            email TEXT,
+                            address TEXT,
+                            service TEXT,
+                            status TEXT DEFAULT 'pending',
+                            created_at TIMESTAMP DEFAULT NOW()
+                        );
+                    `;
+                    
+                    const sqlTextArea = document.createElement('textarea');
+                    sqlTextArea.value = createSql;
+                    document.body.appendChild(sqlTextArea);
+                    sqlTextArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(sqlTextArea);
+                    
+                    showNotification('Create table SQL copied to clipboard!', 'success');
+                    openDatabaseSetupModal();
+                    
+                } catch (err) {
+                    console.error('Error creating table:', err);
+                    showNotification('Error: ' + err.message, 'error');
+                }
+            }
+            
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', init);
             
@@ -2421,6 +2942,9 @@ FOR ALL USING (true);</textarea>
             window.openDatabaseSetupModal = openDatabaseSetupModal;
             window.closeDatabaseSetupModal = closeDatabaseSetupModal;
             window.copyToClipboard = copyToClipboard;
+            window.updateBookingsTableStructure = updateBookingsTableStructure;
+            window.createBookingsTable = createBookingsTable;
+            window.updateBookingStatus = updateBookingStatus;
             
         })();
     </script>
