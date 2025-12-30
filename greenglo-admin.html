@@ -1033,9 +1033,9 @@ CREATE TABLE IF NOT EXISTS bookings (
     booking_date DATE NOT NULL,
     time_slot TEXT NOT NULL,
     customer_name TEXT NOT NULL,
-    email TEXT,
-    address TEXT,
-    service TEXT,
+    customer_email TEXT,
+    customer_address TEXT,
+    service_title TEXT,
     status TEXT DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT NOW()
 );</textarea>
