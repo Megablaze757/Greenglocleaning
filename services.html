@@ -1454,724 +1454,751 @@
 
     <!-- JavaScript -->
     <script>
-// ===== Mobile Navigation =====
-const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-const mobileCloseBtn = document.getElementById('mobileCloseBtn');
-const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-const navMenu = document.getElementById('navMenu');
-const navbar = document.getElementById('navbar');
-const navLinks = document.querySelectorAll('.nav-link');
+        // ===== Mobile Navigation =====
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const navMenu = document.getElementById('navMenu');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-const openMobileMenu = () => {
-    navMenu.classList.add('active');
-    mobileMenuOverlay.classList.add('active');
-    mobileMenuBtn.classList.add('active');
-    mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-    document.body.style.overflow = 'hidden';
-};
+        const openMobileMenu = () => {
+            navMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
+        };
 
-const closeMobileMenu = () => {
-    navMenu.classList.remove('active');
-    mobileMenuOverlay.classList.remove('active');
-    mobileMenuBtn.classList.remove('active');
-    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-    document.body.style.overflow = '';
-};
+        const closeMobileMenu = () => {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        };
 
-mobileMenuBtn.addEventListener('click', () => {
-    if (navMenu.classList.contains('active')) {
-        closeMobileMenu();
-    } else {
-        openMobileMenu();
-    }
-});
+        mobileMenuBtn.addEventListener('click', () => {
+            if (navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
 
-mobileCloseBtn.addEventListener('click', closeMobileMenu);
-mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        mobileCloseBtn.addEventListener('click', closeMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
-navLinks.forEach(link => {
-    link.addEventListener('click', closeMobileMenu);
-});
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-        closeMobileMenu();
-    }
-});
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
 
-// ===== Booking System =====
-const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
-const RESEND_API_KEY = 're_NiRLrvXk_4p6TfCmjQMXzVcGcnw99iDro';
+        // ===== Booking System =====
+        const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
+        const RESEND_API_KEY = 're_NiRLrvXk_4p6TfCmjQMXzVcGcnw99iDro';
 
-let supabaseClient = null;
-let currentBooking = {
-    service: null,
-    date: null,
-    timeSlot: null,
-    slotId: null,
-    bedrooms: 1,
-    calculatedPrice: 0,
-    customer: {}
-};
+        let supabaseClient = null;
+        let currentBooking = {
+            service: null,
+            date: null,
+            timeSlot: null,
+            slotId: null,
+            bedrooms: 1,
+            calculatedPrice: 0,
+            customer: {}
+        };
 
-// Initialize Supabase
-if (typeof supabase !== 'undefined') {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
+        // Initialize Supabase
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
 
-// Database Schema Check
-async function checkDatabaseSchema() {
-    if (!supabaseClient) {
-        return false;
-    }
-    
-    try {
-        const { data, error } = await supabaseClient
-            .from('bookings')
-            .select('id')
-            .limit(1);
-        
-        if (error) {
-            if (error.message.includes('service_title') || error.code === 'PGRST204') {
+        // Database Schema Check
+        async function checkDatabaseSchema() {
+            if (!supabaseClient) {
                 return false;
             }
-            return false;
-        }
-        
-        return true;
-        
-    } catch (err) {
-        return false;
-    }
-}
-
-// Email Confirmation Function
-async function sendConfirmationEmail(customerEmail, bookingDetails) {
-    if (!customerEmail || !customerEmail.includes('@')) {
-        return { success: false, reason: 'No valid email' };
-    }
-    
-    const apiUrl = 'https://api.resend.com/emails';
-    
-    const emailData = {
-        from: 'GreenGlo Cleaners <bookings@greenglocleaners.co.uk>',
-        to: [customerEmail],
-        reply_to: 'greenglocleaning@gmail.com',
-        subject: `✅ Booking Confirmed: ${bookingDetails.service} - ${bookingDetails.date}`,
-        html: `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <style>
-                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-                    .header { background: linear-gradient(135deg, #10B981, #0D9488); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-                    .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb; }
-                    .booking-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10B981; }
-                    .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px; }
-                    h1, h2, h3 { color: #065F46; }
-                    .highlight { background: #D1FAE5; padding: 15px; border-radius: 8px; margin: 15px 0; }
-                    .btn { display: inline-block; background: #10B981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; }
-                    .price-badge { background: #FBBF24; color: #92400e; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; }
-                </style>
-            </head>
-            <body>
-                <div class="header">
-                    <h1 style="color: white; margin: 0;">✅ Booking Confirmed!</h1>
-                    <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0;">Thank you for choosing GreenGlo Cleaners</p>
-                </div>
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('bookings')
+                    .select('id')
+                    .limit(1);
                 
-                <div class="content">
-                    <h2>📋 Your Booking Summary</h2>
-                    <div class="booking-details">
-                        <p><strong>Service:</strong> ${bookingDetails.service}</p>
-                        <p><strong>Date:</strong> ${new Date(bookingDetails.date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                        <p><strong>Time:</strong> ${bookingDetails.timeSlot}</p>
-                        <p><strong>Duration:</strong> ${bookingDetails.duration}</p>
-                        <p><strong>Bedrooms:</strong> ${bookingDetails.bedrooms}</p>
-                        <p><strong>Price:</strong> <span class="price-badge">${bookingDetails.price}</span></p>
-                    </div>
-                    
-                    <div class="highlight">
-                        <h3>👤 Your Details</h3>
-                        <p><strong>Name:</strong> ${bookingDetails.customerName}</p>
-                        <p><strong>Phone:</strong> ${bookingDetails.customerPhone}</p>
-                        <p><strong>Address:</strong> ${bookingDetails.customerAddress}</p>
-                    </div>
-                    
-                    <h3>📞 What Happens Next?</h3>
-                    <ul>
-                        <li><strong>24-Hour Confirmation Call:</strong> Our team will call you within 24 hours to confirm all details</li>
-                        <li><strong>Preparation:</strong> Please ensure access to the property during the booked time</li>
-                        <li><strong>Our Team:</strong> Vetted, background-checked cleaners with eco-friendly products</li>
-                        <li><strong>Payment:</strong> Payment is due upon completion of service (Cash, Card, or Bank Transfer)</li>
-                    </ul>
-                    
-                    <h3>🔄 Need to Make Changes?</h3>
-                    <p>Contact us at <a href="tel:07827784204" style="color: #10B981; font-weight: bold;">07827 784204</a> or reply to this email</p>
-                    
-                    <div style="text-align: center; margin: 30px 0;">
-                        <a href="tel:07827784204" class="btn">📞 Call Us Now</a>
-                    </div>
-                    
-                    <div class="footer">
-                        <p><strong>GreenGlo Cleaners London</strong><br>
-                        📞 07827 784204 | ✉️ greenglocleaning@gmail.com</p>
-                        <p style="font-size: 12px; color: #9CA3AF; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                            This is an automated confirmation email. Please do not reply directly to this email.<br>
-                            Booking Reference: ${bookingDetails.bookingId || new Date().getTime()}
-                        </p>
-                    </div>
-                </div>
-            </body>
-            </html>
-        `,
-        text: `
-            ✅ BOOKING CONFIRMED - GreenGlo Cleaners
-            
-            Your booking has been successfully confirmed!
-            
-            SERVICE DETAILS:
-            =================
-            Service: ${bookingDetails.service}
-            Date: ${bookingDetails.date}
-            Time: ${bookingDetails.timeSlot}
-            Duration: ${bookingDetails.duration}
-            Bedrooms: ${bookingDetails.bedrooms}
-            Price: ${bookingDetails.price}
-            
-            CUSTOMER DETAILS:
-            =================
-            Name: ${bookingDetails.customerName}
-            Phone: ${bookingDetails.customerPhone}
-            Address: ${bookingDetails.customerAddress}
-            
-            NEXT STEPS:
-            ===========
-            1. We will call you within 24 hours to confirm all details
-            2. Please ensure someone is available at the address
-            3. Our cleaners will arrive with all necessary equipment
-            4. Payment is due upon completion
-            
-            Need help? Call us at 07827 784204
-            
-            ---
-            GreenGlo Cleaners London
-            07827 784204 | greenglocleaning@gmail.com
-            www.greenglocleaners.co.uk
-        `
-    };
-    
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${RESEND_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(emailData)
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            return { success: true, data };
-        } else {
-            return { success: false, error: data };
+                if (error) {
+                    if (error.message.includes('service_title') || error.code === 'PGRST204') {
+                        return false;
+                    }
+                    return false;
+                }
+                
+                return true;
+                
+            } catch (err) {
+                return false;
+            }
         }
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-}
 
-// Initialize Database Check
-window.addEventListener('DOMContentLoaded', async function() {
-    if (!supabaseClient) {
-        return;
-    }
-    
-    await checkDatabaseSchema();
-});
-
-// ===== Booking Modal Functions =====
-function openBookingModal(serviceTitle, serviceId, serviceData) {
-    currentBooking.service = {
-        title: serviceTitle,
-        id: serviceId,
-        data: serviceData
-    };
-    
-    document.getElementById('bookingServiceName').textContent = serviceTitle;
-    
-    currentBooking.bedrooms = 1;
-    currentBooking.calculatedPrice = 0;
-    
-    const bedroomGroup = document.getElementById('bedroomSelectionGroup');
-    const priceDisplay = document.getElementById('priceDisplay');
-    
-    if (serviceData.hasBedrooms) {
-        bedroomGroup.style.display = 'block';
-        priceDisplay.style.display = 'block';
-        renderBedroomOptions(serviceData);
-    } else {
-        bedroomGroup.style.display = 'none';
-        priceDisplay.style.display = 'block';
-        updatePriceDisplay(serviceData.basePrice);
-    }
-    
-    const today = new Date().toISOString().split('T')[0];
-    const dateInput = document.getElementById('bookingDate');
-    dateInput.min = today;
-    dateInput.value = today;
-    currentBooking.date = today;
-    
-    loadTimeSlots(today);
-    
-    document.getElementById('bookingModal').style.display = 'flex';
-    document.getElementById('bookingStep1').style.display = 'block';
-    document.getElementById('bookingStep2').style.display = 'none';
-    
-    document.getElementById('customerName').value = '';
-    document.getElementById('customerPhone').value = '';
-    document.getElementById('customerEmail').value = '';
-    document.getElementById('customerAddress').value = '';
-    document.getElementById('bookingNotes').value = '';
-}
-
-function renderBedroomOptions(serviceData) {
-    const container = document.getElementById('bedroomSelector');
-    container.innerHTML = '';
-    
-    const bedroomOptions = [
-        { value: 1, label: '1 Bed', icon: 'bed', price: serviceData.basePrice },
-        { value: 2, label: '2 Bed', icon: 'bed', price: serviceData.basePrice + serviceData.perBedroomPrice },
-        { value: 3, label: '3 Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 2) },
-        { value: 4, label: '4 Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 3) },
-        { value: 5, label: '5+ Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 4) }
-    ];
-    
-    bedroomOptions.forEach(option => {
-        const optionElement = document.createElement('div');
-        optionElement.className = 'bedroom-option';
-        optionElement.dataset.bedrooms = option.value;
-        optionElement.dataset.price = option.price;
-        
-        optionElement.innerHTML = `
-            <div class="bedroom-icon">
-                <i class="fas fa-${option.icon}"></i>
-            </div>
-            <div class="bedroom-label">${option.label}</div>
-            <div class="bedroom-price">£${option.price}</div>
-        `;
-        
-        optionElement.addEventListener('click', function() {
-            document.querySelectorAll('.bedroom-option').forEach(o => {
-                o.classList.remove('selected');
-            });
+        // Email Confirmation Function
+        async function sendConfirmationEmail(customerEmail, bookingDetails) {
+            if (!customerEmail || !customerEmail.includes('@')) {
+                return { success: false, reason: 'No valid email' };
+            }
             
-            this.classList.add('selected');
+            const apiUrl = 'https://api.resend.com/emails';
             
-            currentBooking.bedrooms = option.value;
-            currentBooking.calculatedPrice = option.price;
+            const emailData = {
+                from: 'GreenGlo Cleaners <bookings@greenglocleaners.co.uk>',
+                to: [customerEmail],
+                reply_to: 'greenglocleaning@gmail.com',
+                subject: `✅ Booking Confirmed: ${bookingDetails.service} - ${bookingDetails.date}`,
+                html: `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <meta charset="utf-8">
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+                            .header { background: linear-gradient(135deg, #10B981, #0D9488); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e5e7eb; }
+                            .booking-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10B981; }
+                            .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px; }
+                            h1, h2, h3 { color: #065F46; }
+                            .highlight { background: #D1FAE5; padding: 15px; border-radius: 8px; margin: 15px 0; }
+                            .btn { display: inline-block; background: #10B981; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; }
+                            .price-badge { background: #FBBF24; color: #92400e; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="header">
+                            <h1 style="color: white; margin: 0;">✅ Booking Confirmed!</h1>
+                            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0;">Thank you for choosing GreenGlo Cleaners</p>
+                        </div>
+                        
+                        <div class="content">
+                            <h2>📋 Your Booking Summary</h2>
+                            <div class="booking-details">
+                                <p><strong>Service:</strong> ${bookingDetails.service}</p>
+                                <p><strong>Date:</strong> ${new Date(bookingDetails.date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                <p><strong>Time:</strong> ${bookingDetails.timeSlot}</p>
+                                <p><strong>Duration:</strong> ${bookingDetails.duration}</p>
+                                <p><strong>Bedrooms:</strong> ${bookingDetails.bedrooms}</p>
+                                <p><strong>Price:</strong> <span class="price-badge">${bookingDetails.price}</span></p>
+                            </div>
+                            
+                            <div class="highlight">
+                                <h3>👤 Your Details</h3>
+                                <p><strong>Name:</strong> ${bookingDetails.customerName}</p>
+                                <p><strong>Phone:</strong> ${bookingDetails.customerPhone}</p>
+                                <p><strong>Address:</strong> ${bookingDetails.customerAddress}</p>
+                            </div>
+                            
+                            <h3>📞 What Happens Next?</h3>
+                            <ul>
+                                <li><strong>24-Hour Confirmation Call:</strong> Our team will call you within 24 hours to confirm all details</li>
+                                <li><strong>Preparation:</strong> Please ensure access to the property during the booked time</li>
+                                <li><strong>Our Team:</strong> Vetted, background-checked cleaners with eco-friendly products</li>
+                                <li><strong>Payment:</strong> Payment is due upon completion of service (Cash, Card, or Bank Transfer)</li>
+                            </ul>
+                            
+                            <h3>🔄 Need to Make Changes?</h3>
+                            <p>Contact us at <a href="tel:07827784204" style="color: #10B981; font-weight: bold;">07827 784204</a> or reply to this email</p>
+                            
+                            <div style="text-align: center; margin: 30px 0;">
+                                <a href="tel:07827784204" class="btn">📞 Call Us Now</a>
+                            </div>
+                            
+                            <div class="footer">
+                                <p><strong>GreenGlo Cleaners London</strong><br>
+                                📞 07827 784204 | ✉️ greenglocleaning@gmail.com</p>
+                                <p style="font-size: 12px; color: #9CA3AF; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                                    This is an automated confirmation email. Please do not reply directly to this email.<br>
+                                    Booking Reference: ${bookingDetails.bookingId || new Date().getTime()}
+                                </p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `,
+                text: `
+                    ✅ BOOKING CONFIRMED - GreenGlo Cleaners
+                    
+                    Your booking has been successfully confirmed!
+                    
+                    SERVICE DETAILS:
+                    =================
+                    Service: ${bookingDetails.service}
+                    Date: ${bookingDetails.date}
+                    Time: ${bookingDetails.timeSlot}
+                    Duration: ${bookingDetails.duration}
+                    Bedrooms: ${bookingDetails.bedrooms}
+                    Price: ${bookingDetails.price}
+                    
+                    CUSTOMER DETAILS:
+                    =================
+                    Name: ${bookingDetails.customerName}
+                    Phone: ${bookingDetails.customerPhone}
+                    Address: ${bookingDetails.customerAddress}
+                    
+                    NEXT STEPS:
+                    ===========
+                    1. We will call you within 24 hours to confirm all details
+                    2. Please ensure someone is available at the address
+                    3. Our cleaners will arrive with all necessary equipment
+                    4. Payment is due upon completion
+                    
+                    Need help? Call us at 07827 784204
+                    
+                    ---
+                    GreenGlo Cleaners London
+                    07827 784204 | greenglocleaning@gmail.com
+                    www.greenglocleaners.co.uk
+                `
+            };
             
-            updatePriceDisplay(option.price);
-        });
-        
-        container.appendChild(optionElement);
-    });
-    
-    const firstOption = container.querySelector('.bedroom-option');
-    if (firstOption) {
-        firstOption.classList.add('selected');
-        currentBooking.bedrooms = 1;
-        currentBooking.calculatedPrice = bedroomOptions[0].price;
-        updatePriceDisplay(bedroomOptions[0].price);
-    }
-}
-
-function updatePriceDisplay(price) {
-    document.getElementById('selectedPrice').textContent = `£${price}`;
-    
-    if (currentBooking.service.data.hasBedrooms) {
-        const basePrice = currentBooking.service.data.basePrice;
-        const perBedroom = currentBooking.service.data.perBedroomPrice;
-        const breakdown = currentBooking.bedrooms > 1 
-            ? `Base: £${basePrice} + £${perBedroom} × ${currentBooking.bedrooms - 1} bedroom(s)`
-            : 'Standard 1 bedroom rate';
-        
-        document.getElementById('priceBreakdown').textContent = breakdown;
-    } else {
-        document.getElementById('priceBreakdown').textContent = 'Fixed price service';
-    }
-}
-
-function closeBookingModal() {
-    document.getElementById('bookingModal').style.display = 'none';
-    currentBooking = {
-        service: null,
-        date: null,
-        timeSlot: null,
-        slotId: null,
-        bedrooms: 1,
-        calculatedPrice: 0,
-        customer: {}
-    };
-}
-
-document.getElementById('bookingModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeBookingModal();
-    }
-});
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && document.getElementById('bookingModal').style.display === 'flex') {
-        closeBookingModal();
-    }
-});
-
-document.getElementById('bookingDate').addEventListener('change', function() {
-    currentBooking.date = this.value;
-    loadTimeSlots(this.value);
-});
-
-async function loadTimeSlots(date) {
-    const container = document.getElementById('timeSlotsContainer');
-    container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top: 10px;">Loading available time slots...</div></div>';
-    
-    if (!supabaseClient) {
-        container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--red);"><i class="fas fa-exclamation-triangle fa-2x"></i><div style="margin-top: 10px;">Error: Cannot connect to booking system</div></div>';
-        return;
-    }
-    
-    try {
-        const { data: availability, error } = await supabaseClient
-            .from('availability')
-            .select('*')
-            .eq('date', date)
-            .eq('is_available', true)
-            .order('time_slot');
-        
-        if (error) {
-            throw error;
-        }
-        
-        container.innerHTML = '';
-        
-        if (!availability || availability.length === 0) {
-            container.innerHTML = `
-                <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
-                    <i class="fas fa-calendar-times fa-2x"></i>
-                    <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">No Available Slots</div>
-                    <div>No time slots available for ${new Date(date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                    <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
-                        <i class="fas fa-phone"></i> Call us at 07827 784204 for alternative times
-                    </div>
-                </div>
-            `;
-            return;
-        }
-        
-        currentBooking.timeSlot = null;
-        currentBooking.slotId = null;
-        
-        availability.forEach(slot => {
-            const slotElement = document.createElement('div');
-            slotElement.className = 'time-slot-option';
-            slotElement.dataset.slotId = slot.id;
-            slotElement.dataset.timeSlot = slot.time_slot;
-            
-            const [start, end] = slot.time_slot.split('-');
-            
-            slotElement.innerHTML = `
-                <div style="font-weight: 700; color: var(--dark-green); margin-bottom: 5px; font-size: 18px;">
-                    ${formatTime(start)}
-                </div>
-                <div style="font-size: 13px; color: var(--medium-gray); margin-bottom: 5px;">
-                    to ${formatTime(end)}
-                </div>
-                <div style="font-size: 11px; color: var(--primary-green);">
-                    <i class="fas fa-check-circle"></i> Available
-                </div>
-            `;
-            
-            slotElement.addEventListener('click', function() {
-                document.querySelectorAll('.time-slot-option').forEach(s => {
-                    s.classList.remove('selected');
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${RESEND_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(emailData)
                 });
                 
-                this.classList.add('selected');
+                const data = await response.json();
                 
-                currentBooking.timeSlot = slot.time_slot;
-                currentBooking.slotId = String(slot.id);
+                if (response.ok) {
+                    return { success: true, data };
+                } else {
+                    return { success: false, error: data };
+                }
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Initialize Database Check
+        window.addEventListener('DOMContentLoaded', async function() {
+            if (!supabaseClient) {
+                return;
+            }
+            
+            await checkDatabaseSchema();
+        });
+
+        // ===== Booking Modal Functions =====
+        function openBookingModal(serviceTitle, serviceId, serviceData) {
+            currentBooking.service = {
+                title: serviceTitle,
+                id: serviceId,
+                data: serviceData
+            };
+            
+            document.getElementById('bookingServiceName').textContent = serviceTitle;
+            
+            currentBooking.bedrooms = 1;
+            currentBooking.calculatedPrice = 0;
+            
+            const bedroomGroup = document.getElementById('bedroomSelectionGroup');
+            const priceDisplay = document.getElementById('priceDisplay');
+            
+            if (serviceData.hasBedrooms) {
+                bedroomGroup.style.display = 'block';
+                priceDisplay.style.display = 'block';
+                renderBedroomOptions(serviceData);
+            } else {
+                bedroomGroup.style.display = 'none';
+                priceDisplay.style.display = 'block';
+                updatePriceDisplay(serviceData.basePrice);
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('bookingDate');
+            dateInput.min = today;
+            dateInput.value = today;
+            currentBooking.date = today;
+            
+            loadTimeSlots(today);
+            
+            document.getElementById('bookingModal').style.display = 'flex';
+            document.getElementById('bookingStep1').style.display = 'block';
+            document.getElementById('bookingStep2').style.display = 'none';
+            
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerEmail').value = '';
+            document.getElementById('customerAddress').value = '';
+            document.getElementById('bookingNotes').value = '';
+        }
+
+        function renderBedroomOptions(serviceData) {
+            const container = document.getElementById('bedroomSelector');
+            container.innerHTML = '';
+            
+            const bedroomOptions = [
+                { value: 1, label: '1 Bed', icon: 'bed', price: serviceData.basePrice },
+                { value: 2, label: '2 Bed', icon: 'bed', price: serviceData.basePrice + serviceData.perBedroomPrice },
+                { value: 3, label: '3 Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 2) },
+                { value: 4, label: '4 Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 3) },
+                { value: 5, label: '5+ Bed', icon: 'bed', price: serviceData.basePrice + (serviceData.perBedroomPrice * 4) }
+            ];
+            
+            bedroomOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'bedroom-option';
+                optionElement.dataset.bedrooms = option.value;
+                optionElement.dataset.price = option.price;
+                
+                optionElement.innerHTML = `
+                    <div class="bedroom-icon">
+                        <i class="fas fa-${option.icon}"></i>
+                    </div>
+                    <div class="bedroom-label">${option.label}</div>
+                    <div class="bedroom-price">£${option.price}</div>
+                `;
+                
+                optionElement.addEventListener('click', function() {
+                    document.querySelectorAll('.bedroom-option').forEach(o => {
+                        o.classList.remove('selected');
+                    });
+                    
+                    this.classList.add('selected');
+                    
+                    currentBooking.bedrooms = option.value;
+                    currentBooking.calculatedPrice = option.price;
+                    
+                    updatePriceDisplay(option.price);
+                });
+                
+                container.appendChild(optionElement);
             });
             
-            container.appendChild(slotElement);
-        });
-        
-    } catch (err) {
-        container.innerHTML = `
-            <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--red);">
-                <i class="fas fa-exclamation-triangle fa-2x"></i>
-                <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Connection Error</div>
-                <div>Unable to load time slots. Please try again.</div>
-                <button onclick="loadTimeSlots('${date}')" class="btn btn-outline" style="margin-top: 20px; padding: 10px 20px;">
-                    <i class="fas fa-redo"></i> Retry
-                </button>
-            </div>
-        `;
-    }
-}
-
-function formatTime(time) {
-    const [hour, minute] = time.split(':');
-    const hourNum = parseInt(hour);
-    const suffix = hourNum >= 12 ? 'PM' : 'AM';
-    const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
-    return `${displayHour}:${minute} ${suffix}`;
-}
-
-function nextBookingStep() {
-    if (currentBooking.service.data.hasBedrooms && currentBooking.calculatedPrice <= 0) {
-        alert('⚠️ Please select number of bedrooms');
-        return;
-    }
-    
-    if (!currentBooking.timeSlot) {
-        alert('⚠️ Please select a time slot');
-        return;
-    }
-    
-    if (!currentBooking.slotId) {
-        alert('⚠️ Error: No slot ID selected. Please select a time slot again.');
-        return;
-    }
-    
-    currentBooking.slotId = String(currentBooking.slotId);
-    
-    updateBookingSummary();
-    
-    document.getElementById('bookingStep1').style.display = 'none';
-    document.getElementById('bookingStep2').style.display = 'block';
-}
-
-function prevBookingStep() {
-    document.getElementById('bookingStep2').style.display = 'none';
-    document.getElementById('bookingStep1').style.display = 'block';
-}
-
-function updateBookingSummary() {
-    const summary = document.getElementById('summaryDetails');
-    const [start, end] = currentBooking.timeSlot.split('-');
-    const bookingDate = new Date(currentBooking.date);
-    
-    const slotIdStr = String(currentBooking.slotId || '');
-    
-    let priceDisplay = currentBooking.calculatedPrice 
-        ? `£${currentBooking.calculatedPrice}`
-        : currentBooking.service.data.displayPrice;
-    
-    let bedroomInfo = '';
-    if (currentBooking.service.data.hasBedrooms) {
-        bedroomInfo = `
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
-                <span style="color: var(--dark-gray); font-weight: 600;">Bedrooms:</span>
-                <span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms > 1 ? 's' : ''}</span>
-            </div>
-        `;
-    }
-    
-    summary.innerHTML = `
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
-            <span style="color: var(--dark-gray); font-weight: 600;">Service:</span>
-            <span style="font-weight: 700; color: var(--dark-green);">${currentBooking.service.title}</span>
-        </div>
-        ${bedroomInfo}
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
-            <span style="color: var(--dark-gray); font-weight: 600;">Price:</span>
-            <span style="font-weight: 700; color: var(--primary-green); font-size: 1.25rem;">${priceDisplay}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
-            <span style="color: var(--dark-gray); font-weight: 600;">Date:</span>
-            <span>${bookingDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
-            <span style="color: var(--dark-gray); font-weight: 600;">Time:</span>
-            <span style="font-weight: 600; color: var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span>
-        </div>
-    `;
-}
-
-async function confirmBooking() {
-    const customerName = document.getElementById('customerName').value.trim();
-    const customerPhone = document.getElementById('customerPhone').value.trim();
-    const customerAddress = document.getElementById('customerAddress').value.trim();
-    const customerEmail = document.getElementById('customerEmail').value.trim();
-    
-    if (!customerName || !customerPhone || !customerAddress) {
-        alert('❌ Please fill in all required fields:\n\n• Full Name\n• Phone Number\n• Service Address');
-        return;
-    }
-    
-    if (!currentBooking.timeSlot || !currentBooking.slotId) {
-        alert('❌ Please select a time slot');
-        return;
-    }
-    
-    if (!supabaseClient) {
-        alert('❌ Cannot connect to booking system.\n\nPlease call us directly at 07827 784204.');
-        return;
-    }
-    
-    const confirmBtn = document.querySelector('.btn-success');
-    const originalText = confirmBtn.innerHTML;
-    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Booking...';
-    confirmBtn.disabled = true;
-    
-    try {
-        const { data: slotCheck, error: checkError } = await supabaseClient
-            .from('availability')
-            .select('*')
-            .eq('id', currentBooking.slotId)
-            .eq('is_available', true)
-            .single();
-        
-        if (checkError || !slotCheck) {
-            alert('❌ This time slot is no longer available.\n\nPlease select another time slot.');
-            loadTimeSlots(currentBooking.date);
-            return;
+            const firstOption = container.querySelector('.bedroom-option');
+            if (firstOption) {
+                firstOption.classList.add('selected');
+                currentBooking.bedrooms = 1;
+                currentBooking.calculatedPrice = bedroomOptions[0].price;
+                updatePriceDisplay(bedroomOptions[0].price);
+            }
         }
-        
-        const serviceData = currentBooking.service.data;
-        const serviceDuration = serviceData.duration;
-        const bookingRef = 'GG' + Date.now().toString().slice(-8);
-        const finalPrice = currentBooking.calculatedPrice || serviceData.basePrice;
-        
-        const bookingData = {
-            service_title: currentBooking.service.title,
-            service_id: parseInt(currentBooking.service.id),
-            customer_name: customerName,
-            customer_phone: customerPhone,
-            customer_email: customerEmail || null,
-            customer_address: customerAddress,
-            booking_date: currentBooking.date,
-            time_slot: currentBooking.timeSlot,
-            duration: serviceDuration,
-            bedrooms: currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : null,
-            price: `£${finalPrice}`,
-            calculated_price: finalPrice,
-            notes: document.getElementById('bookingNotes').value.trim() || null,
-            status: 'confirmed',
-            booking_reference: bookingRef,
-            created_at: new Date().toISOString()
-        };
-        
-        const { data: booking, error: bookingError } = await supabaseClient
-            .from('bookings')
-            .insert([bookingData])
-            .select()
-            .single();
 
-        if (bookingError) {
-            const { error: simpleInsertError } = await supabaseClient
-                .from('bookings')
-                .insert(bookingData);
+        function updatePriceDisplay(price) {
+            document.getElementById('selectedPrice').textContent = `£${price}`;
             
-            if (simpleInsertError) {
-                const simpleData = {
+            if (currentBooking.service.data.hasBedrooms) {
+                const basePrice = currentBooking.service.data.basePrice;
+                const perBedroom = currentBooking.service.data.perBedroomPrice;
+                const breakdown = currentBooking.bedrooms > 1 
+                    ? `Base: £${basePrice} + £${perBedroom} × ${currentBooking.bedrooms - 1} bedroom(s)`
+                    : 'Standard 1 bedroom rate';
+                
+                document.getElementById('priceBreakdown').textContent = breakdown;
+            } else {
+                document.getElementById('priceBreakdown').textContent = 'Fixed price service';
+            }
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            currentBooking = {
+                service: null,
+                date: null,
+                timeSlot: null,
+                slotId: null,
+                bedrooms: 1,
+                calculatedPrice: 0,
+                customer: {}
+            };
+        }
+
+        document.getElementById('bookingModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBookingModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('bookingModal').style.display === 'flex') {
+                closeBookingModal();
+            }
+        });
+
+        document.getElementById('bookingDate').addEventListener('change', function() {
+            currentBooking.date = this.value;
+            loadTimeSlots(this.value);
+        });
+
+        async function loadTimeSlots(date) {
+            const container = document.getElementById('timeSlotsContainer');
+            container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top: 10px;">Loading available time slots...</div></div>';
+            
+            if (!supabaseClient) {
+                container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--red);"><i class="fas fa-exclamation-triangle fa-2x"></i><div style="margin-top: 10px;">Error: Cannot connect to booking system</div></div>';
+                return;
+            }
+            
+            try {
+                const { data: availability, error } = await supabaseClient
+                    .from('availability')
+                    .select('*')
+                    .eq('date', date)
+                    .eq('is_available', true)
+                    .order('time_slot');
+                
+                if (error) {
+                    throw error;
+                }
+                
+                container.innerHTML = '';
+                
+                if (!availability || availability.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                            <i class="fas fa-calendar-times fa-2x"></i>
+                            <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">No Available Slots</div>
+                            <div>No time slots available for ${new Date(date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                                <i class="fas fa-phone"></i> Call us at 07827 784204 for alternative times
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                currentBooking.timeSlot = null;
+                currentBooking.slotId = null;
+                
+                availability.forEach(slot => {
+                    const slotElement = document.createElement('div');
+                    slotElement.className = 'time-slot-option';
+                    slotElement.dataset.slotId = slot.id;
+                    slotElement.dataset.timeSlot = slot.time_slot;
+                    
+                    const [start, end] = slot.time_slot.split('-');
+                    
+                    slotElement.innerHTML = `
+                        <div style="font-weight: 700; color: var(--dark-green); margin-bottom: 5px; font-size: 18px;">
+                            ${formatTime(start)}
+                        </div>
+                        <div style="font-size: 13px; color: var(--medium-gray); margin-bottom: 5px;">
+                            to ${formatTime(end)}
+                        </div>
+                        <div style="font-size: 11px; color: var(--primary-green);">
+                            <i class="fas fa-check-circle"></i> Available
+                        </div>
+                    `;
+                    
+                    slotElement.addEventListener('click', function() {
+                        document.querySelectorAll('.time-slot-option').forEach(s => {
+                            s.classList.remove('selected');
+                        });
+                        
+                        this.classList.add('selected');
+                        
+                        currentBooking.timeSlot = slot.time_slot;
+                        currentBooking.slotId = String(slot.id);
+                    });
+                    
+                    container.appendChild(slotElement);
+                });
+                
+            } catch (err) {
+                container.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--red);">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Connection Error</div>
+                        <div>Unable to load time slots. Please try again.</div>
+                        <button onclick="loadTimeSlots('${date}')" class="btn btn-outline" style="margin-top: 20px; padding: 10px 20px;">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function formatTime(time) {
+            const [hour, minute] = time.split(':');
+            const hourNum = parseInt(hour);
+            const suffix = hourNum >= 12 ? 'PM' : 'AM';
+            const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
+            return `${displayHour}:${minute} ${suffix}`;
+        }
+
+        function nextBookingStep() {
+            if (currentBooking.service.data.hasBedrooms && currentBooking.calculatedPrice <= 0) {
+                alert('⚠️ Please select number of bedrooms');
+                return;
+            }
+            
+            if (!currentBooking.timeSlot) {
+                alert('⚠️ Please select a time slot');
+                return;
+            }
+            
+            if (!currentBooking.slotId) {
+                alert('⚠️ Error: No slot ID selected. Please select a time slot again.');
+                return;
+            }
+            
+            currentBooking.slotId = String(currentBooking.slotId);
+            
+            updateBookingSummary();
+            
+            document.getElementById('bookingStep1').style.display = 'none';
+            document.getElementById('bookingStep2').style.display = 'block';
+        }
+
+        function prevBookingStep() {
+            document.getElementById('bookingStep2').style.display = 'none';
+            document.getElementById('bookingStep1').style.display = 'block';
+        }
+
+        function updateBookingSummary() {
+            const summary = document.getElementById('summaryDetails');
+            const [start, end] = currentBooking.timeSlot.split('-');
+            const bookingDate = new Date(currentBooking.date);
+            
+            const slotIdStr = String(currentBooking.slotId || '');
+            
+            let priceDisplay = currentBooking.calculatedPrice 
+                ? `£${currentBooking.calculatedPrice}`
+                : currentBooking.service.data.displayPrice;
+            
+            let bedroomInfo = '';
+            if (currentBooking.service.data.hasBedrooms) {
+                bedroomInfo = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+                        <span style="color: var(--dark-gray); font-weight: 600;">Bedrooms:</span>
+                        <span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms > 1 ? 's' : ''}</span>
+                    </div>
+                `;
+            }
+            
+            summary.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span style="color: var(--dark-gray); font-weight: 600;">Service:</span>
+                    <span style="font-weight: 700; color: var(--dark-green);">${currentBooking.service.title}</span>
+                </div>
+                ${bedroomInfo}
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span style="color: var(--dark-gray); font-weight: 600;">Price:</span>
+                    <span style="font-weight: 700; color: var(--primary-green); font-size: 1.25rem;">${priceDisplay}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span style="color: var(--dark-gray); font-weight: 600;">Date:</span>
+                    <span>${bookingDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span style="color: var(--dark-gray); font-weight: 600;">Time:</span>
+                    <span style="font-weight: 600; color: var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span>
+                </div>
+            `;
+        }
+
+        async function confirmBooking() {
+            const customerName = document.getElementById('customerName').value.trim();
+            const customerPhone = document.getElementById('customerPhone').value.trim();
+            const customerAddress = document.getElementById('customerAddress').value.trim();
+            const customerEmail = document.getElementById('customerEmail').value.trim();
+            
+            if (!customerName || !customerPhone || !customerAddress) {
+                alert('❌ Please fill in all required fields:\n\n• Full Name\n• Phone Number\n• Service Address');
+                return;
+            }
+            
+            if (!currentBooking.timeSlot || !currentBooking.slotId) {
+                alert('❌ Please select a time slot');
+                return;
+            }
+            
+            if (!supabaseClient) {
+                alert('❌ Cannot connect to booking system.\n\nPlease call us directly at 07827 784204.');
+                return;
+            }
+            
+            const confirmBtn = document.querySelector('.btn-success');
+            const originalText = confirmBtn.innerHTML;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Booking...';
+            confirmBtn.disabled = true;
+            
+            try {
+                // Check if time slot is still available
+                const { data: slotCheck, error: checkError } = await supabaseClient
+                    .from('availability')
+                    .select('*')
+                    .eq('id', currentBooking.slotId)
+                    .eq('is_available', true)
+                    .single();
+                
+                if (checkError || !slotCheck) {
+                    alert('❌ This time slot is no longer available.\n\nPlease select another time slot.');
+                    loadTimeSlots(currentBooking.date);
+                    return;
+                }
+                
+                const serviceData = currentBooking.service.data;
+                const serviceDuration = serviceData.duration;
+                const bookingRef = 'GG' + Date.now().toString().slice(-8);
+                const finalPrice = currentBooking.calculatedPrice || serviceData.basePrice;
+                
+                // Prepare booking data with proper email and service information
+                const bookingData = {
                     service_title: currentBooking.service.title,
+                    service_id: parseInt(currentBooking.service.id),
                     customer_name: customerName,
                     customer_phone: customerPhone,
+                    customer_email: customerEmail || null,
                     customer_address: customerAddress,
                     booking_date: currentBooking.date,
                     time_slot: currentBooking.timeSlot,
+                    duration: serviceDuration,
+                    bedrooms: currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : null,
                     price: `£${finalPrice}`,
+                    calculated_price: finalPrice,
+                    notes: document.getElementById('bookingNotes').value.trim() || null,
                     status: 'confirmed',
-                    booking_reference: bookingRef
+                    booking_reference: bookingRef,
+                    created_at: new Date().toISOString()
                 };
                 
-                const { error: minimalError } = await supabaseClient
+                // First try with full booking data
+                const { data: booking, error: bookingError } = await supabaseClient
                     .from('bookings')
-                    .insert(simpleData);
+                    .insert([bookingData])
+                    .select()
+                    .single();
+
+                if (bookingError) {
+                    // If that fails, try simplified version (in case of column mismatch)
+                    const simpleData = {
+                        service_title: currentBooking.service.title,
+                        service_id: parseInt(currentBooking.service.id),
+                        customer_name: customerName,
+                        customer_phone: customerPhone,
+                        customer_email: customerEmail || null,
+                        customer_address: customerAddress,
+                        booking_date: currentBooking.date,
+                        time_slot: currentBooking.timeSlot,
+                        price: `£${finalPrice}`,
+                        status: 'confirmed',
+                        booking_reference: bookingRef
+                    };
+                    
+                    const { error: simpleInsertError } = await supabaseClient
+                        .from('bookings')
+                        .insert([simpleData]);
+                    
+                    if (simpleInsertError) {
+                        // Last resort: minimal data
+                        const minimalData = {
+                            service: currentBooking.service.title,
+                            customer_name: customerName,
+                            customer_phone: customerPhone,
+                            customer_email: customerEmail,
+                            customer_address: customerAddress,
+                            booking_date: currentBooking.date,
+                            time_slot: currentBooking.timeSlot,
+                            price: finalPrice
+                        };
+                        
+                        const { error: minimalError } = await supabaseClient
+                            .from('bookings')
+                            .insert([minimalData]);
+                        
+                        if (minimalError) {
+                            throw new Error(`Database insert failed: ${minimalError.message}`);
+                        }
+                    }
+                }
                 
-                if (minimalError) {
-                    throw new Error(`Database insert failed: ${minimalError.message}`);
+                // Mark time slot as booked
+                const { error: updateError } = await supabaseClient
+                    .from('availability')
+                    .update({ 
+                        is_available: false,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', currentBooking.slotId);
+                
+                if (updateError) {
+                    console.warn('Failed to update availability:', updateError);
                 }
-            }
-        }
-        
-        const { error: updateError } = await supabaseClient
-            .from('availability')
-            .update({ 
-                is_available: false,
-                updated_at: new Date().toISOString()
-            })
-            .eq('id', currentBooking.slotId);
-        
-        const bookingDetails = {
-            service: currentBooking.service.title,
-            date: currentBooking.date,
-            timeSlot: currentBooking.timeSlot,
-            duration: serviceDuration,
-            bedrooms: currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : 'N/A',
-            price: `£${finalPrice}`,
-            customerName: customerName,
-            customerPhone: customerPhone,
-            customerEmail: customerEmail,
-            customerAddress: customerAddress,
-            bookingId: bookingRef
-        };
-        
-        let emailSent = false;
-        if (customerEmail && customerEmail.includes('@')) {
-            try {
-                const emailResult = await sendConfirmationEmail(customerEmail, bookingDetails);
-                if (emailResult.success) {
-                    emailSent = true;
+                
+                // Prepare booking details for email
+                const bookingDetails = {
+                    service: currentBooking.service.title,
+                    date: currentBooking.date,
+                    timeSlot: currentBooking.timeSlot,
+                    duration: serviceDuration,
+                    bedrooms: currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : 'N/A',
+                    price: `£${finalPrice}`,
+                    customerName: customerName,
+                    customerPhone: customerPhone,
+                    customerEmail: customerEmail,
+                    customerAddress: customerAddress,
+                    bookingId: bookingRef
+                };
+                
+                // Send confirmation email if email is provided
+                let emailSent = false;
+                if (customerEmail && customerEmail.includes('@')) {
+                    try {
+                        const emailResult = await sendConfirmationEmail(customerEmail, bookingDetails);
+                        if (emailResult.success) {
+                            emailSent = true;
+                        }
+                    } catch (emailError) {
+                        console.warn('Email sending error:', emailError);
+                    }
                 }
-            } catch (emailError) {
-                console.warn('Email sending error:', emailError);
-            }
-        }
-        
-        const whatsappMessage = encodeURIComponent(
-            `📅 NEW BOOKING CONFIRMED - GreenGlo Cleaners\n\n` +
-            `🛠️ Service: ${currentBooking.service.title}\n` +
-            `💰 Price: £${finalPrice}\n` +
-            `🛏️ Bedrooms: ${currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : 'N/A'}\n` +
-            `📅 Date: ${currentBooking.date}\n` +
-            `🕒 Time: ${currentBooking.timeSlot}\n` +
-            `📞 Customer: ${customerName}\n` +
-            `☎️ Phone: ${customerPhone}\n` +
-            `📧 Email: ${customerEmail || 'Not provided'}\n` +
-            `🏠 Address: ${customerAddress}\n` +
-            `📝 Notes: ${document.getElementById('bookingNotes').value.trim() || 'None'}\n` +
-            `🔗 Booking Ref: ${bookingRef}\n` +
-            `📧 Email Status: ${emailSent ? '✅ Sent' : '❌ Not sent'}\n\n` +
-            `💰 Revenue: £${finalPrice}`
-        );
-        
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`;
-        window.open(whatsappUrl, '_blank');
-        
-        const bookingDate = new Date(currentBooking.date);
-        const formattedDate = bookingDate.toLocaleDateString('en-GB', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-        
-        const successMessage = `
+                
+                // Send WhatsApp notification to business
+                const whatsappMessage = encodeURIComponent(
+                    `📅 NEW BOOKING CONFIRMED - GreenGlo Cleaners\n\n` +
+                    `🛠️ Service: ${currentBooking.service.title}\n` +
+                    `💰 Price: £${finalPrice}\n` +
+                    `🛏️ Bedrooms: ${currentBooking.service.data.hasBedrooms ? currentBooking.bedrooms : 'N/A'}\n` +
+                    `📅 Date: ${currentBooking.date}\n` +
+                    `🕒 Time: ${currentBooking.timeSlot}\n` +
+                    `📞 Customer: ${customerName}\n` +
+                    `☎️ Phone: ${customerPhone}\n` +
+                    `📧 Email: ${customerEmail || 'Not provided'}\n` +
+                    `🏠 Address: ${customerAddress}\n` +
+                    `📝 Notes: ${document.getElementById('bookingNotes').value.trim() || 'None'}\n` +
+                    `🔗 Booking Ref: ${bookingRef}\n` +
+                    `📧 Email Status: ${emailSent ? '✅ Sent' : '❌ Not sent'}\n\n` +
+                    `💰 Revenue: £${finalPrice}`
+                );
+                
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMessage}`;
+                window.open(whatsappUrl, '_blank');
+                
+                // Show success message
+                const bookingDate = new Date(currentBooking.date);
+                const formattedDate = bookingDate.toLocaleDateString('en-GB', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                const successMessage = `
 ✅ BOOKING CONFIRMED!
 
 📋 SERVICE DETAILS
@@ -2199,462 +2226,463 @@ ${emailSent ? 'A confirmation email has been sent to your email address.\n' : cu
 We will call you within 24 hours to confirm all details.
 
 Thank you for choosing GreenGlo Cleaners! 🌿
-        `;
-        
-        alert(successMessage);
-        
-        setTimeout(() => {
-            closeBookingModal();
-        }, 1000);
-        
-    } catch (err) {
-        let errorMessage = '❌ BOOKING FAILED\n\n';
-        
-        if (err.message.includes('customer_address')) {
-            errorMessage += 'Database configuration error.\n\n';
-        } else if (err.message.includes('network') || err.message.includes('fetch')) {
-            errorMessage += 'Network connection error.\n\nPlease check your internet connection.';
-        } else if (err.message.includes('permission') || err.message.includes('auth') || err.message.includes('policy')) {
-            errorMessage += 'Database permission error.\n\n';
-        } else if (err.message.includes('duplicate')) {
-            errorMessage += 'Time slot already booked.\n\nPlease select another time.';
-        } else {
-            errorMessage += `Technical error: ${err.message}\n\n`;
+                `;
+                
+                alert(successMessage);
+                
+                // Close modal after delay
+                setTimeout(() => {
+                    closeBookingModal();
+                }, 1000);
+                
+            } catch (err) {
+                let errorMessage = '❌ BOOKING FAILED\n\n';
+                
+                if (err.message.includes('customer_email') || err.message.includes('service_title')) {
+                    errorMessage += 'Database configuration error. Please check your Supabase table columns.\n\n';
+                } else if (err.message.includes('network') || err.message.includes('fetch')) {
+                    errorMessage += 'Network connection error.\n\nPlease check your internet connection.';
+                } else if (err.message.includes('permission') || err.message.includes('auth')) {
+                    errorMessage += 'Database permission error.\n\n';
+                } else if (err.message.includes('duplicate')) {
+                    errorMessage += 'Time slot already booked.\n\nPlease select another time.';
+                } else {
+                    errorMessage += `Technical error: ${err.message}\n\n`;
+                }
+                
+                errorMessage += '\n📞 PLEASE CALL US DIRECTLY AT:\n07827 784204\n\nWe can take your booking over the phone.';
+                
+                alert(errorMessage);
+                
+            } finally {
+                confirmBtn.innerHTML = originalText;
+                confirmBtn.disabled = false;
+            }
         }
-        
-        errorMessage += '\n📞 PLEASE CALL US DIRECTLY AT:\n07827 784204\n\nWe can take your booking over the phone.';
-        
-        alert(errorMessage);
-        
-    } finally {
-        confirmBtn.innerHTML = originalText;
-        confirmBtn.disabled = false;
-    }
-}
 
-document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
+        document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
 
-// ===== Services Data =====
-const servicesData = [
-    {
-        id: 1,
-        title: "Living Room Deep Clean",
-        category: "domestic",
-        description: "Complete living room cleaning and organization with eco-friendly products.",
-        features: ["Complete dust removal", "Furniture cleaning", "Floor sanitization", "Window sills"],
-        duration: "2-3 hours",
-        hasBedrooms: false,
-        basePrice: 75,
-        displayPrice: "£75",
-        image: "livingroom.png"
-    },
-    {
-        id: 2,
-        title: "Office Cleaning",
-        category: "office",
-        description: "Professional office cleaning for businesses and startups.",
-        features: ["Workstation sanitization", "Meeting room cleaning", "Kitchenette cleaning", "Floor care"],
-        duration: "2-6 hours",
-        hasBedrooms: false,
-        basePrice: 18,
-        displayPrice: "£18/hour",
-        image: "office.png"
-    },
-    {
-        id: 3,
-        title: "Kitchen Deep Cleaning",
-        category: "domestic",
-        description: "Complete kitchen deep clean including appliances and cabinets.",
-        features: ["Oven cleaning included", "Appliance sanitization", "Cabinet cleaning", "Surface degreasing"],
-        duration: "2-3 hours",
-        hasBedrooms: false,
-        basePrice: 85,
-        displayPrice: "£85",
-        image: "kitchen.png"
-    },
-    {
-        id: 4,
-        title: "Oven Deep Clean",
-        category: "deep",
-        description: "Professional oven cleaning for single and double ovens.",
-        features: ["Complete interior clean", "Door and glass", "Rack cleaning", "Exterior polish"],
-        duration: "1-2 hours",
-        hasBedrooms: false,
-        basePrice: 40,
-        displayPrice: "From £40",
-        image: "ovenafter.png"
-    },
-    {
-        id: 5,
-        title: "Bathroom Deep Clean",
-        category: "deep",
-        description: "Complete bathroom sanitization and deep cleaning.",
-        features: ["Tile and grout cleaning", "Sanitization", "Fixture polishing", "Mould treatment"],
-        duration: "1-2 hours",
-        hasBedrooms: false,
-        basePrice: 65,
-        displayPrice: "£65",
-        image: "bathroom.png"
-    },
-    {
-        id: 6,
-        title: "End of Tenancy Cleaning",
-        category: "deep",
-        description: "Professional cleaning to ensure full deposit return.",
-        features: ["Inventory check ready", "Complete property clean", "Carpet cleaning available", "Guaranteed satisfaction"],
-        duration: "4-8 hours",
-        hasBedrooms: true,
-        basePrice: 220,
-        perBedroomPrice: 30,
-        displayPrice: "From £220",
-        image: "tenancy.png"
-    },
-    {
-        id: 7,
-        title: "Carpet Cleaning",
-        category: "deep",
-        description: "Professional hot water extraction carpet cleaning.",
-        features: ["Hot water extraction", "Stain removal", "Quick drying", "Deodorizing"],
-        duration: "1-3 hours",
-        hasBedrooms: false,
-        basePrice: 15,
-        displayPrice: "From £15/room",
-        image: "carpet.png"
-    },
-    {
-        id: 8,
-        title: "Regular Domestic Cleaning",
-        category: "domestic",
-        description: "Weekly or fortnightly cleaning service.",
-        features: ["Dusting & vacuuming", "Kitchen & bathroom", "Surface cleaning", "Floor mopping"],
-        duration: "2-4 hours",
-        hasBedrooms: false,
-        basePrice: 18,
-        displayPrice: "£18/hour",
-        image: "domestic.png"
-    },
-    {
-        id: 9,
-        title: "One-Off Deep Clean",
-        category: "deep",
-        description: "Thorough one-time cleaning for your entire home.",
-        features: ["Complete home clean", "Inside cabinets", "Appliance cleaning", "Detailed attention"],
-        duration: "4-8 hours",
-        hasBedrooms: true,
-        basePrice: 150,
-        perBedroomPrice: 35,
-        displayPrice: "From £150",
-        image: "deepclean.png"
-    },
-    {
-        id: 10,
-        title: "Window Cleaning",
-        category: "special",
-        description: "Interior and exterior window cleaning service.",
-        features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment"],
-        duration: "1-3 hours",
-        hasBedrooms: false,
-        basePrice: 30,
-        displayPrice: "Flat: £30 | House: £45",
-        image: "window.png"
-    },
-    {
-        id: 11,
-        title: "Upholstery Cleaning",
-        category: "deep",
-        description: "Sofa, armchair, and car seat deep cleaning.",
-        features: ["Stain removal", "Fabric protection", "Deodorizing", "Professional equipment"],
-        duration: "1-2 hours",
-        hasBedrooms: false,
-        basePrice: 55,
-        displayPrice: "Sofa 3-seater: £55",
-        image: "upholstery.png"
-    },
-    {
-        id: 12,
-        title: "After Builders Cleaning",
-        category: "deep",
-        description: "Post-construction cleanup for renovation projects.",
-        features: ["Debris removal", "Dust elimination", "Surface cleaning", "Final touch-up"],
-        duration: "4-8 hours",
-        hasBedrooms: true,
-        basePrice: 200,
-        perBedroomPrice: 40,
-        displayPrice: "From £200",
-        image: "builders.png"
-    },
-    {
-        id: 13,
-        title: "Hard Floor Cleaning",
-        category: "deep",
-        description: "Professional hard floor scrubbing and polishing.",
-        features: ["Scrubbing & cleaning", "Polishing", "Sealing available", "Protective coating"],
-        duration: "2-4 hours",
-        hasBedrooms: false,
-        basePrice: 3.5,
-        displayPrice: "£3.50/m²",
-        image: "hardfloor.png"
-    },
-    {
-        id: 14,
-        title: "Gutter Cleaning",
-        category: "special",
-        description: "Gutter clearing and downpipe unblocking service.",
-        features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first"],
-        duration: "1-3 hours",
-        hasBedrooms: false,
-        basePrice: 75,
-        displayPrice: "Terraced house: £75",
-        image: "gutter.png"
-    },
-    {
-        id: 15,
-        title: "Antiviral Sanitisation",
-        category: "special",
-        description: "Professional sanitisation against germs and viruses.",
-        features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage"],
-        duration: "1-2 hours",
-        hasBedrooms: true,
-        basePrice: 120,
-        perBedroomPrice: 25,
-        displayPrice: "From £120",
-        image: "sanitisation.png"
-    },
-    {
-        id: 16,
-        title: "BBQ Cleaning",
-        category: "special",
-        description: "Deep cleaning of BBQs and outdoor cooking equipment.",
-        features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
-        duration: "1-2 hours",
-        hasBedrooms: false,
-        basePrice: 45,
-        displayPrice: "Small BBQ: £45",
-        image: "bbq.png"
-    },
-    {
-        id: 17,
-        title: "Commercial Cleaning",
-        category: "office",
-        description: "Regular commercial cleaning for businesses.",
-        features: ["Daily/weekly service", "Floor maintenance", "Restroom cleaning", "Waste removal"],
-        duration: "2-8 hours",
-        hasBedrooms: false,
-        basePrice: 25,
-        displayPrice: "£25/hour",
-        image: "commercial.png"
-    },
-    {
-        id: 18,
-        title: "Move In/Move Out Cleaning",
-        category: "deep",
-        description: "Complete cleaning for moving properties.",
-        features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround"],
-        duration: "3-6 hours",
-        hasBedrooms: true,
-        basePrice: 180,
-        perBedroomPrice: 40,
-        displayPrice: "From £180",
-        image: "moveclean.png"
-    },
-    {
-        id: 19,
-        title: "Patio & Decking Cleaning",
-        category: "special",
-        description: "Pressure washing for patios and decking areas.",
-        features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration"],
-        duration: "2-4 hours",
-        hasBedrooms: false,
-        basePrice: 70,
-        displayPrice: "From £70",
-        image: "patio.png"
-    },
-    {
-        id: 20,
-        title: "Spring Cleaning",
-        category: "deep",
-        description: "Seasonal deep cleaning service.",
-        features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help"],
-        duration: "4-8 hours",
-        hasBedrooms: true,
-        basePrice: 175,
-        perBedroomPrice: 35,
-        displayPrice: "From £175",
-        image: "spring.png"
-    },
-    {
-        id: 21,
-        title: "Carpet Stain Removal",
-        category: "deep",
-        description: "Specialized treatment for stubborn carpet stains.",
-        features: ["Professional treatment", "Odor removal", "Color restoration", "Guaranteed results"],
-        duration: "1-2 hours",
-        hasBedrooms: false,
-        basePrice: 35,
-        displayPrice: "From £35/stain",
-        image: "stain.png"
-    },
-    {
-        id: 22,
-        title: "Emergency Cleaning",
-        category: "special",
-        description: "24/7 emergency cleaning services.",
-        features: ["24/7 availability", "Fast response", "Flood cleanup", "Accident cleanup"],
-        duration: "2-6 hours",
-        hasBedrooms: false,
-        basePrice: 35,
-        displayPrice: "£35/hour",
-        image: "emergency.png"
-    }
-];
+        // ===== Services Data =====
+        const servicesData = [
+            {
+                id: 1,
+                title: "Living Room Deep Clean",
+                category: "domestic",
+                description: "Complete living room cleaning and organization with eco-friendly products.",
+                features: ["Complete dust removal", "Furniture cleaning", "Floor sanitization", "Window sills"],
+                duration: "2-3 hours",
+                hasBedrooms: false,
+                basePrice: 75,
+                displayPrice: "£75",
+                image: "livingroom.png"
+            },
+            {
+                id: 2,
+                title: "Office Cleaning",
+                category: "office",
+                description: "Professional office cleaning for businesses and startups.",
+                features: ["Workstation sanitization", "Meeting room cleaning", "Kitchenette cleaning", "Floor care"],
+                duration: "2-6 hours",
+                hasBedrooms: false,
+                basePrice: 18,
+                displayPrice: "£18/hour",
+                image: "office.png"
+            },
+            {
+                id: 3,
+                title: "Kitchen Deep Cleaning",
+                category: "domestic",
+                description: "Complete kitchen deep clean including appliances and cabinets.",
+                features: ["Oven cleaning included", "Appliance sanitization", "Cabinet cleaning", "Surface degreasing"],
+                duration: "2-3 hours",
+                hasBedrooms: false,
+                basePrice: 85,
+                displayPrice: "£85",
+                image: "kitchen.png"
+            },
+            {
+                id: 4,
+                title: "Oven Deep Clean",
+                category: "deep",
+                description: "Professional oven cleaning for single and double ovens.",
+                features: ["Complete interior clean", "Door and glass", "Rack cleaning", "Exterior polish"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 40,
+                displayPrice: "From £40",
+                image: "ovenafter.png"
+            },
+            {
+                id: 5,
+                title: "Bathroom Deep Clean",
+                category: "deep",
+                description: "Complete bathroom sanitization and deep cleaning.",
+                features: ["Tile and grout cleaning", "Sanitization", "Fixture polishing", "Mould treatment"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 65,
+                displayPrice: "£65",
+                image: "bathroom.png"
+            },
+            {
+                id: 6,
+                title: "End of Tenancy Cleaning",
+                category: "deep",
+                description: "Professional cleaning to ensure full deposit return.",
+                features: ["Inventory check ready", "Complete property clean", "Carpet cleaning available", "Guaranteed satisfaction"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 220,
+                perBedroomPrice: 30,
+                displayPrice: "From £220",
+                image: "tenancy.png"
+            },
+            {
+                id: 7,
+                title: "Carpet Cleaning",
+                category: "deep",
+                description: "Professional hot water extraction carpet cleaning.",
+                features: ["Hot water extraction", "Stain removal", "Quick drying", "Deodorizing"],
+                duration: "1-3 hours",
+                hasBedrooms: false,
+                basePrice: 15,
+                displayPrice: "From £15/room",
+                image: "carpet.png"
+            },
+            {
+                id: 8,
+                title: "Regular Domestic Cleaning",
+                category: "domestic",
+                description: "Weekly or fortnightly cleaning service.",
+                features: ["Dusting & vacuuming", "Kitchen & bathroom", "Surface cleaning", "Floor mopping"],
+                duration: "2-4 hours",
+                hasBedrooms: false,
+                basePrice: 18,
+                displayPrice: "£18/hour",
+                image: "domestic.png"
+            },
+            {
+                id: 9,
+                title: "One-Off Deep Clean",
+                category: "deep",
+                description: "Thorough one-time cleaning for your entire home.",
+                features: ["Complete home clean", "Inside cabinets", "Appliance cleaning", "Detailed attention"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 150,
+                perBedroomPrice: 35,
+                displayPrice: "From £150",
+                image: "deepclean.png"
+            },
+            {
+                id: 10,
+                title: "Window Cleaning",
+                category: "special",
+                description: "Interior and exterior window cleaning service.",
+                features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment"],
+                duration: "1-3 hours",
+                hasBedrooms: false,
+                basePrice: 30,
+                displayPrice: "Flat: £30 | House: £45",
+                image: "window.png"
+            },
+            {
+                id: 11,
+                title: "Upholstery Cleaning",
+                category: "deep",
+                description: "Sofa, armchair, and car seat deep cleaning.",
+                features: ["Stain removal", "Fabric protection", "Deodorizing", "Professional equipment"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 55,
+                displayPrice: "Sofa 3-seater: £55",
+                image: "upholstery.png"
+            },
+            {
+                id: 12,
+                title: "After Builders Cleaning",
+                category: "deep",
+                description: "Post-construction cleanup for renovation projects.",
+                features: ["Debris removal", "Dust elimination", "Surface cleaning", "Final touch-up"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 200,
+                perBedroomPrice: 40,
+                displayPrice: "From £200",
+                image: "builders.png"
+            },
+            {
+                id: 13,
+                title: "Hard Floor Cleaning",
+                category: "deep",
+                description: "Professional hard floor scrubbing and polishing.",
+                features: ["Scrubbing & cleaning", "Polishing", "Sealing available", "Protective coating"],
+                duration: "2-4 hours",
+                hasBedrooms: false,
+                basePrice: 3.5,
+                displayPrice: "£3.50/m²",
+                image: "hardfloor.png"
+            },
+            {
+                id: 14,
+                title: "Gutter Cleaning",
+                category: "special",
+                description: "Gutter clearing and downpipe unblocking service.",
+                features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first"],
+                duration: "1-3 hours",
+                hasBedrooms: false,
+                basePrice: 75,
+                displayPrice: "Terraced house: £75",
+                image: "gutter.png"
+            },
+            {
+                id: 15,
+                title: "Antiviral Sanitisation",
+                category: "special",
+                description: "Professional sanitisation against germs and viruses.",
+                features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage"],
+                duration: "1-2 hours",
+                hasBedrooms: true,
+                basePrice: 120,
+                perBedroomPrice: 25,
+                displayPrice: "From £120",
+                image: "sanitisation.png"
+            },
+            {
+                id: 16,
+                title: "BBQ Cleaning",
+                category: "special",
+                description: "Deep cleaning of BBQs and outdoor cooking equipment.",
+                features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 45,
+                displayPrice: "Small BBQ: £45",
+                image: "bbq.png"
+            },
+            {
+                id: 17,
+                title: "Commercial Cleaning",
+                category: "office",
+                description: "Regular commercial cleaning for businesses.",
+                features: ["Daily/weekly service", "Floor maintenance", "Restroom cleaning", "Waste removal"],
+                duration: "2-8 hours",
+                hasBedrooms: false,
+                basePrice: 25,
+                displayPrice: "£25/hour",
+                image: "commercial.png"
+            },
+            {
+                id: 18,
+                title: "Move In/Move Out Cleaning",
+                category: "deep",
+                description: "Complete cleaning for moving properties.",
+                features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround"],
+                duration: "3-6 hours",
+                hasBedrooms: true,
+                basePrice: 180,
+                perBedroomPrice: 40,
+                displayPrice: "From £180",
+                image: "moveclean.png"
+            },
+            {
+                id: 19,
+                title: "Patio & Decking Cleaning",
+                category: "special",
+                description: "Pressure washing for patios and decking areas.",
+                features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration"],
+                duration: "2-4 hours",
+                hasBedrooms: false,
+                basePrice: 70,
+                displayPrice: "From £70",
+                image: "patio.png"
+            },
+            {
+                id: 20,
+                title: "Spring Cleaning",
+                category: "deep",
+                description: "Seasonal deep cleaning service.",
+                features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 175,
+                perBedroomPrice: 35,
+                displayPrice: "From £175",
+                image: "spring.png"
+            },
+            {
+                id: 21,
+                title: "Carpet Stain Removal",
+                category: "deep",
+                description: "Specialized treatment for stubborn carpet stains.",
+                features: ["Professional treatment", "Odor removal", "Color restoration", "Guaranteed results"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 35,
+                displayPrice: "From £35/stain",
+                image: "stain.png"
+            },
+            {
+                id: 22,
+                title: "Emergency Cleaning",
+                category: "special",
+                description: "24/7 emergency cleaning services.",
+                features: ["24/7 availability", "Fast response", "Flood cleanup", "Accident cleanup"],
+                duration: "2-6 hours",
+                hasBedrooms: false,
+                basePrice: 35,
+                displayPrice: "£35/hour",
+                image: "emergency.png"
+            }
+        ];
 
-// ===== Render Services =====
-const servicesGrid = document.getElementById('servicesGrid');
+        // ===== Render Services =====
+        const servicesGrid = document.getElementById('servicesGrid');
 
-function renderServices(category = 'all') {
-    servicesGrid.innerHTML = '';
+        function renderServices(category = 'all') {
+            servicesGrid.innerHTML = '';
 
-    const filteredServices = category === 'all'
-        ? servicesData
-        : servicesData.filter(service => service.category === category);
+            const filteredServices = category === 'all'
+                ? servicesData
+                : servicesData.filter(service => service.category === category);
 
-    filteredServices.forEach(service => {
-        const serviceCard = document.createElement('div');
-        serviceCard.className = 'service-card';
-        serviceCard.setAttribute('data-category', service.category);
+            filteredServices.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card';
+                serviceCard.setAttribute('data-category', service.category);
 
-        let priceContent = '';
-        if (service.hasBedrooms) {
-            const tiers = [
-                { bedrooms: 1, price: service.basePrice, badge: 'gold' },
-                { bedrooms: 2, price: service.basePrice + service.perBedroomPrice, badge: 'silver' },
-                { bedrooms: 3, price: service.basePrice + (service.perBedroomPrice * 2), badge: 'bronze' }
-            ];
-            
-            priceContent = `
-                <div class="service-price-container">
-                    <div class="price-tag-main">£${service.basePrice}</div>
-                    <div class="price-tier-container">
-                        ${tiers.map(tier => `
-                            <div class="price-tier">
-                                <div class="tier-badge ${tier.badge}">${tier.bedrooms} BED</div>
-                                <div class="tier-bedrooms">${tier.bedrooms} Bedroom${tier.bedrooms > 1 ? 's' : ''}</div>
-                                <div class="tier-price">£${tier.price}</div>
+                let priceContent = '';
+                if (service.hasBedrooms) {
+                    const tiers = [
+                        { bedrooms: 1, price: service.basePrice, badge: 'gold' },
+                        { bedrooms: 2, price: service.basePrice + service.perBedroomPrice, badge: 'silver' },
+                        { bedrooms: 3, price: service.basePrice + (service.perBedroomPrice * 2), badge: 'bronze' }
+                    ];
+                    
+                    priceContent = `
+                        <div class="service-price-container">
+                            <div class="price-tag-main">£${service.basePrice}</div>
+                            <div class="price-tier-container">
+                                ${tiers.map(tier => `
+                                    <div class="price-tier">
+                                        <div class="tier-badge ${tier.badge}">${tier.bedrooms} BED</div>
+                                        <div class="tier-bedrooms">${tier.bedrooms} Bedroom${tier.bedrooms > 1 ? 's' : ''}</div>
+                                        <div class="tier-price">£${tier.price}</div>
+                                    </div>
+                                `).join('')}
                             </div>
-                        `).join('')}
+                        </div>
+                    `;
+                } else {
+                    priceContent = `
+                        <div class="service-price-container" style="text-align: center;">
+                            <div class="price-tag-main">${service.displayPrice}</div>
+                        </div>
+                    `;
+                }
+
+                serviceCard.innerHTML = `
+                    <div class="service-image" style="background-image: url('${service.image}'); background-color: var(--light-green);">
+                        <div class="service-overlay">
+                            <h3>${service.title}</h3>
+                        </div>
                     </div>
-                </div>
-            `;
-        } else {
-            priceContent = `
-                <div class="service-price-container" style="text-align: center;">
-                    <div class="price-tag-main">${service.displayPrice}</div>
-                </div>
-            `;
-        }
-
-        serviceCard.innerHTML = `
-            <div class="service-image" style="background-image: url('${service.image}'); background-color: var(--light-green);">
-                <div class="service-overlay">
-                    <h3>${service.title}</h3>
-                </div>
-            </div>
-            <div class="service-content">
-                ${priceContent}
-                
-                <div style="text-align: center; margin: 1rem 0;">
-                    <span class="service-duration-badge">
-                        <i class="far fa-clock"></i> ${service.duration}
-                    </span>
-                </div>
-                
-                <p class="service-description">${service.description}</p>
-                <ul class="service-features">
-                    ${service.features.map(feature => `
-                        <li><i class="fas fa-check"></i>${feature}</li>
-                    `).join('')}
-                </ul>
-                <div class="service-meta">
-                    <div class="service-cta">
-                        <button class="btn book-service-btn" 
-                                data-service-id="${service.id}" 
-                                data-service-title="${service.title}"
-                                style="padding: 1rem 2rem; font-size: 1.125rem; background: var(--gradient-primary);">
-                            <i class="fas fa-calendar-check"></i>
-                            Book Now
-                        </button>
+                    <div class="service-content">
+                        ${priceContent}
+                        
+                        <div style="text-align: center; margin: 1rem 0;">
+                            <span class="service-duration-badge">
+                                <i class="far fa-clock"></i> ${service.duration}
+                            </span>
+                        </div>
+                        
+                        <p class="service-description">${service.description}</p>
+                        <ul class="service-features">
+                            ${service.features.map(feature => `
+                                <li><i class="fas fa-check"></i>${feature}</li>
+                            `).join('')}
+                        </ul>
+                        <div class="service-meta">
+                            <div class="service-cta">
+                                <button class="btn book-service-btn" 
+                                        data-service-id="${service.id}" 
+                                        data-service-title="${service.title}"
+                                        style="padding: 1rem 2rem; font-size: 1.125rem; background: var(--gradient-primary);">
+                                    <i class="fas fa-calendar-check"></i>
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        `;
+                `;
 
-        servicesGrid.appendChild(serviceCard);
-    });
+                servicesGrid.appendChild(serviceCard);
+            });
 
-    document.querySelectorAll('.book-service-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const serviceId = this.getAttribute('data-service-id');
-            const serviceTitle = this.getAttribute('data-service-title');
-            const serviceData = servicesData.find(s => s.id == serviceId);
-            openBookingModal(serviceTitle, serviceId, serviceData);
-        });
-    });
+            document.querySelectorAll('.book-service-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const serviceId = this.getAttribute('data-service-id');
+                    const serviceTitle = this.getAttribute('data-service-title');
+                    const serviceData = servicesData.find(s => s.id == serviceId);
+                    openBookingModal(serviceTitle, serviceId, serviceData);
+                });
+            });
 
-    const serviceCards = document.querySelectorAll('.service-card');
-    serviceCards.forEach((el, index) => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-        
-        setTimeout(() => {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-        }, 100 + (index * 100));
-    });
-}
-
-// ===== Category Filtering =====
-const categoryButtons = document.querySelectorAll('.category-btn');
-
-categoryButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        categoryButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-
-        const category = button.getAttribute('data-category');
-        renderServices(category);
-    });
-});
-
-// ===== Smooth Scrolling =====
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        if (this.getAttribute('href') === '#') return;
-
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-
-        if (targetElement) {
-            window.scrollTo({
-                top: targetElement.offsetTop - 80,
-                behavior: 'smooth'
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 + (index * 100));
             });
         }
-    });
-});
 
-// ===== Initialize Page =====
-document.addEventListener('DOMContentLoaded', function() {
-    renderServices();
-    
-    // Test Resend connection on page load
-    if (RESEND_API_KEY && RESEND_API_KEY.startsWith('re_')) {
-        console.log('Resend API key detected');
-    } else {
-        console.warn('Resend API key not configured');
-    }
-});
+        // ===== Category Filtering =====
+        const categoryButtons = document.querySelectorAll('.category-btn');
+
+        categoryButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                categoryButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                const category = button.getAttribute('data-category');
+                renderServices(category);
+            });
+        });
+
+        // ===== Smooth Scrolling =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href') === '#') return;
+
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ===== Initialize Page =====
+        document.addEventListener('DOMContentLoaded', function() {
+            renderServices();
+            
+            // Test Resend connection on page load
+            if (RESEND_API_KEY && RESEND_API_KEY.startsWith('re_')) {
+                console.log('Resend API key detected');
+            } else {
+                console.warn('Resend API key not configured');
+            }
+        });
     </script>
 </body>
 </html>
