@@ -10,8 +10,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Stripe Elements for secure payment -->
-    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root {
             --primary-green: #10B981;
@@ -569,192 +567,24 @@
             font-size: 1.5rem;
         }
 
-        /* Registration Form */
-        .registration-section {
+        /* Confirmation Section */
+        .confirmation-section {
             background: linear-gradient(135deg, rgba(209, 250, 229, 0.3) 0%, rgba(255, 255, 255, 0.95) 100%);
             padding: 6rem 0;
         }
 
-        .registration-container {
+        .confirmation-container {
             max-width: 800px;
             margin: 0 auto;
         }
 
-        .registration-card {
+        .confirmation-card {
             background: var(--white);
             border-radius: var(--border-radius);
             padding: 3rem;
             box-shadow: var(--shadow-lg);
             border: 1px solid rgba(16, 185, 129, 0.1);
-        }
-
-        .form-progress {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .form-progress::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--light-gray);
-            z-index: 1;
-        }
-
-        .progress-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light-gray);
-            color: var(--medium-gray);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            transition: var(--transition);
-        }
-
-        .step-circle.active {
-            background: var(--gradient-primary);
-            color: var(--white);
-        }
-
-        .step-label {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--medium-gray);
-        }
-
-        .step-label.active {
-            color: var(--primary-green);
-        }
-
-        .form-step {
-            display: none;
-        }
-
-        .form-step.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-green);
-            font-size: 1rem;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            transition: var(--transition);
-            background: var(--off-white);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-            background: var(--white);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 3rem;
-            gap: 1rem;
-        }
-
-        .form-actions .btn {
-            min-width: 150px;
-        }
-
-        /* Stripe Payment Elements */
-        .stripe-element {
-            padding: 1rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            background: var(--off-white);
-            transition: var(--transition);
-        }
-
-        .stripe-element.focused {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-            background: var(--white);
-        }
-
-        .payment-summary {
-            background: var(--off-white);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-        }
-
-        .summary-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .summary-item.total {
-            font-weight: 700;
-            font-size: 1.125rem;
-            color: var(--dark-green);
-            border-top: 2px solid rgba(16, 185, 129, 0.2);
-            padding-top: 1rem;
-            margin-top: 1rem;
-        }
-
-        /* Success Message */
-        .success-message {
             text-align: center;
-            padding: 3rem 2rem;
-            display: none;
         }
 
         .success-icon {
@@ -777,13 +607,13 @@
             100% { transform: scale(1); }
         }
 
-        .success-message h3 {
+        .confirmation-card h3 {
             font-size: 2rem;
             margin-bottom: 1rem;
             color: var(--dark-green);
         }
 
-        .success-message p {
+        .confirmation-card p {
             color: var(--medium-gray);
             margin-bottom: 2rem;
             max-width: 600px;
@@ -1019,20 +849,8 @@
                 padding: 4rem 0;
             }
 
-            .registration-card {
+            .confirmation-card {
                 padding: 2rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .form-actions .btn {
-                width: 100%;
             }
 
             /* Mobile Close Button */
@@ -1133,6 +951,121 @@
         </div>
     </nav>
 
+    <!-- Show different content based on URL parameters -->
+    <?php
+    // Check if this is a success page
+    $isSuccess = isset($_GET['success']) && $_GET['success'] === 'true';
+    $plan = isset($_GET['plan']) ? $_GET['plan'] : '';
+    
+    // Define plan details
+    $planDetails = [
+        'starter' => [
+            'name' => 'Green Starter',
+            'price' => '£9.99',
+            'features' => ['£5 off every cleaning', 'Priority booking', 'Same-cleaner guarantee', 'Eco-friendly products', 'No call-out fee']
+        ],
+        'plus' => [
+            'name' => 'Green Plus',
+            'price' => '£19.99',
+            'features' => ['£10 off every cleaning', '1 FREE fridge OR oven clean per year', 'Priority + weekend booking', 'Same-cleaner guarantee', 'Eco deep-clean checklist', 'Discounted end-of-tenancy cleans']
+        ],
+        'premium' => [
+            'name' => 'Green Premium',
+            'price' => '£29.99',
+            'features' => ['£15 off every cleaning', '2 FREE add-ons per year', 'Annual eco deep clean included', 'Emergency same-day bookings', 'Dedicated account support', 'Best rates on all services']
+        ]
+    ];
+    
+    if ($isSuccess && $plan && isset($planDetails[$plan])) {
+        // Show success page
+        $currentPlan = $planDetails[$plan];
+    ?>
+    
+    <!-- Success Confirmation Section -->
+    <section class="membership-hero">
+        <div class="container">
+            <div class="membership-hero-content">
+                <h1>Welcome to the GreenGlo Club!</h1>
+                <p>Thank you for joining the <?php echo $currentPlan['name']; ?> plan. Your membership is now active and you can start enjoying premium benefits immediately.</p>
+                <a href="#confirmation" class="btn btn-large">
+                    <i class="fas fa-check-circle"></i>
+                    View Membership Details
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Confirmation Details -->
+    <section class="confirmation-section" id="confirmation">
+        <div class="container">
+            <div class="confirmation-container">
+                <div class="confirmation-card">
+                    <div class="success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h3>Membership Activated Successfully!</h3>
+                    <p>Your <?php echo $currentPlan['name']; ?> plan has been activated. Here's what happens next:</p>
+                    
+                    <div style="background: var(--off-white); padding: 1.5rem; border-radius: var(--border-radius); margin: 2rem 0; text-align: left;">
+                        <h4 style="margin-bottom: 1rem; color: var(--dark-green);">Your Membership Details</h4>
+                        <div style="display: grid; gap: 0.75rem;">
+                            <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                <span style="font-weight: 600;">Plan:</span>
+                                <span><?php echo $currentPlan['name']; ?></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                <span style="font-weight: 600;">Monthly Cost:</span>
+                                <span><?php echo $currentPlan['price']; ?></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(16, 185, 129, 0.1);">
+                                <span style="font-weight: 600;">Member ID:</span>
+                                <span>GG-<?php echo str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT); ?></span>
+                            </div>
+                        </div>
+                        
+                        <h4 style="margin: 1.5rem 0 1rem; color: var(--dark-green);">Your Benefits Include:</h4>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <?php foreach ($currentPlan['features'] as $feature): ?>
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+                                <i class="fas fa-check-circle" style="color: var(--primary-green); margin-top: 0.125rem;"></i>
+                                <span><?php echo $feature; ?></span>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                    
+                    <h4 style="margin-bottom: 1rem; color: var(--dark-green);">Next Steps</h4>
+                    <ol style="text-align: left; margin: 0 auto 2rem; max-width: 600px; padding-left: 1.5rem;">
+                        <li style="margin-bottom: 0.75rem;">You will receive a confirmation email from Stripe with your payment receipt</li>
+                        <li style="margin-bottom: 0.75rem;">Our team will contact you within 24 hours to welcome you to the club</li>
+                        <li style="margin-bottom: 0.75rem;">You can start using your benefits immediately on your next cleaning</li>
+                        <li>Keep your membership details handy when booking cleanings</li>
+                    </ol>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto;">
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%20just%20joined%20the%20<?php echo urlencode($currentPlan['name']); ?>%20plan%20and%20would%20like%20to%20book%20my%20first%20cleaning"
+                           class="btn" target="_blank">
+                            <i class="fas fa-whatsapp"></i>
+                            Book Your First Cleaning
+                        </a>
+                        <a href="greengloclub.html" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Membership Plans
+                        </a>
+                    </div>
+                    
+                    <p style="font-size: 0.875rem; color: var(--medium-gray); margin-top: 2rem;">
+                        <i class="fas fa-info-circle"></i> Need help? Contact us at greenglocleaning@gmail.com or call 07827 784204
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <?php } else { ?>
+    
+    <!-- Regular Membership Page (when not coming from success redirect) -->
+    
     <!-- Membership Hero Section -->
     <section class="membership-hero">
         <div class="container">
@@ -1178,9 +1111,9 @@
                     </div>
                     
                     <div class="pricing-footer">
-                        <button class="btn btn-outline select-plan" data-plan="starter">
-                            Select Starter Plan
-                        </button>
+                        <a href="https://buy.stripe.com/6oUcMY1eS8mDftEfV98AE00" class="btn btn-outline" target="_blank">
+                            Join Starter Plan
+                        </a>
                     </div>
                 </div>
 
@@ -1208,9 +1141,9 @@
                     </div>
                     
                     <div class="pricing-footer">
-                        <button class="btn select-plan" data-plan="plus">
-                            Select Plus Plan
-                        </button>
+                        <a href="https://buy.stripe.com/00w14g5v8auLa9kbET8AE01" class="btn" target="_blank">
+                            Join Plus Plan
+                        </a>
                     </div>
                 </div>
 
@@ -1237,9 +1170,9 @@
                     </div>
                     
                     <div class="pricing-footer">
-                        <button class="btn btn-outline select-plan" data-plan="premium">
-                            Select Premium Plan
-                        </button>
+                        <a href="https://buy.stripe.com/5kQaEQ1eS46ndlweR58AE02" class="btn btn-outline" target="_blank">
+                            Join Premium Plan
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1298,231 +1231,43 @@
         </div>
     </section>
 
-    <!-- Registration Form Section -->
-    <section class="registration-section" id="registration">
+    <!-- How It Works Section -->
+    <section class="section section-light">
         <div class="container">
             <div class="section-title">
-                <h2>Become a GreenGlo Member</h2>
-                <p>Fill out the form below to start enjoying premium benefits</p>
+                <h2>How It Works</h2>
+                <p>Simple steps to start enjoying premium cleaning benefits</p>
             </div>
 
-            <div class="registration-container">
-                <div class="registration-card">
-                    <!-- Form Progress -->
-                    <div class="form-progress">
-                        <div class="progress-step">
-                            <div class="step-circle active">1</div>
-                            <div class="step-label active">Plan Selection</div>
-                        </div>
-                        <div class="progress-step">
-                            <div class="step-circle">2</div>
-                            <div class="step-label">Personal Details</div>
-                        </div>
-                        <div class="progress-step">
-                            <div class="step-circle">3</div>
-                            <div class="step-label">Payment</div>
-                        </div>
-                        <div class="progress-step">
-                            <div class="step-circle">4</div>
-                            <div class="step-label">Confirmation</div>
-                        </div>
+            <div class="services-grid">
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-credit-card"></i>
                     </div>
-
-                    <!-- Step 1: Plan Selection -->
-                    <div class="form-step active" id="step1">
-                        <h3 style="margin-bottom: 1.5rem;">Select Your Membership Plan</h3>
-                        
-                        <div class="plan-selection">
-                            <div class="form-group">
-                                <label>Choose Plan:</label>
-                                <select class="form-control" id="planSelect">
-                                    <option value="">Please select a plan</option>
-                                    <option value="starter">🌿 Green Starter - £9.99/month</option>
-                                    <option value="plus">🌱 Green Plus - £19.99/month (Most Popular)</option>
-                                    <option value="premium">🌳 Green Premium - £29.99/month</option>
-                                </select>
-                            </div>
-
-                            <div class="payment-summary" id="planSummary" style="display: none;">
-                                <h4 style="margin-bottom: 1rem;">Plan Summary</h4>
-                                <div class="summary-item">
-                                    <span>Membership Plan:</span>
-                                    <span id="summaryPlan">-</span>
-                                </div>
-                                <div class="summary-item">
-                                    <span>Monthly Fee:</span>
-                                    <span id="summaryPrice">-</span>
-                                </div>
-                                <div class="summary-item">
-                                    <span>Setup Fee:</span>
-                                    <span>£0.00</span>
-                                </div>
-                                <div class="summary-item total">
-                                    <span>Total Monthly:</span>
-                                    <span id="summaryTotal">-</span>
-                                </div>
-                                <p style="font-size: 0.875rem; color: var(--medium-gray); margin-top: 1rem;">
-                                    <i class="fas fa-info-circle"></i> Cancel anytime. No long-term contract required.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" disabled>Previous</button>
-                            <button type="button" class="btn" id="nextToStep2">Next: Personal Details</button>
-                        </div>
+                    <h3>1. Choose Your Plan</h3>
+                    <p>Select the membership level that fits your needs and budget</p>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-user-check"></i>
                     </div>
-
-                    <!-- Step 2: Personal Details -->
-                    <div class="form-step" id="step2">
-                        <h3 style="margin-bottom: 1.5rem;">Personal Information</h3>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="firstName">First Name *</label>
-                                <input type="text" id="firstName" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Last Name *</label>
-                                <input type="text" id="lastName" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="address">Address *</label>
-                            <input type="text" id="address" class="form-control" required>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="postcode">Postcode *</label>
-                                <input type="text" id="postcode" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="city">City *</label>
-                                <input type="text" id="city" class="form-control" required>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" id="backToStep1">Previous</button>
-                            <button type="button" class="btn" id="nextToStep3">Next: Payment</button>
-                        </div>
+                    <h3>2. Secure Sign Up</h3>
+                    <p>Complete the secure payment via Stripe's trusted platform</p>
+                </div>
+                
+                <div class="service-item">
+                    <div class="service-icon">
+                        <i class="fas fa-spray-can"></i>
                     </div>
-
-                    <!-- Step 3: Payment -->
-                    <div class="form-step" id="step3">
-                        <h3 style="margin-bottom: 1.5rem;">Payment Details</h3>
-                        
-                        <div class="payment-summary">
-                            <h4 style="margin-bottom: 1rem;">Order Summary</h4>
-                            <div class="summary-item">
-                                <span>Selected Plan:</span>
-                                <span id="paymentPlan">-</span>
-                            </div>
-                            <div class="summary-item">
-                                <span>Monthly Amount:</span>
-                                <span id="paymentAmount">-</span>
-                            </div>
-                            <div class="summary-item total">
-                                <span>First Payment:</span>
-                                <span id="paymentTotal">-</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Card Details</label>
-                            <div id="card-element" class="stripe-element"></div>
-                            <div id="card-errors" role="alert" style="color: #dc3545; margin-top: 0.5rem; font-size: 0.875rem;"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="billingAddress">Billing Address (if different)</label>
-                            <textarea id="billingAddress" class="form-control" rows="3"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
-                                <input type="checkbox" id="terms" required style="margin-top: 0.25rem;">
-                                <label for="terms" style="font-size: 0.875rem;">
-                                    I agree to the <a href="#" style="color: var(--primary-green);">Terms of Service</a> and <a href="#" style="color: var(--primary-green);">Privacy Policy</a>. I understand that this is a recurring monthly subscription that I can cancel at any time.
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
-                                <input type="checkbox" id="marketing" style="margin-top: 0.25rem;">
-                                <label for="marketing" style="font-size: 0.875rem;">
-                                    I would like to receive updates about new services and special offers from GreenGlo Cleaners.
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-outline" id="backToStep2">Previous</button>
-                            <button type="button" class="btn" id="submitPayment">
-                                <i class="fas fa-lock"></i>
-                                Complete Payment
-                            </button>
-                        </div>
-
-                        <div style="margin-top: 2rem; text-align: center;">
-                            <p style="font-size: 0.875rem; color: var(--medium-gray);">
-                                <i class="fas fa-shield-alt"></i> Secure payment processed by Stripe. Your information is encrypted and secure.
-                            </p>
-                            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
-                                <img src="https://stripe.com/img/v3/home/two-icons/icon-security.svg" alt="Secure" height="24">
-                                <img src="https://stripe.com/img/v3/home/two-icons/icon-pci.svg" alt="PCI Compliant" height="24">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Step 4: Success -->
-                    <div class="form-step" id="step4">
-                        <div class="success-message">
-                            <div class="success-icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <h3>Welcome to GreenGlo Club!</h3>
-                            <p>Your membership has been successfully activated. You will receive a confirmation email shortly with your membership details and next steps.</p>
-                            
-                            <div style="background: var(--off-white); padding: 1.5rem; border-radius: var(--border-radius); margin: 2rem 0; text-align: left;">
-                                <h4 style="margin-bottom: 1rem;">Membership Details</h4>
-                                <p><strong>Plan:</strong> <span id="confirmationPlan">-</span></p>
-                                <p><strong>Member ID:</strong> <span id="memberId">GG-000001</span></p>
-                                <p><strong>Start Date:</strong> <span id="startDate">-</span></p>
-                                <p><strong>Next Payment:</strong> <span id="nextPayment">-</span></p>
-                            </div>
-
-                            <div style="display: flex; flex-direction: column; gap: 1rem; max-width: 400px; margin: 0 auto;">
-                                <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%20just%20signed%20up%20for%20the%20GreenGlo%20Club%20and%20would%20like%20to%20book%20my%20first%20cleaning"
-                                   class="btn" target="_blank">
-                                    <i class="fas fa-whatsapp"></i>
-                                    Book Your First Cleaning
-                                </a>
-                                <a href="index.html" class="btn btn-outline">
-                                    <i class="fas fa-home"></i>
-                                    Return to Homepage
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <h3>3. Start Saving</h3>
+                    <p>Use your membership discounts immediately on your next cleaning</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <?php } ?>
 
     <!-- FAQ Section -->
     <section class="section section-light" id="faq">
@@ -1593,9 +1338,9 @@
                 <h2 style="color: var(--white);">Ready to Transform Your Cleaning Experience?</h2>
                 <p style="font-size: 1.25rem; opacity: 0.9; max-width: 700px; margin: 0 auto 3rem;">Join hundreds of satisfied members enjoying premium cleaning services with exclusive benefits.</p>
                 <div class="cta-buttons" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="#registration" class="btn btn-large" style="background: var(--white); color: var(--dark-green);">
+                    <a href="#pricing" class="btn btn-large" style="background: var(--white); color: var(--dark-green);">
                         <i class="fas fa-crown"></i>
-                        Join Now
+                        View Plans
                     </a>
                     <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%20have%20questions%20about%20the%20GreenGlo%20Club%20membership"
                        class="btn btn-outline btn-large" style="border-color: var(--white); color: var(--white);">
@@ -1747,281 +1492,6 @@
             });
         });
 
-        // ===== Membership Plans Configuration =====
-        const membershipPlans = {
-            starter: {
-                name: '🌿 Green Starter',
-                price: 9.99,
-                description: 'Best for light users',
-                features: [
-                    '£5 off every cleaning',
-                    'Priority booking',
-                    'Same-cleaner guarantee (where possible)',
-                    'Eco-friendly products included',
-                    'No call-out fee'
-                ]
-            },
-            plus: {
-                name: '🌱 Green Plus',
-                price: 19.99,
-                description: 'For regular households',
-                features: [
-                    '£10 off every cleaning',
-                    '1 FREE fridge OR oven clean per year',
-                    'Priority + weekend booking',
-                    'Same-cleaner guarantee',
-                    'Eco deep-clean checklist included',
-                    'Discounted end-of-tenancy cleans'
-                ]
-            },
-            premium: {
-                name: '🌳 Green Premium',
-                price: 29.99,
-                description: 'For premium & family homes',
-                features: [
-                    '£15 off every cleaning',
-                    '2 FREE add-ons per year (oven, fridge, inside windows)',
-                    'Annual eco deep clean included',
-                    'Emergency same-day bookings (subject to availability)',
-                    'Dedicated account support',
-                    'Best rates on all services'
-                ]
-            }
-        };
-
-        // ===== Registration Form Logic =====
-        let selectedPlan = '';
-        let stripe = null;
-        let cardElement = null;
-
-        // Initialize Stripe (replace with your publishable key)
-        function initStripe() {
-            // Note: Replace 'pk_test_your_key_here' with your actual Stripe publishable key
-            stripe = Stripe('pk_test_your_key_here'); // Replace with your Stripe publishable key
-            
-            const elements = stripe.elements();
-            const style = {
-                base: {
-                    color: '#32325d',
-                    fontFamily: '"Montserrat", sans-serif',
-                    fontSmoothing: 'antialiased',
-                    fontSize: '16px',
-                    '::placeholder': {
-                        color: '#9CA3AF'
-                    }
-                },
-                invalid: {
-                    color: '#dc3545',
-                    iconColor: '#dc3545'
-                }
-            };
-
-            cardElement = elements.create('card', { style: style });
-            cardElement.mount('#card-element');
-
-            // Handle real-time validation errors
-            cardElement.addEventListener('change', function(event) {
-                const displayError = document.getElementById('card-errors');
-                if (event.error) {
-                    displayError.textContent = event.error.message;
-                } else {
-                    displayError.textContent = '';
-                }
-            });
-        }
-
-        // Plan Selection
-        document.querySelectorAll('.select-plan').forEach(button => {
-            button.addEventListener('click', function() {
-                selectedPlan = this.dataset.plan;
-                document.getElementById('planSelect').value = selectedPlan;
-                updatePlanSummary();
-                document.getElementById('planSummary').style.display = 'block';
-                document.getElementById('nextToStep2').disabled = false;
-            });
-        });
-
-        document.getElementById('planSelect').addEventListener('change', function() {
-            selectedPlan = this.value;
-            if (selectedPlan) {
-                updatePlanSummary();
-                document.getElementById('planSummary').style.display = 'block';
-                document.getElementById('nextToStep2').disabled = false;
-            } else {
-                document.getElementById('planSummary').style.display = 'none';
-                document.getElementById('nextToStep2').disabled = true;
-            }
-        });
-
-        function updatePlanSummary() {
-            if (!selectedPlan || !membershipPlans[selectedPlan]) return;
-            
-            const plan = membershipPlans[selectedPlan];
-            document.getElementById('summaryPlan').textContent = plan.name;
-            document.getElementById('summaryPrice').textContent = `£${plan.price.toFixed(2)}`;
-            document.getElementById('summaryTotal').textContent = `£${plan.price.toFixed(2)}`;
-            
-            // Update payment step summary
-            document.getElementById('paymentPlan').textContent = plan.name;
-            document.getElementById('paymentAmount').textContent = `£${plan.price.toFixed(2)}`;
-            document.getElementById('paymentTotal').textContent = `£${plan.price.toFixed(2)}`;
-            
-            // Update confirmation step
-            document.getElementById('confirmationPlan').textContent = plan.name;
-        }
-
-        // Form Navigation
-        let currentStep = 1;
-        const steps = document.querySelectorAll('.form-step');
-        const stepCircles = document.querySelectorAll('.step-circle');
-        const stepLabels = document.querySelectorAll('.step-label');
-
-        function showStep(stepNumber) {
-            // Hide all steps
-            steps.forEach(step => step.classList.remove('active'));
-            stepCircles.forEach(circle => circle.classList.remove('active'));
-            stepLabels.forEach(label => label.classList.remove('active'));
-            
-            // Show current step
-            document.getElementById(`step${stepNumber}`).classList.add('active');
-            stepCircles[stepNumber - 1].classList.add('active');
-            stepLabels[stepNumber - 1].classList.add('active');
-            
-            currentStep = stepNumber;
-        }
-
-        // Step Navigation
-        document.getElementById('nextToStep2').addEventListener('click', function() {
-            if (!selectedPlan) {
-                alert('Please select a membership plan first.');
-                return;
-            }
-            showStep(2);
-            // Scroll to top of form
-            document.querySelector('.registration-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-
-        document.getElementById('backToStep1').addEventListener('click', function() {
-            showStep(1);
-        });
-
-        document.getElementById('nextToStep3').addEventListener('click', function() {
-            // Validate personal details
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const postcode = document.getElementById('postcode').value.trim();
-            const city = document.getElementById('city').value.trim();
-
-            if (!firstName || !lastName || !email || !phone || !address || !postcode || !city) {
-                alert('Please fill in all required fields.');
-                return;
-            }
-
-            // Simple email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address.');
-                return;
-            }
-
-            showStep(3);
-            // Initialize Stripe if not already initialized
-            if (!stripe) {
-                initStripe();
-            }
-        });
-
-        document.getElementById('backToStep2').addEventListener('click', function() {
-            showStep(2);
-        });
-
-        // Payment Submission
-        document.getElementById('submitPayment').addEventListener('click', async function() {
-            // Validate terms agreement
-            if (!document.getElementById('terms').checked) {
-                alert('Please agree to the Terms of Service and Privacy Policy.');
-                return;
-            }
-
-            // Get form data
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
-            const postcode = document.getElementById('postcode').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const billingAddress = document.getElementById('billingAddress').value.trim();
-            const marketingOptIn = document.getElementById('marketing').checked;
-
-            // Disable button and show loading state
-            const submitBtn = this;
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            submitBtn.disabled = true;
-
-            try {
-                // In a real implementation, you would:
-                // 1. Create a payment intent on your server
-                // 2. Confirm the card payment with Stripe
-                // 3. Save the customer and subscription details to your database
-                
-                // For demo purposes, we'll simulate a successful payment
-                setTimeout(() => {
-                    // Generate a random member ID
-                    const memberId = 'GG-' + Math.floor(100000 + Math.random() * 900000);
-                    const today = new Date();
-                    const nextMonth = new Date(today);
-                    nextMonth.setMonth(nextMonth.getMonth() + 1);
-                    
-                    // Format dates
-                    const formatDate = (date) => {
-                        return date.toLocaleDateString('en-GB', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric'
-                        });
-                    };
-
-                    // Update confirmation details
-                    document.getElementById('memberId').textContent = memberId;
-                    document.getElementById('startDate').textContent = formatDate(today);
-                    document.getElementById('nextPayment').textContent = formatDate(nextMonth);
-
-                    // Show success step
-                    showStep(4);
-                    
-                    // Reset form (in real implementation, you would clear sensitive data)
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                    
-                    // Scroll to top of success message
-                    document.querySelector('.success-message').scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Send confirmation email (simulated)
-                    console.log('Membership activated:', {
-                        memberId,
-                        plan: selectedPlan,
-                        customer: { firstName, lastName, email, phone },
-                        address: { address, postcode, city }
-                    });
-                    
-                    // In real implementation, you would send this data to your server
-                    // to create the actual subscription and send confirmation emails
-                    
-                }, 2000); // Simulate processing delay
-
-            } catch (error) {
-                console.error('Payment error:', error);
-                alert('There was an error processing your payment. Please try again.');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-
         // ===== FAQ Accordion =====
         const faqQuestions = document.querySelectorAll('.faq-question');
         faqQuestions.forEach(question => {
@@ -2052,20 +1522,6 @@
 
         // ===== Initialize on page load =====
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up smooth scrolling for internal links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    if (href !== '#' && href !== '#registration') {
-                        e.preventDefault();
-                        const target = document.querySelector(href);
-                        if (target) {
-                            target.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    }
-                });
-            });
-
             // Highlight current page in navigation
             const currentPage = window.location.pathname.split('/').pop();
             document.querySelectorAll('.nav-link').forEach(link => {
@@ -2074,14 +1530,6 @@
                 }
             });
         });
-
-        // Note: For production use, you need to:
-        // 1. Get a Stripe account (stripe.com)
-        // 2. Replace 'pk_test_your_key_here' with your actual Stripe publishable key
-        // 3. Set up a server to handle payment intents and customer creation
-        // 4. Implement proper form validation and error handling
-        // 5. Set up webhooks to handle subscription events
-        // 6. Add proper security measures and data protection
     </script>
 </body>
 </html>
