@@ -373,6 +373,18 @@
             }
         }
 
+        .bics-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .bics-logo {
+            height: 24px;
+            width: auto;
+            display: block;
+        }
+
         .hero-badge i {
             color: var(--gold);
             font-size: 1.25rem;
@@ -789,7 +801,7 @@
             transform: scale(1.2);
         }
 
-        /* ===== Premium FAQ ===== */
+        /* ===== Premium FAQ - FIXED ===== */
         .faq-grid {
             max-width: 800px;
             margin: 0 auto;
@@ -802,6 +814,12 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
+        }
+
+        .faq-item.active {
+            border-color: var(--primary-green);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
         }
 
         .faq-question {
@@ -828,17 +846,31 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition);
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .faq-item.active .faq-toggle {
+            background: var(--primary-green);
+            color: var(--white);
+            transform: rotate(180deg);
         }
 
         .faq-answer {
             padding: 0 2rem;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
         }
 
-        .faq-answer.open {
+        .faq-item.active .faq-answer {
             padding: 0 2rem 2rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--dark-gray);
+            line-height: 1.7;
         }
 
         /* ===== Premium CTA ===== */
@@ -1347,6 +1379,19 @@
                 background: var(--mint);
                 transform: rotate(90deg);
             }
+            
+            .faq-question {
+                padding: 1.25rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .faq-answer {
+                padding: 0 1.5rem;
+            }
+            
+            .faq-item.active .faq-answer {
+                padding: 0 1.5rem 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1373,6 +1418,16 @@
 
             .testimonial-card {
                 padding: 2rem 1.5rem;
+            }
+            
+            .hero-badge {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+            }
+            
+            .bics-logo-container {
+                justify-content: center;
             }
         }
     </style>
@@ -1415,7 +1470,7 @@
                 <li class="nav-item">
                     <a href="gallery.html" class="nav-link">Gallery</a>
                 </li>
-                                <li class="nav-item">
+                <li class="nav-item">
                     <a href="greengloclub.html" class="nav-link">Green Glo Club</a>
                 </li>
                 <li class="nav-item">
@@ -1437,8 +1492,10 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-badge">
-                    <i class="fas fa-star"></i>
-                    <span>BICSc Registered</span>
+                    <div class="bics-logo-container">
+                        <img src="bics.png" alt="BICSc Registered" class="bics-logo">
+                        <span>BICSc Registered</span>
+                    </div>
                 </div>
 
                 <h1>Professional Cleaning and Maintenance Services</h1>
@@ -1708,7 +1765,7 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
+    <!-- FAQ Section - FIXED -->
     <section class="section section-gray" id="faq">
         <div class="container">
             <div class="section-title">
@@ -1720,7 +1777,7 @@
                 <div class="faq-item">
                     <div class="faq-question">
                         How much does a professional house cleaning service cost in London?
-                        <span class="faq-toggle">+</span>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <div class="faq-answer">
                         <p>Our affordable home cleaning services in London starts at £18/h and offer clear, transparent
@@ -1731,7 +1788,7 @@
                 <div class="faq-item">
                     <div class="faq-question">
                         Are the cleaners vetted and insured?
-                        <span class="faq-toggle">+</span>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <div class="faq-answer">
                         <p>Yes, all our local cleaners in London are fully background-checked, trained, and insured.
@@ -1742,7 +1799,7 @@
                 <div class="faq-item">
                     <div class="faq-question">
                         What tasks are included in a standard home cleaning service?
-                        <span class="faq-toggle">+</span>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <div class="faq-answer">
                         <p>Our house cleaning services London include dusting, vacuuming, sweeping, mopping, kitchen and
@@ -1753,12 +1810,32 @@
                 <div class="faq-item">
                     <div class="faq-question">
                         How do I schedule or manage bookings online?
-                        <span class="faq-toggle">+</span>
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
                     </div>
                     <div class="faq-answer">
                         <p>Our easy-to-use platform allows you to book professional home cleaners London in just a few
                             clicks. You can manage all appointments, reschedule services, and plan future visits
                             directly from your account.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What eco-friendly products do you use?
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We use only certified eco-friendly, non-toxic cleaning products that are safe for children,
+                            pets, and the environment. Our products are biodegradable and come from sustainable sources.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Do you offer emergency cleaning services?
+                        <span class="faq-toggle"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we offer same-day and emergency cleaning services for urgent situations. Contact us via
+                            WhatsApp for immediate assistance, and we'll do our best to accommodate your needs.</p>
                     </div>
                 </div>
             </div>
@@ -2192,8 +2269,15 @@
                         Professional eco-friendly cleaning services for homes and offices across London.
                     </p>
                     <div class="social-links">
-                        <a href="https://instagram.com/greenglocleaningco" class="social-link" target="_blank"><i
-                                class="fab fa-instagram"></i></a>
+                        <a href="https://instagram.com/greenglocleaningco" class="social-link" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://tiktok.com/@greenglocleaningco" class="social-link" target="_blank" aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        <a href="https://facebook.com/greenglocleaningco" class="social-link" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
                     </div>
                 </div>
 
@@ -2368,31 +2452,22 @@
             carouselInterval = setInterval(nextSlide, 5000);
         });
 
-        // ===== FAQ Accordion =====
-        const faqQuestions = document.querySelectorAll('.faq-question');
-        faqQuestions.forEach(question => {
+        // ===== FAQ Accordion - FIXED =====
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
             question.addEventListener('click', () => {
-                const answer = question.nextElementSibling;
-                const toggle = question.querySelector('.faq-toggle');
-
-                // Close other FAQs
-                faqQuestions.forEach(otherQuestion => {
-                    if (otherQuestion !== question) {
-                        const otherAnswer = otherQuestion.nextElementSibling;
-                        const otherToggle = otherQuestion.querySelector('.faq-toggle');
-                        otherAnswer.classList.remove('open');
-                        otherToggle.textContent = '+';
+                // Close all other FAQs
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
                     }
                 });
-
+                
                 // Toggle current FAQ
-                if (answer.classList.contains('open')) {
-                    answer.classList.remove('open');
-                    toggle.textContent = '+';
-                } else {
-                    answer.classList.add('open');
-                    toggle.textContent = '−';
-                }
+                item.classList.toggle('active');
             });
         });
 
@@ -2700,6 +2775,9 @@
                 postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
                 exampleIndex = (exampleIndex + 1) % examples.length;
             }, 3000);
+            
+            // Initialize first FAQ as open (optional)
+            // faqItems[0].classList.add('active');
         });
 
         // ===== WhatsApp Floating Button =====
@@ -2780,8 +2858,8 @@
 
             if (statusText) {
                 statusText.textContent = isWorkingHours
-                    ? "Typically replies instantly"
-                    : "Will reply during working hours";
+                    ? "Typically replies instantly • Follow @greenglocleaningco"
+                    : "Will reply during working hours • Follow @greenglocleaningco";
                 statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
             }
         }
@@ -2815,4 +2893,3 @@
 </body>
 
 </html>
-
