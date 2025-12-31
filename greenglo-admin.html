@@ -1027,14 +1027,15 @@ CREATE TABLE IF NOT EXISTS availability (
     UNIQUE(date, time_slot)
 );
 
--- Create bookings table
+-- Create bookings table with correct field names
 CREATE TABLE IF NOT EXISTS bookings (
     id BIGSERIAL PRIMARY KEY,
-    booking_date DATE NOT NULL,
-    time_slot TEXT NOT NULL,
     customer_name TEXT NOT NULL,
     customer_email TEXT,
+    customer_phone TEXT,
     customer_address TEXT,
+    booking_date DATE NOT NULL,
+    time_slot TEXT NOT NULL,
     service_title TEXT,
     status TEXT DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT NOW()
@@ -2458,7 +2459,7 @@ FOR ALL USING (true);</textarea>
                 container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading bookings...</div></div>';
                 
                 try {
-                    // Fetch bookings from database with all fields
+                    // Fetch bookings from database with correct field names
                     const { data: bookings, error } = await state.db
                         .from('bookings')
                         .select('*')
@@ -2472,14 +2473,10 @@ FOR ALL USING (true);</textarea>
                                 <div style="text-align: center; padding: 60px; color: var(--medium-gray);">
                                     <i class="fas fa-calendar-check" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
                                     <h3 style="margin-bottom: 10px;">Bookings Table Setup Required</h3>
-                                    <p style="margin-bottom: 20px;">The bookings table needs to be updated with new fields.</p>
+                                    <p style="margin-bottom: 20px;">The bookings table needs to be set up with correct fields.</p>
                                     <button onclick="updateBookingsTableStructure()" class="btn btn-primary" style="margin: 10px;">
                                         <i class="fas fa-database"></i>
                                         Update Table Structure
-                                    </button>
-                                    <button onclick="createBookingsTable()" class="btn btn-secondary" style="margin: 10px;">
-                                        <i class="fas fa-plus-circle"></i>
-                                        Create Bookings Table
                                     </button>
                                 </div>
                             `;
@@ -2502,10 +2499,11 @@ FOR ALL USING (true);</textarea>
                     // Group bookings by date
                     const bookingsByDate = {};
                     bookings.forEach(booking => {
-                        if (!bookingsByDate[booking.booking_date]) {
-                            bookingsByDate[booking.booking_date] = [];
+                        const date = booking.booking_date || 'No Date';
+                        if (!bookingsByDate[date]) {
+                            bookingsByDate[date] = [];
                         }
-                        bookingsByDate[booking.booking_date].push(booking);
+                        bookingsByDate[date].push(booking);
                     });
                     
                     // Create bookings list
@@ -2551,12 +2549,12 @@ FOR ALL USING (true);</textarea>
                     Object.keys(bookingsByDate).sort().reverse().forEach(date => {
                         const dateBookings = bookingsByDate[date];
                         const dateObj = new Date(date);
-                        const dateStr = dateObj.toLocaleDateString('en-US', {
+                        const dateStr = date !== 'No Date' ? dateObj.toLocaleDateString('en-US', {
                             weekday: 'long',
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
-                        });
+                        }) : 'No Date Specified';
                         
                         html += `
                             <div class="booking-date-group" style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden;">
@@ -2584,43 +2582,65 @@ FOR ALL USING (true);</textarea>
                                                     </div>
                                                     
                                                     <div class="details-grid">
-                                                        ${booking.email ? `
+                                                        ${booking.customer_email ? `
                                                             <div class="detail-item">
                                                                 <div class="detail-label">Email</div>
                                                                 <div class="detail-value">
                                                                     <i class="fas fa-envelope" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.email}
+                                                                    ${booking.customer_email}
                                                                 </div>
                                                             </div>
                                                         ` : ''}
                                                         
-                                                        ${booking.address ? `
+                                                        ${booking.customer_phone ? `
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Phone</div>
+                                                                <div class="detail-value">
+                                                                    <i class="fas fa-phone" style="margin-right: 8px; color: var(--primary-green);"></i>
+                                                                    ${booking.customer_phone}
+                                                                </div>
+                                                            </div>
+                                                        ` : ''}
+                                                        
+                                                        ${booking.customer_address ? `
                                                             <div class="detail-item">
                                                                 <div class="detail-label">Address</div>
                                                                 <div class="detail-value">
                                                                     <i class="fas fa-map-marker-alt" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.address}
+                                                                    ${booking.customer_address}
                                                                 </div>
                                                             </div>
                                                         ` : ''}
                                                         
-                                                        ${booking.service ? `
+                                                        ${booking.service_title ? `
                                                             <div class="detail-item">
-                                                                <div class="detail-label">Service</div>
+                                                                <div class="detail-label">Service Title</div>
                                                                 <div class="detail-value">
                                                                     <i class="fas fa-concierge-bell" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.service}
+                                                                    ${booking.service_title}
                                                                 </div>
                                                             </div>
                                                         ` : ''}
                                                         
-                                                        <div class="detail-item">
-                                                            <div class="detail-label">Time Slot</div>
-                                                            <div class="detail-value">
-                                                                <i class="fas fa-clock" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                ${booking.time_slot}
+                                                        ${booking.time_slot ? `
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Time Slot</div>
+                                                                <div class="detail-value">
+                                                                    <i class="fas fa-clock" style="margin-right: 8px; color: var(--primary-green);"></i>
+                                                                    ${booking.time_slot}
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        ` : ''}
+                                                        
+                                                        ${booking.booking_date ? `
+                                                            <div class="detail-item">
+                                                                <div class="detail-label">Booking Date</div>
+                                                                <div class="detail-value">
+                                                                    <i class="fas fa-calendar" style="margin-right: 8px; color: var(--primary-green);"></i>
+                                                                    ${new Date(booking.booking_date).toLocaleDateString()}
+                                                                </div>
+                                                            </div>
+                                                        ` : ''}
                                                     </div>
                                                 </div>
                                                 
@@ -2798,27 +2818,32 @@ FOR ALL USING (true);</textarea>
                             
                             <div class="detail-item">
                                 <div class="detail-label">Email</div>
-                                <div class="detail-value">${booking.email || 'Not specified'}</div>
+                                <div class="detail-value">${booking.customer_email || 'Not specified'}</div>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <div class="detail-label">Phone</div>
+                                <div class="detail-value">${booking.customer_phone || 'Not specified'}</div>
                             </div>
                             
                             <div class="detail-item">
                                 <div class="detail-label">Address</div>
-                                <div class="detail-value">${booking.address || 'Not specified'}</div>
+                                <div class="detail-value">${booking.customer_address || 'Not specified'}</div>
                             </div>
                             
                             <div class="detail-item">
-                                <div class="detail-label">Service</div>
-                                <div class="detail-value">${booking.service || 'Not specified'}</div>
+                                <div class="detail-label">Service Title</div>
+                                <div class="detail-value">${booking.service_title || 'Not specified'}</div>
                             </div>
                             
                             <div class="detail-item">
                                 <div class="detail-label">Booking Date</div>
-                                <div class="detail-value">${new Date(booking.booking_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                                <div class="detail-value">${booking.booking_date ? new Date(booking.booking_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Not specified'}</div>
                             </div>
                             
                             <div class="detail-item">
                                 <div class="detail-label">Time Slot</div>
-                                <div class="detail-value">${booking.time_slot}</div>
+                                <div class="detail-value">${booking.time_slot || 'Not specified'}</div>
                             </div>
                             
                             <div class="detail-item">
@@ -2844,16 +2869,23 @@ FOR ALL USING (true);</textarea>
                         
                         <div style="margin-top: 20px; padding: 15px; background: var(--light-green); border-radius: 8px;">
                             <div style="font-weight: 600; color: var(--dark-green); margin-bottom: 10px;">Quick Actions</div>
-                            <div style="display: flex; gap: 10px;">
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                 <button onclick="updateBookingStatus(${booking.id}, 'confirm')" class="btn btn-success btn-sm">
                                     <i class="fas fa-check"></i> Confirm Booking
                                 </button>
                                 <button onclick="updateBookingStatus(${booking.id}, 'cancel')" class="btn btn-danger btn-sm">
                                     <i class="fas fa-times"></i> Cancel Booking
                                 </button>
-                                <a href="mailto:${booking.email || ''}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-envelope"></i> Email Customer
-                                </a>
+                                ${booking.customer_email ? `
+                                    <a href="mailto:${booking.customer_email}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-envelope"></i> Email Customer
+                                    </a>
+                                ` : ''}
+                                ${booking.customer_phone ? `
+                                    <a href="tel:${booking.customer_phone}" class="btn btn-secondary btn-sm">
+                                        <i class="fas fa-phone"></i> Call Customer
+                                    </a>
+                                ` : ''}
                             </div>
                         </div>
                     `;
@@ -2872,16 +2904,56 @@ FOR ALL USING (true);</textarea>
                 try {
                     showNotification('Updating bookings table structure...', 'info');
                     
-                    // Add columns if they don't exist
+                    // Add all required columns with correct field names
                     const alterSql = `
+                        -- Update bookings table to have correct field names
                         ALTER TABLE bookings 
-                        ADD COLUMN IF NOT EXISTS email TEXT,
-                        ADD COLUMN IF NOT EXISTS address TEXT,
-                        ADD COLUMN IF NOT EXISTS service TEXT;
+                        ADD COLUMN IF NOT EXISTS customer_name TEXT NOT NULL,
+                        ADD COLUMN IF NOT EXISTS customer_email TEXT,
+                        ADD COLUMN IF NOT EXISTS customer_phone TEXT,
+                        ADD COLUMN IF NOT EXISTS customer_address TEXT,
+                        ADD COLUMN IF NOT EXISTS booking_date DATE NOT NULL,
+                        ADD COLUMN IF NOT EXISTS time_slot TEXT NOT NULL,
+                        ADD COLUMN IF NOT EXISTS service_title TEXT,
+                        ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending',
+                        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
+                        
+                        -- If table has old columns, we can optionally rename them
+                        -- Note: This might fail if columns don't exist, so we use DO block
+                        DO $$
+                        BEGIN
+                            -- Check and rename economic_name to customer_name
+                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='economic_name') THEN
+                                ALTER TABLE bookings RENAME COLUMN economic_name TO customer_name;
+                            END IF;
+                            
+                            -- Check and rename economic_result to customer_email
+                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='economic_result') THEN
+                                ALTER TABLE bookings RENAME COLUMN economic_result TO customer_email;
+                            END IF;
+                            
+                            -- Check and rename economic_address to customer_address
+                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='economic_address') THEN
+                                ALTER TABLE bookings RENAME COLUMN economic_address TO customer_address;
+                            END IF;
+                            
+                            -- Check and rename service_type to service_title
+                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='service_type') THEN
+                                ALTER TABLE bookings RENAME COLUMN service_type TO service_title;
+                            END IF;
+                            
+                            -- Check and rename banking_date to booking_date
+                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='banking_date') THEN
+                                ALTER TABLE bookings RENAME COLUMN banking_date TO booking_date;
+                            END IF;
+                            
+                            -- Check and rename financials to time_slot
+                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='financials') THEN
+                                ALTER TABLE bookings RENAME COLUMN financials TO time_slot;
+                            END IF;
+                        END $$;
                     `;
                     
-                    // You would need to execute this SQL in Supabase SQL Editor
-                    // For now, we'll show the SQL to copy
                     const sqlTextArea = document.createElement('textarea');
                     sqlTextArea.value = alterSql;
                     document.body.appendChild(sqlTextArea);
@@ -2905,12 +2977,13 @@ FOR ALL USING (true);</textarea>
                     const createSql = `
                         CREATE TABLE IF NOT EXISTS bookings (
                             id BIGSERIAL PRIMARY KEY,
+                            customer_name TEXT NOT NULL,
+                            customer_email TEXT,
+                            customer_phone TEXT,
+                            customer_address TEXT,
                             booking_date DATE NOT NULL,
                             time_slot TEXT NOT NULL,
-                            customer_name TEXT NOT NULL,
-                            email TEXT,
-                            address TEXT,
-                            service TEXT,
+                            service_title TEXT,
                             status TEXT DEFAULT 'pending',
                             created_at TIMESTAMP DEFAULT NOW()
                         );
