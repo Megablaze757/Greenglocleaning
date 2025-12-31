@@ -46,11 +46,38 @@
             color: var(--dark-gray);
             line-height: 1.6;
             min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Mobile-first adjustments */
         .admin-container {
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            transform: scale(1.05);
         }
 
         .admin-sidebar {
@@ -60,121 +87,72 @@
             padding: 30px 20px;
             position: fixed;
             height: 100vh;
-            z-index: 100;
+            z-index: 1000;
             box-shadow: 5px 0 20px rgba(6, 95, 70, 0.2);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .admin-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        .admin-sidebar.active {
+            transform: translateX(0);
         }
 
-        .admin-logo-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .admin-logo h2 {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .admin-nav {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-
-        .admin-nav-item {
-            margin-bottom: 8px;
-        }
-
-        .admin-nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 15px 20px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .admin-nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .admin-nav-link.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .admin-nav-link i {
-            width: 24px;
-            font-size: 18px;
+        .admin-sidebar.closed {
+            transform: translateX(-100%);
         }
 
         .admin-main {
             flex: 1;
-            margin-left: 280px;
-            padding: 30px;
+            padding: 20px;
+            width: 100%;
+            transition: margin-left 0.3s ease;
         }
 
+        /* Mobile header adjustments */
         .admin-header {
             background: white;
-            padding: 25px 30px;
-            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border: 1px solid rgba(209, 250, 229, 0.5);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .admin-header h1 {
             color: var(--dark-green);
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1.3;
         }
 
         .header-actions {
             display: flex;
-            gap: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
             align-items: center;
+            justify-content: space-between;
         }
 
+        /* Dashboard stats - mobile grid */
         .dashboard-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
             background: white;
-            padding: 25px;
-            border-radius: var(--border-radius-lg);
+            padding: 20px;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             border: 1px solid rgba(209, 250, 229, 0.5);
             transition: all 0.3s ease;
@@ -183,79 +161,77 @@
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--gradient-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
         }
 
         .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 20px;
+            margin-bottom: 15px;
             background: linear-gradient(135deg, #d1fae5, #a7f3d0);
             color: var(--primary-green);
         }
 
         .stat-value {
-            font-size: 36px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--dark-green);
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             line-height: 1;
         }
 
         .stat-label {
             color: var(--medium-gray);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
         }
 
-        .quick-calendar-section {
+        /* Calendar sections - mobile improvements */
+        .quick-calendar-section,
+        .main-calendar-section,
+        .time-slots-section {
             background: white;
-            border-radius: var(--border-radius-lg);
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             overflow: hidden;
             border: 1px solid rgba(209, 250, 229, 0.5);
         }
 
-        .quick-calendar-header {
+        .quick-calendar-header,
+        .main-calendar-header {
+            padding: 20px;
             background: var(--gradient-primary);
             color: white;
-            padding: 20px 30px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .quick-calendar-header h3 {
-            font-size: 20px;
+        .quick-calendar-header h3,
+        .main-calendar-header h3 {
+            font-size: 18px;
             font-weight: 600;
         }
 
-        .quick-calendar-nav {
+        /* Calendar navigation - touch friendly */
+        .quick-calendar-nav,
+        .month-navigation {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .nav-btn {
             width: 40px;
             height: 40px;
+            min-width: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -266,522 +242,178 @@
             align-items: center;
             justify-content: center;
             font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
+        .nav-btn:active {
+            transform: scale(0.95);
         }
 
-        .current-week {
+        .current-week,
+        .current-month {
             font-weight: 600;
-            min-width: 150px;
+            font-size: 14px;
             text-align: center;
-            font-size: 15px;
+            flex: 1;
         }
 
-        .quick-calendar-grid {
-            padding: 30px;
+        /* Calendar grids - mobile responsive */
+        .quick-calendar-grid,
+        .main-calendar-grid {
+            padding: 15px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .weekdays-row {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(7, minmax(40px, 1fr));
+            gap: 8px;
+            margin-bottom: 15px;
+            min-width: 280px;
         }
 
         .weekday {
             text-align: center;
             font-weight: 600;
             color: var(--dark-gray);
-            padding: 15px 10px;
-            font-size: 15px;
+            padding: 10px 5px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             background: #f9fafb;
-            border-radius: 10px;
+            border-radius: 8px;
         }
 
-        .week-days {
+        .week-days,
+        .month-days {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(7, minmax(40px, 1fr));
+            gap: 8px;
+            min-width: 280px;
         }
 
-        .week-day {
+        .week-day,
+        .month-day {
             aspect-ratio: 1;
             background: white;
             border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .week-day:hover {
-            border-color: var(--primary-green);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
+        .week-day:active,
+        .month-day:active {
+            transform: scale(0.95);
         }
 
-        .week-day.today {
-            background: var(--light-green);
-            border-color: var(--primary-green);
-            font-weight: bold;
-        }
-
-        .week-day.selected {
-            background: var(--gradient-primary);
-            color: white;
-            border-color: var(--primary-green);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .week-day-number {
-            font-size: 22px;
+        .week-day-number,
+        .month-day-number {
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .week-day-name {
-            font-size: 12px;
+            font-size: 10px;
             opacity: 0.8;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .week-day-status {
-            position: absolute;
-            bottom: 8px;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        .status-available {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--primary-green);
-        }
-
-        .status-partial {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--orange);
-        }
-
-        .status-booked {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--red);
-        }
-
-        .status-blocked {
-            background: rgba(107, 114, 128, 0.1);
-            color: var(--dark-gray);
-        }
-
-        .quick-calendar-actions {
-            padding: 20px 30px;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-        }
-
-        .main-calendar-section {
-            background: white;
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-            overflow: hidden;
-            border: 1px solid rgba(209, 250, 229, 0.5);
-        }
-
-        .main-calendar-header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 25px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .main-calendar-header h3 {
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .month-navigation {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .current-month {
-            font-weight: 600;
-            font-size: 18px;
-            min-width: 200px;
-            text-align: center;
-        }
-
-        .main-calendar-grid {
-            padding: 30px;
-        }
-
-        .month-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 12px;
-        }
-
-        .month-day {
-            aspect-ratio: 1.2;
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .month-day:hover {
-            border-color: var(--primary-green);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .month-day.today {
-            background: var(--light-green);
-            border-color: var(--primary-green);
-            font-weight: bold;
-        }
-
-        .month-day.selected {
-            background: var(--gradient-primary);
-            color: white;
-            border-color: var(--primary-green);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .month-day.other-month {
-            opacity: 0.4;
-            background: #f9fafb;
-        }
-
-        .month-day-number {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .month-day-events {
-            margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            justify-content: center;
-        }
-
-        .event-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .event-dot.available {
-            background: var(--primary-green);
-        }
-
-        .event-dot.booked {
-            background: var(--red);
-        }
-
-        .time-slots-section {
-            background: white;
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            border: 1px solid rgba(209, 250, 229, 0.5);
-        }
-
-        .time-slots-header {
-            padding: 25px 30px;
-            border-bottom: 1px solid #e5e7eb;
-            background: #f9fafb;
-        }
-
-        .time-slots-header h3 {
-            color: var(--dark-green);
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .time-slots-subtitle {
-            color: var(--medium-gray);
-            font-size: 15px;
-        }
-
-        .selected-date-display {
-            color: var(--primary-green);
-            font-weight: 600;
-        }
-
+        /* Time slots grid - mobile responsive */
         .time-slots-grid {
-            padding: 30px;
+            padding: 15px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
         }
 
         .time-slot-card {
             background: white;
             border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 10px;
+            padding: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
             position: relative;
             overflow: hidden;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .time-slot-card:hover {
-            border-color: var(--primary-green);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .time-slot-card.selected {
-            background: var(--gradient-primary);
-            color: white;
-            border-color: var(--primary-green);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .time-slot-card.booked {
-            background: #fef2f2;
-            border-color: #fee2e2;
-            cursor: not-allowed;
-        }
-
-        .time-slot-card.blocked {
-            background: #f3f4f6;
-            border-color: #e5e7eb;
-            cursor: pointer;
-        }
-
-        .time-slot-card.booked .time-slot-time {
-            color: var(--red);
-        }
-
-        .time-slot-card.blocked .time-slot-time {
-            color: var(--dark-gray);
+        .time-slot-card:active {
+            transform: scale(0.98);
         }
 
         .time-slot-time {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             color: var(--dark-gray);
         }
 
-        .time-slot-status {
-            font-size: 12px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 5px;
-        }
-
-        .slot-available {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--primary-green);
-        }
-
-        .slot-booked {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--red);
-        }
-
-        .slot-blocked {
-            background: rgba(107, 114, 128, 0.1);
-            color: var(--dark-gray);
-        }
-
+        /* Action buttons - mobile friendly */
+        .quick-calendar-actions,
         .time-slots-actions {
-            padding: 25px 30px;
+            padding: 15px;
             border-top: 1px solid #e5e7eb;
             display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 10px;
             background: #f9fafb;
         }
 
-        .day-status-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .day-status-available {
-            background: var(--primary-green);
-        }
-
-        .day-status-partial {
-            background: var(--orange);
-        }
-
-        .day-status-blocked {
-            background: var(--red);
-        }
-
         .btn {
-            padding: 12px 24px;
+            padding: 12px 20px;
             border-radius: 10px;
             border: none;
             cursor: pointer;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--dark-gray);
-            border: 2px solid #e5e7eb;
-        }
-
-        .btn-secondary:hover {
-            background: #f9fafb;
-            border-color: var(--primary-green);
-            color: var(--primary-green);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #10B981, #059669);
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #EF4444, #DC2626);
-            color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-            color: white;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-warning:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .btn-lg {
-            padding: 16px 32px;
-            font-size: 16px;
+            padding: 16px 24px;
+            font-size: 15px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--medium-gray);
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid rgba(16, 185, 129, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary-green);
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .notification {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            padding: 18px 24px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            display: none;
-            max-width: 400px;
-            box-shadow: var(--shadow-xl);
-        }
-
-        .notification.success {
-            background: linear-gradient(135deg, #10B981, #059669);
-        }
-
-        .notification.error {
-            background: linear-gradient(135deg, #EF4444, #DC2626);
-        }
-
-        .notification.warning {
-            background: linear-gradient(135deg, #F59E0B, #D97706);
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        /* Modals - mobile improvements */
+        .modal {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            width: 95%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 20px;
         }
 
         .modal-overlay {
@@ -790,168 +422,336 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 2000;
+            padding: 10px;
+            backdrop-filter: blur(5px);
         }
 
-        .modal {
-            background: white;
-            border-radius: var(--border-radius-lg);
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: var(--shadow-xl);
+        /* Mobile-specific improvements */
+        .mobile-only {
+            display: none;
         }
 
-        .modal-header {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            color: var(--dark-green);
-            font-size: 22px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--medium-gray);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
+        .desktop-only {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-gray);
         }
 
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 15px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-green);
-        }
-
-        .time-range-inputs {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .time-range-inputs span {
-            text-align: center;
-            font-weight: 600;
-            color: var(--medium-gray);
-        }
-
-        /* Booking specific styles */
-        .btn-sm {
-            padding: 6px 12px !important;
-            font-size: 12px !important;
-        }
-
+        /* Booking cards - mobile improvements */
         .booking-card {
-            padding: 20px;
+            padding: 15px;
             background: var(--off-white);
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             border-left: 4px solid var(--primary-green);
             transition: all 0.3s ease;
         }
 
-        .booking-card:hover {
-            box-shadow: var(--shadow);
-            transform: translateY(-2px);
-        }
-
-        .booking-card.pending {
-            border-left-color: var(--orange);
-        }
-
-        .booking-card.cancelled {
-            border-left-color: var(--red);
-        }
-
         .details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 10px 0;
         }
 
-        .detail-item {
-            background: white;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #e5e7eb;
+        /* Status badges - mobile */
+        .week-day-status,
+        .time-slot-status {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 3px;
         }
 
-        .detail-label {
-            font-size: 11px;
+        /* Loading states */
+        .loading {
+            text-align: center;
+            padding: 30px;
             color: var(--medium-gray);
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .detail-value {
-            font-weight: 500;
-            color: var(--dark-gray);
+        .spinner {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border: 3px solid rgba(16, 185, 129, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-green);
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
         }
 
-        /* Modal for booking details */
-        .booking-details-modal .modal {
-            max-width: 700px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 1200px) {
+        /* Notification - mobile positioning */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            display: none;
+            max-width: 100%;
+            box-shadow: var(--shadow-xl);
+            word-break: break-word;
+        }
+
+        /* Swipe gestures for calendar */
+        .calendar-swipe-area {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Mobile bottom navigation */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 10px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            border: none;
+            background: none;
+            color: var(--medium-gray);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .mobile-bottom-nav-item.active {
+            color: var(--primary-green);
+            background: var(--light-green);
+        }
+
+        .mobile-bottom-nav-item i {
+            font-size: 18px;
+        }
+
+        /* Tablet styles */
+        @media (min-width: 768px) {
+            .admin-container {
+                flex-direction: row;
+            }
+            
+            .mobile-menu-toggle {
+                display: none;
+            }
+            
             .admin-sidebar {
-                width: 240px;
+                position: fixed;
+                transform: translateX(0);
+            }
+            
+            .admin-sidebar.closed {
+                transform: translateX(-100%);
             }
             
             .admin-main {
-                margin-left: 240px;
+                margin-left: 280px;
+                padding: 30px;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+            
+            .admin-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 25px 30px;
+            }
+            
+            .header-actions {
+                flex-wrap: nowrap;
+            }
+            
+            .quick-calendar-actions,
+            .time-slots-actions {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            }
+            
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .mobile-bottom-nav {
+                display: none;
+            }
+            
+            .mobile-only {
+                display: none;
+            }
+            
+            .desktop-only {
+                display: block;
             }
         }
 
-        @media (max-width: 768px) {
-            .admin-container {
-                flex-direction: column;
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+            .admin-main {
+                padding: 30px 40px;
+            }
+            
+            .dashboard-stats {
+                gap: 25px;
+            }
+            
+            .stat-card {
+                padding: 25px;
+            }
+            
+            .stat-value {
+                font-size: 36px;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 15px;
+            }
+            
+            .details-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 767px) {
+            .mobile-menu-toggle {
+                display: flex;
             }
             
             .admin-sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 20px;
+                width: 85%;
+                max-width: 300px;
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.active {
+                transform: translateX(0);
             }
             
             .admin-main {
                 margin-left: 0;
-                padding: 20px;
+                padding: 20px 15px 80px; /* Added bottom padding for mobile nav */
             }
             
+            .admin-header {
+                margin-top: 60px; /* Space for mobile menu button */
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .week-days,
+            .month-days {
+                grid-template-columns: repeat(7, minmax(35px, 1fr));
+                gap: 5px;
+            }
+            
+            .week-day,
+            .month-day {
+                padding: 8px 5px;
+            }
+            
+            .week-day-number,
+            .month-day-number {
+                font-size: 16px;
+            }
+            
+            .week-day-name {
+                font-size: 9px;
+            }
+            
+            .time-slots-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .time-slot-card {
+                padding: 12px;
+                min-height: 65px;
+            }
+            
+            .time-slot-time {
+                font-size: 14px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .btn-lg {
+                width: 100%;
+            }
+            
+            .modal {
+                width: 95%;
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            .mobile-only {
+                display: block;
+            }
+            
+            .desktop-only {
+                display: none;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            /* Hide sidebar logo text on mobile when collapsed */
+            .admin-logo h2 {
+                font-size: 18px;
+            }
+            
+            /* Adjust modal content for mobile */
+            textarea {
+                font-size: 11px;
+            }
+        }
+
+        /* Very small phones */
+        @media (max-width: 360px) {
             .dashboard-stats {
                 grid-template-columns: 1fr;
             }
@@ -960,47 +760,119 @@
                 grid-template-columns: 1fr;
             }
             
-            .month-days,
-            .week-days {
-                gap: 8px;
+            .week-days,
+            .month-days {
+                grid-template-columns: repeat(7, minmax(30px, 1fr));
+                gap: 4px;
             }
             
-            .time-slots-actions {
-                flex-direction: column;
+            .week-day,
+            .month-day {
+                padding: 6px 3px;
             }
             
-            .time-slots-actions .btn {
-                width: 100%;
-                justify-content: center;
+            .week-day-number,
+            .month-day-number {
+                font-size: 14px;
+            }
+            
+            .admin-header h1 {
+                font-size: 20px;
+            }
+            
+            .stat-value {
+                font-size: 24px;
             }
         }
 
-        @media (max-width: 480px) {
-            .admin-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
+        /* Landscape orientation improvements */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .admin-sidebar {
+                overflow-y: auto;
+                padding: 20px 15px;
             }
             
-            .header-actions {
-                width: 100%;
-                justify-content: space-between;
+            .admin-logo {
+                margin-bottom: 20px;
             }
             
-            .main-calendar-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
+            .admin-nav-item {
+                margin-bottom: 5px;
             }
             
-            .month-navigation {
-                width: 100%;
-                justify-content: space-between;
+            .admin-nav-link {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .modal {
+                max-height: 80vh;
+            }
+        }
+
+        /* Improve touch targets */
+        button,
+        .btn,
+        .nav-btn,
+        .week-day,
+        .month-day,
+        .time-slot-card {
+            min-height: 44px;
+        }
+
+        /* Prevent text selection on interactive elements */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* iOS-specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            .admin-sidebar {
+                height: 100vh;
+                height: -webkit-fill-available;
+            }
+            
+            .admin-container {
+                min-height: 100vh;
+                min-height: -webkit-fill-available;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu Toggle -->
+    <button id="mobileMenuToggle" class="mobile-menu-toggle no-select">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-bottom-nav">
+        <button class="mobile-bottom-nav-item active" data-section="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </button>
+        <button class="mobile-bottom-nav-item" data-section="calendar">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Calendar</span>
+        </button>
+        <button class="mobile-bottom-nav-item" data-section="bookings">
+            <i class="fas fa-book"></i>
+            <span>Bookings</span>
+        </button>
+        <button class="mobile-bottom-nav-item" id="mobileDatabaseBtn">
+            <i class="fas fa-database"></i>
+            <span>DB Setup</span>
+        </button>
+    </div>
+    
     <!-- Notification System -->
     <div id="notification" class="notification"></div>
     
@@ -1012,67 +884,21 @@
                 <button class="modal-close" id="closeDatabaseSetupModal">&times;</button>
             </div>
             <div class="modal-body">
-                <p style="margin-bottom: 20px;">You need to configure your Supabase database to allow the admin panel to work.</p>
+                <p style="margin-bottom: 15px; font-size: 14px;">You need to configure your Supabase database to allow the admin panel to work.</p>
                 
-                <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 10px;">Step 1: Create the tables</h4>
-                    <textarea id="createTableSql" readonly style="width: 100%; height: 200px; font-family: monospace; background: white; border: 1px solid #e5e7eb; padding: 10px; border-radius: 4px; font-size: 12px;">
--- Create availability table
-CREATE TABLE IF NOT EXISTS availability (
-    id BIGSERIAL PRIMARY KEY,
-    date DATE NOT NULL,
-    time_slot TEXT NOT NULL,
-    is_available BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT NOW(),
-    UNIQUE(date, time_slot)
-);
-
--- Create bookings table with correct field names
-CREATE TABLE IF NOT EXISTS bookings (
-    id BIGSERIAL PRIMARY KEY,
-    customer_name TEXT NOT NULL,
-    customer_email TEXT,
-    customer_phone TEXT,
-    customer_address TEXT,
-    booking_date DATE NOT NULL,
-    time_slot TEXT NOT NULL,
-    service_title TEXT,
-    status TEXT DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT NOW()
-);</textarea>
+                <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="margin-bottom: 8px; font-size: 16px;">Step 1: Create the tables</h4>
+                    <textarea id="createTableSql" readonly style="width: 100%; height: 150px; font-family: monospace; background: white; border: 1px solid #e5e7eb; padding: 10px; border-radius: 4px; font-size: 11px; resize: vertical;"></textarea>
                     <button onclick="copyToClipboard('createTableSql')" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">
                         <i class="fas fa-copy"></i> Copy SQL
                     </button>
                 </div>
                 
-                <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="margin-bottom: 10px;">Step 2: Fix Row Level Security (RLS)</h4>
-                    <textarea id="fixRlsSql" readonly style="width: 100%; height: 150px; font-family: monospace; background: white; border: 1px solid #e5e7eb; padding: 10px; border-radius: 4px; font-size: 12px;">
--- Option A: Disable RLS (easiest for development)
-ALTER TABLE availability DISABLE ROW LEVEL SECURITY;
-ALTER TABLE bookings DISABLE ROW LEVEL SECURITY;
-
--- Option B: Enable RLS with proper policies (recommended)
--- First, enable RLS
-ALTER TABLE availability ENABLE ROW LEVEL SECURITY;
-ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
-
--- Then create policies
-CREATE POLICY "Allow all operations" ON "public"."availability"
-FOR ALL USING (true);
-
-CREATE POLICY "Allow all operations" ON "public"."bookings"
-FOR ALL USING (true);</textarea>
-                    <button onclick="copyToClipboard('fixRlsSql')" class="btn btn-secondary" style="margin-top: 10px; width: 100%;">
-                        <i class="fas fa-copy"></i> Copy SQL
-                    </button>
-                </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="window.open('https://supabase.com/dashboard/project/faxjeniohetefqwcsefi/sql', '_blank')" class="btn btn-primary">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="window.open('https://supabase.com/dashboard/project/faxjeniohetefqwcsefi/sql', '_blank')" class="btn btn-primary" style="flex: 1;">
                         <i class="fas fa-external-link-alt"></i> Open SQL Editor
                     </button>
-                    <button onclick="closeDatabaseSetupModal()" class="btn btn-secondary">
+                    <button onclick="closeDatabaseSetupModal()" class="btn btn-secondary" style="flex: 1;">
                         <i class="fas fa-times"></i> Close
                     </button>
                 </div>
@@ -1092,9 +918,9 @@ FOR ALL USING (true);</textarea>
                     <!-- Booking details will be loaded here -->
                 </div>
             </div>
-            <div class="modal-footer" style="padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 10px;">
-                <button id="closeBookingDetailsBtn" class="btn btn-secondary">Close</button>
-                <button id="printBookingBtn" class="btn btn-primary">
+            <div class="modal-footer" style="padding-top: 15px; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; flex-wrap: wrap;">
+                <button id="closeBookingDetailsBtn" class="btn btn-secondary" style="flex: 1;">Close</button>
+                <button id="printBookingBtn" class="btn btn-primary" style="flex: 1;">
                     <i class="fas fa-print"></i> Print
                 </button>
             </div>
@@ -1104,7 +930,7 @@ FOR ALL USING (true);</textarea>
     <!-- Main App -->
     <div class="admin-container">
         <!-- Sidebar -->
-        <aside class="admin-sidebar">
+        <aside class="admin-sidebar closed">
             <div class="admin-logo">
                 <div class="admin-logo-icon">
                     <i class="fas fa-leaf"></i>
@@ -1113,6 +939,9 @@ FOR ALL USING (true);</textarea>
                     <h2>GreenGlo</h2>
                     <div style="font-size: 12px; opacity: 0.8;">Admin Dashboard</div>
                 </div>
+                <button class="mobile-only sidebar-close" style="margin-left: auto; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             
             <ul class="admin-nav">
@@ -1162,10 +991,10 @@ FOR ALL USING (true);</textarea>
                 <div class="admin-header">
                     <h1>Dashboard Overview</h1>
                     <div class="header-actions">
-                        <div id="lastUpdatedTime" style="font-size: 14px; color: var(--medium-gray);"></div>
+                        <div id="lastUpdatedTime" style="font-size: 12px; color: var(--medium-gray);"></div>
                         <button id="refreshDashboardBtn" class="btn btn-secondary">
                             <i class="fas fa-sync-alt"></i>
-                            Refresh
+                            <span class="desktop-only">Refresh</span>
                         </button>
                     </div>
                 </div>
@@ -1235,15 +1064,18 @@ FOR ALL USING (true);</textarea>
                     <div class="quick-calendar-actions">
                         <button id="applyDefaultWeekBtn" class="btn btn-warning">
                             <i class="fas fa-magic"></i>
-                            Apply Default to This Week
+                            <span class="desktop-only">Apply Default to This Week</span>
+                            <span class="mobile-only">Default Week</span>
                         </button>
                         <button id="saveQuickChangesBtn" class="btn btn-success">
                             <i class="fas fa-save"></i>
-                            Save Weekly Changes
+                            <span class="desktop-only">Save Weekly Changes</span>
+                            <span class="mobile-only">Save Week</span>
                         </button>
                         <button id="goToFullCalendarBtn" class="btn btn-secondary">
                             <i class="fas fa-external-link-alt"></i>
-                            Go to Full Calendar
+                            <span class="desktop-only">Go to Full Calendar</span>
+                            <span class="mobile-only">Full Calendar</span>
                         </button>
                     </div>
                 </div>
@@ -1256,15 +1088,16 @@ FOR ALL USING (true);</textarea>
                     <div class="header-actions">
                         <button id="todayBtn" class="btn btn-secondary">
                             <i class="fas fa-calendar-day"></i>
-                            Today
+                            <span class="desktop-only">Today</span>
                         </button>
                         <button id="applyDefaultBtn" class="btn btn-warning">
                             <i class="fas fa-magic"></i>
-                            Apply Default to Month
+                            <span class="desktop-only">Apply Default to Month</span>
+                            <span class="mobile-only">Default Month</span>
                         </button>
                         <button id="refreshCalendarBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
-                            Refresh
+                            <span class="desktop-only">Refresh</span>
                         </button>
                     </div>
                 </div>
@@ -1303,7 +1136,7 @@ FOR ALL USING (true);</textarea>
                 <div class="time-slots-section">
                     <div class="time-slots-header">
                         <h3>Time Slots for <span class="selected-date-display" id="selectedDateDisplay">No date selected</span></h3>
-                        <div class="time-slots-subtitle">Select a date from the calendar above to manage availability</div>
+                        <div class="time-slots-subtitle" style="font-size: 14px;">Select a date from the calendar to manage availability</div>
                     </div>
                     
                     <div id="timeSlotsLoading" class="loading" style="display: none;">
@@ -1312,9 +1145,8 @@ FOR ALL USING (true);</textarea>
                     </div>
                     
                     <div class="time-slots-grid" id="timeSlotsGrid">
-                        <!-- Time slots will be loaded here -->
-                        <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
-                            <i class="fas fa-calendar-alt" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <div style="text-align: center; padding: 30px; color: var(--medium-gray); grid-column: 1 / -1;">
+                            <i class="fas fa-calendar-alt" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
                             <div>Please select a date to view and manage time slots</div>
                         </div>
                     </div>
@@ -1322,23 +1154,28 @@ FOR ALL USING (true);</textarea>
                     <div class="time-slots-actions">
                         <button id="saveTimeSlotsBtn" class="btn btn-success btn-lg">
                             <i class="fas fa-save"></i>
-                            Save Time Slot Changes
+                            <span class="desktop-only">Save Time Slot Changes</span>
+                            <span class="mobile-only">Save Changes</span>
                         </button>
                         <button id="applyDefaultToDayBtn" class="btn btn-warning">
                             <i class="fas fa-magic"></i>
-                            Apply Default to Day
+                            <span class="desktop-only">Apply Default to Day</span>
+                            <span class="mobile-only">Default Day</span>
                         </button>
                         <button id="selectAllBtn" class="btn btn-secondary">
                             <i class="fas fa-check-square"></i>
-                            Select All
+                            <span class="desktop-only">Select All</span>
+                            <span class="mobile-only">All</span>
                         </button>
                         <button id="deselectAllBtn" class="btn btn-secondary">
                             <i class="fas fa-square"></i>
-                            Deselect All
+                            <span class="desktop-only">Deselect All</span>
+                            <span class="mobile-only">None</span>
                         </button>
                         <button id="blockDayBtn" class="btn btn-danger">
                             <i class="fas fa-ban"></i>
-                            Block Entire Day
+                            <span class="desktop-only">Block Entire Day</span>
+                            <span class="mobile-only">Block Day</span>
                         </button>
                     </div>
                 </div>
@@ -1351,13 +1188,12 @@ FOR ALL USING (true);</textarea>
                     <div class="header-actions">
                         <button id="refreshBookingsBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
-                            Refresh
+                            <span class="desktop-only">Refresh</span>
                         </button>
                     </div>
                 </div>
                 
                 <div id="bookingsList">
-                    <!-- Bookings will be loaded here -->
                     <div class="loading">
                         <div class="spinner"></div>
                         <div>Loading bookings...</div>
@@ -1390,7 +1226,9 @@ FOR ALL USING (true);</textarea>
                     endTime: '17:00',
                     slotDuration: 60,
                     workingDays: [1, 2, 3, 4, 5] // Monday to Friday by default
-                }
+                },
+                isMobile: window.innerWidth <= 767,
+                sidebarOpen: false
             };
             
             // Initialize
@@ -1417,24 +1255,79 @@ FOR ALL USING (true);</textarea>
                     // Check database setup
                     setTimeout(() => checkDatabaseSetup(), 1000);
                     
+                    // Initialize SQL content
+                    initSqlContent();
+                    
                 } catch (error) {
                     console.error('Initialization error:', error);
                     showNotification('Error initializing application', 'error');
                 }
             }
             
+            // Initialize SQL content
+            function initSqlContent() {
+                const createTableSql = `-- Create availability table
+CREATE TABLE IF NOT EXISTS availability (
+    id BIGSERIAL PRIMARY KEY,
+    date DATE NOT NULL,
+    time_slot TEXT NOT NULL,
+    is_available BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(date, time_slot)
+);
+
+-- Create bookings table with correct field names
+CREATE TABLE IF NOT EXISTS bookings (
+    id BIGSERIAL PRIMARY KEY,
+    customer_name TEXT NOT NULL,
+    customer_email TEXT,
+    customer_phone TEXT,
+    customer_address TEXT,
+    booking_date DATE NOT NULL,
+    time_slot TEXT NOT NULL,
+    service_title TEXT,
+    status TEXT DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT NOW()
+);`;
+                
+                document.getElementById('createTableSql').value = createTableSql;
+            }
+            
+            // Toggle sidebar
+            function toggleSidebar() {
+                const sidebar = document.querySelector('.admin-sidebar');
+                state.sidebarOpen = !state.sidebarOpen;
+                
+                if (state.sidebarOpen) {
+                    sidebar.classList.remove('closed');
+                    sidebar.classList.add('active');
+                } else {
+                    sidebar.classList.remove('active');
+                    sidebar.classList.add('closed');
+                }
+            }
+            
+            // Close sidebar on mobile
+            function closeSidebar() {
+                if (state.isMobile) {
+                    const sidebar = document.querySelector('.admin-sidebar');
+                    sidebar.classList.remove('active');
+                    sidebar.classList.add('closed');
+                    state.sidebarOpen = false;
+                }
+            }
+            
             // Database setup check
             async function checkDatabaseSetup() {
                 try {
-                    // Try to query the availability table to see if it exists and has proper permissions
                     const { data, error } = await state.db
                         .from('availability')
                         .select('*')
                         .limit(1);
                     
                     if (error && error.message.includes('RLS')) {
-                        console.warn('RLS policy violation detected. Database needs setup.');
-                        showNotification('Database configuration required. Click "Database Setup" in sidebar.', 'warning');
+                        console.warn('RLS policy violation detected.');
+                        showNotification('Database configuration required.', 'warning');
                     }
                 } catch (err) {
                     console.warn('Database check failed:', err);
@@ -1443,6 +1336,37 @@ FOR ALL USING (true);</textarea>
             
             // Event Listeners
             function setupEventListeners() {
+                // Mobile menu toggle
+                document.getElementById('mobileMenuToggle').addEventListener('click', toggleSidebar);
+                
+                // Close sidebar button
+                document.querySelector('.sidebar-close')?.addEventListener('click', closeSidebar);
+                
+                // Mobile bottom navigation
+                document.querySelectorAll('.mobile-bottom-nav-item').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const section = this.getAttribute('data-section');
+                        
+                        if (section === 'dashboard') {
+                            showSection('dashboard');
+                        } else if (section === 'calendar') {
+                            showSection('calendar');
+                        } else if (section === 'bookings') {
+                            showSection('bookings');
+                        }
+                        
+                        // Update active state
+                        document.querySelectorAll('.mobile-bottom-nav-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    });
+                });
+                
+                // Mobile database button
+                document.getElementById('mobileDatabaseBtn').addEventListener('click', openDatabaseSetupModal);
+                
                 // Navigation
                 document.querySelectorAll('.admin-nav-link').forEach(link => {
                     link.addEventListener('click', function(e) {
@@ -1453,6 +1377,7 @@ FOR ALL USING (true);</textarea>
                         } else {
                             showSection(section);
                         }
+                        closeSidebar();
                     });
                 });
                 
@@ -1495,11 +1420,70 @@ FOR ALL USING (true);</textarea>
                 document.getElementById('databaseSetupModal').addEventListener('click', function(e) {
                     if (e.target === this) closeDatabaseSetupModal();
                 });
+                
+                // Window resize
+                window.addEventListener('resize', handleResize);
+                
+                // Touch gestures for calendar navigation
+                setupTouchGestures();
+            }
+            
+            // Handle window resize
+            function handleResize() {
+                state.isMobile = window.innerWidth <= 767;
+                
+                if (!state.isMobile) {
+                    // On desktop, ensure sidebar is visible
+                    const sidebar = document.querySelector('.admin-sidebar');
+                    sidebar.classList.remove('closed');
+                    sidebar.classList.add('active');
+                    state.sidebarOpen = true;
+                }
+            }
+            
+            // Setup touch gestures
+            function setupTouchGestures() {
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let touchEndX = 0;
+                let touchEndY = 0;
+                
+                const calendarGrid = document.querySelector('.main-calendar-grid');
+                if (calendarGrid) {
+                    calendarGrid.addEventListener('touchstart', function(e) {
+                        touchStartX = e.changedTouches[0].screenX;
+                        touchStartY = e.changedTouches[0].screenY;
+                    }, { passive: true });
+                    
+                    calendarGrid.addEventListener('touchend', function(e) {
+                        touchEndX = e.changedTouches[0].screenX;
+                        touchEndY = e.changedTouches[0].screenY;
+                        handleSwipe();
+                    }, { passive: true });
+                }
+                
+                function handleSwipe() {
+                    const minSwipeDistance = 50;
+                    const xDiff = touchStartX - touchEndX;
+                    const yDiff = touchStartY - touchEndY;
+                    
+                    // Only consider horizontal swipes
+                    if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > minSwipeDistance) {
+                        if (xDiff > 0) {
+                            // Swipe left - next month
+                            nextMonth();
+                        } else {
+                            // Swipe right - previous month
+                            prevMonth();
+                        }
+                    }
+                }
             }
             
             // Database Setup Modal
             function openDatabaseSetupModal() {
                 document.getElementById('databaseSetupModal').style.display = 'flex';
+                closeSidebar();
             }
             
             function closeDatabaseSetupModal() {
@@ -1554,7 +1538,7 @@ FOR ALL USING (true);</textarea>
             function copyToClipboard(elementId) {
                 const element = document.getElementById(elementId);
                 element.select();
-                element.setSelectionRange(0, 99999); // For mobile devices
+                element.setSelectionRange(0, 99999);
                 navigator.clipboard.writeText(element.value)
                     .then(() => showNotification('SQL copied to clipboard!', 'success'))
                     .catch(err => showNotification('Failed to copy: ' + err, 'error'));
@@ -1589,6 +1573,9 @@ FOR ALL USING (true);</textarea>
                 document.querySelectorAll('.admin-nav-link').forEach(link => {
                     link.classList.remove('active');
                 });
+                document.querySelectorAll('.mobile-bottom-nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
                 
                 // Show section
                 document.getElementById(section + 'Section').style.display = 'block';
@@ -1596,6 +1583,13 @@ FOR ALL USING (true);</textarea>
                 if (activeLink) {
                     activeLink.classList.add('active');
                 }
+                
+                // Update mobile bottom nav
+                const mobileNavItem = document.querySelector(`.mobile-bottom-nav-item[data-section="${section}"]`);
+                if (mobileNavItem) {
+                    mobileNavItem.classList.add('active');
+                }
+                
                 state.currentView = section;
                 
                 // Load data
@@ -1610,6 +1604,9 @@ FOR ALL USING (true);</textarea>
                         loadBookings();
                         break;
                 }
+                
+                // Close sidebar on mobile
+                closeSidebar();
             }
             
             // DASHBOARD FUNCTIONS
@@ -1622,7 +1619,7 @@ FOR ALL USING (true);</textarea>
             function updateLastUpdated() {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                document.getElementById('lastUpdatedTime').textContent = `Last updated: ${timeStr}`;
+                document.getElementById('lastUpdatedTime').textContent = `Updated: ${timeStr}`;
             }
             
             async function loadQuickCalendar() {
@@ -1671,7 +1668,7 @@ FOR ALL USING (true);</textarea>
                     const dateStr = day.toISOString().split('T')[0];
                     
                     const dayElement = document.createElement('div');
-                    dayElement.className = 'week-day';
+                    dayElement.className = 'week-day no-select';
                     dayElement.dataset.date = dateStr;
                     
                     if (day.toDateString() === today.toDateString()) {
@@ -1684,7 +1681,6 @@ FOR ALL USING (true);</textarea>
                     let statusText = 'Available';
                     
                     if (dayAvailability.length === 0) {
-                        // No slots in database - check if it's a working day
                         const isWorkingDay = state.defaultSettings.workingDays.includes(day.getDay());
                         if (!isWorkingDay) {
                             status = 'blocked';
@@ -1721,6 +1717,7 @@ FOR ALL USING (true);</textarea>
                     // Add day status badge
                     const badge = document.createElement('div');
                     badge.className = `day-status-badge day-status-${status}`;
+                    badge.style.cssText = 'position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%;';
                     dayElement.appendChild(badge);
                     
                     // Click to view in main calendar
@@ -1902,6 +1899,7 @@ FOR ALL USING (true);</textarea>
                 for (let i = 0; i < firstDayIndex; i++) {
                     const emptyDay = document.createElement('div');
                     emptyDay.className = 'month-day other-month';
+                    emptyDay.style.opacity = '0.3';
                     container.appendChild(emptyDay);
                 }
                 
@@ -1910,7 +1908,7 @@ FOR ALL USING (true);</textarea>
                     const date = new Date(state.currentYear, state.currentMonth, day);
                     const dateStr = date.toISOString().split('T')[0];
                     const dayElement = document.createElement('div');
-                    dayElement.className = 'month-day';
+                    dayElement.className = 'month-day no-select';
                     dayElement.dataset.date = dateStr;
                     
                     if (date.toDateString() === today.toDateString()) {
@@ -1926,7 +1924,6 @@ FOR ALL USING (true);</textarea>
                     let status = 'available';
                     
                     if (dayAvailability.length === 0) {
-                        // No slots in database - check if it's a working day
                         const isWorkingDay = state.defaultSettings.workingDays.includes(date.getDay());
                         if (!isWorkingDay) {
                             status = 'blocked';
@@ -1956,6 +1953,7 @@ FOR ALL USING (true);</textarea>
                     if (status !== 'available') {
                         const badge = document.createElement('div');
                         badge.className = `day-status-badge day-status-${status}`;
+                        badge.style.cssText = 'position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%;';
                         dayElement.appendChild(badge);
                     }
                     
@@ -1990,10 +1988,9 @@ FOR ALL USING (true);</textarea>
                 const element = document.getElementById('selectedDateDisplay');
                 if (element && state.selectedDate) {
                     element.textContent = state.selectedDate.toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric'
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric'
                     });
                 } else {
                     element.textContent = 'No date selected';
@@ -2012,7 +2009,6 @@ FOR ALL USING (true);</textarea>
                 const dateStr = date.toISOString().split('T')[0];
                 
                 try {
-                    // Fetch existing availability for this date
                     const { data: existingSlots, error } = await state.db
                         .from('availability')
                         .select('*')
@@ -2020,15 +2016,14 @@ FOR ALL USING (true);</textarea>
                         .order('time_slot');
                     
                     if (error) {
-                        // Check if it's an RLS error
                         if (error.message.includes('RLS') || error.message.includes('row-level security')) {
-                            showNotification('Database RLS configuration needed. Click "Database Setup" in sidebar.', 'warning');
+                            showNotification('Database RLS configuration needed.', 'warning');
                             loading.style.display = 'none';
                             container.innerHTML = `
-                                <div style="text-align: center; padding: 40px; color: var(--orange); grid-column: 1 / -1;">
-                                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                                    <div style="font-size: 18px; margin-bottom: 10px;">Database Configuration Required</div>
-                                    <div style="margin-bottom: 20px;">You need to set up your database permissions.</div>
+                                <div style="text-align: center; padding: 30px; color: var(--orange); grid-column: 1 / -1;">
+                                    <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 15px;"></i>
+                                    <div style="font-size: 16px; margin-bottom: 10px;">Database Configuration Required</div>
+                                    <div style="margin-bottom: 15px; font-size: 14px;">You need to set up your database permissions.</div>
                                     <button onclick="openDatabaseSetupModal()" class="btn btn-warning">
                                         <i class="fas fa-database"></i>
                                         Open Database Setup
@@ -2045,19 +2040,17 @@ FOR ALL USING (true);</textarea>
                     let slots = existingSlots;
                     
                     if (existingSlots.length === 0) {
-                        // Check if it's a working day
                         const isWorkingDay = state.defaultSettings.workingDays.includes(date.getDay());
                         
                         if (isWorkingDay) {
                             slots = generateDefaultSlots(date);
                         } else {
-                            // Non-working day - no slots
                             container.innerHTML = `
-                                <div style="text-align: center; padding: 40px; color: var(--medium-gray); grid-column: 1 / -1;">
-                                    <i class="fas fa-ban" style="font-size: 48px; margin-bottom: 20px; opacity: 0.5;"></i>
-                                    <div style="font-size: 18px; margin-bottom: 10px;">Non-Working Day</div>
-                                    <div>This is not a working day according to your default settings</div>
-                                    <button onclick="applyDefaultToSelectedDay()" class="btn btn-warning" style="margin-top: 20px;">
+                                <div style="text-align: center; padding: 30px; color: var(--medium-gray); grid-column: 1 / -1;">
+                                    <i class="fas fa-ban" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
+                                    <div style="font-size: 16px; margin-bottom: 10px;">Non-Working Day</div>
+                                    <div style="font-size: 14px;">This is not a working day according to your default settings</div>
+                                    <button onclick="applyDefaultToSelectedDay()" class="btn btn-warning" style="margin-top: 15px;">
                                         <i class="fas fa-calendar-plus"></i>
                                         Create Working Day
                                     </button>
@@ -2070,7 +2063,7 @@ FOR ALL USING (true);</textarea>
                     // Display slots
                     slots.forEach(slot => {
                         const slotElement = document.createElement('div');
-                        slotElement.className = `time-slot-card ${slot.is_available ? 'selected' : 'blocked'}`;
+                        slotElement.className = `time-slot-card ${slot.is_available ? 'selected' : 'blocked'} no-select`;
                         slotElement.dataset.slotId = slot.id || 'new';
                         slotElement.dataset.timeSlot = slot.time_slot;
                         slotElement.dataset.isAvailable = slot.is_available;
@@ -2084,7 +2077,7 @@ FOR ALL USING (true);</textarea>
                         
                         // Toggle availability
                         slotElement.addEventListener('click', function() {
-                            if (this.classList.contains('booked')) return; // Don't toggle booked slots
+                            if (this.classList.contains('booked')) return;
                             
                             const isCurrentlyAvailable = this.classList.contains('selected');
                             const newStatus = !isCurrentlyAvailable;
@@ -2110,10 +2103,10 @@ FOR ALL USING (true);</textarea>
                     console.error('Error loading time slots:', err);
                     loading.style.display = 'none';
                     container.innerHTML = `
-                        <div style="text-align: center; padding: 40px; color: var(--red); grid-column: 1 / -1;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
-                            <div>Error loading time slots: ${err.message}</div>
-                            <button onclick="loadTimeSlots(state.selectedDate)" class="btn btn-secondary" style="margin-top: 20px;">
+                        <div style="text-align: center; padding: 30px; color: var(--red); grid-column: 1 / -1;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 15px;"></i>
+                            <div style="font-size: 14px;">Error loading time slots: ${err.message}</div>
+                            <button onclick="loadTimeSlots(state.selectedDate)" class="btn btn-secondary" style="margin-top: 15px;">
                                 <i class="fas fa-redo"></i>
                                 Retry
                             </button>
@@ -2139,7 +2132,6 @@ FOR ALL USING (true);</textarea>
                 while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
                     const startTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
                     
-                    // Calculate end time
                     let endHourCalc = currentHour;
                     let endMinuteCalc = currentMinute + duration;
                     
@@ -2148,7 +2140,6 @@ FOR ALL USING (true);</textarea>
                         endMinuteCalc -= 60;
                     }
                     
-                    // Check if this slot would exceed end time
                     if (endHourCalc > endHour || (endHourCalc === endHour && endMinuteCalc > endMinute)) {
                         break;
                     }
@@ -2162,7 +2153,6 @@ FOR ALL USING (true);</textarea>
                         is_available: true
                     });
                     
-                    // Move to next slot start time
                     currentHour = endHourCalc;
                     currentMinute = endMinuteCalc;
                 }
@@ -2212,22 +2202,21 @@ FOR ALL USING (true);</textarea>
                 });
                 
                 try {
-                    // First, delete existing slots for this date
                     try {
                         const { error: deleteError } = await state.db
                             .from('availability')
                             .delete()
                             .eq('date', dateStr);
                         
-                        if (deleteError) throw deleteError;
+                        if (deleteError && !deleteError.message.includes('RLS')) {
+                            throw deleteError;
+                        }
                     } catch (deleteErr) {
-                        // If delete fails due to RLS, try to insert anyway
                         if (!deleteErr.message.includes('RLS') && !deleteErr.message.includes('row-level security')) {
                             throw deleteErr;
                         }
                     }
                     
-                    // Insert new slots
                     const { error: insertError } = await state.db
                         .from('availability')
                         .insert(slotsToSave);
@@ -2243,7 +2232,6 @@ FOR ALL USING (true);</textarea>
                     
                     showNotification('Time slots saved successfully!', 'success');
                     
-                    // Reload calendar and slots
                     await renderMonthCalendar();
                     await loadTimeSlots(state.selectedDate);
                     
@@ -2286,11 +2274,9 @@ FOR ALL USING (true);</textarea>
                     return;
                 }
                 
-                // Get all dates in the current month
                 const firstDay = new Date(state.currentYear, state.currentMonth, 1);
                 const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
                 
-                let processed = 0;
                 const totalDays = lastDay.getDate();
                 
                 try {
@@ -2302,8 +2288,6 @@ FOR ALL USING (true);</textarea>
                         } else {
                             await blockDayInDB(date);
                         }
-                        
-                        processed++;
                     }
                     
                     showNotification('Default availability applied to entire month!', 'success');
@@ -2328,7 +2312,6 @@ FOR ALL USING (true);</textarea>
                 const slots = generateDefaultSlots(date);
                 
                 try {
-                    // Delete existing slots
                     try {
                         const { error: deleteError } = await state.db
                             .from('availability')
@@ -2339,13 +2322,11 @@ FOR ALL USING (true);</textarea>
                             throw deleteError;
                         }
                     } catch (deleteErr) {
-                        // If it's an RLS error, we'll try to insert anyway
                         if (!deleteErr.message.includes('RLS') && !deleteErr.message.includes('row-level security')) {
                             throw deleteErr;
                         }
                     }
                     
-                    // Insert default slots (only if there are slots to insert)
                     if (slots.length > 0) {
                         const { error: insertError } = await state.db
                             .from('availability')
@@ -2373,7 +2354,6 @@ FOR ALL USING (true);</textarea>
                 const dateStr = date.toISOString().split('T')[0];
                 
                 try {
-                    // Delete all slots for this date (effectively blocking it)
                     const { error } = await state.db
                         .from('availability')
                         .delete()
@@ -2449,6 +2429,11 @@ FOR ALL USING (true);</textarea>
                 state.currentYear = date.getFullYear();
                 renderMonthCalendar();
                 selectDate(date);
+                
+                // Scroll to calendar section on mobile
+                if (state.isMobile) {
+                    document.getElementById('calendarSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
             }
             
             // BOOKINGS FUNCTIONS
@@ -2459,7 +2444,6 @@ FOR ALL USING (true);</textarea>
                 container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading bookings...</div></div>';
                 
                 try {
-                    // Fetch bookings from database with correct field names
                     const { data: bookings, error } = await state.db
                         .from('bookings')
                         .select('*')
@@ -2468,12 +2452,11 @@ FOR ALL USING (true);</textarea>
                     
                     if (error) {
                         if (error.message.includes('does not exist') || error.message.includes('column') || error.message.includes('422')) {
-                            // Table or columns don't exist yet
                             container.innerHTML = `
-                                <div style="text-align: center; padding: 60px; color: var(--medium-gray);">
-                                    <i class="fas fa-calendar-check" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
-                                    <h3 style="margin-bottom: 10px;">Bookings Table Setup Required</h3>
-                                    <p style="margin-bottom: 20px;">The bookings table needs to be set up with correct fields.</p>
+                                <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
+                                    <i class="fas fa-calendar-check" style="font-size: 50px; margin-bottom: 15px; opacity: 0.5;"></i>
+                                    <h3 style="margin-bottom: 10px; font-size: 18px;">Bookings Table Setup Required</h3>
+                                    <p style="margin-bottom: 15px; font-size: 14px;">The bookings table needs to be set up with correct fields.</p>
                                     <button onclick="updateBookingsTableStructure()" class="btn btn-primary" style="margin: 10px;">
                                         <i class="fas fa-database"></i>
                                         Update Table Structure
@@ -2487,10 +2470,10 @@ FOR ALL USING (true);</textarea>
                     
                     if (bookings.length === 0) {
                         container.innerHTML = `
-                            <div style="text-align: center; padding: 60px; color: var(--medium-gray);">
-                                <i class="fas fa-calendar-check" style="font-size: 60px; margin-bottom: 20px; opacity: 0.5;"></i>
-                                <h3 style="margin-bottom: 10px;">No Bookings Yet</h3>
-                                <p>No bookings have been made yet</p>
+                            <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
+                                <i class="fas fa-calendar-check" style="font-size: 50px; margin-bottom: 15px; opacity: 0.5;"></i>
+                                <h3 style="margin-bottom: 10px; font-size: 18px;">No Bookings Yet</h3>
+                                <p style="font-size: 14px;">No bookings have been made yet</p>
                             </div>
                         `;
                         return;
@@ -2506,38 +2489,39 @@ FOR ALL USING (true);</textarea>
                         bookingsByDate[date].push(booking);
                     });
                     
-                    // Create bookings list
-                    let html = '<div style="display: flex; flex-direction: column; gap: 20px;">';
+                    let html = '<div style="display: flex; flex-direction: column; gap: 15px;">';
                     
                     // Add search and filter controls
                     html += `
-                        <div style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); padding: 20px;">
-                            <h3 style="color: var(--dark-green); margin-bottom: 15px;">Filters</h3>
-                            <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                                <div style="flex: 1; min-width: 200px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 14px;">Search by name, email, or service</label>
-                                    <input type="text" id="bookingSearch" placeholder="Search..." style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif;">
+                        <div style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); padding: 15px;">
+                            <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 16px;">Filters</h3>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Search by name, email, or service</label>
+                                    <input type="text" id="bookingSearch" placeholder="Search..." style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                 </div>
-                                <div style="min-width: 150px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 14px;">Status</label>
-                                    <select id="bookingStatusFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif;">
-                                        <option value="all">All Status</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="confirmed">Confirmed</option>
-                                        <option value="cancelled">Cancelled</option>
-                                    </select>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <div>
+                                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Status</label>
+                                        <select id="bookingStatusFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                                            <option value="all">All Status</option>
+                                            <option value="pending">Pending</option>
+                                            <option value="confirmed">Confirmed</option>
+                                            <option value="cancelled">Cancelled</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Date Range</label>
+                                        <select id="bookingDateFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                                            <option value="all">All Dates</option>
+                                            <option value="today">Today</option>
+                                            <option value="week">This Week</option>
+                                            <option value="month">This Month</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div style="min-width: 150px;">
-                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 14px;">Date Range</label>
-                                    <select id="bookingDateFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif;">
-                                        <option value="all">All Dates</option>
-                                        <option value="today">Today</option>
-                                        <option value="week">This Week</option>
-                                        <option value="month">This Month</option>
-                                    </select>
-                                </div>
-                                <div style="align-self: flex-end;">
-                                    <button id="applyBookingFilters" class="btn btn-primary">
+                                <div>
+                                    <button id="applyBookingFilters" class="btn btn-primary" style="width: 100%;">
                                         <i class="fas fa-filter"></i>
                                         Apply Filters
                                     </button>
@@ -2550,114 +2534,95 @@ FOR ALL USING (true);</textarea>
                         const dateBookings = bookingsByDate[date];
                         const dateObj = new Date(date);
                         const dateStr = date !== 'No Date' ? dateObj.toLocaleDateString('en-US', {
-                            weekday: 'long',
+                            weekday: 'short',
                             year: 'numeric',
-                            month: 'long',
+                            month: 'short',
                             day: 'numeric'
                         }) : 'No Date Specified';
                         
                         html += `
                             <div class="booking-date-group" style="background: white; border-radius: var(--border-radius); box-shadow: var(--shadow); overflow: hidden;">
-                                <div style="background: var(--light-green); padding: 15px 20px; border-bottom: 1px solid #e5e7eb;">
-                                    <h3 style="color: var(--dark-green); margin: 0;">${dateStr}</h3>
+                                <div style="background: var(--light-green); padding: 12px 15px; border-bottom: 1px solid #e5e7eb;">
+                                    <h3 style="color: var(--dark-green); margin: 0; font-size: 16px;">${dateStr}</h3>
                                 </div>
-                                <div style="padding: 20px;">
+                                <div style="padding: 15px;">
                                     ${dateBookings.map(booking => `
-                                        <div class="booking-card ${booking.status || 'pending'}" style="border-left-color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : booking.status === 'pending' ? 'var(--orange)' : 'var(--red)'};">
-                                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                                                <div style="flex: 1;">
-                                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px; flex-wrap: wrap;">
-                                                        <div style="font-size: 18px; font-weight: 700; color: var(--dark-gray);">
-                                                            ${booking.customer_name || 'Anonymous'}
-                                                        </div>
-                                                        <span style="padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
-                                                            background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
-                                                                       booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
-                                                                       'rgba(239, 68, 68, 0.1)'}; 
-                                                            color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : 
-                                                                    booking.status === 'pending' ? 'var(--orange)' : 
-                                                                    'var(--red)'};">
-                                                            ${booking.status || 'pending'}
-                                                        </span>
+                                        <div class="booking-card ${booking.status || 'pending'}">
+                                            <div style="margin-bottom: 10px;">
+                                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;">
+                                                    <div style="font-size: 16px; font-weight: 700; color: var(--dark-gray);">
+                                                        ${booking.customer_name || 'Anonymous'}
                                                     </div>
-                                                    
-                                                    <div class="details-grid">
-                                                        ${booking.customer_email ? `
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Email</div>
-                                                                <div class="detail-value">
-                                                                    <i class="fas fa-envelope" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.customer_email}
-                                                                </div>
-                                                            </div>
-                                                        ` : ''}
-                                                        
-                                                        ${booking.customer_phone ? `
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Phone</div>
-                                                                <div class="detail-value">
-                                                                    <i class="fas fa-phone" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.customer_phone}
-                                                                </div>
-                                                            </div>
-                                                        ` : ''}
-                                                        
-                                                        ${booking.customer_address ? `
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Address</div>
-                                                                <div class="detail-value">
-                                                                    <i class="fas fa-map-marker-alt" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.customer_address}
-                                                                </div>
-                                                            </div>
-                                                        ` : ''}
-                                                        
-                                                        ${booking.service_title ? `
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Service Title</div>
-                                                                <div class="detail-value">
-                                                                    <i class="fas fa-concierge-bell" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.service_title}
-                                                                </div>
-                                                            </div>
-                                                        ` : ''}
-                                                        
-                                                        ${booking.time_slot ? `
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Time Slot</div>
-                                                                <div class="detail-value">
-                                                                    <i class="fas fa-clock" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${booking.time_slot}
-                                                                </div>
-                                                            </div>
-                                                        ` : ''}
-                                                        
-                                                        ${booking.booking_date ? `
-                                                            <div class="detail-item">
-                                                                <div class="detail-label">Booking Date</div>
-                                                                <div class="detail-value">
-                                                                    <i class="fas fa-calendar" style="margin-right: 8px; color: var(--primary-green);"></i>
-                                                                    ${new Date(booking.booking_date).toLocaleDateString()}
-                                                                </div>
-                                                            </div>
-                                                        ` : ''}
-                                                    </div>
+                                                    <span style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; 
+                                                        background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
+                                                                   booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
+                                                                   'rgba(239, 68, 68, 0.1)'}; 
+                                                        color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : 
+                                                                booking.status === 'pending' ? 'var(--orange)' : 
+                                                                'var(--red)'};">
+                                                        ${booking.status || 'pending'}
+                                                    </span>
                                                 </div>
                                                 
-                                                <div style="display: flex; gap: 8px;">
-                                                    <button class="btn btn-sm btn-success booking-action-btn" data-booking-id="${booking.id}" data-action="confirm" style="padding: 6px 12px; font-size: 12px;">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger booking-action-btn" data-booking-id="${booking.id}" data-action="cancel" style="padding: 6px 12px; font-size: 12px;">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm btn-secondary booking-details-btn" data-booking-id="${booking.id}" style="padding: 6px 12px; font-size: 12px;">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
+                                                <div class="details-grid">
+                                                    ${booking.customer_email ? `
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">Email</div>
+                                                            <div class="detail-value" style="font-size: 13px;">
+                                                                <i class="fas fa-envelope" style="margin-right: 5px; color: var(--primary-green); font-size: 12px;"></i>
+                                                                ${booking.customer_email}
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
+                                                    
+                                                    ${booking.customer_phone ? `
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">Phone</div>
+                                                            <div class="detail-value" style="font-size: 13px;">
+                                                                <i class="fas fa-phone" style="margin-right: 5px; color: var(--primary-green); font-size: 12px;"></i>
+                                                                ${booking.customer_phone}
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
+                                                    
+                                                    ${booking.service_title ? `
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">Service</div>
+                                                            <div class="detail-value" style="font-size: 13px;">
+                                                                <i class="fas fa-concierge-bell" style="margin-right: 5px; color: var(--primary-green); font-size: 12px;"></i>
+                                                                ${booking.service_title}
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
+                                                    
+                                                    ${booking.time_slot ? `
+                                                        <div class="detail-item">
+                                                            <div class="detail-label">Time</div>
+                                                            <div class="detail-value" style="font-size: 13px;">
+                                                                <i class="fas fa-clock" style="margin-right: 5px; color: var(--primary-green); font-size: 12px;"></i>
+                                                                ${booking.time_slot}
+                                                            </div>
+                                                        </div>
+                                                    ` : ''}
                                                 </div>
                                             </div>
                                             
-                                            <div style="font-size: 12px; color: var(--medium-gray); margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05);">
+                                            <div style="display: flex; gap: 5px; justify-content: flex-end; margin-top: 10px;">
+                                                <button class="btn btn-sm btn-success booking-action-btn" data-booking-id="${booking.id}" data-action="confirm" style="padding: 6px 10px; font-size: 12px;">
+                                                    <i class="fas fa-check"></i>
+                                                    <span style="font-size: 11px;">Confirm</span>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger booking-action-btn" data-booking-id="${booking.id}" data-action="cancel" style="padding: 6px 10px; font-size: 12px;">
+                                                    <i class="fas fa-times"></i>
+                                                    <span style="font-size: 11px;">Cancel</span>
+                                                </button>
+                                                <button class="btn btn-sm btn-secondary booking-details-btn" data-booking-id="${booking.id}" style="padding: 6px 10px; font-size: 12px;">
+                                                    <i class="fas fa-eye"></i>
+                                                    <span style="font-size: 11px;">View</span>
+                                                </button>
+                                            </div>
+                                            
+                                            <div style="font-size: 11px; color: var(--medium-gray); margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.05);">
                                                 <i class="fas fa-calendar-plus" style="margin-right: 5px;"></i>
                                                 Booked on ${new Date(booking.created_at).toLocaleDateString()} at ${new Date(booking.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                             </div>
@@ -2671,17 +2636,16 @@ FOR ALL USING (true);</textarea>
                     html += '</div>';
                     container.innerHTML = html;
                     
-                    // Add event listeners for filters and actions
                     setupBookingEventListeners();
                     
                 } catch (err) {
                     console.error('Error loading bookings:', err);
                     container.innerHTML = `
-                        <div style="text-align: center; padding: 60px; color: var(--red);">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 60px; margin-bottom: 20px;"></i>
-                            <h3 style="margin-bottom: 10px;">Error Loading Bookings</h3>
-                            <p>${err.message}</p>
-                            <button onclick="loadBookings()" class="btn btn-secondary" style="margin-top: 20px;">
+                        <div style="text-align: center; padding: 40px; color: var(--red);">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 50px; margin-bottom: 15px;"></i>
+                            <h3 style="margin-bottom: 10px; font-size: 18px;">Error Loading Bookings</h3>
+                            <p style="font-size: 14px;">${err.message}</p>
+                            <button onclick="loadBookings()" class="btn btn-secondary" style="margin-top: 15px;">
                                 <i class="fas fa-redo"></i>
                                 Retry
                             </button>
@@ -2692,13 +2656,11 @@ FOR ALL USING (true);</textarea>
             
             // Setup booking event listeners
             function setupBookingEventListeners() {
-                // Filter button
                 const applyFiltersBtn = document.getElementById('applyBookingFilters');
                 if (applyFiltersBtn) {
                     applyFiltersBtn.addEventListener('click', applyBookingFilters);
                 }
                 
-                // Booking action buttons
                 document.querySelectorAll('.booking-action-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const bookingId = this.dataset.bookingId;
@@ -2707,7 +2669,6 @@ FOR ALL USING (true);</textarea>
                     });
                 });
                 
-                // Booking details buttons
                 document.querySelectorAll('.booking-details-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const bookingId = this.dataset.bookingId;
@@ -2722,19 +2683,17 @@ FOR ALL USING (true);</textarea>
                 const statusFilter = document.getElementById('bookingStatusFilter')?.value || 'all';
                 const dateFilter = document.getElementById('bookingDateFilter')?.value || 'all';
                 
-                // Hide all booking cards first
                 document.querySelectorAll('.booking-card').forEach(card => {
                     card.style.display = 'none';
                 });
                 
-                // Filter logic
                 document.querySelectorAll('.booking-card').forEach(card => {
-                    const name = card.querySelector('div[style*="font-size: 18px"]')?.textContent.toLowerCase() || '';
+                    const name = card.querySelector('div[style*="font-size: 16px"]')?.textContent.toLowerCase() || '';
                     const emailElement = card.querySelector('div[style*="fas fa-envelope"]');
                     const email = emailElement ? emailElement.parentElement.textContent.toLowerCase() : '';
                     const serviceElement = card.querySelector('div[style*="fas fa-concierge-bell"]');
                     const service = serviceElement ? serviceElement.parentElement.textContent.toLowerCase() : '';
-                    const status = card.querySelector('span[style*="padding: 5px 12px"]')?.textContent.toLowerCase() || '';
+                    const status = card.querySelector('span[style*="padding: 4px 10px"]')?.textContent.toLowerCase() || '';
                     const date = card.closest('.booking-date-group')?.querySelector('h3')?.textContent.toLowerCase() || '';
                     
                     let matchesSearch = !searchTerm || 
@@ -2744,23 +2703,20 @@ FOR ALL USING (true);</textarea>
                     
                     let matchesStatus = statusFilter === 'all' || status === statusFilter;
                     
-                    // Simple date filtering (could be enhanced)
                     let matchesDate = true;
                     if (dateFilter === 'today') {
-                        const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                        matchesDate = date.includes(today.split(',')[0]); // Check day name
+                        const today = new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+                        matchesDate = date.includes(today.split(',')[0]);
                     }
                     
                     if (matchesSearch && matchesStatus && matchesDate) {
                         card.style.display = 'block';
-                        // Also show the parent date group
                         card.closest('.booking-date-group').style.display = 'block';
                     } else {
                         card.style.display = 'none';
                     }
                 });
                 
-                // Hide empty date groups
                 document.querySelectorAll('.booking-date-group').forEach(group => {
                     const visibleCards = group.querySelectorAll('.booking-card[style*="display: block"]').length;
                     if (visibleCards === 0) {
@@ -2838,7 +2794,7 @@ FOR ALL USING (true);</textarea>
                             
                             <div class="detail-item">
                                 <div class="detail-label">Booking Date</div>
-                                <div class="detail-value">${booking.booking_date ? new Date(booking.booking_date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Not specified'}</div>
+                                <div class="detail-value">${booking.booking_date ? new Date(booking.booking_date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) : 'Not specified'}</div>
                             </div>
                             
                             <div class="detail-item">
@@ -2849,7 +2805,7 @@ FOR ALL USING (true);</textarea>
                             <div class="detail-item">
                                 <div class="detail-label">Status</div>
                                 <div class="detail-value">
-                                    <span style="padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; 
+                                    <span style="padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; 
                                         background: ${booking.status === 'confirmed' ? 'rgba(16, 185, 129, 0.1)' : 
                                                    booking.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 
                                                    'rgba(239, 68, 68, 0.1)'}; 
@@ -2867,23 +2823,23 @@ FOR ALL USING (true);</textarea>
                             </div>
                         </div>
                         
-                        <div style="margin-top: 20px; padding: 15px; background: var(--light-green); border-radius: 8px;">
-                            <div style="font-weight: 600; color: var(--dark-green); margin-bottom: 10px;">Quick Actions</div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button onclick="updateBookingStatus(${booking.id}, 'confirm')" class="btn btn-success btn-sm">
-                                    <i class="fas fa-check"></i> Confirm Booking
+                        <div style="margin-top: 15px; padding: 12px; background: var(--light-green); border-radius: 8px;">
+                            <div style="font-weight: 600; color: var(--dark-green); margin-bottom: 8px; font-size: 14px;">Quick Actions</div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <button onclick="updateBookingStatus(${booking.id}, 'confirm')" class="btn btn-success btn-sm" style="flex: 1;">
+                                    <i class="fas fa-check"></i> Confirm
                                 </button>
-                                <button onclick="updateBookingStatus(${booking.id}, 'cancel')" class="btn btn-danger btn-sm">
-                                    <i class="fas fa-times"></i> Cancel Booking
+                                <button onclick="updateBookingStatus(${booking.id}, 'cancel')" class="btn btn-danger btn-sm" style="flex: 1;">
+                                    <i class="fas fa-times"></i> Cancel
                                 </button>
                                 ${booking.customer_email ? `
-                                    <a href="mailto:${booking.customer_email}" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-envelope"></i> Email Customer
+                                    <a href="mailto:${booking.customer_email}" class="btn btn-primary btn-sm" style="flex: 1;">
+                                        <i class="fas fa-envelope"></i> Email
                                     </a>
                                 ` : ''}
                                 ${booking.customer_phone ? `
-                                    <a href="tel:${booking.customer_phone}" class="btn btn-secondary btn-sm">
-                                        <i class="fas fa-phone"></i> Call Customer
+                                    <a href="tel:${booking.customer_phone}" class="btn btn-secondary btn-sm" style="flex: 1;">
+                                        <i class="fas fa-phone"></i> Call
                                     </a>
                                 ` : ''}
                             </div>
@@ -2904,9 +2860,7 @@ FOR ALL USING (true);</textarea>
                 try {
                     showNotification('Updating bookings table structure...', 'info');
                     
-                    // Add all required columns with correct field names
                     const alterSql = `
-                        -- Update bookings table to have correct field names
                         ALTER TABLE bookings 
                         ADD COLUMN IF NOT EXISTS customer_name TEXT NOT NULL,
                         ADD COLUMN IF NOT EXISTS customer_email TEXT,
@@ -2917,41 +2871,6 @@ FOR ALL USING (true);</textarea>
                         ADD COLUMN IF NOT EXISTS service_title TEXT,
                         ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending',
                         ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
-                        
-                        -- If table has old columns, we can optionally rename them
-                        -- Note: This might fail if columns don't exist, so we use DO block
-                        DO $$
-                        BEGIN
-                            -- Check and rename economic_name to customer_name
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='economic_name') THEN
-                                ALTER TABLE bookings RENAME COLUMN economic_name TO customer_name;
-                            END IF;
-                            
-                            -- Check and rename economic_result to customer_email
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='economic_result') THEN
-                                ALTER TABLE bookings RENAME COLUMN economic_result TO customer_email;
-                            END IF;
-                            
-                            -- Check and rename economic_address to customer_address
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='economic_address') THEN
-                                ALTER TABLE bookings RENAME COLUMN economic_address TO customer_address;
-                            END IF;
-                            
-                            -- Check and rename service_type to service_title
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='service_type') THEN
-                                ALTER TABLE bookings RENAME COLUMN service_type TO service_title;
-                            END IF;
-                            
-                            -- Check and rename banking_date to booking_date
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='banking_date') THEN
-                                ALTER TABLE bookings RENAME COLUMN banking_date TO booking_date;
-                            END IF;
-                            
-                            -- Check and rename financials to time_slot
-                            IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='bookings' AND column_name='financials') THEN
-                                ALTER TABLE bookings RENAME COLUMN financials TO time_slot;
-                            END IF;
-                        END $$;
                     `;
                     
                     const sqlTextArea = document.createElement('textarea');
@@ -2970,41 +2889,6 @@ FOR ALL USING (true);</textarea>
                 }
             }
             
-            // Function to create bookings table if it doesn't exist
-            async function createBookingsTable() {
-                try {
-                    // This would be executed in SQL Editor
-                    const createSql = `
-                        CREATE TABLE IF NOT EXISTS bookings (
-                            id BIGSERIAL PRIMARY KEY,
-                            customer_name TEXT NOT NULL,
-                            customer_email TEXT,
-                            customer_phone TEXT,
-                            customer_address TEXT,
-                            booking_date DATE NOT NULL,
-                            time_slot TEXT NOT NULL,
-                            service_title TEXT,
-                            status TEXT DEFAULT 'pending',
-                            created_at TIMESTAMP DEFAULT NOW()
-                        );
-                    `;
-                    
-                    const sqlTextArea = document.createElement('textarea');
-                    sqlTextArea.value = createSql;
-                    document.body.appendChild(sqlTextArea);
-                    sqlTextArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(sqlTextArea);
-                    
-                    showNotification('Create table SQL copied to clipboard!', 'success');
-                    openDatabaseSetupModal();
-                    
-                } catch (err) {
-                    console.error('Error creating table:', err);
-                    showNotification('Error: ' + err.message, 'error');
-                }
-            }
-            
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', init);
             
@@ -3016,7 +2900,7 @@ FOR ALL USING (true);</textarea>
             window.closeDatabaseSetupModal = closeDatabaseSetupModal;
             window.copyToClipboard = copyToClipboard;
             window.updateBookingsTableStructure = updateBookingsTableStructure;
-            window.createBookingsTable = createBookingsTable;
+            window.createBookingsTable = updateBookingsTableStructure;
             window.updateBookingStatus = updateBookingStatus;
             
         })();
