@@ -951,35 +951,7 @@
         </div>
     </nav>
 
-    <!-- Show different content based on URL parameters -->
-    <?php
-    // Check if this is a success page
-    $isSuccess = isset($_GET['success']) && $_GET['success'] === 'true';
-    $plan = isset($_GET['plan']) ? $_GET['plan'] : '';
-    
-    // Define plan details
-    $planDetails = [
-        'starter' => [
-            'name' => 'Green Starter',
-            'price' => '£9.99',
-            'features' => ['£5 off every cleaning', 'Priority booking', 'Same-cleaner guarantee', 'Eco-friendly products', 'No call-out fee']
-        ],
-        'plus' => [
-            'name' => 'Green Plus',
-            'price' => '£19.99',
-            'features' => ['£10 off every cleaning', '1 FREE fridge OR oven clean per year', 'Priority + weekend booking', 'Same-cleaner guarantee', 'Eco deep-clean checklist', 'Discounted end-of-tenancy cleans']
-        ],
-        'premium' => [
-            'name' => 'Green Premium',
-            'price' => '£29.99',
-            'features' => ['£15 off every cleaning', '2 FREE add-ons per year', 'Annual eco deep clean included', 'Emergency same-day bookings', 'Dedicated account support', 'Best rates on all services']
-        ]
-    ];
-    
-    if ($isSuccess && $plan && isset($planDetails[$plan])) {
-        // Show success page
-        $currentPlan = $planDetails[$plan];
-    ?>
+    <!-- Show different content based on URL 
     
     <!-- Success Confirmation Section -->
     <section class="membership-hero">
@@ -1460,5 +1432,6 @@
     </script>
 </body>
 </html>
+
 
 
