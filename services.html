@@ -700,30 +700,6 @@
             color: white;
         }
 
-        /* ===== Services CTA ===== */
-        .services-cta {
-            background: var(--gradient-dark);
-            color: var(--white);
-            text-align: center;
-            padding: 6rem 0;
-            border-radius: var(--border-radius-lg);
-            margin: 4rem auto;
-            max-width: 1200px;
-        }
-
-        .services-cta h2 {
-            color: var(--white);
-            font-size: clamp(2rem, 5vw, 3rem);
-            margin-bottom: 1.5rem;
-        }
-
-        .services-cta p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto 3rem;
-        }
-
         /* ===== Booking Modal ===== */
         .booking-modal-overlay {
             position: fixed;
@@ -744,7 +720,7 @@
             background: white;
             border-radius: var(--border-radius-lg);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -854,6 +830,67 @@
         .whatsapp-note {
             background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.05));
             border: 2px solid #25D366;
+        }
+
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .time-slot-option {
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 18px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+        }
+
+        .time-slot-option:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .time-slot-option.selected {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .booking-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* ===== Services CTA ===== */
+        .services-cta {
+            background: var(--gradient-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 6rem 0;
+            border-radius: var(--border-radius-lg);
+            margin: 4rem auto;
+            max-width: 1200px;
+        }
+
+        .services-cta h2 {
+            color: var(--white);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .services-cta p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 3rem;
         }
 
         /* ===== Premium Footer ===== */
@@ -1099,6 +1136,10 @@
                 width: 95%;
                 padding: 15px;
             }
+
+            .time-slots-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         @media (max-width: 480px) {
@@ -1122,6 +1163,10 @@
                 font-size: 10px;
                 padding: 3px 8px;
                 margin-left: 5px;
+            }
+
+            .time-slots-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1187,46 +1232,76 @@
                 <button class="booking-modal-close" id="closeBookingModal">&times;</button>
             </div>
             <div class="booking-modal-body">
-                <div class="booking-summary">
-                    <h4 style="color: var(--dark-green); margin-bottom: 15px;">Booking Summary</h4>
-                    <div id="bookingSummaryDetails"></div>
+                <!-- Step 1: Date & Time Selection -->
+                <div id="bookingStep1">
+                    <div class="booking-summary">
+                        <h4 style="color: var(--dark-green); margin-bottom: 15px;">Booking Summary</h4>
+                        <div id="bookingSummaryDetails"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Select Date</label>
+                        <input type="date" id="bookingDate" class="form-control" min="" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Available Time Slots</label>
+                        <div id="timeSlotsContainer" class="time-slots-grid">
+                            <!-- Time slots will load here -->
+                        </div>
+                    </div>
+                    
+                    <div id="paymentNote" class="payment-note">
+                        <!-- Payment note will be inserted here based on service type -->
+                    </div>
+                    
+                    <div class="booking-steps">
+                        <button class="btn btn-outline" onclick="closeBookingModal()">Cancel</button>
+                        <button id="nextStepBtn" class="btn" onclick="nextBookingStep()">
+                            <i class="fas fa-arrow-right"></i>
+                            Next: Your Details
+                        </button>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Your Full Name *</label>
-                    <input type="text" id="customerName" class="form-control" required placeholder="John Smith">
-                </div>
-                <div class="form-group">
-                    <label>Phone Number *</label>
-                    <input type="tel" id="customerPhone" class="form-control" required placeholder="07123 456789">
-                </div>
-                <div class="form-group">
-                    <label>Email Address *</label>
-                    <input type="email" id="customerEmail" class="form-control" required placeholder="john@example.com">
-                </div>
-                <div class="form-group">
-                    <label>Service Address *</label>
-                    <textarea id="customerAddress" class="form-control" rows="3" required placeholder="Full address including postcode"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Preferred Date</label>
-                    <input type="date" id="preferredDate" class="form-control" min="">
-                </div>
-                <div class="form-group">
-                    <label>Special Instructions (Optional)</label>
-                    <textarea id="bookingNotes" class="form-control" rows="3" placeholder="Any special requirements or notes..."></textarea>
-                </div>
-                
-                <div id="paymentNote" class="payment-note">
-                    <!-- Payment note will be inserted here based on service type -->
-                </div>
-                
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button class="btn btn-outline" onclick="closeBookingModal()" style="flex: 1;">Cancel</button>
-                    <button id="confirmBookingBtn" class="btn" onclick="confirmBooking()" style="flex: 2;">
-                        <i class="fas fa-check-circle"></i>
-                        Complete Booking
-                    </button>
+
+                <!-- Step 2: Customer Details -->
+                <div id="bookingStep2" style="display: none;">
+                    <div class="form-group">
+                        <label>Your Full Name *</label>
+                        <input type="text" id="customerName" class="form-control" required placeholder="John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="customerPhone" class="form-control" required placeholder="07123 456789">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" id="customerEmail" class="form-control" required placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Service Address *</label>
+                        <textarea id="customerAddress" class="form-control" rows="3" required placeholder="Full address including postcode"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Special Instructions (Optional)</label>
+                        <textarea id="bookingNotes" class="form-control" rows="3" placeholder="Any special requirements or notes..."></textarea>
+                    </div>
+                    
+                    <div class="booking-summary" id="finalBookingSummary">
+                        <h4 style="color: var(--dark-green); margin-bottom: 15px;">Final Booking Summary</h4>
+                        <div id="finalSummaryDetails"></div>
+                    </div>
+                    
+                    <div class="booking-steps">
+                        <button class="btn btn-outline" onclick="prevBookingStep()">
+                            <i class="fas fa-arrow-left"></i>
+                            Back
+                        </button>
+                        <button id="confirmBookingBtn" class="btn" onclick="confirmBooking()" style="flex: 2;">
+                            <i class="fas fa-check-circle"></i>
+                            Complete Booking
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1839,6 +1914,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
         let currentBooking = {
             service: null,
             stripeLink: null,
+            date: null,
+            timeSlot: null,
+            slotId: null,
             bedrooms: 1,
             customer: {}
         };
@@ -1884,23 +1962,24 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             
             currentBooking.stripeLink = serviceData.stripeLink;
             currentBooking.bedrooms = 1;
+            currentBooking.date = null;
+            currentBooking.timeSlot = null;
+            currentBooking.slotId = null;
             
             document.getElementById('bookingServiceName').textContent = serviceTitle;
             
             // Update booking summary
-            updateBookingSummary(serviceData);
+            updateBookingSummary();
             
-            // Set minimum date for preferred date
-            const today = new Date();
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const minDate = tomorrow.toISOString().split('T')[0];
-            document.getElementById('preferredDate').min = minDate;
-            document.getElementById('preferredDate').value = '';
+            // Set minimum date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+            document.getElementById('bookingDate').value = today;
+            currentBooking.date = today;
             
             // Update payment note and button based on service type
             const paymentNote = document.getElementById('paymentNote');
-            const confirmBtn = document.getElementById('confirmBookingBtn');
+            const nextStepBtn = document.getElementById('nextStepBtn');
             
             if (serviceData.stripeLink) {
                 paymentNote.className = 'payment-note stripe-note';
@@ -1911,8 +1990,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                         Your booking will be confirmed upon successful payment.
                     </p>
                 `;
-                confirmBtn.className = 'btn btn-stripe';
-                confirmBtn.innerHTML = '<i class="fab fa-stripe"></i> Proceed to Secure Payment';
+                nextStepBtn.className = 'btn btn-stripe';
             } else {
                 paymentNote.className = 'payment-note whatsapp-note';
                 paymentNote.innerHTML = `
@@ -1921,12 +1999,13 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                         You will be redirected to WhatsApp to complete your booking and discuss payment options with our team.
                     </p>
                 `;
-                confirmBtn.className = 'btn btn-whatsapp';
-                confirmBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Complete Booking on WhatsApp';
+                nextStepBtn.className = 'btn btn-whatsapp';
             }
             
-            // Show modal
+            // Show modal with step 1
             document.getElementById('bookingModal').style.display = 'flex';
+            document.getElementById('bookingStep1').style.display = 'block';
+            document.getElementById('bookingStep2').style.display = 'none';
             
             // Clear form
             document.getElementById('customerName').value = '';
@@ -1934,10 +2013,14 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             document.getElementById('customerEmail').value = '';
             document.getElementById('customerAddress').value = '';
             document.getElementById('bookingNotes').value = '';
+            
+            // Load time slots for today
+            loadTimeSlots(today);
         }
 
-        function updateBookingSummary(serviceData) {
+        function updateBookingSummary() {
             const summary = document.getElementById('bookingSummaryDetails');
+            const serviceData = currentBooking.service.data;
             
             let priceDisplay = serviceData.displayPrice;
             if (serviceData.hasBedrooms) {
@@ -1950,6 +2033,21 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="color: var(--dark-gray);">Bedrooms:</span>
                         <span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms > 1 ? 's' : ''}</span>
+                    </div>
+                `;
+            }
+            
+            let dateTimeInfo = '';
+            if (currentBooking.date && currentBooking.timeSlot) {
+                const [start, end] = currentBooking.timeSlot.split('-');
+                dateTimeInfo = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--dark-gray);">Date:</span>
+                        <span>${formatDate(currentBooking.date)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--dark-gray);">Time:</span>
+                        <span>${formatTime(start)} - ${formatTime(end)}</span>
                     </div>
                 `;
             }
@@ -1972,9 +2070,62 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     <span style="color: var(--dark-gray);">Price:</span>
                     <span style="font-weight: 600; color: var(--primary-green);">${priceDisplay}</span>
                 </div>
+                ${dateTimeInfo}
                 <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
                     <span style="color: var(--dark-gray); font-weight: 600;">Payment:</span>
                     ${paymentMethod}
+                </div>
+            `;
+        }
+
+        function updateFinalSummary() {
+            const summary = document.getElementById('finalSummaryDetails');
+            const serviceData = currentBooking.service.data;
+            
+            let priceDisplay = serviceData.displayPrice;
+            if (serviceData.hasBedrooms) {
+                priceDisplay = `From £${serviceData.basePrice}`;
+            }
+            
+            let bedroomInfo = '';
+            if (serviceData.hasBedrooms) {
+                bedroomInfo = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--dark-gray);">Bedrooms:</span>
+                        <span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms > 1 ? 's' : ''}</span>
+                    </div>
+                `;
+            }
+            
+            const [start, end] = currentBooking.timeSlot.split('-');
+            
+            summary.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--dark-gray);">Service:</span>
+                    <span style="font-weight: 600; color: var(--dark-green);">${currentBooking.service.title}</span>
+                </div>
+                ${bedroomInfo}
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--dark-gray);">Date:</span>
+                    <span>${formatDate(currentBooking.date)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--dark-gray);">Time:</span>
+                    <span style="font-weight: 600; color: var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--dark-gray);">Duration:</span>
+                    <span>${serviceData.duration}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: var(--dark-gray);">Price:</span>
+                    <span style="font-weight: 700; color: var(--primary-green); font-size: 1.25rem;">${priceDisplay}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span style="color: var(--dark-gray); font-weight: 600;">Payment:</span>
+                    ${serviceData.stripeLink ? 
+                        '<span style="color: #635bff; font-weight: 600;">Stripe Secure Payment</span>' : 
+                        '<span style="color: #25D366; font-weight: 600;">WhatsApp Booking</span>'}
                 </div>
             `;
         }
@@ -1984,6 +2135,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             currentBooking = {
                 service: null,
                 stripeLink: null,
+                date: null,
+                timeSlot: null,
+                slotId: null,
                 bedrooms: 1,
                 customer: {}
             };
@@ -2003,13 +2157,167 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             }
         });
 
+        // Date change handler
+        document.getElementById('bookingDate').addEventListener('change', function() {
+            currentBooking.date = this.value;
+            loadTimeSlots(this.value);
+            updateBookingSummary();
+        });
+
+        // ===== Time Slots Functions =====
+        async function loadTimeSlots(date) {
+            const container = document.getElementById('timeSlotsContainer');
+            container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top: 10px;">Loading available time slots...</div></div>';
+            
+            if (!supabaseClient) {
+                container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--ruby);"><i class="fas fa-exclamation-triangle fa-2x"></i><div style="margin-top: 10px;">Error: Cannot connect to availability system</div></div>';
+                return;
+            }
+            
+            try {
+                const { data: availability, error } = await supabaseClient
+                    .from('availability')
+                    .select('*')
+                    .eq('date', date)
+                    .eq('is_available', true)
+                    .order('time_slot');
+                
+                if (error) {
+                    throw error;
+                }
+                
+                container.innerHTML = '';
+                
+                if (!availability || availability.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                            <i class="fas fa-calendar-times fa-2x"></i>
+                            <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">No Available Slots</div>
+                            <div>No time slots available for ${formatDate(date)}</div>
+                            <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                                <i class="fas fa-phone"></i> Call us at 07827 784204 for alternative times
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                currentBooking.timeSlot = null;
+                currentBooking.slotId = null;
+                
+                availability.forEach(slot => {
+                    const slotElement = document.createElement('div');
+                    slotElement.className = 'time-slot-option';
+                    slotElement.dataset.slotId = slot.id;
+                    slotElement.dataset.timeSlot = slot.time_slot;
+                    
+                    const [start, end] = slot.time_slot.split('-');
+                    
+                    slotElement.innerHTML = `
+                        <div style="font-weight: 700; color: var(--dark-green); margin-bottom: 5px; font-size: 18px;">
+                            ${formatTime(start)}
+                        </div>
+                        <div style="font-size: 13px; color: var(--medium-gray); margin-bottom: 5px;">
+                            to ${formatTime(end)}
+                        </div>
+                        <div style="font-size: 11px; color: var(--primary-green);">
+                            <i class="fas fa-check-circle"></i> Available
+                        </div>
+                    `;
+                    
+                    slotElement.addEventListener('click', function() {
+                        document.querySelectorAll('.time-slot-option').forEach(s => {
+                            s.classList.remove('selected');
+                        });
+                        
+                        this.classList.add('selected');
+                        
+                        currentBooking.timeSlot = slot.time_slot;
+                        currentBooking.slotId = String(slot.id);
+                        
+                        updateBookingSummary();
+                    });
+                    
+                    container.appendChild(slotElement);
+                });
+                
+            } catch (err) {
+                console.error('Error loading time slots:', err);
+                container.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--ruby);">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                        <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Connection Error</div>
+                        <div>Unable to load time slots. Please try again.</div>
+                        <button onclick="loadTimeSlots('${date}')" class="btn btn-outline" style="margin-top: 20px; padding: 10px 20px;">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function formatTime(time) {
+            const [hour, minute] = time.split(':');
+            const hourNum = parseInt(hour);
+            const suffix = hourNum >= 12 ? 'PM' : 'AM';
+            const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
+            return `${displayHour}:${minute} ${suffix}`;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+        }
+
+        // ===== Booking Steps =====
+        function nextBookingStep() {
+            // Validate step 1
+            if (!currentBooking.date) {
+                alert('⚠️ Please select a date');
+                return;
+            }
+            
+            if (!currentBooking.timeSlot || !currentBooking.slotId) {
+                alert('⚠️ Please select a time slot');
+                return;
+            }
+            
+            currentBooking.slotId = String(currentBooking.slotId);
+            
+            // Update final summary
+            updateFinalSummary();
+            
+            // Update confirm button based on service type
+            const confirmBtn = document.getElementById('confirmBookingBtn');
+            if (currentBooking.service.data.stripeLink) {
+                confirmBtn.className = 'btn btn-stripe';
+                confirmBtn.innerHTML = '<i class="fab fa-stripe"></i> Complete Booking & Pay';
+            } else {
+                confirmBtn.className = 'btn btn-whatsapp';
+                confirmBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Complete Booking on WhatsApp';
+            }
+            
+            // Show step 2
+            document.getElementById('bookingStep1').style.display = 'none';
+            document.getElementById('bookingStep2').style.display = 'block';
+        }
+
+        function prevBookingStep() {
+            document.getElementById('bookingStep2').style.display = 'none';
+            document.getElementById('bookingStep1').style.display = 'block';
+        }
+
         // ===== Booking Confirmation =====
         async function confirmBooking() {
             const customerName = document.getElementById('customerName').value.trim();
             const customerPhone = document.getElementById('customerPhone').value.trim();
             const customerEmail = document.getElementById('customerEmail').value.trim();
             const customerAddress = document.getElementById('customerAddress').value.trim();
-            const preferredDate = document.getElementById('preferredDate').value;
             const bookingNotes = document.getElementById('bookingNotes').value.trim();
             
             // Validate required fields
@@ -2020,13 +2328,32 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             
             const confirmBtn = document.getElementById('confirmBookingBtn');
             const originalText = confirmBtn.innerHTML;
-            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving Booking...';
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             confirmBtn.disabled = true;
             
             try {
+                // Check if time slot is still available
+                if (!supabaseClient) {
+                    throw new Error('Cannot connect to booking system');
+                }
+                
+                const { data: slotCheck, error: checkError } = await supabaseClient
+                    .from('availability')
+                    .select('*')
+                    .eq('id', currentBooking.slotId)
+                    .eq('is_available', true)
+                    .single();
+                
+                if (checkError || !slotCheck) {
+                    alert('❌ This time slot is no longer available.\n\nPlease select another time slot.');
+                    loadTimeSlots(currentBooking.date);
+                    return;
+                }
+                
                 // Generate booking reference
                 const bookingRef = 'GG' + Date.now().toString().slice(-8);
                 const serviceData = currentBooking.service.data;
+                const [start, end] = currentBooking.timeSlot.split('-');
                 
                 // Prepare booking data for Supabase
                 const bookingData = {
@@ -2035,6 +2362,8 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     customer_phone: customerPhone,
                     customer_email: customerEmail,
                     customer_address: customerAddress,
+                    booking_date: currentBooking.date,
+                    time_slot: currentBooking.timeSlot,
                     status: 'pending',
                     booking_reference: bookingRef,
                     price: serviceData.displayPrice,
@@ -2044,10 +2373,6 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 };
                 
                 // Add optional fields
-                if (preferredDate) {
-                    bookingData.preferred_date = preferredDate;
-                }
-                
                 if (bookingNotes) {
                     bookingData.notes = bookingNotes;
                 }
@@ -2058,34 +2383,51 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 
                 // Save to Supabase
                 let supabaseSuccess = false;
-                if (supabaseClient) {
-                    try {
-                        const { error } = await supabaseClient
-                            .from('bookings')
-                            .insert([bookingData]);
+                try {
+                    const { error } = await supabaseClient
+                        .from('bookings')
+                        .insert([bookingData]);
+                    
+                    if (error) {
+                        console.error('Supabase save error:', error);
+                        throw error;
+                    } else {
+                        supabaseSuccess = true;
+                        console.log('✅ Booking saved to Supabase successfully');
                         
-                        if (error) {
-                            console.error('Supabase save error:', error);
-                            // Continue anyway - we'll still proceed with payment/booking
-                        } else {
-                            supabaseSuccess = true;
-                            console.log('✅ Booking saved to Supabase successfully');
+                        // Mark time slot as booked
+                        try {
+                            const { error: updateError } = await supabaseClient
+                                .from('availability')
+                                .update({ 
+                                    is_available: false,
+                                    updated_at: new Date().toISOString()
+                                })
+                                .eq('id', currentBooking.slotId);
+                            
+                            if (updateError) {
+                                console.warn('Failed to update availability:', updateError);
+                            }
+                        } catch (updateErr) {
+                            console.warn('Error updating availability:', updateErr);
                         }
-                    } catch (supabaseError) {
-                        console.error('Supabase error:', supabaseError);
-                        // Continue anyway
                     }
+                } catch (supabaseError) {
+                    console.error('Supabase error:', supabaseError);
+                    throw supabaseError;
                 }
                 
                 // Prepare success message
-                let successMessage = '✅ Booking information saved!\n\n';
+                let successMessage = '✅ Booking confirmed!\n\n';
                 successMessage += `Booking Reference: ${bookingRef}\n`;
                 successMessage += `Service: ${currentBooking.service.title}\n`;
+                successMessage += `Date: ${formatDate(currentBooking.date)}\n`;
+                successMessage += `Time: ${formatTime(start)} - ${formatTime(end)}\n`;
                 successMessage += `Customer: ${customerName}\n`;
                 successMessage += `Status: ${supabaseSuccess ? 'Saved to system' : 'Pending save'}\n\n`;
                 
                 // Process based on payment type
-                if (currentBooking.stripeLink) {
+                if (currentBooking.service.data.stripeLink) {
                     successMessage += 'You will now be redirected to Stripe to complete your payment.\n';
                     successMessage += 'Your booking will be confirmed upon successful payment.';
                     
@@ -2094,7 +2436,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     // Close modal and redirect to Stripe
                     closeBookingModal();
                     setTimeout(() => {
-                        window.open(currentBooking.stripeLink, '_blank');
+                        window.open(currentBooking.service.data.stripeLink, '_blank');
                     }, 500);
                     
                 } else {
@@ -2102,15 +2444,16 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     successMessage += 'Our team will confirm your booking and discuss payment options.';
                     
                     // Prepare WhatsApp message
-                    let whatsappMessage = `📋 NEW BOOKING REQUEST - ${currentBooking.service.title}\n\n`;
+                    let whatsappMessage = `📋 BOOKING CONFIRMED - ${currentBooking.service.title}\n\n`;
                     whatsappMessage += `🔢 Booking Reference: ${bookingRef}\n`;
                     whatsappMessage += `👤 Customer: ${customerName}\n`;
                     whatsappMessage += `📞 Phone: ${customerPhone}\n`;
                     whatsappMessage += `📧 Email: ${customerEmail}\n`;
                     whatsappMessage += `🏠 Address: ${customerAddress}\n`;
-                    whatsappMessage += `📅 Preferred Date: ${preferredDate || 'Not specified'}\n`;
+                    whatsappMessage += `📅 Date: ${formatDate(currentBooking.date)}\n`;
+                    whatsappMessage += `🕒 Time: ${formatTime(start)} - ${formatTime(end)}\n`;
                     whatsappMessage += `⏱️ Duration: ${serviceData.duration}\n`;
-                    whatsappMessage += `💰 Estimated Price: ${serviceData.displayPrice}\n`;
+                    whatsappMessage += `💰 Price: ${serviceData.displayPrice}\n`;
                     
                     if (serviceData.hasBedrooms) {
                         whatsappMessage += `🛏️ Bedrooms: ${currentBooking.bedrooms}\n`;
@@ -2120,8 +2463,8 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                         whatsappMessage += `📝 Notes: ${bookingNotes}\n`;
                     }
                     
-                    whatsappMessage += `\n✅ Booking ${supabaseSuccess ? 'saved to system' : 'pending save'}\n`;
-                    whatsappMessage += `🔗 Please confirm booking and discuss payment.`;
+                    whatsappMessage += `\n✅ Booking saved to system\n`;
+                    whatsappMessage += `🔗 Please discuss payment options and confirm.`;
                     
                     // Encode for WhatsApp URL
                     const encodedMessage = encodeURIComponent(whatsappMessage);
@@ -2142,18 +2485,20 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 // Fallback: Open appropriate payment method directly
                 let fallbackMessage = `❌ An error occurred. Opening payment directly...\n\n`;
                 
-                if (currentBooking.stripeLink) {
+                if (currentBooking.service.data.stripeLink) {
                     fallbackMessage += 'Please complete your payment on Stripe and contact us if needed.';
                     alert(fallbackMessage);
                     closeBookingModal();
                     setTimeout(() => {
-                        window.open(currentBooking.stripeLink, '_blank');
+                        window.open(currentBooking.service.data.stripeLink, '_blank');
                     }, 500);
                 } else {
                     const fallbackWhatsApp = encodeURIComponent(
                         `📋 BOOKING ERROR - ${currentBooking.service.title}\n\n` +
                         `👤 Customer: ${customerName || 'Not provided'}\n` +
                         `📞 Phone: ${customerPhone || 'Not provided'}\n` +
+                        `📅 Date: ${currentBooking.date || 'Not specified'}\n` +
+                        `🕒 Time: ${currentBooking.timeSlot || 'Not specified'}\n` +
                         `⏱️ Service: ${currentBooking.service.data.duration}\n` +
                         `💰 Price: ${currentBooking.service.data.displayPrice}\n\n` +
                         `⚠️ There was an error saving the booking.\n` +
@@ -2221,13 +2566,16 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 // Determine badge and button based on stripe link availability
                 let badgeHTML = '';
                 let buttonClass = '';
+                let buttonText = '';
                 
                 if (service.stripeLink) {
                     badgeHTML = '<span class="payment-badge stripe-badge"><i class="fab fa-stripe"></i> Instant Payment</span>';
                     buttonClass = 'btn-stripe';
+                    buttonText = 'Book & Pay Now';
                 } else {
                     badgeHTML = '<span class="payment-badge whatsapp-badge"><i class="fab fa-whatsapp"></i> Book Now</span>';
                     buttonClass = 'btn-whatsapp';
+                    buttonText = 'Book Now';
                 }
                 
                 const buttonHTML = `
@@ -2336,9 +2684,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             if (supabaseClient) {
                 testSupabaseConnection().then(success => {
                     if (success) {
-                        console.log('✅ Supabase ready for bookings');
+                        console.log('✅ Supabase ready for bookings & availability');
                     } else {
-                        console.warn('⚠️ Supabase connection failed - bookings will still work');
+                        console.warn('⚠️ Supabase connection failed - some features may not work');
                     }
                 });
             }
