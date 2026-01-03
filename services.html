@@ -159,6 +159,14 @@
             background: linear-gradient(135deg, #1da851, #0d7c5a);
         }
 
+        .btn-stripe {
+            background: linear-gradient(135deg, #635bff, #8a84ff);
+        }
+
+        .btn-stripe::before {
+            background: linear-gradient(135deg, #544bfd, #7a73ff);
+        }
+
         /* ===== Navigation Bar ===== */
         .navbar {
             position: fixed;
@@ -670,18 +678,26 @@
             padding: 1rem 2rem;
         }
 
-        .whatsapp-badge {
+        .payment-badge {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            background: #25D366;
-            color: white;
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
             margin-left: 10px;
             vertical-align: middle;
+        }
+
+        .stripe-badge {
+            background: #635bff;
+            color: white;
+        }
+
+        .whatsapp-badge {
+            background: #25D366;
+            color: white;
         }
 
         /* ===== Services CTA ===== */
@@ -747,7 +763,7 @@
         }
 
         .booking-modal-header {
-            background: linear-gradient(135deg, #25D366, #128C7E);
+            background: var(--gradient-primary);
             color: white;
             padding: 25px 30px;
             border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
@@ -822,19 +838,22 @@
             border: 2px solid var(--secondary-green);
         }
 
-        .whatsapp-note {
-            background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.05));
+        .payment-note {
             padding: 15px;
             border-radius: 12px;
             margin: 20px 0;
-            border: 2px solid #25D366;
             text-align: center;
+            font-size: 14px;
         }
 
-        .whatsapp-note i {
-            color: #25D366;
-            font-size: 24px;
-            margin-bottom: 10px;
+        .stripe-note {
+            background: linear-gradient(135deg, rgba(99, 91, 255, 0.1), rgba(138, 132, 255, 0.05));
+            border: 2px solid #635bff;
+        }
+
+        .whatsapp-note {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(18, 140, 126, 0.05));
+            border: 2px solid #25D366;
         }
 
         /* ===== Premium Footer ===== */
@@ -1099,7 +1118,7 @@
                 padding: 1.5rem;
             }
 
-            .whatsapp-badge {
+            .payment-badge {
                 font-size: 10px;
                 padding: 3px 8px;
                 margin-left: 5px;
@@ -1198,18 +1217,15 @@
                     <textarea id="bookingNotes" class="form-control" rows="3" placeholder="Any special requirements or notes..."></textarea>
                 </div>
                 
-                <div class="whatsapp-note">
-                    <i class="fab fa-whatsapp"></i>
-                    <p style="color: var(--dark-gray); margin: 0; font-size: 14px;">
-                        After submitting, you'll be redirected to WhatsApp to complete your booking and discuss payment options with our team.
-                    </p>
+                <div id="paymentNote" class="payment-note">
+                    <!-- Payment note will be inserted here based on service type -->
                 </div>
                 
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                     <button class="btn btn-outline" onclick="closeBookingModal()" style="flex: 1;">Cancel</button>
-                    <button class="btn btn-whatsapp" onclick="confirmBooking()" style="flex: 2;">
-                        <i class="fab fa-whatsapp"></i>
-                        Complete Booking on WhatsApp
+                    <button id="confirmBookingBtn" class="btn" onclick="confirmBooking()" style="flex: 2;">
+                        <i class="fas fa-check-circle"></i>
+                        Complete Booking
                     </button>
                 </div>
             </div>
@@ -1416,7 +1432,127 @@
             }
         });
 
-        // ===== Services Data =====
+        // ===== Stripe Payment Links Data =====
+        const stripeLinksCSV = `id,Url,Name
+plink_1SlHX02Kluec3BRLXQqWe6TQ,https://buy.stripe.com/28EbIU1eSeL12GSfV98AE0G,Spring Cleaning 5 bed
+plink_1SlHVM2Kluec3BRLm5tujG7p,https://buy.stripe.com/aFa6oA4r4eL1ftEdN18AE0F,Spring cleaning 4 bed
+plink_1SlHPO2Kluec3BRLO77GRTXj,https://buy.stripe.com/7sY9AM5v846n81ceR58AE0E,Spring Cleaning 3 bed
+plink_1SlHOw2Kluec3BRLbRK1rTZt,https://buy.stripe.com/dRmeV6g9M32jdlw8sH8AE0D,Spring Cleaning 2 bed
+plink_1SlHOX2Kluec3BRLRK6UEAvp,https://buy.stripe.com/6oU7sE3n01Yfdlw4cr8AE0C,Spring Cleaning 1 bed
+plink_1SlHNZ2Kluec3BRLooTxeMLh,https://buy.stripe.com/7sY6oA9Lo0Ub5T4gZd8AE0B,Patio and Decking
+plink_1SlHM32Kluec3BRLLrGgoigg,https://buy.stripe.com/cNi3co1eS32j0yK8sH8AE0A,Move In/ Move Out Cleaning 5 bed
+plink_1SlHKO2Kluec3BRLlA6FB8VH,https://buy.stripe.com/5kQeV6e1E1Yf81cfV98AE0z,Move In/ Move Out Cleaning 4 bed
+plink_1SlHIw2Kluec3BRLIfjXLJ0v,https://buy.stripe.com/cNifZa4r4cCT2GSdN18AE0y,Move In/ Move Out Cleaning 3 bed
+plink_1SlHIO2Kluec3BRLnovlmjWO,https://buy.stripe.com/9B6cMY7DgfP56X85gv8AE0x,Move In/ Move Out Cleaning 2 bed
+plink_1SlHHO2Kluec3BRLiSxKMHqS,https://buy.stripe.com/cNi28k3n01Yfdlw7oD8AE0w,Move In/ Move Out Cleaning 1 bed
+plink_1SlHGQ2Kluec3BRLNRNsBLtD,https://buy.stripe.com/8x200ccXA7iz2GSdN18AE0v,BBQ cleaning
+plink_1SlHFv2Kluec3BRLx8UZKbbO,https://buy.stripe.com/6oUbIUf5IcCTgxIdN18AE0u,Antiviral Sanitisation 5+ bed
+plink_1SlHFL2Kluec3BRLZLmOITYJ,https://buy.stripe.com/4gM6oA8HkgT9dlwaAP8AE0t,Antiviral Sanitation 4 bed
+plink_1SlHA92Kluec3BRLfprjU3Fp,https://buy.stripe.com/4gM8wI6zc1YfftE4cr8AE0s,Antiviral Sanitation 3 bed
+plink_1SlH8i2Kluec3BRLAFheHP2E,https://buy.stripe.com/14AcMYcXAauL2GS7oD8AE0r,Antiviral Sanitation 2 bed
+plink_1SlH6E2Kluec3BRLuFSJgOMJ,https://buy.stripe.com/cNi00c9Lo32j1CO24j8AE0q,Antiviral Sanitation 1 bed
+plink_1SlH3Y2Kluec3BRLA4pvwUXH,https://buy.stripe.com/eVqdR24r46evftE24j8AE0p,Gutter Cleaning
+plink_1SlGxa2Kluec3BRLRkvflK9P,https://buy.stripe.com/28E3co2iWfP5chscIX8AE0o,After builders 5+ Bed
+plink_1SlGvi2Kluec3BRLhJ55DK0N,https://buy.stripe.com/7sY7sE2iW46n4P08sH8AE0n,After Builders 4 Bed
+plink_1SlGt22Kluec3BRLG8ZaGMeI,https://buy.stripe.com/14A8wI3n06ev6X810f8AE0m,After Builders 3 Bed
+plink_1SlGrT2Kluec3BRLunUT1cR5,https://buy.stripe.com/5kQ4gs3n032jbdofV98AE0l,After Builders 2 Bed
+plink_1SlGnV2Kluec3BRLQ0J4QyAk,https://buy.stripe.com/fZu6oAaPs7izbdo38n8AE0k,After Builders Cleaning 1 bed
+plink_1SlG3Z2Kluec3BRLMXHWL0N3,https://buy.stripe.com/bJe6oA8HkcCT2GS38n8AE0j,Upholstery Cleaning
+plink_1SlG1E2Kluec3BRLsP61MYVf,https://buy.stripe.com/eVq28k3n0byPepAcIX8AE0i,Window Cleaning House
+plink_1SlFv12Kluec3BRLJtrCjnMq,https://buy.stripe.com/fZu8wIg9M6ev2GS4cr8AE0h,Window Cleaning Flat
+plink_1SlFoi2Kluec3BRLE8FkcaEs,https://buy.stripe.com/7sY14g9LogT94P06kz8AE0g,One-Off Deep Clean 5+ Bed
+plink_1SlFmj2Kluec3BRLcpOTWvWY,https://buy.stripe.com/8x2cMY9Lo32jgxI4cr8AE0f,One-Off Deep Clean 4 Bed
+plink_1SlFj02Kluec3BRLmkrcDxnp,https://buy.stripe.com/dRm3cog9MeL181c6kz8AE0e,One-Off deep Clean 3 bed
+plink_1SlFeg2Kluec3BRLBLyysuyo,https://buy.stripe.com/28EcMY1eSgT96X8aAP8AE0d,One-Off Deep Clean 2 bed
+plink_1SlFcw2Kluec3BRLV7zMB0Fl,https://buy.stripe.com/9B6fZa0aO46n5T410f8AE0c,One-Off Deep Clean 1 Bed
+plink_1SlFZl2Kluec3BRLL2jbmwRh,https://buy.stripe.com/4gMeV67DgeL1gxIaAP8AE0b,End of Tenancy 5 bed
+plink_1SlFYk2Kluec3BRLAyAXTFCV,https://buy.stripe.com/fZu14gaPsgT9ftE24j8AE0a,End Of Tenancy 4 Bed
+plink_1SlFY62Kluec3BRLnvDrn77V,https://buy.stripe.com/28EdR2f5IbyPbdo5gv8AE09,End of Tenancy 3 Bed
+plink_1SlFVx2Kluec3BRLxXn4Gb99,https://buy.stripe.com/28E5kw8HkeL13KW24j8AE08,End of Tenancy Cleaning
+plink_1SlFU12Kluec3BRL09qDH9QR,https://buy.stripe.com/7sY00c1eS9qH0yKfV98AE07,End of Tenancy 1 bed
+plink_1SlFT82Kluec3BRLMxkh0gaR,https://buy.stripe.com/fZufZag9MeL1bdo5gv8AE06,Bathroom Deep Clean
+plink_1SlFSa2Kluec3BRLkXd1f1su,https://buy.stripe.com/aFa5kw7DgeL1epAbET8AE05,Oven Deep Clean
+plink_1SlFRc2Kluec3BRLTo2n7RWY,https://buy.stripe.com/aFaaEQ1eS46nftEgZd8AE04,Kitchen Deep Cleaning
+plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Living Room Deep Clean`;
+
+        // Parse CSV function
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',');
+            const result = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                
+                const obj = {};
+                const currentline = lines[i].split(',');
+                
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j].trim()] = currentline[j] ? currentline[j].trim() : '';
+                }
+                result.push(obj);
+            }
+            return result;
+        }
+
+        // Parse stripe links
+        const stripeLinks = parseCSV(stripeLinksCSV);
+
+        // Function to find stripe link for a service
+        function findStripeLink(serviceTitle) {
+            const serviceTitleLower = serviceTitle.toLowerCase();
+            
+            // First try exact match
+            for (const link of stripeLinks) {
+                if (link.Name.toLowerCase() === serviceTitleLower) {
+                    return link.Url;
+                }
+            }
+            
+            // Try partial match
+            for (const link of stripeLinks) {
+                const linkNameLower = link.Name.toLowerCase();
+                
+                // Check if service title contains link name or vice versa
+                if (serviceTitleLower.includes(linkNameLower) || 
+                    linkNameLower.includes(serviceTitleLower)) {
+                    return link.Url;
+                }
+                
+                // Remove common words and try again
+                const serviceWords = serviceTitleLower.split(' ').filter(word => 
+                    !['deep', 'clean', 'cleaning', 'service', 'bed', 'bedroom', '5', '4', '3', '2', '1'].includes(word)
+                );
+                const linkWords = linkNameLower.split(' ').filter(word => 
+                    !['deep', 'clean', 'cleaning', 'service', 'bed', 'bedroom', '5', '4', '3', '2', '1'].includes(word)
+                );
+                
+                // Check if there's significant word overlap
+                const matchingWords = serviceWords.filter(word => 
+                    linkWords.some(linkWord => linkWord.includes(word) || word.includes(linkWord))
+                );
+                
+                if (matchingWords.length >= 2) {
+                    return link.Url;
+                }
+            }
+            
+            // Specific manual mappings for services that might not match automatically
+            const manualMappings = {
+                'Living Room Deep Clean': 'https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03',
+                'Oven Deep Clean': 'https://buy.stripe.com/aFa5kw7DgeL1epAbET8AE05',
+                'Bathroom Deep Clean': 'https://buy.stripe.com/fZufZag9MeL1bdo5gv8AE06',
+                'Kitchen Deep Cleaning': 'https://buy.stripe.com/aFaaEQ1eS46nftEgZd8AE04'
+            };
+            
+            if (manualMappings[serviceTitle]) {
+                return manualMappings[serviceTitle];
+            }
+            
+            return null;
+        }
+
+        // ===== Services Data with Stripe Links =====
         const servicesData = [
             {
                 id: 1,
@@ -1690,6 +1826,11 @@
             }
         ];
 
+        // Add stripe links to services data
+        servicesData.forEach(service => {
+            service.stripeLink = findStripeLink(service.title);
+        });
+
         // ===== Supabase Configuration =====
         const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
@@ -1697,6 +1838,7 @@
         let supabaseClient = null;
         let currentBooking = {
             service: null,
+            stripeLink: null,
             bedrooms: 1,
             customer: {}
         };
@@ -1724,7 +1866,7 @@
                     return false;
                 }
                 
-                console.log('Supabase connection successful');
+                console.log('✅ Supabase connection successful');
                 return true;
             } catch (err) {
                 console.error('Supabase test error:', err);
@@ -1740,6 +1882,7 @@
                 data: serviceData
             };
             
+            currentBooking.stripeLink = serviceData.stripeLink;
             currentBooking.bedrooms = 1;
             
             document.getElementById('bookingServiceName').textContent = serviceTitle;
@@ -1753,6 +1896,34 @@
             tomorrow.setDate(tomorrow.getDate() + 1);
             const minDate = tomorrow.toISOString().split('T')[0];
             document.getElementById('preferredDate').min = minDate;
+            document.getElementById('preferredDate').value = '';
+            
+            // Update payment note and button based on service type
+            const paymentNote = document.getElementById('paymentNote');
+            const confirmBtn = document.getElementById('confirmBookingBtn');
+            
+            if (serviceData.stripeLink) {
+                paymentNote.className = 'payment-note stripe-note';
+                paymentNote.innerHTML = `
+                    <i class="fab fa-stripe" style="color: #635bff; font-size: 24px; margin-bottom: 10px;"></i>
+                    <p style="color: var(--dark-gray); margin: 0;">
+                        You will be redirected to Stripe to complete your payment securely. 
+                        Your booking will be confirmed upon successful payment.
+                    </p>
+                `;
+                confirmBtn.className = 'btn btn-stripe';
+                confirmBtn.innerHTML = '<i class="fab fa-stripe"></i> Proceed to Secure Payment';
+            } else {
+                paymentNote.className = 'payment-note whatsapp-note';
+                paymentNote.innerHTML = `
+                    <i class="fab fa-whatsapp" style="color: #25D366; font-size: 24px; margin-bottom: 10px;"></i>
+                    <p style="color: var(--dark-gray); margin: 0;">
+                        You will be redirected to WhatsApp to complete your booking and discuss payment options with our team.
+                    </p>
+                `;
+                confirmBtn.className = 'btn btn-whatsapp';
+                confirmBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Complete Booking on WhatsApp';
+            }
             
             // Show modal
             document.getElementById('bookingModal').style.display = 'flex';
@@ -1762,7 +1933,6 @@
             document.getElementById('customerPhone').value = '';
             document.getElementById('customerEmail').value = '';
             document.getElementById('customerAddress').value = '';
-            document.getElementById('preferredDate').value = '';
             document.getElementById('bookingNotes').value = '';
         }
 
@@ -1784,6 +1954,10 @@
                 `;
             }
             
+            let paymentMethod = serviceData.stripeLink ? 
+                '<span style="color: #635bff; font-weight: 600;">Stripe Payment</span>' : 
+                '<span style="color: #25D366; font-weight: 600;">WhatsApp Booking</span>';
+            
             summary.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="color: var(--dark-gray);">Service:</span>
@@ -1795,8 +1969,12 @@
                     <span>${serviceData.duration}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span style="color: var(--dark-gray);">Estimated Price:</span>
+                    <span style="color: var(--dark-gray);">Price:</span>
                     <span style="font-weight: 600; color: var(--primary-green);">${priceDisplay}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(16, 185, 129, 0.2);">
+                    <span style="color: var(--dark-gray); font-weight: 600;">Payment:</span>
+                    ${paymentMethod}
                 </div>
             `;
         }
@@ -1805,6 +1983,7 @@
             document.getElementById('bookingModal').style.display = 'none';
             currentBooking = {
                 service: null,
+                stripeLink: null,
                 bedrooms: 1,
                 customer: {}
             };
@@ -1839,7 +2018,7 @@
                 return;
             }
             
-            const confirmBtn = document.querySelector('.btn-whatsapp');
+            const confirmBtn = document.getElementById('confirmBookingBtn');
             const originalText = confirmBtn.innerHTML;
             confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving Booking...';
             confirmBtn.disabled = true;
@@ -1860,6 +2039,7 @@
                     booking_reference: bookingRef,
                     price: serviceData.displayPrice,
                     duration: serviceData.duration,
+                    payment_method: serviceData.stripeLink ? 'stripe' : 'whatsapp',
                     created_at: new Date().toISOString()
                 };
                 
@@ -1886,10 +2066,10 @@
                         
                         if (error) {
                             console.error('Supabase save error:', error);
-                            // Continue anyway - we'll still open WhatsApp
+                            // Continue anyway - we'll still proceed with payment/booking
                         } else {
                             supabaseSuccess = true;
-                            console.log('Booking saved to Supabase successfully');
+                            console.log('✅ Booking saved to Supabase successfully');
                         }
                     } catch (supabaseError) {
                         console.error('Supabase error:', supabaseError);
@@ -1897,70 +2077,95 @@
                     }
                 }
                 
-                // Prepare WhatsApp message
-                let whatsappMessage = `📋 NEW BOOKING REQUEST - ${currentBooking.service.title}\n\n`;
-                whatsappMessage += `🔢 Booking Reference: ${bookingRef}\n`;
-                whatsappMessage += `👤 Customer: ${customerName}\n`;
-                whatsappMessage += `📞 Phone: ${customerPhone}\n`;
-                whatsappMessage += `📧 Email: ${customerEmail}\n`;
-                whatsappMessage += `🏠 Address: ${customerAddress}\n`;
-                whatsappMessage += `📅 Preferred Date: ${preferredDate || 'Not specified'}\n`;
-                whatsappMessage += `⏱️ Duration: ${serviceData.duration}\n`;
-                whatsappMessage += `💰 Estimated Price: ${serviceData.displayPrice}\n`;
-                
-                if (serviceData.hasBedrooms) {
-                    whatsappMessage += `🛏️ Bedrooms: ${currentBooking.bedrooms}\n`;
-                }
-                
-                if (bookingNotes) {
-                    whatsappMessage += `📝 Notes: ${bookingNotes}\n`;
-                }
-                
-                whatsappMessage += `\n✅ Booking ${supabaseSuccess ? 'saved to system' : 'pending save'}\n`;
-                whatsappMessage += `🔗 Please process payment and confirm booking.`;
-                
-                // Encode for WhatsApp URL
-                const encodedMessage = encodeURIComponent(whatsappMessage);
-                const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-                
-                // Show success message
+                // Prepare success message
                 let successMessage = '✅ Booking information saved!\n\n';
-                successMessage += `Booking Reference: ${bookingRef}\n\n`;
-                successMessage += 'You will now be redirected to WhatsApp.\n';
-                successMessage += 'Our team will:\n';
-                successMessage += '1. Confirm your booking details\n';
-                successMessage += '2. Provide available time slots\n';
-                successMessage += '3. Send payment options\n\n';
-                successMessage += 'Thank you for choosing GreenGlo Cleaners!';
+                successMessage += `Booking Reference: ${bookingRef}\n`;
+                successMessage += `Service: ${currentBooking.service.title}\n`;
+                successMessage += `Customer: ${customerName}\n`;
+                successMessage += `Status: ${supabaseSuccess ? 'Saved to system' : 'Pending save'}\n\n`;
                 
-                alert(successMessage);
-                
-                // Close modal and open WhatsApp
-                closeBookingModal();
-                setTimeout(() => {
-                    window.open(whatsappUrl, '_blank');
-                }, 500);
+                // Process based on payment type
+                if (currentBooking.stripeLink) {
+                    successMessage += 'You will now be redirected to Stripe to complete your payment.\n';
+                    successMessage += 'Your booking will be confirmed upon successful payment.';
+                    
+                    alert(successMessage);
+                    
+                    // Close modal and redirect to Stripe
+                    closeBookingModal();
+                    setTimeout(() => {
+                        window.open(currentBooking.stripeLink, '_blank');
+                    }, 500);
+                    
+                } else {
+                    successMessage += 'You will now be redirected to WhatsApp.\n';
+                    successMessage += 'Our team will confirm your booking and discuss payment options.';
+                    
+                    // Prepare WhatsApp message
+                    let whatsappMessage = `📋 NEW BOOKING REQUEST - ${currentBooking.service.title}\n\n`;
+                    whatsappMessage += `🔢 Booking Reference: ${bookingRef}\n`;
+                    whatsappMessage += `👤 Customer: ${customerName}\n`;
+                    whatsappMessage += `📞 Phone: ${customerPhone}\n`;
+                    whatsappMessage += `📧 Email: ${customerEmail}\n`;
+                    whatsappMessage += `🏠 Address: ${customerAddress}\n`;
+                    whatsappMessage += `📅 Preferred Date: ${preferredDate || 'Not specified'}\n`;
+                    whatsappMessage += `⏱️ Duration: ${serviceData.duration}\n`;
+                    whatsappMessage += `💰 Estimated Price: ${serviceData.displayPrice}\n`;
+                    
+                    if (serviceData.hasBedrooms) {
+                        whatsappMessage += `🛏️ Bedrooms: ${currentBooking.bedrooms}\n`;
+                    }
+                    
+                    if (bookingNotes) {
+                        whatsappMessage += `📝 Notes: ${bookingNotes}\n`;
+                    }
+                    
+                    whatsappMessage += `\n✅ Booking ${supabaseSuccess ? 'saved to system' : 'pending save'}\n`;
+                    whatsappMessage += `🔗 Please confirm booking and discuss payment.`;
+                    
+                    // Encode for WhatsApp URL
+                    const encodedMessage = encodeURIComponent(whatsappMessage);
+                    const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+                    
+                    alert(successMessage);
+                    
+                    // Close modal and redirect to WhatsApp
+                    closeBookingModal();
+                    setTimeout(() => {
+                        window.open(whatsappUrl, '_blank');
+                    }, 500);
+                }
                 
             } catch (err) {
                 console.error('Booking error:', err);
                 
-                // Fallback: Open WhatsApp directly with basic info
-                const fallbackMessage = encodeURIComponent(
-                    `📋 NEW BOOKING REQUEST - ${currentBooking.service.title}\n\n` +
-                    `👤 Customer: ${customerName}\n` +
-                    `📞 Phone: ${customerPhone}\n` +
-                    `📧 Email: ${customerEmail}\n` +
-                    `🏠 Address: ${customerAddress}\n` +
-                    `⏱️ Service: ${currentBooking.service.data.duration}\n` +
-                    `💰 Price: ${currentBooking.service.data.displayPrice}\n\n` +
-                    `Please save this booking manually.`
-                );
+                // Fallback: Open appropriate payment method directly
+                let fallbackMessage = `❌ An error occurred. Opening payment directly...\n\n`;
                 
-                alert('⚠️ An error occurred. Opening WhatsApp directly...\n\nPlease provide your booking details to our team.');
-                closeBookingModal();
-                setTimeout(() => {
-                    window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${fallbackMessage}`, '_blank');
-                }, 500);
+                if (currentBooking.stripeLink) {
+                    fallbackMessage += 'Please complete your payment on Stripe and contact us if needed.';
+                    alert(fallbackMessage);
+                    closeBookingModal();
+                    setTimeout(() => {
+                        window.open(currentBooking.stripeLink, '_blank');
+                    }, 500);
+                } else {
+                    const fallbackWhatsApp = encodeURIComponent(
+                        `📋 BOOKING ERROR - ${currentBooking.service.title}\n\n` +
+                        `👤 Customer: ${customerName || 'Not provided'}\n` +
+                        `📞 Phone: ${customerPhone || 'Not provided'}\n` +
+                        `⏱️ Service: ${currentBooking.service.data.duration}\n` +
+                        `💰 Price: ${currentBooking.service.data.displayPrice}\n\n` +
+                        `⚠️ There was an error saving the booking.\n` +
+                        `Please help complete this booking manually.`
+                    );
+                    
+                    alert(fallbackMessage + 'Please provide your booking details to our team.');
+                    closeBookingModal();
+                    setTimeout(() => {
+                        window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${fallbackWhatsApp}`, '_blank');
+                    }, 500);
+                }
                 
             } finally {
                 confirmBtn.innerHTML = originalText;
@@ -2013,15 +2218,24 @@
                     `;
                 }
 
-                const badgeHTML = '<span class="whatsapp-badge"><i class="fab fa-whatsapp"></i> Book Now</span>';
+                // Determine badge and button based on stripe link availability
+                let badgeHTML = '';
+                let buttonClass = '';
+                
+                if (service.stripeLink) {
+                    badgeHTML = '<span class="payment-badge stripe-badge"><i class="fab fa-stripe"></i> Instant Payment</span>';
+                    buttonClass = 'btn-stripe';
+                } else {
+                    badgeHTML = '<span class="payment-badge whatsapp-badge"><i class="fab fa-whatsapp"></i> Book Now</span>';
+                    buttonClass = 'btn-whatsapp';
+                }
                 
                 const buttonHTML = `
-                    <button class="btn book-service-btn btn-whatsapp" 
+                    <button class="btn book-service-btn ${buttonClass}" 
                             data-service-id="${service.id}" 
                             data-service-title="${service.title}"
                             style="padding: 1rem 2rem; font-size: 1.125rem;">
-                        <i class="fab fa-whatsapp"></i>
-                        Book Now
+                        ${service.stripeLink ? '<i class="fab fa-stripe"></i> Book & Pay Now' : '<i class="fab fa-whatsapp"></i> Book Now'}
                     </button>
                 `;
 
@@ -2122,21 +2336,23 @@
             if (supabaseClient) {
                 testSupabaseConnection().then(success => {
                     if (success) {
-                        console.log('✅ Supabase connection ready for bookings');
+                        console.log('✅ Supabase ready for bookings');
                     } else {
-                        console.warn('⚠️ Supabase connection failed - bookings will still open WhatsApp');
+                        console.warn('⚠️ Supabase connection failed - bookings will still work');
                     }
                 });
             }
             
-            // Set minimum date for today
-            const today = new Date().toISOString().split('T')[0];
-            const dateInputs = document.querySelectorAll('input[type="date"]');
-            dateInputs.forEach(input => {
-                if (input.id === 'preferredDate') {
-                    const tomorrow = new Date();
-                    tomorrow.setDate(tomorrow.getDate() + 1);
-                    input.min = tomorrow.toISOString().split('T')[0];
+            // Log stripe links info
+            console.log('📊 Stripe Links Summary:');
+            console.log(`- Total services: ${servicesData.length}`);
+            console.log(`- Services with Stripe links: ${servicesData.filter(s => s.stripeLink).length}`);
+            console.log(`- Services without Stripe links: ${servicesData.filter(s => !s.stripeLink).length}`);
+            
+            // Show which services have stripe links
+            servicesData.forEach(service => {
+                if (service.stripeLink) {
+                    console.log(`✓ ${service.title}: ${service.stripeLink}`);
                 }
             });
         });
