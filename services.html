@@ -921,7 +921,7 @@
             bottom: 0;
             left: 0;
             width: 40px;
-            height: 3px;
+            height = 3px;
             background: var(--primary-green);
         }
 
@@ -1930,7 +1930,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
 
         // ===== Supabase Configuration =====
         const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGplbmlvaGV0ZWZxd2NzZWZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE3MzcwODQsImV4cCI6MjA0NzMxMzA4NH0.vwQIL2NY4X1CipjvqqPqZ2dRwwEBhS2TveBNkNHn-Vg';
+        const SUPABASE_ANON_KEY = 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7';
         
         let supabaseClient = null;
         let currentBooking = {
@@ -1944,47 +1944,73 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
         };
 
         // Initialize Supabase
-        if (typeof supabase !== 'undefined') {
-            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        function initSupabase() {
+            if (typeof supabase === 'undefined') {
+                console.error('Supabase library not loaded');
+                return null;
+            }
+            
+            try {
+                const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase client initialized');
+                return client;
+            } catch (error) {
+                console.error('❌ Error initializing Supabase:', error);
+                return null;
+            }
         }
+
+        // Initialize on page load
+        supabaseClient = initSupabase();
 
         // Test Supabase connection
         async function testSupabaseConnection() {
             if (!supabaseClient) {
-                console.error('Supabase client not initialized');
-                return false;
+                console.error('❌ Supabase client not initialized');
+                return { success: false, message: 'Client not initialized' };
             }
             
+            console.log('🔌 Testing Supabase connection...');
+            
             try {
-                // Test if we can access the bookings table
-                const { data, error, count } = await supabaseClient
+                // Simple test query - try to access bookings table
+                const { data, error } = await supabaseClient
                     .from('bookings')
-                    .select('*', { count: 'exact', head: true });
+                    .select('count')
+                    .limit(1)
+                    .single();
                 
                 if (error) {
-                    console.error('Supabase connection error:', error);
-                    return false;
+                    console.error('❌ Supabase connection test failed:', error);
+                    
+                    // Try a different approach - maybe the table doesn't exist yet
+                    const { data: testData, error: testError } = await supabaseClient
+                        .from('bookings')
+                        .select('*')
+                        .limit(1);
+                    
+                    if (testError) {
+                        console.error('❌ Alternative test also failed:', testError);
+                        return { 
+                            success: false, 
+                            message: `Connection failed: ${testError.message}`,
+                            code: testError.code
+                        };
+                    }
+                    
+                    console.log('✅ Supabase connection successful (alternative test)');
+                    return { success: true, message: 'Connected' };
                 }
                 
-                console.log('✅ Supabase connection successful - bookings table accessible');
+                console.log('✅ Supabase connection successful');
+                return { success: true, message: 'Connected' };
                 
-                // Test availability table
-                const { error: availError } = await supabaseClient
-                    .from('availability')
-                    .select('id')
-                    .limit(1);
-                
-                if (availError) {
-                    console.warn('Availability table test:', availError);
-                    console.log('⚠️ Availability table may not be accessible');
-                } else {
-                    console.log('✅ Availability table accessible');
-                }
-                
-                return true;
             } catch (err) {
-                console.error('Supabase test error:', err);
-                return false;
+                console.error('❌ Supabase test error:', err);
+                return { 
+                    success: false, 
+                    message: `Test error: ${err.message}` 
+                };
             }
         }
 
@@ -2206,12 +2232,46 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top: 10px;">Loading available time slots...</div></div>';
             
             if (!supabaseClient) {
-                container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--ruby);"><i class="fas fa-exclamation-triangle fa-2x"></i><div style="margin-top: 10px;">Error: Cannot connect to availability system</div></div>';
+                container.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                        <i class="fas fa-calendar-check fa-2x"></i>
+                        <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Book via WhatsApp</div>
+                        <div>For ${formatDate(date)}, please contact us to check availability.</div>
+                        <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                            <i class="fas fa-phone"></i> Call 07827 784204
+                        </div>
+                        <button onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Booking%20inquiry%20for%20${encodeURIComponent(formatDate(date))}'" 
+                                class="btn btn-whatsapp" style="margin-top: 20px; padding: 10px 20px;">
+                            <i class="fab fa-whatsapp"></i> Book via WhatsApp
+                        </button>
+                    </div>
+                `;
                 return;
             }
             
             try {
-                // Use the correct table name from your schema
+                // First, test the connection
+                const connectionTest = await testSupabaseConnection();
+                if (!connectionTest.success) {
+                    // If database fails, show manual booking option
+                    container.innerHTML = `
+                        <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                            <i class="fas fa-calendar-check fa-2x"></i>
+                            <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Manual Booking Required</div>
+                            <div>For ${formatDate(date)}, please contact us to check availability.</div>
+                            <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                                <i class="fas fa-phone"></i> Call 07827 784204
+                            </div>
+                            <button onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Booking%20inquiry%20for%20${encodeURIComponent(formatDate(date))}'" 
+                                    class="btn btn-whatsapp" style="margin-top: 20px; padding: 10px 20px;">
+                                <i class="fab fa-whatsapp"></i> Book via WhatsApp
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Try to load availability
                 const { data: availability, error } = await supabaseClient
                     .from('availability')
                     .select('id, date, time_slot, is_available')
@@ -2220,8 +2280,8 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     .order('time_slot');
                 
                 if (error) {
-                    console.error('Availability fetch error:', error);
-                    throw error;
+                    console.error('❌ Availability fetch error:', error);
+                    throw new Error('Unable to load time slots from database');
                 }
                 
                 container.innerHTML = '';
@@ -2280,14 +2340,18 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 });
                 
             } catch (err) {
-                console.error('Error loading time slots:', err);
+                console.error('❌ Error loading time slots:', err);
                 container.innerHTML = `
-                    <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--ruby);">
-                        <i class="fas fa-exclamation-triangle fa-2x"></i>
-                        <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Connection Error</div>
-                        <div>Unable to load time slots. Please try again.</div>
-                        <button onclick="loadTimeSlots('${date}')" class="btn btn-outline" style="margin-top: 20px; padding: 10px 20px;">
-                            <i class="fas fa-redo"></i> Retry
+                    <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                        <i class="fas fa-calendar-check fa-2x"></i>
+                        <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Book Manually</div>
+                        <div>Please contact us to check availability for ${formatDate(date)}</div>
+                        <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                            <i class="fas fa-phone"></i> Call 07827 784204
+                        </div>
+                        <button onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Booking%20inquiry%20for%20${encodeURIComponent(formatDate(date))}'" 
+                                class="btn btn-whatsapp" style="margin-top: 20px; padding: 10px 20px;">
+                            <i class="fab fa-whatsapp"></i> Book via WhatsApp
                         </button>
                     </div>
                 `;
@@ -2370,126 +2434,71 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             confirmBtn.disabled = true;
             
             try {
-                // Check if time slot is still available
-                if (!supabaseClient) {
-                    throw new Error('Cannot connect to booking system');
-                }
-                
-                const { data: slotCheck, error: checkError } = await supabaseClient
-                    .from('availability')
-                    .select('*')
-                    .eq('id', currentBooking.slotId)
-                    .eq('is_available', true)
-                    .single();
-                
-                if (checkError || !slotCheck) {
-                    alert('❌ This time slot is no longer available.\n\nPlease select another time slot.');
-                    loadTimeSlots(currentBooking.date);
-                    return;
-                }
-                
-                // Generate booking reference
-                const bookingRef = 'GG' + Date.now().toString().slice(-8);
                 const serviceData = currentBooking.service.data;
                 const [start, end] = currentBooking.timeSlot.split('-');
                 
-                // Prepare booking data for Supabase - MATCHING YOUR SCHEMA
-                const bookingData = {
-                    service_title: currentBooking.service.title,
-                    service_type: currentBooking.service.title, // Use same as service_title
-                    customer_name: customerName,
-                    customer_phone: customerPhone,
-                    customer_email: customerEmail,
-                    customer_address: customerAddress,
-                    service_address: customerAddress, // Same as customer_address
-                    booking_date: currentBooking.date,
-                    time_slot: currentBooking.timeSlot,
-                    status: 'pending',
-                    booking_reference: bookingRef,
-                    price: serviceData.displayPrice,
-                    duration: serviceData.duration,
-                    created_at: new Date().toISOString()
-                };
+                // Generate booking reference
+                const bookingRef = 'GG' + Date.now().toString().slice(-8);
                 
-                // Add optional fields based on your schema
-                if (bookingNotes) {
-                    bookingData.special_instructions = bookingNotes;
-                    bookingData.notes = bookingNotes; // Both columns exist in your schema
-                }
-                
-                if (serviceData.hasBedrooms) {
-                    // Add bedrooms as notes since there's no bedrooms column
-                    bookingData.notes = (bookingData.notes || '') + `\nBedrooms: ${currentBooking.bedrooms}`;
-                    bookingData.special_instructions = (bookingData.special_instructions || '') + `\nBedrooms: ${currentBooking.bedrooms}`;
-                }
-                
-                // Debug: Log what we're trying to insert
-                console.log('Inserting booking data:', JSON.stringify(bookingData, null, 2));
-                
-                // Save to Supabase
+                // Try to save to Supabase if available
                 let supabaseSuccess = false;
-                try {
-                    const { data: insertData, error } = await supabaseClient
-                        .from('bookings')
-                        .insert([bookingData])
-                        .select();
-                    
-                    if (error) {
-                        console.error('Supabase save error details:', {
-                            message: error.message,
-                            details: error.details,
-                            hint: error.hint,
-                            code: error.code
-                        });
-                        throw error;
-                    } else {
-                        supabaseSuccess = true;
-                        console.log('✅ Booking saved to Supabase successfully:', insertData);
+                if (supabaseClient) {
+                    try {
+                        // Check if time slot is still available
+                        const { data: slotCheck, error: checkError } = await supabaseClient
+                            .from('availability')
+                            .select('*')
+                            .eq('id', currentBooking.slotId)
+                            .eq('is_available', true)
+                            .single();
                         
-                        // Mark time slot as booked
-                        try {
-                            const { error: updateError } = await supabaseClient
-                                .from('availability')
-                                .update({ 
-                                    is_available: false
-                                })
-                                .eq('id', currentBooking.slotId);
+                        if (!checkError && slotCheck) {
+                            // Prepare booking data
+                            const bookingData = {
+                                service_title: currentBooking.service.title,
+                                service_type: currentBooking.service.title,
+                                customer_name: customerName,
+                                customer_phone: customerPhone,
+                                customer_email: customerEmail,
+                                customer_address: customerAddress,
+                                service_address: customerAddress,
+                                booking_date: currentBooking.date,
+                                time_slot: currentBooking.timeSlot,
+                                status: 'pending',
+                                booking_reference: bookingRef,
+                                price: serviceData.displayPrice,
+                                duration: serviceData.duration,
+                                created_at: new Date().toISOString()
+                            };
                             
-                            if (updateError) {
-                                console.warn('Failed to update availability:', updateError);
-                            } else {
-                                console.log('✅ Availability updated successfully');
+                            if (bookingNotes) {
+                                bookingData.special_instructions = bookingNotes;
+                                bookingData.notes = bookingNotes;
                             }
-                        } catch (updateErr) {
-                            console.warn('Error updating availability:', updateErr);
+                            
+                            if (serviceData.hasBedrooms) {
+                                bookingData.notes = (bookingData.notes || '') + `\nBedrooms: ${currentBooking.bedrooms}`;
+                            }
+                            
+                            // Save booking
+                            const { error: insertError } = await supabaseClient
+                                .from('bookings')
+                                .insert([bookingData]);
+                            
+                            if (!insertError) {
+                                supabaseSuccess = true;
+                                console.log('✅ Booking saved to Supabase');
+                                
+                                // Mark slot as unavailable
+                                await supabaseClient
+                                    .from('availability')
+                                    .update({ is_available: false })
+                                    .eq('id', currentBooking.slotId);
+                            }
                         }
+                    } catch (dbError) {
+                        console.warn('⚠️ Database save failed, continuing with manual booking:', dbError);
                     }
-                } catch (supabaseError) {
-                    console.error('Supabase error:', supabaseError);
-                    
-                    // Try with minimal required fields
-                    const minimalBookingData = {
-                        customer_name: customerName,
-                        customer_phone: customerPhone,
-                        booking_date: currentBooking.date,
-                        time_slot: currentBooking.timeSlot,
-                        status: 'pending',
-                        service_title: currentBooking.service.title
-                    };
-                    
-                    console.log('Trying minimal booking data:', minimalBookingData);
-                    
-                    const { data: minimalData, error: minimalError } = await supabaseClient
-                        .from('bookings')
-                        .insert([minimalBookingData])
-                        .select();
-                    
-                    if (minimalError) {
-                        throw new Error(`Supabase insertion failed: ${minimalError.message}`);
-                    }
-                    
-                    supabaseSuccess = true;
-                    console.log('✅ Booking saved with minimal data:', minimalData);
                 }
                 
                 // Prepare success message
@@ -2499,10 +2508,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 successMessage += `Date: ${formatDate(currentBooking.date)}\n`;
                 successMessage += `Time: ${formatTime(start)} - ${formatTime(end)}\n`;
                 successMessage += `Customer: ${customerName}\n`;
-                successMessage += `Status: ${supabaseSuccess ? 'Saved to system' : 'Pending save'}\n\n`;
+                successMessage += `Status: ${supabaseSuccess ? 'Saved to system' : 'Manual booking required'}\n\n`;
                 
                 // Process based on payment type
-                if (currentBooking.service.data.stripeLink) {
+                if (serviceData.stripeLink) {
                     successMessage += 'You will now be redirected to Stripe to complete your payment.\n';
                     successMessage += 'Your booking will be confirmed upon successful payment.';
                     
@@ -2511,7 +2520,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     // Close modal and redirect to Stripe
                     closeBookingModal();
                     setTimeout(() => {
-                        window.open(currentBooking.service.data.stripeLink, '_blank');
+                        window.open(serviceData.stripeLink, '_blank');
                     }, 500);
                     
                 } else {
@@ -2538,7 +2547,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                         whatsappMessage += `📝 Notes: ${bookingNotes}\n`;
                     }
                     
-                    whatsappMessage += `\n✅ Booking saved to system\n`;
+                    whatsappMessage += `\n✅ ${supabaseSuccess ? 'Booking saved to system' : 'Manual booking required'}\n`;
                     whatsappMessage += `🔗 Please discuss payment options and confirm.`;
                     
                     // Encode for WhatsApp URL
@@ -2555,33 +2564,28 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 }
                 
             } catch (err) {
-                console.error('Booking error:', err);
+                console.error('❌ Booking error:', err);
                 
-                let errorMessage = `❌ An error occurred while saving your booking.\n\n`;
-                errorMessage += `Error: ${err.message}\n\n`;
-                errorMessage += `Please contact us directly to complete your booking.`;
-                
-                alert(errorMessage);
-                
-                // Fallback: Open WhatsApp with booking details
+                // Fallback to WhatsApp booking
                 const fallbackWhatsApp = encodeURIComponent(
-                    `📋 BOOKING ERROR - ${currentBooking.service.title}\n\n` +
-                    `👤 Customer: ${customerName || 'Not provided'}\n` +
-                    `📞 Phone: ${customerPhone || 'Not provided'}\n` +
-                    `📧 Email: ${customerEmail || 'Not provided'}\n` +
-                    `🏠 Address: ${customerAddress || 'Not provided'}\n` +
+                    `📋 BOOKING REQUEST - ${currentBooking.service.title}\n\n` +
+                    `👤 Customer: ${customerName}\n` +
+                    `📞 Phone: ${customerPhone}\n` +
+                    `📧 Email: ${customerEmail}\n` +
+                    `🏠 Address: ${customerAddress}\n` +
                     `📅 Date: ${currentBooking.date || 'Not specified'}\n` +
                     `🕒 Time: ${currentBooking.timeSlot || 'Not specified'}\n` +
                     `⏱️ Service: ${currentBooking.service.data.duration}\n` +
                     `💰 Price: ${currentBooking.service.data.displayPrice}\n\n` +
-                    `⚠️ There was an error saving the booking.\n` +
-                    `Error: ${err.message}\n` +
+                    `⚠️ Online booking system experienced an error.\n` +
                     `Please help complete this booking manually.`
                 );
                 
+                alert('❌ An error occurred. You will be redirected to WhatsApp to complete your booking manually.');
+                closeBookingModal();
                 setTimeout(() => {
                     window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${fallbackWhatsApp}`, '_blank');
-                }, 1000);
+                }, 500);
                 
             } finally {
                 confirmBtn.innerHTML = originalText;
@@ -2750,11 +2754,12 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             
             // Test Supabase connection
             if (supabaseClient) {
-                testSupabaseConnection().then(success => {
-                    if (success) {
+                testSupabaseConnection().then(result => {
+                    if (result.success) {
                         console.log('✅ Supabase ready for bookings & availability');
                     } else {
-                        console.warn('⚠️ Supabase connection failed - some features may not work');
+                        console.warn('⚠️ Supabase connection failed:', result.message);
+                        console.log('Booking system will use WhatsApp fallback mode');
                     }
                 });
             }
@@ -2764,15 +2769,6 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             console.log(`- Total services: ${servicesData.length}`);
             console.log(`- Services with Stripe links: ${servicesData.filter(s => s.stripeLink).length}`);
             console.log(`- Services without Stripe links: ${servicesData.filter(s => !s.stripeLink).length}`);
-            
-            // Show which services have stripe links
-            servicesData.forEach(service => {
-                if (service.stripeLink) {
-                    console.log(`✓ ${service.title}: ${service.stripeLink}`);
-                } else {
-                    console.log(`✗ ${service.title}: No stripe link`);
-                }
-            });
         });
     </script>
 </body>
