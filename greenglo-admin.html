@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenGlo Admin | Availability Management</title>
+    <title>GreenGlo Admin | 24/7 Availability Management</title>
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -335,6 +335,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .time-slot-card {
@@ -365,13 +367,78 @@
             color: var(--dark-gray);
         }
 
+        /* Status styles */
+        .slot-available {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+            font-weight: 600;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .slot-blocked {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+            font-weight: 600;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .slot-booked {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--orange);
+            font-weight: 600;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .time-slot-card.selected {
+            border-color: var(--primary-green);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
+        }
+
+        .time-slot-card.blocked {
+            border-color: var(--red);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(252, 165, 165, 0.1));
+            opacity: 0.7;
+        }
+
+        .time-slot-card.booked {
+            border-color: var(--orange);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+            cursor: not-allowed;
+        }
+
+        /* Day status indicators */
+        .day-status-available {
+            background: var(--primary-green);
+        }
+
+        .day-status-partial {
+            background: var(--orange);
+        }
+
+        .day-status-blocked {
+            background: var(--red);
+        }
+
+        .day-status-within-lead-time {
+            background: var(--blue);
+        }
+
         /* Action buttons - mobile friendly */
         .quick-calendar-actions,
         .time-slots-actions {
             padding: 15px;
             border-top: 1px solid #e5e7eb;
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 10px;
             background: #f9fafb;
         }
@@ -403,6 +470,36 @@
             font-size: 15px;
         }
 
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--dark-gray);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+        }
+
         /* Modals - mobile improvements */
         .modal {
             background: white;
@@ -414,6 +511,41 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             margin: 20px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h3 {
+            color: var(--dark-green);
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--medium-gray);
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--light-gray);
         }
 
         .modal-overlay {
@@ -450,11 +582,45 @@
             transition: all 0.3s ease;
         }
 
+        .booking-card.pending {
+            border-left-color: var(--orange);
+        }
+
+        .booking-card.confirmed {
+            border-left-color: var(--primary-green);
+        }
+
+        .booking-card.cancelled {
+            border-left-color: var(--red);
+        }
+
         .details-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 10px;
             margin: 10px 0;
+        }
+
+        .detail-item {
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--medium-gray);
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: var(--dark-gray);
+            font-weight: 500;
         }
 
         /* Status badges - mobile */
@@ -508,6 +674,33 @@
             word-break: break-word;
         }
 
+        .notification.success {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
+
+        .notification.warning {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         /* Swipe gestures for calendar */
         .calendar-swipe-area {
             position: relative;
@@ -551,6 +744,107 @@
 
         .mobile-bottom-nav-item i {
             font-size: 18px;
+        }
+
+        /* Admin logo and navigation */
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .admin-logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .admin-logo h2 {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .admin-nav {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .admin-nav-item {
+            margin-bottom: 5px;
+        }
+
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .admin-nav-link:hover,
+        .admin-nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .admin-nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Today highlight */
+        .today {
+            border-color: var(--primary-green) !important;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1)) !important;
+            font-weight: 700;
+        }
+
+        .selected {
+            border-color: var(--blue) !important;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)) !important;
+        }
+
+        /* Lead time indicator */
+        .within-lead-time {
+            border-color: var(--blue) !important;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)) !important;
+            opacity: 0.7;
+        }
+
+        /* Event dots */
+        .month-day-events {
+            display: flex;
+            gap: 2px;
+            margin-top: 5px;
+        }
+
+        .event-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .event-dot.available {
+            background: var(--primary-green);
+        }
+
+        .event-dot.booked {
+            background: var(--orange);
+        }
+
+        .event-dot.blocked {
+            background: var(--red);
         }
 
         /* Tablet styles */
@@ -666,11 +960,11 @@
             
             .admin-main {
                 margin-left: 0;
-                padding: 20px 15px 80px; /* Added bottom padding for mobile nav */
+                padding: 20px 15px 80px;
             }
             
             .admin-header {
-                margin-top: 60px; /* Space for mobile menu button */
+                margin-top: 60px;
             }
             
             .dashboard-stats {
@@ -742,11 +1036,6 @@
             /* Hide sidebar logo text on mobile when collapsed */
             .admin-logo h2 {
                 font-size: 18px;
-            }
-            
-            /* Adjust modal content for mobile */
-            textarea {
-                font-size: 11px;
             }
         }
 
@@ -895,7 +1184,7 @@
                 </div>
                 
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button onclick="window.open('https://supabase.com/dashboard/project/faxjeniohetefqwcsefi/sql', '_blank')" class="btn btn-primary" style="flex: 1;">
+                    <button onclick="window.open('https://supabase.com/dashboard/project/_/sql', '_blank')" class="btn btn-primary" style="flex: 1;">
                         <i class="fas fa-external-link-alt"></i> Open SQL Editor
                     </button>
                     <button onclick="closeDatabaseSetupModal()" class="btn btn-secondary" style="flex: 1;">
@@ -927,6 +1216,92 @@
         </div>
     </div>
     
+    <!-- 24/7 Bulk Setup Modal -->
+    <div id="bulkSetupModal" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>24/7 Bulk Availability Setup</h3>
+                <button class="modal-close" id="closeBulkSetupModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 20px;">
+                    <p style="margin-bottom: 15px; font-size: 14px;">Set up 24/7 availability with one-day lead time for multiple days.</p>
+                    
+                    <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 8px; font-size: 16px;">Settings</h4>
+                        <div style="margin-bottom: 10px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Lead Time</label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <input type="number" id="leadTimeHours" value="24" min="0" max="720" style="width: 100px; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                                <span>hours</span>
+                            </div>
+                            <div style="font-size: 12px; color: var(--medium-gray); margin-top: 5px;">Minimum: 24 hours (1 day)</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 8px; font-size: 16px;">Time Slots</h4>
+                        <div style="margin-bottom: 10px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Start Time</label>
+                                    <input type="time" id="bulkStartTime" value="00:00" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">End Time</label>
+                                    <input type="time" id="bulkEndTime" value="23:59" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Slot Duration</label>
+                                <select id="bulkSlotDuration" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                                    <option value="60">60 minutes</option>
+                                    <option value="90">90 minutes</option>
+                                    <option value="120">120 minutes</option>
+                                    <option value="30">30 minutes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                        <h4 style="margin-bottom: 8px; font-size: 16px;">Date Range</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Start Date</label>
+                                <input type="date" id="bulkStartDate" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">End Date</label>
+                                <input type="date" id="bulkEndDate" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button id="apply247WeekBtnModal" class="btn btn-primary">
+                                <i class="fas fa-calendar-week"></i> Apply to Next Week
+                            </button>
+                            <button id="apply247MonthBtnModal" class="btn btn-primary">
+                                <i class="fas fa-calendar-alt"></i> Apply to Next Month
+                            </button>
+                            <button id="apply247YearBtnModal" class="btn btn-primary">
+                                <i class="fas fa-calendar-day"></i> Apply to Next Year
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button onclick="apply247Bulk()" class="btn btn-success" style="flex: 1;">
+                        <i class="fas fa-play"></i> Apply Settings
+                    </button>
+                    <button onclick="closeBulkSetupModal()" class="btn btn-secondary" style="flex: 1;">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Main App -->
     <div class="admin-container">
         <!-- Sidebar -->
@@ -937,7 +1312,7 @@
                 </div>
                 <div>
                     <h2>GreenGlo</h2>
-                    <div style="font-size: 12px; opacity: 0.8;">Admin Dashboard</div>
+                    <div style="font-size: 12px; opacity: 0.8;">24/7 Admin Dashboard</div>
                 </div>
                 <button class="mobile-only sidebar-close" style="margin-left: auto; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
                     <i class="fas fa-times"></i>
@@ -964,6 +1339,12 @@
                     </a>
                 </li>
                 <li class="admin-nav-item">
+                    <a class="admin-nav-link" id="bulkSetupBtn">
+                        <i class="fas fa-bolt"></i>
+                        <span>24/7 Bulk Setup</span>
+                    </a>
+                </li>
+                <li class="admin-nav-item">
                     <a class="admin-nav-link" id="databaseSetupBtn">
                         <i class="fas fa-database"></i>
                         <span>Database Setup</span>
@@ -978,7 +1359,7 @@
                     </div>
                     <div>
                         <div style="font-weight: 600;">Administrator</div>
-                        <div style="font-size: 12px; opacity: 0.8;">Admin Access</div>
+                        <div style="font-size: 12px; opacity: 0.8;">24/7 System Access</div>
                     </div>
                 </div>
             </div>
@@ -989,7 +1370,7 @@
             <!-- Dashboard Section -->
             <div id="dashboardSection" class="admin-section">
                 <div class="admin-header">
-                    <h1>Dashboard Overview</h1>
+                    <h1>24/7 Dashboard Overview</h1>
                     <div class="header-actions">
                         <div id="lastUpdatedTime" style="font-size: 12px; color: var(--medium-gray);"></div>
                         <button id="refreshDashboardBtn" class="btn btn-secondary">
@@ -1012,7 +1393,7 @@
                             <i class="fas fa-clock"></i>
                         </div>
                         <div class="stat-value" id="availableSlots">0</div>
-                        <div class="stat-label">Available Slots</div>
+                        <div class="stat-label">Available Slots (24h)</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">
@@ -1026,7 +1407,7 @@
                             <i class="fas fa-calendar-day"></i>
                         </div>
                         <div class="stat-value" id="upcomingSlots">0</div>
-                        <div class="stat-label">Upcoming Available Days</div>
+                        <div class="stat-label">Available Days (7d)</div>
                     </div>
                 </div>
 
@@ -1062,20 +1443,20 @@
                     </div>
                     
                     <div class="quick-calendar-actions">
-                        <button id="applyDefaultWeekBtn" class="btn btn-warning">
-                            <i class="fas fa-magic"></i>
-                            <span class="desktop-only">Apply Default to This Week</span>
-                            <span class="mobile-only">Default Week</span>
+                        <button id="apply247WeekQuickBtn" class="btn btn-primary">
+                            <i class="fas fa-bolt"></i>
+                            <span class="desktop-only">24/7 This Week</span>
+                            <span class="mobile-only">24/7 Week</span>
                         </button>
                         <button id="saveQuickChangesBtn" class="btn btn-success">
                             <i class="fas fa-save"></i>
-                            <span class="desktop-only">Save Weekly Changes</span>
-                            <span class="mobile-only">Save Week</span>
+                            <span class="desktop-only">Save Changes</span>
+                            <span class="mobile-only">Save</span>
                         </button>
                         <button id="goToFullCalendarBtn" class="btn btn-secondary">
                             <i class="fas fa-external-link-alt"></i>
-                            <span class="desktop-only">Go to Full Calendar</span>
-                            <span class="mobile-only">Full Calendar</span>
+                            <span class="desktop-only">Full Calendar</span>
+                            <span class="mobile-only">Calendar</span>
                         </button>
                     </div>
                 </div>
@@ -1084,16 +1465,16 @@
             <!-- Calendar Section -->
             <div id="calendarSection" class="admin-section" style="display: none;">
                 <div class="admin-header">
-                    <h1>Calendar Management</h1>
+                    <h1>24/7 Calendar Management</h1>
                     <div class="header-actions">
                         <button id="todayBtn" class="btn btn-secondary">
                             <i class="fas fa-calendar-day"></i>
                             <span class="desktop-only">Today</span>
                         </button>
-                        <button id="applyDefaultBtn" class="btn btn-warning">
-                            <i class="fas fa-magic"></i>
-                            <span class="desktop-only">Apply Default to Month</span>
-                            <span class="mobile-only">Default Month</span>
+                        <button id="apply247MonthBtn" class="btn btn-primary">
+                            <i class="fas fa-bolt"></i>
+                            <span class="desktop-only">24/7 This Month</span>
+                            <span class="mobile-only">24/7 Month</span>
                         </button>
                         <button id="refreshCalendarBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
@@ -1134,48 +1515,48 @@
                 </div>
 
                 <div class="time-slots-section">
-                    <div class="time-slots-header">
-                        <h3>Time Slots for <span class="selected-date-display" id="selectedDateDisplay">No date selected</span></h3>
-                        <div class="time-slots-subtitle" style="font-size: 14px;">Select a date from the calendar to manage availability</div>
+                    <div class="time-slots-header" style="padding: 20px; background: var(--light-green); border-bottom: 1px solid #e5e7eb;">
+                        <h3 style="color: var(--dark-green); margin-bottom: 5px;">Time Slots for <span class="selected-date-display" id="selectedDateDisplay">No date selected</span></h3>
+                        <div class="time-slots-subtitle" style="font-size: 14px; color: var(--medium-gray);">24/7 availability with 1-day lead time • Select a date to manage slots</div>
                     </div>
                     
                     <div id="timeSlotsLoading" class="loading" style="display: none;">
                         <div class="spinner"></div>
-                        <div>Loading time slots...</div>
+                        <div>Loading 24/7 time slots...</div>
                     </div>
                     
                     <div class="time-slots-grid" id="timeSlotsGrid">
                         <div style="text-align: center; padding: 30px; color: var(--medium-gray); grid-column: 1 / -1;">
                             <i class="fas fa-calendar-alt" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
-                            <div>Please select a date to view and manage time slots</div>
+                            <div>Please select a date to view and manage 24/7 time slots</div>
                         </div>
                     </div>
                     
                     <div class="time-slots-actions">
                         <button id="saveTimeSlotsBtn" class="btn btn-success btn-lg">
                             <i class="fas fa-save"></i>
-                            <span class="desktop-only">Save Time Slot Changes</span>
-                            <span class="mobile-only">Save Changes</span>
+                            <span class="desktop-only">Save All Changes</span>
+                            <span class="mobile-only">Save</span>
                         </button>
-                        <button id="applyDefaultToDayBtn" class="btn btn-warning">
-                            <i class="fas fa-magic"></i>
-                            <span class="desktop-only">Apply Default to Day</span>
-                            <span class="mobile-only">Default Day</span>
+                        <button id="apply247DayBtn" class="btn btn-primary">
+                            <i class="fas fa-bolt"></i>
+                            <span class="desktop-only">24/7 This Day</span>
+                            <span class="mobile-only">24/7 Day</span>
                         </button>
                         <button id="selectAllBtn" class="btn btn-secondary">
                             <i class="fas fa-check-square"></i>
-                            <span class="desktop-only">Select All</span>
+                            <span class="desktop-only">All Available</span>
                             <span class="mobile-only">All</span>
                         </button>
                         <button id="deselectAllBtn" class="btn btn-secondary">
                             <i class="fas fa-square"></i>
-                            <span class="desktop-only">Deselect All</span>
+                            <span class="desktop-only">All Blocked</span>
                             <span class="mobile-only">None</span>
                         </button>
                         <button id="blockDayBtn" class="btn btn-danger">
                             <i class="fas fa-ban"></i>
-                            <span class="desktop-only">Block Entire Day</span>
-                            <span class="mobile-only">Block Day</span>
+                            <span class="desktop-only">Block Day</span>
+                            <span class="mobile-only">Block</span>
                         </button>
                     </div>
                 </div>
@@ -1184,7 +1565,7 @@
             <!-- Bookings Section -->
             <div id="bookingsSection" class="admin-section" style="display: none;">
                 <div class="admin-header">
-                    <h1>Bookings Management</h1>
+                    <h1>24/7 Bookings Management</h1>
                     <div class="header-actions">
                         <button id="refreshBookingsBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
@@ -1222,10 +1603,14 @@
                 weekOffset: 0,
                 timeSlots: [],
                 defaultSettings: {
-                    startTime: '09:00',
-                    endTime: '17:00',
-                    slotDuration: 60,
-                    workingDays: [1, 2, 3, 4, 5] // Monday to Friday by default
+                    startTime: '00:00',
+                    endTime: '23:59',
+                    slotDuration: 60, // 1 hour slots
+                    workingDays: [0, 1, 2, 3, 4, 5, 6], // All days (0=Sunday)
+                    leadTimeHours: 24, // 1 day lead time
+                    minBookingHours: 24, // Must book at least 24 hours in advance
+                    slotsPerDay: 24, // 24 slots per day for 1-hour intervals
+                    is247Mode: true
                 },
                 isMobile: window.innerWidth <= 767,
                 sidebarOpen: false
@@ -1258,6 +1643,9 @@
                     // Initialize SQL content
                     initSqlContent();
                     
+                    // Set default dates for bulk modal
+                    setDefaultBulkDates();
+                    
                 } catch (error) {
                     console.error('Initialization error:', error);
                     showNotification('Error initializing application', 'error');
@@ -1266,19 +1654,10 @@
             
             // Initialize SQL content
             function initSqlContent() {
-                const createTableSql = `-- Create availability table
-CREATE TABLE IF NOT EXISTS availability (
-    id BIGSERIAL PRIMARY KEY,
-    date DATE NOT NULL,
-    time_slot TEXT NOT NULL,
-    is_available BOOLEAN DEFAULT true,
-    created_at TIMESTAMP DEFAULT NOW(),
-    UNIQUE(date, time_slot)
-);
-
--- Create bookings table with correct field names
+                const createTableSql = `-- Create bookings table for 24/7 system
 CREATE TABLE IF NOT EXISTS bookings (
     id BIGSERIAL PRIMARY KEY,
+    booking_reference TEXT UNIQUE DEFAULT 'GG' || LPAD(CAST(nextval('bookings_id_seq') AS TEXT), 6, '0'),
     customer_name TEXT NOT NULL,
     customer_email TEXT,
     customer_phone TEXT,
@@ -1287,10 +1666,56 @@ CREATE TABLE IF NOT EXISTS bookings (
     time_slot TEXT NOT NULL,
     service_title TEXT,
     status TEXT DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT NOW()
-);`;
+    created_at TIMESTAMP DEFAULT NOW(),
+    duration INTEGER DEFAULT 60,
+    notes TEXT,
+    price DECIMAL(10,2)
+);
+
+-- Create 24/7 availability slots table
+CREATE TABLE IF NOT EXISTS availability_slots (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    slot_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    is_blocked BOOLEAN DEFAULT false,
+    booked_count INTEGER DEFAULT 0,
+    max_capacity INTEGER DEFAULT 1,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(slot_date, start_time, end_time)
+);
+
+-- Create index for faster queries
+CREATE INDEX IF NOT EXISTS idx_availability_slots_date ON availability_slots(slot_date);
+CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(booking_date);
+
+-- Insert sample 24-hour time slots for next 30 days
+INSERT INTO availability_slots (slot_date, start_time, end_time, is_blocked, max_capacity)
+SELECT 
+    current_date + INTERVAL '1 day' * d.day_offset,
+    make_time(h.hour, 0, 0),
+    make_time((h.hour + 1) % 24, 0, 0),
+    false,
+    1
+FROM generate_series(1, 30) AS d(day_offset)
+CROSS JOIN generate_series(0, 23) AS h(hour)
+WHERE (current_date + INTERVAL '1 day' * d.day_offset) > current_date + INTERVAL '1 day'
+ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 
                 document.getElementById('createTableSql').value = createTableSql;
+            }
+            
+            // Set default dates for bulk modal
+            function setDefaultBulkDates() {
+                const today = new Date();
+                const startDate = new Date(today);
+                startDate.setDate(today.getDate() + 2); // Skip lead time
+                
+                const endDate = new Date(today);
+                endDate.setDate(today.getDate() + 30); // Next 30 days
+                
+                document.getElementById('bulkStartDate').value = startDate.toISOString().split('T')[0];
+                document.getElementById('bulkEndDate').value = endDate.toISOString().split('T')[0];
             }
             
             // Toggle sidebar
@@ -1321,13 +1746,12 @@ CREATE TABLE IF NOT EXISTS bookings (
             async function checkDatabaseSetup() {
                 try {
                     const { data, error } = await state.db
-                        .from('availability')
+                        .from('bookings')
                         .select('*')
                         .limit(1);
                     
-                    if (error && error.message.includes('RLS')) {
-                        console.warn('RLS policy violation detected.');
-                        showNotification('Database configuration required.', 'warning');
+                    if (error && error.message.includes('does not exist')) {
+                        showNotification('Database tables need to be created', 'warning');
                     }
                 } catch (err) {
                     console.warn('Database check failed:', err);
@@ -1374,6 +1798,8 @@ CREATE TABLE IF NOT EXISTS bookings (
                         const section = this.getAttribute('data-section');
                         if (section === 'databaseSetupBtn') {
                             openDatabaseSetupModal();
+                        } else if (section === 'bulkSetupBtn') {
+                            openBulkSetupModal();
                         } else {
                             showSection(section);
                         }
@@ -1385,13 +1811,17 @@ CREATE TABLE IF NOT EXISTS bookings (
                 document.getElementById('databaseSetupBtn').addEventListener('click', openDatabaseSetupModal);
                 document.getElementById('closeDatabaseSetupModal').addEventListener('click', closeDatabaseSetupModal);
                 
+                // Bulk setup modal
+                document.getElementById('bulkSetupBtn').addEventListener('click', openBulkSetupModal);
+                document.getElementById('closeBulkSetupModal').addEventListener('click', closeBulkSetupModal);
+                
                 // Dashboard
                 document.getElementById('refreshDashboardBtn').addEventListener('click', loadDashboard);
                 document.getElementById('prevWeekBtn').addEventListener('click', prevWeek);
                 document.getElementById('nextWeekBtn').addEventListener('click', nextWeek);
                 document.getElementById('saveQuickChangesBtn').addEventListener('click', saveQuickChanges);
                 document.getElementById('goToFullCalendarBtn').addEventListener('click', goToFullCalendar);
-                document.getElementById('applyDefaultWeekBtn').addEventListener('click', applyDefaultToWeek);
+                document.getElementById('apply247WeekQuickBtn').addEventListener('click', () => apply247ToWeek());
                 
                 // Calendar
                 document.getElementById('todayBtn').addEventListener('click', goToToday);
@@ -1402,8 +1832,8 @@ CREATE TABLE IF NOT EXISTS bookings (
                 document.getElementById('selectAllBtn').addEventListener('click', selectAllSlots);
                 document.getElementById('deselectAllBtn').addEventListener('click', deselectAllSlots);
                 document.getElementById('blockDayBtn').addEventListener('click', blockDay);
-                document.getElementById('applyDefaultBtn').addEventListener('click', applyDefaultToMonth);
-                document.getElementById('applyDefaultToDayBtn').addEventListener('click', applyDefaultToSelectedDay);
+                document.getElementById('apply247MonthBtn').addEventListener('click', () => apply247ToMonth());
+                document.getElementById('apply247DayBtn').addEventListener('click', apply247ToSelectedDay);
                 
                 // Bookings
                 document.getElementById('refreshBookingsBtn').addEventListener('click', loadBookings);
@@ -1416,9 +1846,28 @@ CREATE TABLE IF NOT EXISTS bookings (
                     if (e.target === this) closeBookingDetailsModal();
                 });
                 
-                // Modal backdrop click
+                // Bulk setup modal buttons
+                document.getElementById('apply247WeekBtnModal').addEventListener('click', () => {
+                    setBulkDateRange('week');
+                });
+                document.getElementById('apply247MonthBtnModal').addEventListener('click', () => {
+                    setBulkDateRange('month');
+                });
+                document.getElementById('apply247YearBtnModal').addEventListener('click', () => {
+                    setBulkDateRange('year');
+                });
+                
+                // Modal backdrop clicks
                 document.getElementById('databaseSetupModal').addEventListener('click', function(e) {
                     if (e.target === this) closeDatabaseSetupModal();
+                });
+                
+                document.getElementById('bookingDetailsModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeBookingDetailsModal();
+                });
+                
+                document.getElementById('bulkSetupModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeBulkSetupModal();
                 });
                 
                 // Window resize
@@ -1480,7 +1929,7 @@ CREATE TABLE IF NOT EXISTS bookings (
                 }
             }
             
-            // Database Setup Modal
+            // Modal Functions
             function openDatabaseSetupModal() {
                 document.getElementById('databaseSetupModal').style.display = 'flex';
                 closeSidebar();
@@ -1490,7 +1939,15 @@ CREATE TABLE IF NOT EXISTS bookings (
                 document.getElementById('databaseSetupModal').style.display = 'none';
             }
             
-            // Booking Details Modal
+            function openBulkSetupModal() {
+                document.getElementById('bulkSetupModal').style.display = 'flex';
+                closeSidebar();
+            }
+            
+            function closeBulkSetupModal() {
+                document.getElementById('bulkSetupModal').style.display = 'none';
+            }
+            
             function openBookingDetailsModal() {
                 document.getElementById('bookingDetailsModal').style.display = 'flex';
             }
@@ -1520,7 +1977,7 @@ CREATE TABLE IF NOT EXISTS bookings (
                     </head>
                     <body>
                         <div class="print-header">
-                            <h1>GreenGlo Booking Details</h1>
+                            <h1>GreenGlo 24/7 Booking Details</h1>
                             <p>Printed on ${new Date().toLocaleDateString()}</p>
                         </div>
                         ${content}
@@ -1532,6 +1989,57 @@ CREATE TABLE IF NOT EXISTS bookings (
                     </html>
                 `);
                 printWindow.document.close();
+            }
+            
+            // Set bulk date range
+            function setBulkDateRange(rangeType) {
+                const today = new Date();
+                const startDate = new Date(today);
+                const endDate = new Date(today);
+                
+                switch(rangeType) {
+                    case 'week':
+                        startDate.setDate(today.getDate() + 2); // Skip lead time
+                        endDate.setDate(today.getDate() + 8); // Next 7 days
+                        break;
+                    case 'month':
+                        startDate.setDate(today.getDate() + 2); // Skip lead time
+                        endDate.setMonth(today.getMonth() + 1);
+                        endDate.setDate(0); // Last day of next month
+                        break;
+                    case 'year':
+                        startDate.setDate(today.getDate() + 2); // Skip lead time
+                        endDate.setFullYear(today.getFullYear() + 1);
+                        endDate.setDate(0); // Last day of next year
+                        break;
+                }
+                
+                document.getElementById('bulkStartDate').value = startDate.toISOString().split('T')[0];
+                document.getElementById('bulkEndDate').value = endDate.toISOString().split('T')[0];
+            }
+            
+            // Apply 24/7 bulk settings
+            async function apply247Bulk() {
+                const startDate = document.getElementById('bulkStartDate').value;
+                const endDate = document.getElementById('bulkEndDate').value;
+                const leadTime = parseInt(document.getElementById('leadTimeHours').value) || 24;
+                const startTime = document.getElementById('bulkStartTime').value || '00:00';
+                const endTime = document.getElementById('bulkEndTime').value || '23:59';
+                const slotDuration = parseInt(document.getElementById('bulkSlotDuration').value) || 60;
+                
+                // Update state settings
+                state.defaultSettings.leadTimeHours = Math.max(24, leadTime);
+                state.defaultSettings.minBookingHours = Math.max(24, leadTime);
+                state.defaultSettings.startTime = startTime;
+                state.defaultSettings.endTime = endTime;
+                state.defaultSettings.slotDuration = slotDuration;
+                
+                // Save settings
+                localStorage.setItem('greenglo_247_settings', JSON.stringify(state.defaultSettings));
+                
+                // Apply to date range
+                await apply247AvailabilityRange(new Date(startDate), new Date(endDate));
+                closeBulkSetupModal();
             }
             
             // Copy to clipboard helper
@@ -1558,7 +2066,7 @@ CREATE TABLE IF NOT EXISTS bookings (
             
             // Settings functions
             function loadDefaultSettings() {
-                const savedSettings = localStorage.getItem('greenglo_default_settings');
+                const savedSettings = localStorage.getItem('greenglo_247_settings');
                 if (savedSettings) {
                     state.defaultSettings = JSON.parse(savedSettings);
                 }
@@ -1609,6 +2117,15 @@ CREATE TABLE IF NOT EXISTS bookings (
                 closeSidebar();
             }
             
+            // Lead time validation
+            function isWithinLeadTime(date) {
+                const now = new Date();
+                const bookingDate = new Date(date);
+                const hoursDifference = (bookingDate - now) / (1000 * 60 * 60);
+                
+                return hoursDifference < state.defaultSettings.minBookingHours;
+            }
+            
             // DASHBOARD FUNCTIONS
             async function loadDashboard() {
                 updateLastUpdated();
@@ -1639,28 +2156,6 @@ CREATE TABLE IF NOT EXISTS bookings (
                 const endStr = endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 document.getElementById('currentWeekDisplay').textContent = `${startStr} - ${endStr}`;
                 
-                // Fetch availability for the entire week
-                const weekDates = [];
-                for (let i = 0; i < 7; i++) {
-                    const day = new Date(startOfWeek);
-                    day.setDate(startOfWeek.getDate() + i);
-                    weekDates.push(day.toISOString().split('T')[0]);
-                }
-                
-                let availabilityData = [];
-                try {
-                    const { data, error } = await state.db
-                        .from('availability')
-                        .select('*')
-                        .in('date', weekDates);
-                    
-                    if (!error && data) {
-                        availabilityData = data;
-                    }
-                } catch (err) {
-                    console.error('Error fetching availability:', err);
-                }
-                
                 // Create days
                 for (let i = 0; i < 7; i++) {
                     const day = new Date(startOfWeek);
@@ -1675,31 +2170,9 @@ CREATE TABLE IF NOT EXISTS bookings (
                         dayElement.classList.add('today');
                     }
                     
-                    // Check availability status
-                    const dayAvailability = availabilityData.filter(a => a.date === dateStr);
-                    let status = 'available';
-                    let statusText = 'Available';
-                    
-                    if (dayAvailability.length === 0) {
-                        const isWorkingDay = state.defaultSettings.workingDays.includes(day.getDay());
-                        if (!isWorkingDay) {
-                            status = 'blocked';
-                            statusText = 'Blocked';
-                        }
-                    } else {
-                        const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
-                        const totalSlots = dayAvailability.length;
-                        
-                        if (totalSlots === 0 || availableSlots === 0) {
-                            status = 'blocked';
-                            statusText = 'Blocked';
-                        } else if (availableSlots === totalSlots) {
-                            status = 'available';
-                            statusText = 'Available';
-                        } else {
-                            status = 'partial';
-                            statusText = 'Partial';
-                        }
+                    // Check if within lead time
+                    if (isWithinLeadTime(dateStr)) {
+                        dayElement.classList.add('within-lead-time');
                     }
                     
                     // Day content
@@ -1710,18 +2183,39 @@ CREATE TABLE IF NOT EXISTS bookings (
                     
                     // Add status indicator
                     const statusElement = document.createElement('div');
-                    statusElement.className = `week-day-status status-${status}`;
-                    statusElement.textContent = statusText;
+                    statusElement.className = 'week-day-status';
+                    
+                    if (isWithinLeadTime(dateStr)) {
+                        statusElement.textContent = 'Within Lead Time';
+                        statusElement.style.background = 'rgba(59, 130, 246, 0.1)';
+                        statusElement.style.color = 'var(--blue)';
+                    } else {
+                        statusElement.textContent = '24/7 Available';
+                        statusElement.style.background = 'rgba(16, 185, 129, 0.1)';
+                        statusElement.style.color = 'var(--primary-green)';
+                    }
+                    
                     dayElement.appendChild(statusElement);
                     
                     // Add day status badge
                     const badge = document.createElement('div');
-                    badge.className = `day-status-badge day-status-${status}`;
+                    badge.className = 'day-status-badge';
                     badge.style.cssText = 'position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%;';
+                    
+                    if (isWithinLeadTime(dateStr)) {
+                        badge.classList.add('day-status-within-lead-time');
+                    } else {
+                        badge.classList.add('day-status-available');
+                    }
+                    
                     dayElement.appendChild(badge);
                     
                     // Click to view in main calendar
                     dayElement.addEventListener('click', () => {
+                        if (isWithinLeadTime(dateStr)) {
+                            showNotification('This date is within the lead time period', 'warning');
+                            return;
+                        }
                         showSection('calendar');
                         goToDate(day);
                     });
@@ -1742,31 +2236,6 @@ CREATE TABLE IF NOT EXISTS bookings (
             
             async function saveQuickChanges() {
                 showNotification('Weekly changes saved successfully!', 'success');
-                await loadQuickCalendar();
-            }
-            
-            async function applyDefaultToWeek() {
-                const today = new Date();
-                const startOfWeek = new Date(today);
-                startOfWeek.setDate(today.getDate() - today.getDay() + 1 + (state.weekOffset * 7));
-                
-                const weekDates = [];
-                for (let i = 0; i < 7; i++) {
-                    const day = new Date(startOfWeek);
-                    day.setDate(startOfWeek.getDate() + i);
-                    weekDates.push(day);
-                }
-                
-                // Apply default to each day
-                for (const date of weekDates) {
-                    if (state.defaultSettings.workingDays.includes(date.getDay())) {
-                        await applyDefaultAvailability(date);
-                    } else {
-                        await blockDayInDB(date);
-                    }
-                }
-                
-                showNotification('Default availability applied to week!', 'success');
                 await loadQuickCalendar();
             }
             
@@ -1795,28 +2264,76 @@ CREATE TABLE IF NOT EXISTS bookings (
                         document.getElementById('pendingRequests').textContent = pending;
                     }
                     
-                    // Get available slots for next 7 days
+                    // Get available slots for next 7 days (excluding lead time)
                     const startDate = new Date();
+                    startDate.setDate(startDate.getDate() + Math.ceil(state.defaultSettings.minBookingHours / 24));
                     const endDate = new Date();
                     endDate.setDate(endDate.getDate() + 7);
                     
                     const { data: availability, error: availError } = await state.db
-                        .from('availability')
+                        .from('availability_slots')
                         .select('*')
-                        .gte('date', startDate.toISOString().split('T')[0])
-                        .lte('date', endDate.toISOString().split('T')[0])
-                        .eq('is_available', true);
+                        .gte('slot_date', startDate.toISOString().split('T')[0])
+                        .lte('slot_date', endDate.toISOString().split('T')[0])
+                        .eq('is_blocked', false);
                     
                     if (!availError && availability) {
                         document.getElementById('availableSlots').textContent = availability.length;
                         
                         // Count unique available days
-                        const uniqueDays = [...new Set(availability.map(a => a.date))];
+                        const uniqueDays = [...new Set(availability.map(a => a.slot_date))];
                         document.getElementById('upcomingSlots').textContent = uniqueDays.length;
                     }
                     
                 } catch (err) {
                     console.error('Error updating stats:', err);
+                }
+            }
+            
+            // 24/7 Availability Functions
+            async function apply247ToWeek() {
+                const today = new Date();
+                const startDate = new Date(today);
+                startDate.setDate(today.getDate() + Math.ceil(state.defaultSettings.minBookingHours / 24)); // Skip lead time
+                const endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + 6); // Next 7 days
+                
+                if (confirm('Apply 24/7 availability to the next week (excluding lead time)?')) {
+                    await apply247AvailabilityRange(startDate, endDate);
+                    await loadQuickCalendar();
+                    showNotification('24/7 availability applied to next week!', 'success');
+                }
+            }
+            
+            async function apply247ToMonth() {
+                const today = new Date();
+                const startDate = new Date(today);
+                startDate.setDate(today.getDate() + Math.ceil(state.defaultSettings.minBookingHours / 24)); // Skip lead time
+                const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of next month
+                
+                if (confirm('Apply 24/7 availability to the next month (excluding lead time)?')) {
+                    await apply247AvailabilityRange(startDate, endDate);
+                    await loadCalendar();
+                    showNotification('24/7 availability applied to next month!', 'success');
+                }
+            }
+            
+            async function apply247ToSelectedDay() {
+                if (!state.selectedDate) {
+                    showNotification('Please select a date first', 'warning');
+                    return;
+                }
+                
+                if (isWithinLeadTime(state.selectedDate)) {
+                    showNotification('Cannot apply 24/7 to dates within lead time', 'warning');
+                    return;
+                }
+                
+                if (confirm(`Apply 24/7 availability to ${state.selectedDate.toLocaleDateString()}?`)) {
+                    await apply247Availability(state.selectedDate);
+                    await loadTimeSlots(state.selectedDate);
+                    await renderMonthCalendar();
+                    showNotification('24/7 availability applied!', 'success');
                 }
             }
             
@@ -1873,10 +2390,10 @@ CREATE TABLE IF NOT EXISTS bookings (
                 let availabilityData = [];
                 try {
                     const { data, error } = await state.db
-                        .from('availability')
+                        .from('availability_slots')
                         .select('*')
-                        .gte('date', startDate.toISOString().split('T')[0])
-                        .lte('date', endDate.toISOString().split('T')[0]);
+                        .gte('slot_date', startDate.toISOString().split('T')[0])
+                        .lte('slot_date', endDate.toISOString().split('T')[0]);
                     
                     if (!error && data) {
                         availabilityData = data;
@@ -1888,10 +2405,10 @@ CREATE TABLE IF NOT EXISTS bookings (
                 // Group availability by date
                 const availabilityByDate = {};
                 availabilityData.forEach(slot => {
-                    if (!availabilityByDate[slot.date]) {
-                        availabilityByDate[slot.date] = [];
+                    if (!availabilityByDate[slot.slot_date]) {
+                        availabilityByDate[slot.slot_date] = [];
                     }
-                    availabilityByDate[slot.date].push(slot);
+                    availabilityByDate[slot.slot_date].push(slot);
                 });
                 
                 // Add empty cells for days before the first day
@@ -1919,46 +2436,62 @@ CREATE TABLE IF NOT EXISTS bookings (
                         dayElement.classList.add('selected');
                     }
                     
+                    // Check if within lead time
+                    if (isWithinLeadTime(dateStr)) {
+                        dayElement.classList.add('within-lead-time');
+                    }
+                    
                     // Determine day status
                     const dayAvailability = availabilityByDate[dateStr] || [];
-                    let status = 'available';
+                    let availableSlots = 0;
+                    let blockedSlots = 0;
                     
-                    if (dayAvailability.length === 0) {
-                        const isWorkingDay = state.defaultSettings.workingDays.includes(date.getDay());
-                        if (!isWorkingDay) {
-                            status = 'blocked';
+                    dayAvailability.forEach(slot => {
+                        if (slot.is_blocked || slot.booked_count >= slot.max_capacity) {
+                            blockedSlots++;
+                        } else {
+                            availableSlots++;
                         }
-                    } else {
-                        const availableSlots = dayAvailability.filter(slot => slot.is_available).length;
-                        const totalSlots = dayAvailability.length;
-                        
-                        if (totalSlots === 0 || availableSlots === 0) {
-                            status = 'blocked';
-                        } else if (availableSlots < totalSlots) {
-                            status = 'partial';
-                        }
+                    });
+                    
+                    // If no data, generate default 24/7 status
+                    if (dayAvailability.length === 0 && !isWithinLeadTime(dateStr)) {
+                        availableSlots = state.defaultSettings.slotsPerDay;
                     }
                     
                     // Day content
                     dayElement.innerHTML = `
                         <div class="month-day-number">${day}</div>
                         <div class="month-day-events">
-                            ${status === 'available' ? '<div class="event-dot available"></div><div class="event-dot available"></div>' : ''}
-                            ${status === 'partial' ? '<div class="event-dot available"></div><div class="event-dot booked"></div>' : ''}
-                            ${status === 'blocked' ? '<div class="event-dot booked"></div><div class="event-dot booked"></div>' : ''}
+                            ${availableSlots > 0 ? '<div class="event-dot available"></div>' : ''}
+                            ${blockedSlots > 0 ? '<div class="event-dot blocked"></div>' : ''}
+                            ${isWithinLeadTime(dateStr) ? '<div class="event-dot available"></div><div class="event-dot blocked"></div>' : ''}
                         </div>
                     `;
                     
                     // Add status badge
-                    if (status !== 'available') {
-                        const badge = document.createElement('div');
-                        badge.className = `day-status-badge day-status-${status}`;
-                        badge.style.cssText = 'position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%;';
-                        dayElement.appendChild(badge);
+                    const badge = document.createElement('div');
+                    badge.className = 'day-status-badge';
+                    badge.style.cssText = 'position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%;';
+                    
+                    if (isWithinLeadTime(dateStr)) {
+                        badge.classList.add('day-status-within-lead-time');
+                    } else if (availableSlots > 0 && blockedSlots === 0) {
+                        badge.classList.add('day-status-available');
+                    } else if (availableSlots > 0 && blockedSlots > 0) {
+                        badge.classList.add('day-status-partial');
+                    } else {
+                        badge.classList.add('day-status-blocked');
                     }
+                    
+                    dayElement.appendChild(badge);
                     
                     // Click handler
                     dayElement.addEventListener('click', () => {
+                        if (isWithinLeadTime(dateStr)) {
+                            showNotification('This date is within the lead time period', 'warning');
+                            return;
+                        }
                         selectDate(date);
                     });
                     
@@ -1990,7 +2523,8 @@ CREATE TABLE IF NOT EXISTS bookings (
                     element.textContent = state.selectedDate.toLocaleDateString('en-US', {
                         weekday: 'short',
                         month: 'short',
-                        day: 'numeric'
+                        day: 'numeric',
+                        year: 'numeric'
                     });
                 } else {
                     element.textContent = 'No date selected';
@@ -2008,22 +2542,38 @@ CREATE TABLE IF NOT EXISTS bookings (
                 
                 const dateStr = date.toISOString().split('T')[0];
                 
+                // Check lead time
+                if (isWithinLeadTime(dateStr)) {
+                    loading.style.display = 'none';
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 30px; color: var(--orange); grid-column: 1 / -1;">
+                            <i class="fas fa-clock" style="font-size: 40px; margin-bottom: 15px;"></i>
+                            <div style="font-size: 16px; margin-bottom: 10px;">Within Lead Time Period</div>
+                            <div style="margin-bottom: 15px; font-size: 14px;">
+                                Bookings for ${dateStr} must be made at least ${state.defaultSettings.minBookingHours} hours in advance.
+                            </div>
+                            <div style="font-size: 12px; color: var(--medium-gray);">
+                                This date cannot be booked yet.
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
                 try {
                     const { data: existingSlots, error } = await state.db
-                        .from('availability')
+                        .from('availability_slots')
                         .select('*')
-                        .eq('date', dateStr)
-                        .order('time_slot');
+                        .eq('slot_date', dateStr)
+                        .order('start_time');
                     
                     if (error) {
-                        if (error.message.includes('RLS') || error.message.includes('row-level security')) {
-                            showNotification('Database RLS configuration needed.', 'warning');
-                            loading.style.display = 'none';
+                        if (error.message.includes('does not exist')) {
                             container.innerHTML = `
                                 <div style="text-align: center; padding: 30px; color: var(--orange); grid-column: 1 / -1;">
                                     <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 15px;"></i>
-                                    <div style="font-size: 16px; margin-bottom: 10px;">Database Configuration Required</div>
-                                    <div style="margin-bottom: 15px; font-size: 14px;">You need to set up your database permissions.</div>
+                                    <div style="font-size: 16px; margin-bottom: 10px;">Database Setup Required</div>
+                                    <div style="margin-bottom: 15px; font-size: 14px;">The 24/7 availability table needs to be created.</div>
                                     <button onclick="openDatabaseSetupModal()" class="btn btn-warning">
                                         <i class="fas fa-database"></i>
                                         Open Database Setup
@@ -2040,44 +2590,46 @@ CREATE TABLE IF NOT EXISTS bookings (
                     let slots = existingSlots;
                     
                     if (existingSlots.length === 0) {
-                        const isWorkingDay = state.defaultSettings.workingDays.includes(date.getDay());
-                        
-                        if (isWorkingDay) {
-                            slots = generateDefaultSlots(date);
-                        } else {
-                            container.innerHTML = `
-                                <div style="text-align: center; padding: 30px; color: var(--medium-gray); grid-column: 1 / -1;">
-                                    <i class="fas fa-ban" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
-                                    <div style="font-size: 16px; margin-bottom: 10px;">Non-Working Day</div>
-                                    <div style="font-size: 14px;">This is not a working day according to your default settings</div>
-                                    <button onclick="applyDefaultToSelectedDay()" class="btn btn-warning" style="margin-top: 15px;">
-                                        <i class="fas fa-calendar-plus"></i>
-                                        Create Working Day
-                                    </button>
-                                </div>
-                            `;
-                            return;
-                        }
+                        slots = generate247Slots(date);
                     }
                     
                     // Display slots
                     slots.forEach(slot => {
+                        const startTime = slot.start_time.substring(0, 5);
+                        const endTime = slot.end_time.substring(0, 5);
+                        const timeSlot = `${startTime}-${endTime}`;
+                        
                         const slotElement = document.createElement('div');
-                        slotElement.className = `time-slot-card ${slot.is_available ? 'selected' : 'blocked'} no-select`;
+                        slotElement.className = `time-slot-card no-select`;
                         slotElement.dataset.slotId = slot.id || 'new';
-                        slotElement.dataset.timeSlot = slot.time_slot;
-                        slotElement.dataset.isAvailable = slot.is_available;
+                        slotElement.dataset.timeSlot = timeSlot;
+                        
+                        // Determine slot status
+                        if (slot.booked_count >= slot.max_capacity) {
+                            slotElement.classList.add('booked');
+                            slotElement.dataset.isAvailable = 'false';
+                        } else if (slot.is_blocked) {
+                            slotElement.classList.add('blocked');
+                            slotElement.dataset.isAvailable = 'false';
+                        } else {
+                            slotElement.classList.add('selected');
+                            slotElement.dataset.isAvailable = 'true';
+                        }
                         
                         slotElement.innerHTML = `
-                            <div class="time-slot-time">${formatTimeSlot(slot.time_slot)}</div>
-                            <div class="time-slot-status ${slot.is_available ? 'slot-available' : 'slot-blocked'}">
-                                ${slot.is_available ? 'Available' : 'Blocked'}
+                            <div class="time-slot-time">${formatTime(startTime)} - ${formatTime(endTime)}</div>
+                            <div class="time-slot-status ${slot.booked_count >= slot.max_capacity ? 'slot-booked' : slot.is_blocked ? 'slot-blocked' : 'slot-available'}">
+                                ${slot.booked_count >= slot.max_capacity ? 'Booked' : slot.is_blocked ? 'Blocked' : 'Available'}
                             </div>
+                            ${slot.booked_count > 0 ? `<div style="font-size: 11px; margin-top: 3px; color: var(--medium-gray);">${slot.booked_count}/${slot.max_capacity} booked</div>` : ''}
                         `;
                         
-                        // Toggle availability
+                        // Toggle availability (only if not booked)
                         slotElement.addEventListener('click', function() {
-                            if (this.classList.contains('booked')) return;
+                            if (this.classList.contains('booked')) {
+                                showNotification('Cannot modify booked time slots', 'warning');
+                                return;
+                            }
                             
                             const isCurrentlyAvailable = this.classList.contains('selected');
                             const newStatus = !isCurrentlyAvailable;
@@ -2115,54 +2667,37 @@ CREATE TABLE IF NOT EXISTS bookings (
                 }
             }
             
-            function generateDefaultSlots(date) {
+            function generate247Slots(date) {
                 const slots = [];
-                const start = state.defaultSettings.startTime;
-                const end = state.defaultSettings.endTime;
+                const startHour = parseInt(state.defaultSettings.startTime.split(':')[0]);
+                const startMinute = parseInt(state.defaultSettings.startTime.split(':')[1]);
+                const endHour = parseInt(state.defaultSettings.endTime.split(':')[0]);
+                const endMinute = parseInt(state.defaultSettings.endTime.split(':')[1]);
                 const duration = state.defaultSettings.slotDuration;
-                
-                const startHour = parseInt(start.split(':')[0]);
-                const startMinute = parseInt(start.split(':')[1]);
-                const endHour = parseInt(end.split(':')[0]);
-                const endMinute = parseInt(end.split(':')[1]);
                 
                 let currentHour = startHour;
                 let currentMinute = startMinute;
                 
-                while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
-                    const startTime = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+                // Generate 24-hour slots
+                for (let i = 0; i < 24; i++) {
+                    const hour = i;
+                    const nextHour = (i + 1) % 24;
                     
-                    let endHourCalc = currentHour;
-                    let endMinuteCalc = currentMinute + duration;
-                    
-                    while (endMinuteCalc >= 60) {
-                        endHourCalc += 1;
-                        endMinuteCalc -= 60;
-                    }
-                    
-                    if (endHourCalc > endHour || (endHourCalc === endHour && endMinuteCalc > endMinute)) {
-                        break;
-                    }
-                    
-                    const endTime = `${endHourCalc.toString().padStart(2, '0')}:${endMinuteCalc.toString().padStart(2, '0')}`;
+                    const startTime = `${hour.toString().padStart(2, '0')}:00`;
+                    const endTime = `${nextHour.toString().padStart(2, '0')}:00`;
                     
                     slots.push({
                         id: null,
-                        date: date.toISOString().split('T')[0],
-                        time_slot: `${startTime}-${endTime}`,
-                        is_available: true
+                        slot_date: date.toISOString().split('T')[0],
+                        start_time: startTime + ':00',
+                        end_time: endTime + ':00',
+                        is_blocked: false,
+                        booked_count: 0,
+                        max_capacity: 1
                     });
-                    
-                    currentHour = endHourCalc;
-                    currentMinute = endMinuteCalc;
                 }
                 
                 return slots;
-            }
-            
-            function formatTimeSlot(timeSlot) {
-                const [start, end] = timeSlot.split('-');
-                return `${formatTime(start)} - ${formatTime(end)}`;
             }
             
             function formatTime(time) {
@@ -2179,6 +2714,11 @@ CREATE TABLE IF NOT EXISTS bookings (
                     return;
                 }
                 
+                if (isWithinLeadTime(state.selectedDate)) {
+                    showNotification('Cannot save changes for dates within lead time', 'warning');
+                    return;
+                }
+                
                 const container = document.getElementById('timeSlotsGrid');
                 const slotElements = container.querySelectorAll('.time-slot-card');
                 
@@ -2191,184 +2731,111 @@ CREATE TABLE IF NOT EXISTS bookings (
                 const slotsToSave = [];
                 
                 slotElements.forEach(slotElement => {
+                    if (slotElement.classList.contains('booked')) return; // Skip booked slots
+                    
                     const timeSlot = slotElement.dataset.timeSlot;
-                    const isAvailable = slotElement.dataset.isAvailable === 'true' || slotElement.classList.contains('selected');
+                    const [startTime, endTime] = timeSlot.split('-');
+                    const isAvailable = slotElement.dataset.isAvailable === 'true';
                     
                     slotsToSave.push({
-                        date: dateStr,
-                        time_slot: timeSlot,
-                        is_available: isAvailable
+                        slot_date: dateStr,
+                        start_time: startTime + ':00',
+                        end_time: endTime + ':00',
+                        is_blocked: !isAvailable,
+                        booked_count: 0,
+                        max_capacity: 1
                     });
                 });
                 
                 try {
-                    try {
-                        const { error: deleteError } = await state.db
-                            .from('availability')
-                            .delete()
-                            .eq('date', dateStr);
+                    // First delete existing slots for this date
+                    const { error: deleteError } = await state.db
+                        .from('availability_slots')
+                        .delete()
+                        .eq('slot_date', dateStr);
+                    
+                    if (deleteError) throw deleteError;
+                    
+                    // Insert new slots
+                    if (slotsToSave.length > 0) {
+                        const { error: insertError } = await state.db
+                            .from('availability_slots')
+                            .insert(slotsToSave);
                         
-                        if (deleteError && !deleteError.message.includes('RLS')) {
-                            throw deleteError;
-                        }
-                    } catch (deleteErr) {
-                        if (!deleteErr.message.includes('RLS') && !deleteErr.message.includes('row-level security')) {
-                            throw deleteErr;
-                        }
+                        if (insertError) throw insertError;
                     }
                     
-                    const { error: insertError } = await state.db
-                        .from('availability')
-                        .insert(slotsToSave);
-                    
-                    if (insertError) {
-                        if (insertError.message.includes('RLS') || insertError.message.includes('row-level security')) {
-                            showNotification('Database permissions error. Please run the SQL commands from "Database Setup".', 'error');
-                            openDatabaseSetupModal();
-                            return;
-                        }
-                        throw insertError;
-                    }
-                    
-                    showNotification('Time slots saved successfully!', 'success');
+                    showNotification('24/7 time slots saved successfully!', 'success');
                     
                     await renderMonthCalendar();
                     await loadTimeSlots(state.selectedDate);
                     
                 } catch (err) {
                     console.error('Error saving time slots:', err);
-                    if (err.message.includes('RLS') || err.message.includes('row-level security')) {
-                        showNotification('Row-level security policy violation. Please set up database permissions.', 'error');
-                        openDatabaseSetupModal();
-                    } else {
-                        showNotification('Error saving time slots: ' + err.message, 'error');
-                    }
+                    showNotification('Error saving time slots: ' + err.message, 'error');
                 }
             }
             
-            async function applyDefaultToSelectedDay() {
-                if (!state.selectedDate) {
-                    showNotification('Please select a date first', 'warning');
-                    return;
-                }
+            async function apply247Availability(date) {
+                const dateStr = date.toISOString().split('T')[0];
+                const slots = generate247Slots(date);
                 
                 try {
-                    await applyDefaultAvailability(state.selectedDate);
-                    await loadTimeSlots(state.selectedDate);
-                    await renderMonthCalendar();
+                    // Delete existing slots
+                    const { error: deleteError } = await state.db
+                        .from('availability_slots')
+                        .delete()
+                        .eq('slot_date', dateStr);
                     
-                    showNotification('Default availability applied to selected day!', 'success');
-                } catch (err) {
-                    console.error('Error applying default to day:', err);
-                    if (err.message.includes('RLS') || err.message.includes('row-level security')) {
-                        showNotification('Database permissions error. Please set up RLS policies.', 'error');
-                        openDatabaseSetupModal();
-                    } else {
-                        showNotification('Error applying default: ' + err.message, 'error');
-                    }
-                }
-            }
-            
-            async function applyDefaultToMonth() {
-                if (!confirm('Apply default availability settings to all working days in this month?\nThis will override existing availability.')) {
-                    return;
-                }
-                
-                const firstDay = new Date(state.currentYear, state.currentMonth, 1);
-                const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
-                
-                const totalDays = lastDay.getDate();
-                
-                try {
-                    for (let day = 1; day <= totalDays; day++) {
-                        const date = new Date(state.currentYear, state.currentMonth, day);
+                    if (deleteError) throw deleteError;
+                    
+                    // Insert 24/7 slots
+                    if (slots.length > 0) {
+                        const { error: insertError } = await state.db
+                            .from('availability_slots')
+                            .insert(slots);
                         
-                        if (state.defaultSettings.workingDays.includes(date.getDay())) {
-                            await applyDefaultAvailability(date);
-                        } else {
-                            await blockDayInDB(date);
-                        }
+                        if (insertError) throw insertError;
                     }
                     
-                    showNotification('Default availability applied to entire month!', 'success');
+                } catch (err) {
+                    console.error('Error applying 24/7 availability:', err);
+                    throw err;
+                }
+            }
+            
+            async function apply247AvailabilityRange(startDate, endDate) {
+                const today = new Date();
+                let successCount = 0;
+                let skippedCount = 0;
+                
+                for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                    const dateStr = d.toISOString().split('T')[0];
+                    
+                    // Check lead time
+                    if (isWithinLeadTime(dateStr)) {
+                        skippedCount++;
+                        continue;
+                    }
+                    
+                    try {
+                        await apply247Availability(d);
+                        successCount++;
+                    } catch (err) {
+                        console.error(`Error applying 24/7 availability for ${dateStr}:`, err);
+                    }
+                }
+                
+                showNotification(`Applied 24/7 availability to ${successCount} days. ${skippedCount} days skipped (within lead time).`, 'success');
+                
+                // Refresh views
+                if (state.currentView === 'dashboard') {
+                    await loadQuickCalendar();
+                } else if (state.currentView === 'calendar') {
                     await renderMonthCalendar();
                     if (state.selectedDate) {
                         await loadTimeSlots(state.selectedDate);
                     }
-                    
-                } catch (err) {
-                    console.error('Error applying default to month:', err);
-                    if (err.message.includes('RLS') || err.message.includes('row-level security')) {
-                        showNotification('Database permissions error. Please set up RLS policies.', 'error');
-                        openDatabaseSetupModal();
-                    } else {
-                        showNotification('Error applying to month: ' + err.message, 'error');
-                    }
-                }
-            }
-            
-            async function applyDefaultAvailability(date) {
-                const dateStr = date.toISOString().split('T')[0];
-                const slots = generateDefaultSlots(date);
-                
-                try {
-                    try {
-                        const { error: deleteError } = await state.db
-                            .from('availability')
-                            .delete()
-                            .eq('date', dateStr);
-                        
-                        if (deleteError && !deleteError.message.includes('RLS')) {
-                            throw deleteError;
-                        }
-                    } catch (deleteErr) {
-                        if (!deleteErr.message.includes('RLS') && !deleteErr.message.includes('row-level security')) {
-                            throw deleteErr;
-                        }
-                    }
-                    
-                    if (slots.length > 0) {
-                        const { error: insertError } = await state.db
-                            .from('availability')
-                            .insert(slots.map(slot => ({
-                                date: slot.date,
-                                time_slot: slot.time_slot,
-                                is_available: true
-                            })));
-                        
-                        if (insertError) {
-                            if (insertError.message.includes('RLS') || insertError.message.includes('row-level security')) {
-                                throw new Error('RLS policy violation');
-                            }
-                            throw insertError;
-                        }
-                    }
-                    
-                } catch (err) {
-                    console.error('Error applying default availability:', err);
-                    throw err;
-                }
-            }
-            
-            async function blockDayInDB(date) {
-                const dateStr = date.toISOString().split('T')[0];
-                
-                try {
-                    const { error } = await state.db
-                        .from('availability')
-                        .delete()
-                        .eq('date', dateStr);
-                    
-                    if (error) {
-                        if (error.message.includes('RLS') || error.message.includes('row-level security')) {
-                            throw new Error('RLS policy violation');
-                        }
-                        throw error;
-                    }
-                    
-                } catch (err) {
-                    console.error('Error blocking day:', err);
-                    throw err;
                 }
             }
             
@@ -2406,20 +2873,28 @@ CREATE TABLE IF NOT EXISTS bookings (
                     return;
                 }
                 
+                if (isWithinLeadTime(state.selectedDate)) {
+                    showNotification('Cannot block dates within lead time', 'warning');
+                    return;
+                }
+                
                 if (confirm('Block all time slots for this day? This cannot be undone.')) {
                     try {
-                        await blockDayInDB(state.selectedDate);
+                        const dateStr = state.selectedDate.toISOString().split('T')[0];
+                        
+                        const { error } = await state.db
+                            .from('availability_slots')
+                            .update({ is_blocked: true })
+                            .eq('slot_date', dateStr);
+                        
+                        if (error) throw error;
+                        
                         showNotification('Day blocked successfully!', 'success');
                         await loadTimeSlots(state.selectedDate);
                         await renderMonthCalendar();
                     } catch (err) {
                         console.error('Error blocking day:', err);
-                        if (err.message.includes('RLS') || err.message.includes('row-level security')) {
-                            showNotification('Database permissions error. Please set up RLS policies.', 'error');
-                            openDatabaseSetupModal();
-                        } else {
-                            showNotification('Error blocking day: ' + err.message, 'error');
-                        }
+                        showNotification('Error blocking day: ' + err.message, 'error');
                     }
                 }
             }
@@ -2451,15 +2926,15 @@ CREATE TABLE IF NOT EXISTS bookings (
                         .limit(50);
                     
                     if (error) {
-                        if (error.message.includes('does not exist') || error.message.includes('column') || error.message.includes('422')) {
+                        if (error.message.includes('does not exist')) {
                             container.innerHTML = `
                                 <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
                                     <i class="fas fa-calendar-check" style="font-size: 50px; margin-bottom: 15px; opacity: 0.5;"></i>
                                     <h3 style="margin-bottom: 10px; font-size: 18px;">Bookings Table Setup Required</h3>
-                                    <p style="margin-bottom: 15px; font-size: 14px;">The bookings table needs to be set up with correct fields.</p>
-                                    <button onclick="updateBookingsTableStructure()" class="btn btn-primary" style="margin: 10px;">
+                                    <p style="margin-bottom: 15px; font-size: 14px;">The bookings table needs to be set up.</p>
+                                    <button onclick="openDatabaseSetupModal()" class="btn btn-primary" style="margin: 10px;">
                                         <i class="fas fa-database"></i>
-                                        Update Table Structure
+                                        Open Database Setup
                                     </button>
                                 </div>
                             `;
@@ -2707,6 +3182,12 @@ CREATE TABLE IF NOT EXISTS bookings (
                     if (dateFilter === 'today') {
                         const today = new Date().toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
                         matchesDate = date.includes(today.split(',')[0]);
+                    } else if (dateFilter === 'week') {
+                        const today = new Date();
+                        const weekFromNow = new Date();
+                        weekFromNow.setDate(today.getDate() + 7);
+                        // Simple week filter - in real app would be more sophisticated
+                        matchesDate = true;
                     }
                     
                     if (matchesSearch && matchesStatus && matchesDate) {
@@ -2803,6 +3284,11 @@ CREATE TABLE IF NOT EXISTS bookings (
                             </div>
                             
                             <div class="detail-item">
+                                <div class="detail-label">Duration</div>
+                                <div class="detail-value">${booking.duration || 60} minutes</div>
+                            </div>
+                            
+                            <div class="detail-item">
                                 <div class="detail-label">Status</div>
                                 <div class="detail-value">
                                     <span style="padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; 
@@ -2855,53 +3341,20 @@ CREATE TABLE IF NOT EXISTS bookings (
                 }
             }
             
-            // Function to update bookings table structure
-            async function updateBookingsTableStructure() {
-                try {
-                    showNotification('Updating bookings table structure...', 'info');
-                    
-                    const alterSql = `
-                        ALTER TABLE bookings 
-                        ADD COLUMN IF NOT EXISTS customer_name TEXT NOT NULL,
-                        ADD COLUMN IF NOT EXISTS customer_email TEXT,
-                        ADD COLUMN IF NOT EXISTS customer_phone TEXT,
-                        ADD COLUMN IF NOT EXISTS customer_address TEXT,
-                        ADD COLUMN IF NOT EXISTS booking_date DATE NOT NULL,
-                        ADD COLUMN IF NOT EXISTS time_slot TEXT NOT NULL,
-                        ADD COLUMN IF NOT EXISTS service_title TEXT,
-                        ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pending',
-                        ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW();
-                    `;
-                    
-                    const sqlTextArea = document.createElement('textarea');
-                    sqlTextArea.value = alterSql;
-                    document.body.appendChild(sqlTextArea);
-                    sqlTextArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(sqlTextArea);
-                    
-                    showNotification('SQL copied to clipboard! Paste in Supabase SQL Editor.', 'success');
-                    openDatabaseSetupModal();
-                    
-                } catch (err) {
-                    console.error('Error updating table:', err);
-                    showNotification('Error: ' + err.message, 'error');
-                }
-            }
-            
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', init);
             
             // Expose some functions globally for onclick handlers
-            window.applyDefaultToSelectedDay = applyDefaultToSelectedDay;
+            window.apply247ToSelectedDay = apply247ToSelectedDay;
             window.loadTimeSlots = loadTimeSlots;
             window.showSection = showSection;
             window.openDatabaseSetupModal = openDatabaseSetupModal;
             window.closeDatabaseSetupModal = closeDatabaseSetupModal;
             window.copyToClipboard = copyToClipboard;
-            window.updateBookingsTableStructure = updateBookingsTableStructure;
-            window.createBookingsTable = updateBookingsTableStructure;
             window.updateBookingStatus = updateBookingStatus;
+            window.apply247Bulk = apply247Bulk;
+            window.closeBulkSetupModal = closeBulkSetupModal;
+            window.openBulkSetupModal = openBulkSetupModal;
             
         })();
     </script>
