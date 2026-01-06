@@ -921,7 +921,7 @@
             bottom: 0;
             left: 0;
             width: 40px;
-            height = 3px;
+            height: 3px;
             background: var(--primary-green);
         }
 
@@ -1454,6 +1454,679 @@
 
     <!-- JavaScript -->
     <script>
+        // ===== Analytics Configuration =====
+        const ANALYTICS_CONFIG = {
+            supabaseUrl: 'https://faxjeniohetefqwcsefi.supabase.co',
+            supabaseKey: 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7',
+            sessionTimeout: 30 * 60 * 1000, // 30 minutes
+            pageviewTimeout: 30000, // 30 seconds for pageview tracking
+            scrollThresholds: [25, 50, 75, 100] // Scroll depth thresholds
+        };
+
+        // ===== Analytics State =====
+        let analyticsState = {
+            sessionId: null,
+            userId: null,
+            currentPage: null,
+            sessionStartTime: null,
+            lastActivityTime: null,
+            pageViewCount: 0,
+            scrollDepth: 0,
+            maxScrollDepth: 0,
+            isFirstVisit: true,
+            utmParams: {},
+            deviceInfo: {},
+            isTracking: false
+        };
+
+        // ===== Analytics Functions =====
+        function initAnalytics() {
+            console.log('🔍 Initializing GreenGlo Analytics...');
+            
+            // Generate session ID
+            analyticsState.sessionId = generateSessionId();
+            analyticsState.userId = getOrCreateUserId();
+            analyticsState.sessionStartTime = new Date();
+            analyticsState.lastActivityTime = new Date();
+            analyticsState.currentPage = window.location.pathname;
+            analyticsState.isFirstVisit = !localStorage.getItem('gg_visited');
+            
+            // Get device info
+            analyticsState.deviceInfo = getDeviceInfo();
+            
+            // Get UTM parameters
+            analyticsState.utmParams = getUtmParams();
+            
+            // Mark as visited
+            localStorage.setItem('gg_visited', 'true');
+            localStorage.setItem('gg_last_visit', new Date().toISOString());
+            
+            // Initialize Supabase for analytics
+            initSupabaseAnalytics();
+            
+            // Start tracking
+            startAnalyticsTracking();
+            
+            // Send session start
+            trackSessionStart();
+            
+            // Track pageview
+            trackPageView();
+            
+            console.log('✅ Analytics initialized for session:', analyticsState.sessionId);
+        }
+
+        function generateSessionId() {
+            // Check for existing session
+            const existingSession = sessionStorage.getItem('gg_session_id');
+            const sessionTimestamp = sessionStorage.getItem('gg_session_timestamp');
+            
+            // If session exists and is less than 30 minutes old, reuse it
+            if (existingSession && sessionTimestamp) {
+                const sessionAge = Date.now() - parseInt(sessionTimestamp);
+                if (sessionAge < ANALYTICS_CONFIG.sessionTimeout) {
+                    return existingSession;
+                }
+            }
+            
+            // Generate new session ID
+            const newSessionId = 'gg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('gg_session_id', newSessionId);
+            sessionStorage.setItem('gg_session_timestamp', Date.now().toString());
+            
+            return newSessionId;
+        }
+
+        function getOrCreateUserId() {
+            let userId = localStorage.getItem('gg_user_id');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('gg_user_id', userId);
+                localStorage.setItem('gg_user_created', new Date().toISOString());
+            }
+            return userId;
+        }
+
+        function getDeviceInfo() {
+            const ua = navigator.userAgent;
+            const screen = window.screen;
+            
+            return {
+                device_type: /Mobile|Android|iPhone|iPad|iPod/i.test(ua) ? 'mobile' : 
+                            /Tablet|iPad/i.test(ua) ? 'tablet' : 'desktop',
+                browser: getBrowserName(ua),
+                browser_version: getBrowserVersion(ua),
+                os: getOperatingSystem(ua),
+                os_version: getOSVersion(ua),
+                screen_resolution: `${screen.width}x${screen.height}`,
+                language: navigator.language || navigator.userLanguage || 'en',
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                is_mobile: /Mobile|Android|iPhone|iPad|iPod/i.test(ua)
+            };
+        }
+
+        function getBrowserName(ua) {
+            if (ua.includes('Chrome')) return 'Chrome';
+            if (ua.includes('Firefox')) return 'Firefox';
+            if (ua.includes('Safari')) return 'Safari';
+            if (ua.includes('Edge')) return 'Edge';
+            if (ua.includes('Opera')) return 'Opera';
+            if (ua.includes('MSIE') || ua.includes('Trident/')) return 'Internet Explorer';
+            return 'Unknown';
+        }
+
+        function getBrowserVersion(ua) {
+            const matches = ua.match(/(Chrome|Firefox|Safari|Edge|Opera|MSIE|rv:)[\s\/](\d+(\.\d+)?)/i);
+            return matches ? matches[2] : 'Unknown';
+        }
+
+        function getOperatingSystem(ua) {
+            if (ua.includes('Windows')) return 'Windows';
+            if (ua.includes('Mac OS')) return 'macOS';
+            if (ua.includes('Linux')) return 'Linux';
+            if (ua.includes('Android')) return 'Android';
+            if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) return 'iOS';
+            return 'Unknown';
+        }
+
+        function getOSVersion(ua) {
+            const matches = ua.match(/(Windows NT|Android|iOS|Mac OS X|Linux)[\s\/]?(\d+(\.\d+)*)?/i);
+            return matches ? (matches[2] || 'Unknown') : 'Unknown';
+        }
+
+        function getUtmParams() {
+            const params = new URLSearchParams(window.location.search);
+            const utmParams = {};
+            
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+                const value = params.get(param);
+                if (value) utmParams[param] = value;
+            });
+            
+            return utmParams;
+        }
+
+        function getLocationInfo() {
+            // Note: In production, you'd need to implement IP geolocation
+            // For now, we'll use a simple approximation or leave as null
+            return {
+                country: 'Unknown',
+                region: 'Unknown',
+                city: 'Unknown',
+                postal_code: 'Unknown'
+            };
+        }
+
+        // ===== Analytics Tracking Functions =====
+        function startAnalyticsTracking() {
+            if (analyticsState.isTracking) return;
+            
+            analyticsState.isTracking = true;
+            
+            // Track user activity
+            document.addEventListener('click', trackUserActivity);
+            document.addEventListener('scroll', trackScrollDepth);
+            document.addEventListener('mousemove', trackUserActivity);
+            document.addEventListener('keydown', trackUserActivity);
+            
+            // Track visibility changes
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    trackUserActivity();
+                }
+            });
+            
+            // Track beforeunload
+            window.addEventListener('beforeunload', trackSessionEnd);
+            
+            // Track form interactions
+            setupFormTracking();
+            
+            // Track button clicks
+            setupButtonTracking();
+            
+            console.log('✅ Analytics tracking started');
+        }
+
+        function trackUserActivity() {
+            analyticsState.lastActivityTime = new Date();
+            updateActiveUser();
+        }
+
+        function trackScrollDepth() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+            
+            analyticsState.scrollDepth = Math.round(scrollPercent);
+            analyticsState.maxScrollDepth = Math.max(analyticsState.maxScrollDepth, analyticsState.scrollDepth);
+            
+            // Track scroll depth milestones
+            ANALYTICS_CONFIG.scrollThresholds.forEach(threshold => {
+                if (scrollPercent >= threshold && analyticsState.maxScrollDepth < threshold) {
+                    trackEvent('scroll', 'engagement', `scroll_${threshold}`, threshold.toString());
+                }
+            });
+        }
+
+        function trackSessionStart() {
+            const sessionData = {
+                session_id: analyticsState.sessionId,
+                user_id: analyticsState.userId,
+                device_type: analyticsState.deviceInfo.device_type,
+                browser: analyticsState.deviceInfo.browser,
+                browser_version: analyticsState.deviceInfo.browser_version,
+                os: analyticsState.deviceInfo.os,
+                os_version: analyticsState.deviceInfo.os_version,
+                screen_resolution: analyticsState.deviceInfo.screen_resolution,
+                language: analyticsState.deviceInfo.language,
+                timezone: analyticsState.deviceInfo.timezone,
+                is_first_visit: analyticsState.isFirstVisit,
+                utm_source: analyticsState.utmParams.utm_source,
+                utm_medium: analyticsState.utmParams.utm_medium,
+                utm_campaign: analyticsState.utmParams.utm_campaign,
+                utm_term: analyticsState.utmParams.utm_term,
+                utm_content: analyticsState.utmParams.utm_content,
+                referrer: document.referrer || 'direct',
+                landing_page: window.location.pathname,
+                entry_timestamp: analyticsState.sessionStartTime.toISOString(),
+                pageviews_count: 1
+            };
+            
+            // Add location info
+            const locationInfo = getLocationInfo();
+            Object.assign(sessionData, locationInfo);
+            
+            saveToAnalytics('sessions', sessionData);
+            console.log('📊 Session started:', analyticsState.sessionId);
+        }
+
+        async function trackSessionEnd() {
+            const sessionDuration = Math.floor((new Date() - analyticsState.sessionStartTime) / 1000);
+            
+            const sessionData = {
+                session_id: analyticsState.sessionId,
+                exit_timestamp: new Date().toISOString(),
+                session_duration: sessionDuration,
+                pageviews_count: analyticsState.pageViewCount,
+                is_converted: false // Would be updated if conversion happened
+            };
+            
+            await updateAnalyticsSession(sessionData);
+            console.log('📊 Session ended:', analyticsState.sessionId, 'Duration:', sessionDuration + 's');
+        }
+
+        function trackPageView() {
+            analyticsState.pageViewCount++;
+            analyticsState.currentPage = window.location.pathname;
+            
+            const pageviewData = {
+                session_id: analyticsState.sessionId,
+                page_url: window.location.href,
+                page_title: document.title,
+                page_path: window.location.pathname,
+                referrer: document.referrer || 'direct',
+                time_on_page: 0, // Will be updated on next pageview
+                scroll_depth: analyticsState.maxScrollDepth,
+                is_bounce: analyticsState.pageViewCount === 1,
+                previous_page: document.referrer || 'direct',
+                next_page: null,
+                metadata: {
+                    query_params: window.location.search,
+                    hash: window.location.hash
+                }
+            };
+            
+            saveToAnalytics('pageviews', pageviewData);
+            console.log('📄 Pageview tracked:', window.location.pathname);
+            
+            // Update active user
+            updateActiveUser();
+        }
+
+        function trackEvent(eventType, category, label, value) {
+            const eventData = {
+                session_id: analyticsState.sessionId,
+                event_type: eventType,
+                event_category: category,
+                event_label: label,
+                event_value: value,
+                element_id: '',
+                element_class: '',
+                element_text: '',
+                page_url: window.location.href,
+                metadata: {
+                    timestamp: new Date().toISOString(),
+                    user_agent: navigator.userAgent,
+                    page_title: document.title
+                }
+            };
+            
+            saveToAnalytics('events', eventData);
+            console.log('🎯 Event tracked:', eventType, category, label);
+        }
+
+        function trackConversion(conversionType, value, metadata = {}) {
+            const conversionData = {
+                session_id: analyticsState.sessionId,
+                conversion_type: conversionType,
+                conversion_value: value,
+                customer_email: metadata.email || '',
+                customer_phone: metadata.phone || '',
+                service_type: metadata.service || '',
+                estimated_value: metadata.estimatedValue || 0,
+                funnel_stage: metadata.stage || 'booking',
+                utm_source: analyticsState.utmParams.utm_source,
+                utm_medium: analyticsState.utmParams.utm_medium,
+                utm_campaign: analyticsState.utmParams.utm_campaign,
+                days_to_convert: 0,
+                pageviews_to_convert: analyticsState.pageViewCount,
+                metadata: metadata
+            };
+            
+            saveToAnalytics('conversions', conversionData);
+            console.log('💰 Conversion tracked:', conversionType, 'Value:', value);
+            
+            // Update session as converted
+            updateSessionAsConverted(conversionType);
+        }
+
+        function trackSearch(searchTerm, postcodeArea = null) {
+            const searchData = {
+                search_term: searchTerm,
+                postcode_area: postcodeArea,
+                is_in_coverage_area: checkCoverageArea(postcodeArea),
+                result_type: 'service_page',
+                search_count: 1
+            };
+            
+            saveToAnalytics('search_terms', searchData);
+            console.log('🔍 Search tracked:', searchTerm);
+        }
+
+        function updateActiveUser() {
+            const activeData = {
+                session_id: analyticsState.sessionId,
+                user_id: analyticsState.userId,
+                page_url: window.location.href,
+                last_activity: new Date().toISOString(),
+                active_duration: Math.floor((new Date() - analyticsState.sessionStartTime) / 1000),
+                is_mobile: analyticsState.deviceInfo.is_mobile,
+                current_action: 'viewing_services'
+            };
+            
+            const locationInfo = getLocationInfo();
+            activeData.city = locationInfo.city;
+            
+            saveToAnalytics('active_users', activeData, true); // Upsert mode
+        }
+
+        function updateDailyStats() {
+            // This would typically run server-side, but we can track client-side events
+            const today = new Date().toDateString();
+            console.log('📈 Daily stats update for:', today);
+        }
+
+        // ===== Form and Button Tracking =====
+        function setupFormTracking() {
+            // Track form submissions
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const formId = this.id || 'unknown_form';
+                    const formName = this.getAttribute('name') || 'unknown';
+                    
+                    trackEvent('form_submit', 'forms', formId, formName);
+                    
+                    // If it's a booking form, track as conversion
+                    if (formId.includes('booking') || form.className.includes('booking')) {
+                        trackConversion('booking_form_submit', 0, {
+                            form_type: 'booking',
+                            form_name: formName
+                        });
+                    }
+                });
+            });
+            
+            // Track form field interactions
+            document.querySelectorAll('input, select, textarea').forEach(field => {
+                field.addEventListener('focus', function() {
+                    const fieldId = this.id || 'unknown_field';
+                    trackEvent('form_field_focus', 'forms', fieldId, this.name || 'unknown');
+                });
+                
+                field.addEventListener('blur', function() {
+                    if (this.value.trim()) {
+                        const fieldId = this.id || 'unknown_field';
+                        trackEvent('form_field_complete', 'forms', fieldId, this.name || 'unknown');
+                    }
+                });
+            });
+        }
+
+        function setupButtonTracking() {
+            // Track CTA button clicks
+            document.addEventListener('click', function(e) {
+                const button = e.target.closest('button, a.btn, a[href*="whatsapp"], a[href*="stripe"]');
+                
+                if (button) {
+                    const buttonText = button.textContent.trim() || button.getAttribute('aria-label') || 'unknown_button';
+                    const buttonClass = button.className || '';
+                    
+                    let actionType = 'button_click';
+                    let category = 'engagement';
+                    
+                    if (button.href && button.href.includes('whatsapp')) {
+                        actionType = 'whatsapp_click';
+                        category = 'conversion';
+                        
+                        // Track WhatsApp conversion
+                        setTimeout(() => {
+                            trackConversion('whatsapp_contact', 0, {
+                                source: 'services_page',
+                                button_text: buttonText,
+                                service: getCurrentServiceContext()
+                            });
+                        }, 100);
+                    }
+                    else if (button.href && button.href.includes('stripe')) {
+                        actionType = 'stripe_click';
+                        category = 'conversion';
+                        
+                        // Track Stripe conversion
+                        setTimeout(() => {
+                            trackConversion('stripe_payment_attempt', 0, {
+                                source: 'services_page',
+                                button_text: buttonText,
+                                service: getCurrentServiceContext()
+                            });
+                        }, 100);
+                    }
+                    else if (button.classList.contains('book-service-btn')) {
+                        actionType = 'service_booking_click';
+                        category = 'conversion';
+                        
+                        const serviceId = button.getAttribute('data-service-id');
+                        const serviceTitle = button.getAttribute('data-service-title');
+                        
+                        // Track service interest
+                        setTimeout(() => {
+                            trackConversion('service_interest', 0, {
+                                service_id: serviceId,
+                                service_title: serviceTitle,
+                                source: 'services_grid'
+                            });
+                        }, 100);
+                    }
+                    else if (button.textContent.includes('Call') || button.href && button.href.startsWith('tel:')) {
+                        actionType = 'phone_click';
+                        category = 'conversion';
+                        
+                        setTimeout(() => {
+                            trackConversion('phone_contact', 0, {
+                                source: 'services_page',
+                                phone_number: button.href ? button.href.replace('tel:', '') : 'unknown'
+                            });
+                        }, 100);
+                    }
+                    
+                    trackEvent(actionType, category, buttonText, buttonClass);
+                }
+            });
+        }
+
+        function getCurrentServiceContext() {
+            // Try to get current service from booking modal or active element
+            const bookingService = document.getElementById('bookingServiceName');
+            if (bookingService && bookingService.textContent !== 'Service') {
+                return bookingService.textContent;
+            }
+            
+            // Check for active category filter
+            const activeCategory = document.querySelector('.category-btn.active');
+            if (activeCategory) {
+                return activeCategory.textContent + ' category';
+            }
+            
+            return 'general_services';
+        }
+
+        function checkCoverageArea(postcodeArea) {
+            if (!postcodeArea) return null;
+            
+            const londonAreas = ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC', 'BR', 'CR', 'DA', 'EN', 'HA', 'IG', 'KT', 'RM', 'SM', 'TW', 'UB', 'WD'];
+            const kentAreas = ['BR', 'DA', 'ME', 'TN', 'CT'];
+            const essexAreas = ['CM', 'CO', 'IG', 'RM', 'SS'];
+            
+            const firstPart = postcodeArea.split(' ')[0].toUpperCase();
+            
+            if (londonAreas.some(area => firstPart.startsWith(area))) return true;
+            if (kentAreas.some(area => firstPart.startsWith(area))) return true;
+            if (essexAreas.some(area => firstPart.startsWith(area))) return true;
+            
+            return false;
+        }
+
+        // ===== Supabase Analytics Functions =====
+        let supabaseAnalyticsClient = null;
+
+        function initSupabaseAnalytics() {
+            try {
+                supabaseAnalyticsClient = supabase.createClient(
+                    ANALYTICS_CONFIG.supabaseUrl,
+                    ANALYTICS_CONFIG.supabaseKey
+                );
+                console.log('✅ Supabase Analytics client initialized');
+            } catch (error) {
+                console.error('❌ Failed to initialize Supabase Analytics:', error);
+                supabaseAnalyticsClient = null;
+            }
+        }
+
+        async function saveToAnalytics(table, data, upsert = false) {
+            if (!supabaseAnalyticsClient) {
+                // Fallback to localStorage for offline tracking
+                saveToLocalStorage(table, data);
+                return;
+            }
+            
+            try {
+                let result;
+                if (upsert) {
+                    // Upsert based on session_id for active_users
+                    result = await supabaseAnalyticsClient
+                        .from(table)
+                        .upsert(data, { onConflict: 'session_id' });
+                } else {
+                    result = await supabaseAnalyticsClient
+                        .from(table)
+                        .insert([data]);
+                }
+                
+                if (result.error) {
+                    console.error(`❌ Error saving to ${table}:`, result.error);
+                    saveToLocalStorage(table, data);
+                }
+            } catch (error) {
+                console.error(`❌ Exception saving to ${table}:`, error);
+                saveToLocalStorage(table, data);
+            }
+        }
+
+        async function updateAnalyticsSession(sessionData) {
+            if (!supabaseAnalyticsClient) {
+                saveToLocalStorage('session_updates', sessionData);
+                return;
+            }
+            
+            try {
+                const result = await supabaseAnalyticsClient
+                    .from('analytics_sessions')
+                    .update(sessionData)
+                    .eq('session_id', analyticsState.sessionId);
+                
+                if (result.error) {
+                    console.error('❌ Error updating session:', result.error);
+                    saveToLocalStorage('session_updates', sessionData);
+                }
+            } catch (error) {
+                console.error('❌ Exception updating session:', error);
+                saveToLocalStorage('session_updates', sessionData);
+            }
+        }
+
+        async function updateSessionAsConverted(conversionType) {
+            if (!supabaseAnalyticsClient) return;
+            
+            try {
+                await supabaseAnalyticsClient
+                    .from('analytics_sessions')
+                    .update({
+                        is_converted: true,
+                        conversion_type: conversionType
+                    })
+                    .eq('session_id', analyticsState.sessionId);
+            } catch (error) {
+                console.error('❌ Error marking session as converted:', error);
+            }
+        }
+
+        function saveToLocalStorage(table, data) {
+            try {
+                const key = `gg_analytics_${table}_${Date.now()}`;
+                const queue = JSON.parse(localStorage.getItem('gg_analytics_queue') || '[]');
+                queue.push({ key, table, data, timestamp: new Date().toISOString() });
+                localStorage.setItem('gg_analytics_queue', JSON.stringify(queue));
+                
+                // Keep queue under control
+                if (queue.length > 100) {
+                    queue.splice(0, 50);
+                    localStorage.setItem('gg_analytics_queue', JSON.stringify(queue));
+                }
+                
+                console.log(`💾 Saved to localStorage queue: ${table}`, data);
+            } catch (error) {
+                console.error('❌ Error saving to localStorage:', error);
+            }
+        }
+
+        // ===== Service Category Tracking =====
+        function trackCategoryFilter(category) {
+            trackEvent('category_filter', 'engagement', category, 'services_page');
+            
+            // Track search behavior
+            if (category !== 'all') {
+                trackSearch(category, null);
+            }
+        }
+
+        function trackServiceView(serviceId, serviceTitle, category) {
+            trackEvent('service_view', 'engagement', serviceTitle, serviceId.toString());
+            
+            // Update active user context
+            analyticsState.currentAction = `viewing_${category}_service`;
+            updateActiveUser();
+        }
+
+        function trackServiceClick(serviceId, serviceTitle, category, paymentType) {
+            trackEvent('service_click', 'conversion', serviceTitle, serviceId.toString());
+            
+            // Track as micro-conversion
+            trackConversion('service_click', 0, {
+                service_id: serviceId,
+                service_title: serviceTitle,
+                category: category,
+                payment_type: paymentType,
+                stage: 'interest'
+            });
+            
+            console.log('🎯 Service click tracked:', serviceTitle, 'Payment:', paymentType);
+        }
+
+        function trackBookingStart(serviceId, serviceTitle, paymentType) {
+            trackEvent('booking_start', 'conversion', serviceTitle, serviceId.toString());
+            
+            trackConversion('booking_started', 0, {
+                service_id: serviceId,
+                service_title: serviceTitle,
+                payment_type: paymentType,
+                stage: 'booking_start'
+            });
+        }
+
+        function trackBookingComplete(serviceId, serviceTitle, paymentType, amount, bookingRef) {
+            trackEvent('booking_complete', 'conversion', serviceTitle, serviceId.toString());
+            
+            trackConversion('booking_completed', amount, {
+                service_id: serviceId,
+                service_title: serviceTitle,
+                payment_type: paymentType,
+                booking_reference: bookingRef,
+                stage: 'booking_complete'
+            });
+            
+            console.log('💰 Booking complete tracked:', serviceTitle, 'Amount:', amount);
+        }
+
         // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileCloseBtn = document.getElementById('mobileCloseBtn');
@@ -1468,6 +2141,9 @@
             mobileMenuBtn.classList.add('active');
             mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
             document.body.style.overflow = 'hidden';
+            
+            // Track mobile menu open
+            trackEvent('mobile_menu_open', 'navigation', 'services_page', 'mobile');
         };
 
         const closeMobileMenu = () => {
@@ -1490,7 +2166,13 @@
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
         navLinks.forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
+            link.addEventListener('click', () => {
+                closeMobileMenu();
+                // Track navigation click
+                const linkText = link.textContent;
+                const linkHref = link.getAttribute('href');
+                trackEvent('navigation_click', 'engagement', linkText, linkHref);
+            });
         });
 
         document.addEventListener('keydown', (e) => {
@@ -2016,6 +2698,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
 
         // ===== Booking Modal Functions =====
         function openBookingModal(serviceTitle, serviceId, serviceData) {
+            // Track booking start
+            trackBookingStart(serviceId, serviceTitle, serviceData.stripeLink ? 'stripe' : 'whatsapp');
+            
             currentBooking.service = {
                 title: serviceTitle,
                 id: serviceId,
@@ -2334,6 +3019,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                         currentBooking.slotId = String(slot.id);
                         
                         updateBookingSummary();
+                        
+                        // Track time slot selection
+                        trackEvent('time_slot_select', 'booking', slot.time_slot, currentBooking.service.title);
                     });
                     
                     container.appendChild(slotElement);
@@ -2391,6 +3079,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             
             currentBooking.slotId = String(currentBooking.slotId);
             
+            // Track booking step completion
+            trackEvent('booking_step_complete', 'booking', 'step_1_details', currentBooking.service.title);
+            
             // Update final summary
             updateFinalSummary();
             
@@ -2439,6 +3130,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 
                 // Generate booking reference
                 const bookingRef = 'GG' + Date.now().toString().slice(-8);
+                
+                // Track booking details filled
+                trackEvent('booking_details_filled', 'booking', 'customer_details', currentBooking.service.title);
                 
                 // Try to save to Supabase if available
                 let supabaseSuccess = false;
@@ -2517,6 +3211,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     
                     alert(successMessage);
                     
+                    // Track booking completion
+                    const amount = serviceData.basePrice || 0;
+                    trackBookingComplete(currentBooking.service.id, currentBooking.service.title, 'stripe', amount, bookingRef);
+                    
                     // Close modal and redirect to Stripe
                     closeBookingModal();
                     setTimeout(() => {
@@ -2526,6 +3224,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 } else {
                     successMessage += 'You will now be redirected to WhatsApp.\n';
                     successMessage += 'Our team will confirm your booking and discuss payment options.';
+                    
+                    // Track booking completion
+                    const amount = serviceData.basePrice || 0;
+                    trackBookingComplete(currentBooking.service.id, currentBooking.service.title, 'whatsapp', amount, bookingRef);
                     
                     // Prepare WhatsApp message
                     let whatsappMessage = `📋 BOOKING CONFIRMED - ${currentBooking.service.title}\n\n`;
@@ -2565,6 +3267,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 
             } catch (err) {
                 console.error('❌ Booking error:', err);
+                
+                // Track booking error
+                trackEvent('booking_error', 'error', 'booking_failed', currentBooking.service.title);
                 
                 // Fallback to WhatsApp booking
                 const fallbackWhatsApp = encodeURIComponent(
@@ -2607,6 +3312,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 const serviceCard = document.createElement('div');
                 serviceCard.className = 'service-card';
                 serviceCard.setAttribute('data-category', service.category);
+                serviceCard.setAttribute('data-service-id', service.id);
 
                 let priceContent = '';
                 if (service.hasBedrooms) {
@@ -2689,6 +3395,18 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 `;
 
                 servicesGrid.appendChild(serviceCard);
+                
+                // Track service view when card becomes visible
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            trackServiceView(service.id, service.title, service.category);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                observer.observe(serviceCard);
             });
 
             // Add event listeners to buttons
@@ -2697,6 +3415,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     const serviceId = this.getAttribute('data-service-id');
                     const serviceTitle = this.getAttribute('data-service-title');
                     const serviceData = servicesData.find(s => s.id == serviceId);
+                    const paymentType = serviceData.stripeLink ? 'stripe' : 'whatsapp';
+                    
+                    // Track service click
+                    trackServiceClick(serviceId, serviceTitle, serviceData.category, paymentType);
                     
                     // Open booking modal
                     openBookingModal(serviceTitle, serviceId, serviceData);
@@ -2726,6 +3448,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 button.classList.add('active');
 
                 const category = button.getAttribute('data-category');
+                
+                // Track category filter
+                trackCategoryFilter(category);
+                
                 renderServices(category);
             });
         });
@@ -2744,12 +3470,19 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
+                    
+                    // Track internal link click
+                    trackEvent('internal_link_click', 'navigation', targetId, this.textContent.trim());
                 }
             });
         });
 
         // ===== Initialize Page =====
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize analytics first
+            initAnalytics();
+            
+            // Then render services
             renderServices();
             
             // Test Supabase connection
@@ -2764,12 +3497,46 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 });
             }
             
+            // Log analytics info
+            console.log('📊 Analytics Summary:');
+            console.log('- Session ID:', analyticsState.sessionId);
+            console.log('- User ID:', analyticsState.userId);
+            console.log('- Device:', analyticsState.deviceInfo.device_type);
+            console.log('- UTM:', analyticsState.utmParams);
+            
             // Log stripe links info
             console.log('📊 Stripe Links Summary:');
             console.log(`- Total services: ${servicesData.length}`);
             console.log(`- Services with Stripe links: ${servicesData.filter(s => s.stripeLink).length}`);
             console.log(`- Services without Stripe links: ${servicesData.filter(s => !s.stripeLink).length}`);
+            
+            // Set up periodic analytics updates
+            setInterval(updateActiveUser, 60000); // Update active user every minute
+            setInterval(updateDailyStats, 300000); // Update daily stats every 5 minutes
+            
+            // Process any queued analytics data
+            processQueuedAnalytics();
         });
+
+        // Process queued analytics data from localStorage
+        async function processQueuedAnalytics() {
+            try {
+                const queue = JSON.parse(localStorage.getItem('gg_analytics_queue') || '[]');
+                if (queue.length === 0) return;
+                
+                console.log(`🔄 Processing ${queue.length} queued analytics events...`);
+                
+                for (const item of queue) {
+                    await saveToAnalytics(item.table, item.data, item.table === 'active_users');
+                }
+                
+                // Clear processed items
+                localStorage.removeItem('gg_analytics_queue');
+                console.log('✅ Queued analytics processed');
+            } catch (error) {
+                console.error('❌ Error processing queued analytics:', error);
+            }
+        }
     </script>
 </body>
 </html>
