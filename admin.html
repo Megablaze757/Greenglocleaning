@@ -2266,21 +2266,7 @@ SELECT
 FROM generate_series(1, 30) AS d(day_offset)
 CROSS JOIN generate_series(0, 23) AS h(hour)
 WHERE (current_date + INTERVAL '1 day' * d.day_offset) > current_date + INTERVAL '1 day'
-ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;
-
--- Insert sample analytics data for last 7 days
-INSERT INTO analytics_daily_stats (date, total_sessions, total_visitors, new_visitors, returning_visitors, total_pageviews, conversion_rate, revenue_generated)
-SELECT 
-    current_date - INTERVAL '1 day' * d.day_offset,
-    floor(random() * 100 + 50)::integer,
-    floor(random() * 80 + 40)::integer,
-    floor(random() * 40 + 20)::integer,
-    floor(random() * 40 + 20)::integer,
-    floor(random() * 500 + 200)::integer,
-    random() * 0.05 + 0.02,
-    floor(random() * 1000 + 500)::numeric
-FROM generate_series(0, 6) AS d(day_offset)
-ON CONFLICT (date) DO NOTHING;`;
+ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 
                 document.getElementById('createTableSql').value = createTableSql;
             }
@@ -3561,8 +3547,8 @@ ON CONFLICT (date) DO NOTHING;`;
                         container.innerHTML = `
                             <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
                                 <i class="fas fa-calendar-check" style="font-size: 50px; margin-bottom: 15px; opacity: 0.5;"></i>
-                                <h3 style="margin-bottom: 10px; font-size: 18px;">No Bookings Yet</h3>
-                                <p style="font-size: 14px;">No bookings have been made yet</p>
+                                    <h3 style="margin-bottom: 10px; font-size: 18px;">No Bookings Yet</h3>
+                                    <p style="font-size: 14px;">No bookings have been made yet</p>
                             </div>
                         `;
                         return;
@@ -3955,7 +3941,7 @@ ON CONFLICT (date) DO NOTHING;`;
                 }
             }
             
-            // ANALYTICS FUNCTIONS
+            // ANALYTICS FUNCTIONS - USING REAL DATA FROM SUPABASE
             async function loadAnalytics() {
                 try {
                     // Update real-time stats
@@ -4007,22 +3993,66 @@ ON CONFLICT (date) DO NOTHING;`;
                     
                     if (!activeError && activeUsers) {
                         document.getElementById('liveVisitors').textContent = activeUsers.length;
+                    } else {
+                        document.getElementById('liveVisitors').textContent = '0';
                     }
                     
-                    // Get today's pageviews
-                    const { data: dailyStats, error: dailyError } = await state.db
-                        .from('analytics_daily_stats')
-                        .select('total_pageviews, conversion_rate, revenue_generated, avg_session_duration, bounce_rate, avg_order_value')
-                        .eq('date', today)
-                        .single();
+                    // Get today's pageviews from pageviews table
+                    const { data: todayPageviews, error: pageviewsError } = await state.db
+                        .from('analytics_pageviews')
+                        .select('id')
+                        .gte('created_at', today + 'T00:00:00')
+                        .lte('created_at', today + 'T23:59:59');
                     
-                    if (!dailyError && dailyStats) {
-                        document.getElementById('todayPageviews').textContent = dailyStats.total_pageviews || 0;
-                        document.getElementById('conversionRate').textContent = `${((dailyStats.conversion_rate || 0) * 100).toFixed(1)}%`;
-                        document.getElementById('avgSessionDuration').textContent = `${Math.round((dailyStats.avg_session_duration || 0) / 60)}m`;
-                        document.getElementById('bounceRate').textContent = `${((dailyStats.bounce_rate || 0) * 100).toFixed(1)}%`;
-                        document.getElementById('revenueGenerated').textContent = `£${(dailyStats.revenue_generated || 0).toFixed(2)}`;
-                        document.getElementById('avgOrderValue').textContent = `£${(dailyStats.avg_order_value || 0).toFixed(2)}`;
+                    if (!pageviewsError && todayPageviews) {
+                        document.getElementById('todayPageviews').textContent = todayPageviews.length;
+                    }
+                    
+                    // Get conversion data from conversions table
+                    const { data: todayConversions, error: conversionsError } = await state.db
+                        .from('analytics_conversions')
+                        .select('conversion_value, created_at')
+                        .gte('created_at', today + 'T00:00:00')
+                        .lte('created_at', today + 'T23:59:59');
+                    
+                    if (!conversionsError && todayConversions) {
+                        const conversionCount = todayConversions.length;
+                        const revenue = todayConversions.reduce((sum, conv) => sum + (conv.conversion_value || 0), 0);
+                        const pageviewsCount = parseInt(document.getElementById('todayPageviews').textContent) || 1;
+                        const conversionRate = (conversionCount / pageviewsCount * 100).toFixed(1);
+                        
+                        document.getElementById('conversionRate').textContent = `${conversionRate}%`;
+                        document.getElementById('revenueGenerated').textContent = `£${revenue.toFixed(2)}`;
+                        
+                        // Calculate average order value
+                        const avgOrderValue = conversionCount > 0 ? revenue / conversionCount : 0;
+                        document.getElementById('avgOrderValue').textContent = `£${avgOrderValue.toFixed(2)}`;
+                    }
+                    
+                    // Get session duration from sessions table
+                    const { data: recentSessions, error: sessionsError } = await state.db
+                        .from('analytics_sessions')
+                        .select('session_duration')
+                        .gte('created_at', today + 'T00:00:00')
+                        .lte('created_at', today + 'T23:59:59')
+                        .not('session_duration', 'is', null);
+                    
+                    if (!sessionsError && recentSessions && recentSessions.length > 0) {
+                        const avgDuration = recentSessions.reduce((sum, session) => sum + (session.session_duration || 0), 0) / recentSessions.length;
+                        document.getElementById('avgSessionDuration').textContent = `${Math.round(avgDuration / 60)}m`;
+                        
+                        // Calculate bounce rate (sessions with only 1 pageview)
+                        const { data: bounceSessions, error: bounceError } = await state.db
+                            .from('analytics_sessions')
+                            .select('pageviews_count')
+                            .gte('created_at', today + 'T00:00:00')
+                            .lte('created_at', today + 'T23:59:59');
+                        
+                        if (!bounceError && bounceSessions) {
+                            const bounceCount = bounceSessions.filter(s => (s.pageviews_count || 0) <= 1).length;
+                            const bounceRate = (bounceCount / bounceSessions.length * 100).toFixed(1);
+                            document.getElementById('bounceRate').textContent = `${bounceRate}%`;
+                        }
                     }
                     
                 } catch (err) {
@@ -4058,60 +4088,144 @@ ON CONFLICT (date) DO NOTHING;`;
                             break;
                     }
                     
-                    const { data: dailyStats, error } = await state.db
+                    // Try to get from analytics_daily_stats first
+                    const { data: dailyStats, error: dailyError } = await state.db
                         .from('analytics_daily_stats')
                         .select('*')
                         .gte('date', startDate.toISOString().split('T')[0])
                         .lte('date', endDate.toISOString().split('T')[0])
                         .order('date', { ascending: true });
                     
-                    if (error) {
-                        if (error.message.includes('does not exist')) {
-                            // Create sample data for demonstration
-                            createSampleChartData();
-                            return;
-                        }
-                        throw error;
+                    if (!dailyError && dailyStats && dailyStats.length > 0) {
+                        state.analyticsData.dailyStats = dailyStats;
+                        createChartsFromDailyStats(dailyStats);
+                        return;
                     }
                     
-                    if (dailyStats && dailyStats.length > 0) {
-                        state.analyticsData.dailyStats = dailyStats;
-                        createCharts(dailyStats);
-                    } else {
-                        createSampleChartData();
-                    }
+                    // If no daily stats table, calculate from raw data
+                    await calculateAndCreateCharts(startDate, endDate);
                     
                 } catch (err) {
                     console.error('Error loading daily stats:', err);
-                    createSampleChartData();
+                    showNotification('Error loading analytics data', 'error');
                 }
             }
             
-            function createSampleChartData() {
-                // Create sample data for demonstration
-                const sampleData = [];
-                const today = new Date();
-                
-                for (let i = 6; i >= 0; i--) {
-                    const date = new Date(today);
-                    date.setDate(today.getDate() - i);
+            async function calculateAndCreateCharts(startDate, endDate) {
+                try {
+                    // Get sessions data
+                    const { data: sessions, error: sessionsError } = await state.db
+                        .from('analytics_sessions')
+                        .select('created_at, session_duration, pageviews_count, is_converted')
+                        .gte('created_at', startDate.toISOString())
+                        .lte('created_at', endDate.toISOString())
+                        .order('created_at', { ascending: true });
                     
-                    sampleData.push({
-                        date: date.toISOString().split('T')[0],
-                        total_sessions: Math.floor(Math.random() * 100) + 50,
-                        total_visitors: Math.floor(Math.random() * 80) + 40,
-                        total_pageviews: Math.floor(Math.random() * 500) + 200,
-                        total_conversions: Math.floor(Math.random() * 10) + 2,
-                        conversion_rate: (Math.random() * 0.05) + 0.02,
-                        revenue_generated: Math.floor(Math.random() * 1000) + 500
+                    if (sessionsError) throw sessionsError;
+                    
+                    // Get pageviews data
+                    const { data: pageviews, error: pageviewsError } = await state.db
+                        .from('analytics_pageviews')
+                        .select('created_at')
+                        .gte('created_at', startDate.toISOString())
+                        .lte('created_at', endDate.toISOString());
+                    
+                    if (pageviewsError) throw pageviewsError;
+                    
+                    // Get conversions data
+                    const { data: conversions, error: conversionsError } = await state.db
+                        .from('analytics_conversions')
+                        .select('created_at, conversion_value')
+                        .gte('created_at', startDate.toISOString())
+                        .lte('created_at', endDate.toISOString());
+                    
+                    if (conversionsError) throw conversionsError;
+                    
+                    // Group data by date
+                    const dateMap = {};
+                    const oneDay = 24 * 60 * 60 * 1000;
+                    
+                    // Initialize date map
+                    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                        const dateStr = d.toISOString().split('T')[0];
+                        dateMap[dateStr] = {
+                            date: dateStr,
+                            total_sessions: 0,
+                            total_visitors: 0,
+                            total_pageviews: 0,
+                            total_conversions: 0,
+                            revenue_generated: 0,
+                            avg_session_duration: 0,
+                            bounce_rate: 0
+                        };
+                    }
+                    
+                    // Process sessions
+                    if (sessions) {
+                        sessions.forEach(session => {
+                            const date = new Date(session.created_at).toISOString().split('T')[0];
+                            if (dateMap[date]) {
+                                dateMap[date].total_sessions++;
+                                dateMap[date].total_visitors++;
+                                dateMap[date].avg_session_duration += session.session_duration || 0;
+                                if ((session.pageviews_count || 0) <= 1) {
+                                    // This is a bounce
+                                }
+                                if (session.is_converted) {
+                                    dateMap[date].total_conversions++;
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Process pageviews
+                    if (pageviews) {
+                        pageviews.forEach(pageview => {
+                            const date = new Date(pageview.created_at).toISOString().split('T')[0];
+                            if (dateMap[date]) {
+                                dateMap[date].total_pageviews++;
+                            }
+                        });
+                    }
+                    
+                    // Process conversions
+                    if (conversions) {
+                        conversions.forEach(conversion => {
+                            const date = new Date(conversion.created_at).toISOString().split('T')[0];
+                            if (dateMap[date]) {
+                                dateMap[date].total_conversions++;
+                                dateMap[date].revenue_generated += conversion.conversion_value || 0;
+                            }
+                        });
+                    }
+                    
+                    // Calculate averages and rates
+                    Object.values(dateMap).forEach(day => {
+                        if (day.total_sessions > 0) {
+                            day.avg_session_duration = Math.round(day.avg_session_duration / day.total_sessions / 60); // in minutes
+                            day.conversion_rate = day.total_pageviews > 0 ? (day.total_conversions / day.total_pageviews) : 0;
+                        }
                     });
+                    
+                    // Convert to array and sort
+                    const dailyStats = Object.values(dateMap)
+                        .filter(day => day.total_sessions > 0 || day.total_pageviews > 0)
+                        .sort((a, b) => new Date(a.date) - new Date(b.date));
+                    
+                    if (dailyStats.length > 0) {
+                        state.analyticsData.dailyStats = dailyStats;
+                        createChartsFromDailyStats(dailyStats);
+                    } else {
+                        showNotification('No analytics data available for the selected period', 'info');
+                    }
+                    
+                } catch (err) {
+                    console.error('Error calculating charts:', err);
+                    showNotification('Error calculating analytics data', 'error');
                 }
-                
-                state.analyticsData.dailyStats = sampleData;
-                createCharts(sampleData);
             }
             
-            function createCharts(dailyStats) {
+            function createChartsFromDailyStats(dailyStats) {
                 // Destroy existing charts
                 if (state.charts.trafficChart) {
                     state.charts.trafficChart.destroy();
@@ -4153,8 +4267,8 @@ ON CONFLICT (date) DO NOTHING;`;
                                 fill: true
                             },
                             {
-                                label: 'Visitors',
-                                data: visitors,
+                                label: 'Pageviews',
+                                data: pageviews,
                                 borderColor: '#10B981',
                                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
                                 tension: 0.4,
@@ -4190,103 +4304,181 @@ ON CONFLICT (date) DO NOTHING;`;
                     }
                 });
                 
-                // Sources Chart (Pie)
-                const sourcesCtx = document.getElementById('sourcesChart').getContext('2d');
-                state.charts.sourcesChart = new Chart(sourcesCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Organic Search', 'Direct Traffic', 'Social Media', 'Referral', 'Email'],
-                        datasets: [{
-                            data: [35, 25, 20, 15, 5],
-                            backgroundColor: [
-                                '#10B981',
-                                '#3B82F6',
-                                '#8B5CF6',
-                                '#F59E0B',
-                                '#EC4899'
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                            }
-                        }
-                    }
-                });
-                
-                // Geo Chart (Bar)
-                const geoCtx = document.getElementById('geoChart').getContext('2d');
-                state.charts.geoChart = new Chart(geoCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['London', 'Kent', 'Essex', 'Other'],
-                        datasets: [{
-                            label: 'Visitors',
-                            data: [45, 25, 15, 15],
-                            backgroundColor: [
-                                '#10B981',
-                                '#3B82F6',
-                                '#8B5CF6',
-                                '#F59E0B'
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    drawBorder: false
-                                }
+                // Load real data for other charts
+                loadRealChartData();
+            }
+            
+            async function loadRealChartData() {
+                try {
+                    // Get traffic sources data
+                    const { data: sourcesData, error: sourcesError } = await state.db
+                        .from('analytics_sessions')
+                        .select('utm_source, utm_medium')
+                        .not('utm_source', 'is', null)
+                        .limit(1000);
+                    
+                    if (!sourcesError && sourcesData) {
+                        // Calculate source distribution
+                        const sourceCounts = {};
+                        sourcesData.forEach(session => {
+                            const source = session.utm_source || 'Direct';
+                            sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+                        });
+                        
+                        // Create sources chart
+                        const sourcesCtx = document.getElementById('sourcesChart').getContext('2d');
+                        const sourceLabels = Object.keys(sourceCounts);
+                        const sourceValues = Object.values(sourceCounts);
+                        
+                        state.charts.sourcesChart = new Chart(sourcesCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: sourceLabels,
+                                datasets: [{
+                                    data: sourceValues,
+                                    backgroundColor: [
+                                        '#10B981', '#3B82F6', '#8B5CF6', '#F59E0B', '#EC4899',
+                                        '#6366F1', '#14B8A6', '#F97316', '#EF4444', '#8B5CF6'
+                                    ],
+                                    borderWidth: 0
+                                }]
                             },
-                            x: {
-                                grid: {
-                                    display: false
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                    }
                                 }
                             }
-                        }
+                        });
                     }
-                });
-                
-                // Device Chart (Doughnut)
-                const deviceCtx = document.getElementById('deviceChart').getContext('2d');
-                state.charts.deviceChart = new Chart(deviceCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Mobile', 'Desktop', 'Tablet'],
-                        datasets: [{
-                            data: [60, 35, 5],
-                            backgroundColor: [
-                                '#10B981',
-                                '#3B82F6',
-                                '#8B5CF6'
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
+                    
+                    // Get geographic data
+                    const { data: geoData, error: geoError } = await state.db
+                        .from('analytics_sessions')
+                        .select('city, region, country')
+                        .not('city', 'is', null)
+                        .limit(1000);
+                    
+                    if (!geoError && geoData) {
+                        // Calculate geographic distribution
+                        const locationCounts = {};
+                        geoData.forEach(session => {
+                            const location = session.city || session.region || session.country || 'Unknown';
+                            locationCounts[location] = (locationCounts[location] || 0) + 1;
+                        });
+                        
+                        // Sort and take top 4
+                        const sortedLocations = Object.entries(locationCounts)
+                            .sort((a, b) => b[1] - a[1])
+                            .slice(0, 4);
+                        
+                        // Create geo chart
+                        const geoCtx = document.getElementById('geoChart').getContext('2d');
+                        const geoLabels = sortedLocations.map(([location]) => location);
+                        const geoValues = sortedLocations.map(([, count]) => count);
+                        
+                        state.charts.geoChart = new Chart(geoCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: geoLabels,
+                                datasets: [{
+                                    label: 'Visitors',
+                                    data: geoValues,
+                                    backgroundColor: [
+                                        '#10B981',
+                                        '#3B82F6',
+                                        '#8B5CF6',
+                                        '#F59E0B'
+                                    ],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: {
+                                            drawBorder: false
+                                        }
+                                    },
+                                    x: {
+                                        grid: {
+                                            display: false
+                                        }
+                                    }
+                                }
                             }
-                        }
+                        });
                     }
-                });
+                    
+                    // Get device data
+                    const { data: deviceData, error: deviceError } = await state.db
+                        .from('analytics_sessions')
+                        .select('device_type')
+                        .not('device_type', 'is', null)
+                        .limit(1000);
+                    
+                    if (!deviceError && deviceData) {
+                        // Calculate device distribution
+                        const deviceCounts = { mobile: 0, desktop: 0, tablet: 0, other: 0 };
+                        deviceData.forEach(session => {
+                            const device = (session.device_type || '').toLowerCase();
+                            if (device.includes('mobile')) deviceCounts.mobile++;
+                            else if (device.includes('desktop')) deviceCounts.desktop++;
+                            else if (device.includes('tablet')) deviceCounts.tablet++;
+                            else deviceCounts.other++;
+                        });
+                        
+                        // Create device chart
+                        const deviceCtx = document.getElementById('deviceChart').getContext('2d');
+                        const deviceLabels = ['Mobile', 'Desktop', 'Tablet', 'Other'];
+                        const deviceValues = [
+                            deviceCounts.mobile,
+                            deviceCounts.desktop,
+                            deviceCounts.tablet,
+                            deviceCounts.other
+                        ];
+                        
+                        state.charts.deviceChart = new Chart(deviceCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: deviceLabels.filter((_, i) => deviceValues[i] > 0),
+                                datasets: [{
+                                    data: deviceValues.filter(v => v > 0),
+                                    backgroundColor: [
+                                        '#10B981',
+                                        '#3B82F6',
+                                        '#8B5CF6',
+                                        '#F59E0B'
+                                    ],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'right',
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    
+                } catch (err) {
+                    console.error('Error loading chart data:', err);
+                }
             }
             
             function switchChart(chartType) {
@@ -4337,17 +4529,17 @@ ON CONFLICT (date) DO NOTHING;`;
                     const container = document.getElementById('topPagesList');
                     container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading top pages...</div></div>';
                     
-                    // Try to get real data first
+                    // Get pageviews data
                     const { data: pageviews, error } = await state.db
                         .from('analytics_pageviews')
                         .select('page_url, page_title')
-                        .limit(10);
+                        .limit(1000);
                     
                     if (!error && pageviews && pageviews.length > 0) {
                         // Group by page URL
                         const pageCounts = {};
                         pageviews.forEach(pv => {
-                            const url = pv.page_url || 'Unknown';
+                            const url = pv.page_url || pv.page_title || 'Unknown';
                             pageCounts[url] = (pageCounts[url] || 0) + 1;
                         });
                         
@@ -4367,34 +4559,12 @@ ON CONFLICT (date) DO NOTHING;`;
                         html += '</tbody></table>';
                         container.innerHTML = html;
                     } else {
-                        // Show sample data
-                        const samplePages = [
-                            { url: '/', title: 'Homepage', views: 1250 },
-                            { url: '/services', title: 'Services', views: 890 },
-                            { url: '/book-now', title: 'Book Now', views: 750 },
-                            { url: '/contact', title: 'Contact', views: 620 },
-                            { url: '/about', title: 'About Us', views: 540 },
-                            { url: '/gallery', title: 'Gallery', views: 480 },
-                            { url: '/pricing', title: 'Pricing', views: 420 },
-                            { url: '/faq', title: 'FAQ', views: 380 },
-                            { url: '/reviews', title: 'Reviews', views: 350 },
-                            { url: '/blog', title: 'Blog', views: 310 }
-                        ];
-                        
-                        let html = '<table class="analytics-table">';
-                        html += '<thead><tr><th>Page</th><th>Views</th></tr></thead><tbody>';
-                        
-                        samplePages.forEach(page => {
-                            html += `<tr><td>${page.title}</td><td>${page.views.toLocaleString()}</td></tr>`;
-                        });
-                        
-                        html += '</tbody></table>';
-                        container.innerHTML = html;
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No pageview data available</div>';
                     }
                     
                 } catch (err) {
                     console.error('Error loading top pages:', err);
-                    document.getElementById('topPagesList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">Error loading top pages</div>';
+                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading top pages</div>';
                 }
             }
             
@@ -4403,7 +4573,7 @@ ON CONFLICT (date) DO NOTHING;`;
                     const container = document.getElementById('recentConversions');
                     container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading conversions...</div></div>';
                     
-                    // Try to get real data first
+                    // Get conversions data
                     const { data: conversions, error } = await state.db
                         .from('analytics_conversions')
                         .select('*')
@@ -4412,56 +4582,32 @@ ON CONFLICT (date) DO NOTHING;`;
                     
                     if (!error && conversions && conversions.length > 0) {
                         let html = '<table class="analytics-table">';
-                        html += '<thead><tr><th>Type</th><th>Value</th><th>Date</th></tr></thead><tbody>';
+                        html += '<thead><tr><th>Type</th><th>Value</th><th>Date</th><th>Source</th></tr></thead><tbody>';
                         
                         conversions.forEach(conv => {
                             const date = new Date(conv.created_at);
                             const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                             const value = conv.conversion_value ? `£${conv.conversion_value.toFixed(2)}` : '-';
+                            const source = conv.utm_source || 'Direct';
                             
                             html += `<tr>
                                 <td>${conv.conversion_type}</td>
                                 <td>${value}</td>
-                                <td>${dateStr}</td>
+                                <td>${dateStr} ${timeStr}</td>
+                                <td>${source}</td>
                             </tr>`;
                         });
                         
                         html += '</tbody></table>';
                         container.innerHTML = html;
                     } else {
-                        // Show sample data
-                        const sampleConversions = [
-                            { type: 'Booking', value: 120.00, date: 'Today' },
-                            { type: 'Quote Request', value: null, date: 'Today' },
-                            { type: 'Contact Form', value: null, date: 'Yesterday' },
-                            { type: 'Booking', value: 85.50, date: 'Yesterday' },
-                            { type: 'Quote Request', value: null, date: '2 days ago' },
-                            { type: 'Booking', value: 150.00, date: '3 days ago' },
-                            { type: 'Contact Form', value: null, date: '3 days ago' },
-                            { type: 'Booking', value: 95.00, date: '4 days ago' },
-                            { type: 'Quote Request', value: null, date: '5 days ago' },
-                            { type: 'Booking', value: 200.00, date: '6 days ago' }
-                        ];
-                        
-                        let html = '<table class="analytics-table">';
-                        html += '<thead><tr><th>Type</th><th>Value</th><th>Date</th></tr></thead><tbody>';
-                        
-                        sampleConversions.forEach(conv => {
-                            const value = conv.value ? `£${conv.value.toFixed(2)}` : '-';
-                            html += `<tr>
-                                <td>${conv.type}</td>
-                                <td>${value}</td>
-                                <td>${conv.date}</td>
-                            </tr>`;
-                        });
-                        
-                        html += '</tbody></table>';
-                        container.innerHTML = html;
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No conversion data available</div>';
                     }
                     
                 } catch (err) {
                     console.error('Error loading conversions:', err);
-                    document.getElementById('recentConversions').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">Error loading conversions</div>';
+                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading conversions</div>';
                 }
             }
             
@@ -4470,14 +4616,14 @@ ON CONFLICT (date) DO NOTHING;`;
                     const container = document.getElementById('recentActivity');
                     container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading activity...</div></div>';
                     
-                    // Try to get real data first
-                    const { data: events, error } = await state.db
+                    // Get recent events
+                    const { data: events, error: eventsError } = await state.db
                         .from('analytics_events')
                         .select('*')
                         .order('created_at', { ascending: false })
                         .limit(15);
                     
-                    if (!error && events && events.length > 0) {
+                    if (!eventsError && events && events.length > 0) {
                         let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
                         
                         events.forEach(event => {
@@ -4499,42 +4645,43 @@ ON CONFLICT (date) DO NOTHING;`;
                         html += '</div>';
                         container.innerHTML = html;
                     } else {
-                        // Show sample data
-                        const sampleActivities = [
-                            { type: 'Page View', category: 'Homepage', time: 'Just now' },
-                            { type: 'Button Click', category: 'Book Now', time: '2 mins ago' },
-                            { type: 'Form Submit', category: 'Contact Form', time: '5 mins ago' },
-                            { type: 'Page View', category: 'Services', time: '10 mins ago' },
-                            { type: 'Button Click', category: 'Learn More', time: '15 mins ago' },
-                            { type: 'Page View', category: 'Pricing', time: '20 mins ago' },
-                            { type: 'Form Submit', category: 'Quote Request', time: '25 mins ago' },
-                            { type: 'Button Click', category: 'Call Now', time: '30 mins ago' },
-                            { type: 'Page View', category: 'Gallery', time: '35 mins ago' },
-                            { type: 'Button Click', category: 'View Details', time: '40 mins ago' }
-                        ];
+                        // Try to get recent pageviews as activity
+                        const { data: pageviews, error: pageviewsError } = await state.db
+                            .from('analytics_pageviews')
+                            .select('page_url, created_at')
+                            .order('created_at', { ascending: false })
+                            .limit(15);
                         
-                        let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
-                        
-                        sampleActivities.forEach(activity => {
-                            html += `
-                                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--off-white); border-radius: 8px;">
-                                    <div style="width: 8px; height: 8px; background: var(--primary-green); border-radius: 50%;"></div>
-                                    <div style="flex: 1;">
-                                        <div style="font-weight: 600; font-size: 13px;">${activity.type}</div>
-                                        <div style="font-size: 12px; color: var(--medium-gray);">${activity.category}</div>
+                        if (!pageviewsError && pageviews && pageviews.length > 0) {
+                            let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+                            
+                            pageviews.forEach(pageview => {
+                                const time = new Date(pageview.created_at);
+                                const timeStr = time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                                const pageName = pageview.page_url.split('/').pop() || 'Page';
+                                
+                                html += `
+                                    <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--off-white); border-radius: 8px;">
+                                        <div style="width: 8px; height: 8px; background: var(--primary-green); border-radius: 50%;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; font-size: 13px;">Page View</div>
+                                            <div style="font-size: 12px; color: var(--medium-gray);">${pageName}</div>
+                                        </div>
+                                        <div style="font-size: 12px; color: var(--medium-gray);">${timeStr}</div>
                                     </div>
-                                    <div style="font-size: 12px; color: var(--medium-gray);">${activity.time}</div>
-                                </div>
-                            `;
-                        });
-                        
-                        html += '</div>';
-                        container.innerHTML = html;
+                                `;
+                            });
+                            
+                            html += '</div>';
+                            container.innerHTML = html;
+                        } else {
+                            container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No recent activity</div>';
+                        }
                     }
                     
                 } catch (err) {
                     console.error('Error loading activity:', err);
-                    document.getElementById('recentActivity').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">Error loading activity</div>';
+                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading activity</div>';
                 }
             }
             
@@ -4570,76 +4717,124 @@ ON CONFLICT (date) DO NOTHING;`;
                     
                 } catch (err) {
                     console.error('Error loading analytics table:', err);
-                    document.getElementById('analyticsDataTable').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading data</div>';
+                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading data</div>';
                 }
             }
             
             async function getDailyStatsTable() {
                 try {
-                    const { data: dailyStats, error } = await state.db
-                        .from('analytics_daily_stats')
-                        .select('*')
-                        .order('date', { ascending: false })
-                        .limit(20);
+                    // Calculate daily stats from raw data
+                    const endDate = new Date();
+                    const startDate = new Date();
+                    startDate.setDate(endDate.getDate() - 7); // Last 7 days
                     
-                    if (error) throw error;
+                    const { data: sessions, error: sessionsError } = await state.db
+                        .from('analytics_sessions')
+                        .select('created_at, session_duration, pageviews_count, is_converted')
+                        .gte('created_at', startDate.toISOString())
+                        .lte('created_at', endDate.toISOString());
                     
-                    if (dailyStats && dailyStats.length > 0) {
-                        let html = '<table class="analytics-table">';
-                        html += '<thead><tr>' +
-                            '<th>Date</th>' +
-                            '<th>Sessions</th>' +
-                            '<th>Visitors</th>' +
-                            '<th>Pageviews</th>' +
-                            '<th>Conv. Rate</th>' +
-                            '<th>Revenue</th>' +
-                        '</tr></thead><tbody>';
-                        
-                        dailyStats.forEach(stat => {
-                            const date = new Date(stat.date);
-                            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                            const convRate = ((stat.conversion_rate || 0) * 100).toFixed(1);
-                            const revenue = stat.revenue_generated ? `£${stat.revenue_generated.toFixed(2)}` : '-';
-                            
-                            html += `<tr>
-                                <td>${dateStr}</td>
-                                <td>${stat.total_sessions || 0}</td>
-                                <td>${stat.total_visitors || 0}</td>
-                                <td>${stat.total_pageviews || 0}</td>
-                                <td>${convRate}%</td>
-                                <td>${revenue}</td>
-                            </tr>`;
-                        });
-                        
-                        html += '</tbody></table>';
-                        return html;
+                    const { data: pageviews, error: pageviewsError } = await state.db
+                        .from('analytics_pageviews')
+                        .select('created_at')
+                        .gte('created_at', startDate.toISOString())
+                        .lte('created_at', endDate.toISOString());
+                    
+                    const { data: conversions, error: conversionsError } = await state.db
+                        .from('analytics_conversions')
+                        .select('created_at, conversion_value')
+                        .gte('created_at', startDate.toISOString())
+                        .lte('created_at', endDate.toISOString());
+                    
+                    if (sessionsError || pageviewsError || conversionsError) {
+                        throw new Error('Failed to fetch data');
                     }
+                    
+                    // Group by date
+                    const dateMap = {};
+                    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                        const dateStr = d.toISOString().split('T')[0];
+                        dateMap[dateStr] = {
+                            date: dateStr,
+                            sessions: 0,
+                            pageviews: 0,
+                            conversions: 0,
+                            revenue: 0,
+                            avg_duration: 0
+                        };
+                    }
+                    
+                    // Count sessions
+                    sessions?.forEach(session => {
+                        const date = new Date(session.created_at).toISOString().split('T')[0];
+                        if (dateMap[date]) {
+                            dateMap[date].sessions++;
+                            dateMap[date].avg_duration += session.session_duration || 0;
+                        }
+                    });
+                    
+                    // Count pageviews
+                    pageviews?.forEach(pageview => {
+                        const date = new Date(pageview.created_at).toISOString().split('T')[0];
+                        if (dateMap[date]) {
+                            dateMap[date].pageviews++;
+                        }
+                    });
+                    
+                    // Count conversions and revenue
+                    conversions?.forEach(conversion => {
+                        const date = new Date(conversion.created_at).toISOString().split('T')[0];
+                        if (dateMap[date]) {
+                            dateMap[date].conversions++;
+                            dateMap[date].revenue += conversion.conversion_value || 0;
+                        }
+                    });
+                    
+                    // Calculate averages
+                    Object.values(dateMap).forEach(day => {
+                        if (day.sessions > 0) {
+                            day.avg_duration = Math.round(day.avg_duration / day.sessions / 60); // Convert to minutes
+                        }
+                    });
+                    
+                    // Convert to array and sort
+                    const dailyData = Object.values(dateMap)
+                        .filter(day => day.sessions > 0 || day.pageviews > 0)
+                        .sort((a, b) => new Date(b.date) - new Date(a.date));
+                    
+                    let html = '<table class="analytics-table">';
+                    html += '<thead><tr>' +
+                        '<th>Date</th>' +
+                        '<th>Sessions</th>' +
+                        '<th>Pageviews</th>' +
+                        '<th>Conversions</th>' +
+                        '<th>Revenue</th>' +
+                        '<th>Avg. Duration</th>' +
+                    '</tr></thead><tbody>';
+                    
+                    dailyData.forEach(day => {
+                        const date = new Date(day.date);
+                        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        const revenue = day.revenue > 0 ? `£${day.revenue.toFixed(2)}` : '-';
+                        const avgDuration = day.avg_duration > 0 ? `${day.avg_duration}m` : '-';
+                        
+                        html += `<tr>
+                            <td>${dateStr}</td>
+                            <td>${day.sessions}</td>
+                            <td>${day.pageviews}</td>
+                            <td>${day.conversions}</td>
+                            <td>${revenue}</td>
+                            <td>${avgDuration}</td>
+                        </tr>`;
+                    });
+                    
+                    html += '</tbody></table>';
+                    return html;
+                    
                 } catch (err) {
                     console.error('Error getting daily stats:', err);
+                    return '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No daily stats available</div>';
                 }
-                
-                // Return sample data if real data not available
-                return `
-                    <table class="analytics-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Sessions</th>
-                                <th>Visitors</th>
-                                <th>Pageviews</th>
-                                <th>Conv. Rate</th>
-                                <th>Revenue</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Today</td><td>145</td><td>112</td><td>680</td><td>3.2%</td><td>£480.50</td></tr>
-                            <tr><td>Yesterday</td><td>132</td><td>98</td><td>620</td><td>2.8%</td><td>£420.00</td></tr>
-                            <tr><td>2 days ago</td><td>128</td><td>95</td><td>590</td><td>2.5%</td><td>£380.75</td></tr>
-                            <tr><td>3 days ago</td><td>142</td><td>108</td><td>650</td><td>3.0%</td><td>£450.00</td></tr>
-                            <tr><td>4 days ago</td><td>118</td><td>88</td><td>540</td><td>2.2%</td><td>£320.50</td></tr>
-                        </tbody>
-                    </table>
-                `;
             }
             
             async function getSessionsTable() {
@@ -4650,9 +4845,7 @@ ON CONFLICT (date) DO NOTHING;`;
                         .order('created_at', { ascending: false })
                         .limit(15);
                     
-                    if (error) throw error;
-                    
-                    if (sessions && sessions.length > 0) {
+                    if (!error && sessions && sessions.length > 0) {
                         let html = '<table class="analytics-table">';
                         html += '<thead><tr>' +
                             '<th>Date</th>' +
@@ -4666,12 +4859,13 @@ ON CONFLICT (date) DO NOTHING;`;
                         sessions.forEach(session => {
                             const date = new Date(session.created_at);
                             const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                             const duration = session.session_duration ? `${Math.round(session.session_duration / 60)}m` : '-';
-                            const location = session.city || session.country || 'Unknown';
-                            const source = session.utm_source || session.referrer ? 'Direct' : 'Direct';
+                            const location = session.city || session.region || session.country || 'Unknown';
+                            const source = session.utm_source || (session.referrer ? 'Referral' : 'Direct');
                             
                             html += `<tr>
-                                <td>${dateStr}</td>
+                                <td>${dateStr}<br><small>${timeStr}</small></td>
                                 <td>${session.device_type || 'Desktop'}</td>
                                 <td>${location}</td>
                                 <td>${source}</td>
@@ -4682,33 +4876,14 @@ ON CONFLICT (date) DO NOTHING;`;
                         
                         html += '</tbody></table>';
                         return html;
+                    } else {
+                        return '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No session data available</div>';
                     }
+                    
                 } catch (err) {
                     console.error('Error getting sessions:', err);
+                    return '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading sessions</div>';
                 }
-                
-                // Return sample data
-                return `
-                    <table class="analytics-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Device</th>
-                                <th>Location</th>
-                                <th>Source</th>
-                                <th>Duration</th>
-                                <th>Converted</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Today</td><td>Mobile</td><td>London</td><td>Google</td><td>4m</td><td>Yes</td></tr>
-                            <tr><td>Today</td><td>Desktop</td><td>Kent</td><td>Direct</td><td>8m</td><td>No</td></tr>
-                            <tr><td>Today</td><td>Tablet</td><td>Essex</td><td>Facebook</td><td>3m</td><td>Yes</td></tr>
-                            <tr><td>Yesterday</td><td>Mobile</td><td>London</td><td>Instagram</td><td>6m</td><td>No</td></tr>
-                            <tr><td>Yesterday</td><td>Desktop</td><td>Kent</td><td>Direct</td><td>12m</td><td>Yes</td></tr>
-                        </tbody>
-                    </table>
-                `;
             }
             
             async function getConversionsTable() {
@@ -4719,66 +4894,43 @@ ON CONFLICT (date) DO NOTHING;`;
                         .order('created_at', { ascending: false })
                         .limit(15);
                     
-                    if (error) throw error;
-                    
-                    if (conversions && conversions.length > 0) {
+                    if (!error && conversions && conversions.length > 0) {
                         let html = '<table class="analytics-table">';
                         html += '<thead><tr>' +
                             '<th>Date</th>' +
                             '<th>Type</th>' +
                             '<th>Value</th>' +
                             '<th>Source</th>' +
-                            '<th>Funnel Stage</th>' +
-                            '<th>Days to Convert</th>' +
+                            '<th>Details</th>' +
                         '</tr></thead><tbody>';
                         
                         conversions.forEach(conv => {
                             const date = new Date(conv.created_at);
                             const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                            const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                             const value = conv.conversion_value ? `£${conv.conversion_value.toFixed(2)}` : '-';
                             const source = conv.utm_source || 'Direct';
-                            const funnelStage = conv.funnel_stage || 'Unknown';
-                            const daysToConvert = conv.days_to_convert || '-';
+                            const details = conv.service_type || conv.funnel_stage || '-';
                             
                             html += `<tr>
-                                <td>${dateStr}</td>
+                                <td>${dateStr}<br><small>${timeStr}</small></td>
                                 <td>${conv.conversion_type}</td>
                                 <td>${value}</td>
                                 <td>${source}</td>
-                                <td>${funnelStage}</td>
-                                <td>${daysToConvert}</td>
+                                <td>${details}</td>
                             </tr>`;
                         });
                         
                         html += '</tbody></table>';
                         return html;
+                    } else {
+                        return '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No conversion data available</div>';
                     }
+                    
                 } catch (err) {
                     console.error('Error getting conversions:', err);
+                    return '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading conversions</div>';
                 }
-                
-                // Return sample data
-                return `
-                    <table class="analytics-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Value</th>
-                                <th>Source</th>
-                                <th>Funnel Stage</th>
-                                <th>Days to Convert</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Today</td><td>Booking</td><td>£120.00</td><td>Google</td><td>Completed</td><td>2</td></tr>
-                            <tr><td>Today</td><td>Quote</td><td>-</td><td>Direct</td><td>Consideration</td><td>5</td></tr>
-                            <tr><td>Yesterday</td><td>Booking</td><td>£85.50</td><td>Facebook</td><td>Completed</td><td>1</td></tr>
-                            <tr><td>2 days ago</td><td>Contact</td><td>-</td><td>Instagram</td><td>Awareness</td><td>0</td></tr>
-                            <tr><td>3 days ago</td><td>Booking</td><td>£150.00</td><td>Direct</td><td>Completed</td><td>3</td></tr>
-                        </tbody>
-                    </table>
-                `;
             }
             
             async function getSearchTermsTable() {
@@ -4789,9 +4941,7 @@ ON CONFLICT (date) DO NOTHING;`;
                         .order('search_count', { ascending: false })
                         .limit(15);
                     
-                    if (error) throw error;
-                    
-                    if (searchTerms && searchTerms.length > 0) {
+                    if (!error && searchTerms && searchTerms.length > 0) {
                         let html = '<table class="analytics-table">';
                         html += '<thead><tr>' +
                             '<th>Search Term</th>' +
@@ -4817,32 +4967,14 @@ ON CONFLICT (date) DO NOTHING;`;
                         
                         html += '</tbody></table>';
                         return html;
+                    } else {
+                        return '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No search term data available</div>';
                     }
+                    
                 } catch (err) {
                     console.error('Error getting search terms:', err);
+                    return '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading search terms</div>';
                 }
-                
-                // Return sample data
-                return `
-                    <table class="analytics-table">
-                        <thead>
-                            <tr>
-                                <th>Search Term</th>
-                                <th>Count</th>
-                                <th>Postcode</th>
-                                <th>In Coverage</th>
-                                <th>Last Searched</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>garden cleaning</td><td>45</td><td>SE1</td><td>Yes</td><td>Today</td></tr>
-                            <tr><td>window cleaning london</td><td>38</td><td>SW1</td><td>Yes</td><td>Today</td></tr>
-                            <tr><td>pressure washing</td><td>32</td><td>E1</td><td>Yes</td><td>Yesterday</td></tr>
-                            <tr><td>gutter cleaning near me</td><td>28</td><td>N1</td><td>Yes</td><td>Yesterday</td></tr>
-                            <tr><td>commercial cleaning</td><td>25</td><td>WC1</td><td>Yes</td><td>2 days ago</td></tr>
-                        </tbody>
-                    </table>
-                `;
             }
             
             function handleDateRangeChange() {
@@ -4875,22 +5007,10 @@ ON CONFLICT (date) DO NOTHING;`;
                 }
                 
                 try {
-                    const { data: dailyStats, error } = await state.db
-                        .from('analytics_daily_stats')
-                        .select('*')
-                        .gte('date', startDate)
-                        .lte('date', endDate)
-                        .order('date', { ascending: true });
-                    
-                    if (error) throw error;
-                    
-                    if (dailyStats && dailyStats.length > 0) {
-                        state.analyticsData.dailyStats = dailyStats;
-                        createCharts(dailyStats);
-                        showNotification('Custom range applied successfully!', 'success');
-                    } else {
-                        showNotification('No data available for the selected range', 'warning');
-                    }
+                    // Update the date range and reload
+                    document.getElementById('analyticsDateRange').value = 'custom';
+                    await loadDailyStats();
+                    showNotification('Custom range applied successfully!', 'success');
                     
                 } catch (err) {
                     console.error('Error applying custom range:', err);
@@ -4900,6 +5020,11 @@ ON CONFLICT (date) DO NOTHING;`;
             
             function exportAnalytics() {
                 try {
+                    if (!state.analyticsData.dailyStats || state.analyticsData.dailyStats.length === 0) {
+                        showNotification('No data to export', 'warning');
+                        return;
+                    }
+                    
                     // Create CSV content
                     let csvContent = "data:text/csv;charset=utf-8,";
                     
@@ -4908,20 +5033,18 @@ ON CONFLICT (date) DO NOTHING;`;
                     csvContent += headers.join(",") + "\n";
                     
                     // Add data
-                    if (state.analyticsData.dailyStats && state.analyticsData.dailyStats.length > 0) {
-                        state.analyticsData.dailyStats.forEach(stat => {
-                            const row = [
-                                stat.date,
-                                stat.total_sessions || 0,
-                                stat.total_visitors || 0,
-                                stat.total_pageviews || 0,
-                                stat.total_conversions || 0,
-                                ((stat.conversion_rate || 0) * 100).toFixed(2),
-                                stat.revenue_generated || 0
-                            ];
-                            csvContent += row.join(",") + "\n";
-                        });
-                    }
+                    state.analyticsData.dailyStats.forEach(stat => {
+                        const row = [
+                            stat.date,
+                            stat.total_sessions || 0,
+                            stat.total_visitors || 0,
+                            stat.total_pageviews || 0,
+                            stat.total_conversions || 0,
+                            ((stat.conversion_rate || 0) * 100).toFixed(2),
+                            stat.revenue_generated || 0
+                        ];
+                        csvContent += row.join(",") + "\n";
+                    });
                     
                     // Create download link
                     const encodedUri = encodeURI(csvContent);
