@@ -2,6 +2,910 @@
 <html lang="en">
 
 <head>
+    <!-- GreenGlo Analytics Tracking -->
+<script>
+    // =============================================
+    // WEBSITE ANALYTICS TRACKING SYSTEM
+    // =============================================
+
+    // Configuration
+    const ANALYTICS_CONFIG = {
+        supabaseUrl: 'https://faxjeniohetefqwcsefi.supabase.co',
+        supabaseKey: 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7',
+        trackingEnabled: true,
+        sessionTimeout: 30 * 60 * 1000, // 30 minutes
+        pageviewTimeout: 10 * 1000, // 10 seconds for time on page
+        debugMode: false
+    };
+
+    // Analytics state
+    let analytics = {
+        sessionId: null,
+        currentPage: null,
+        lastActivity: Date.now(),
+        pageStartTime: Date.now(),
+        scrollDepth: 0,
+        sessionStartTime: Date.now(),
+        supabaseClient: null,
+        deviceInfo: {},
+        utmParams: {}
+    };
+
+    // Initialize analytics
+    function initAnalytics() {
+        try {
+            // Generate session ID
+            analytics.sessionId = generateSessionId();
+            
+            // Get device and browser information
+            analytics.deviceInfo = getDeviceInfo();
+            
+            // Parse UTM parameters
+            analytics.utmParams = getUtmParams();
+            
+            // Initialize Supabase client
+            if (typeof supabase !== 'undefined') {
+                analytics.supabaseClient = supabase.createClient(
+                    ANALYTICS_CONFIG.supabaseUrl,
+                    ANALYTICS_CONFIG.supabaseKey
+                );
+                console.log('[Analytics] Supabase client initialized');
+            }
+            
+            // Start tracking
+            startSessionTracking();
+            setupEventListeners();
+            trackPageView();
+            
+            // Set up session timeout
+            setInterval(checkSessionTimeout, 60000); // Check every minute
+            
+            console.log('[Analytics] Tracking initialized successfully');
+            
+        } catch (error) {
+            console.error('[Analytics] Initialization error:', error);
+        }
+    }
+
+    // Generate unique session ID
+    function generateSessionId() {
+        const storedSessionId = localStorage.getItem('gg_session_id');
+        const lastSessionTime = localStorage.getItem('gg_session_time');
+        const now = Date.now();
+        
+        // If session exists and is less than 30 minutes old, keep it
+        if (storedSessionId && lastSessionTime && (now - parseInt(lastSessionTime)) < ANALYTICS_CONFIG.sessionTimeout) {
+            return storedSessionId;
+        }
+        
+        // Generate new session ID
+        const sessionId = 'gg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('gg_session_id', sessionId);
+        localStorage.setItem('gg_session_time', now.toString());
+        
+        return sessionId;
+    }
+
+    // Get device and browser information
+    function getDeviceInfo() {
+        const ua = navigator.userAgent;
+        let deviceType = 'desktop';
+        let browser = 'unknown';
+        let os = 'unknown';
+        
+        // Detect device type
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
+            deviceType = 'mobile';
+        } else if (/Tablet|iPad/i.test(ua)) {
+            deviceType = 'tablet';
+        }
+        
+        // Detect browser
+        if (ua.includes('Chrome') && !ua.includes('Edg')) {
+            browser = 'Chrome';
+        } else if (ua.includes('Firefox')) {
+            browser = 'Firefox';
+        } else if (ua.includes('Safari') && !ua.includes('Chrome')) {
+            browser = 'Safari';
+        } else if (ua.includes('Edg')) {
+            browser = 'Edge';
+        }
+        
+        // Detect OS
+        if (ua.includes('Windows')) {
+            os = 'Windows';
+        } else if (ua.includes('Mac OS')) {
+            os = 'macOS';
+        } else if (ua.includes('Linux')) {
+            os = 'Linux';
+        } else if (ua.includes('Android')) {
+            os = 'Android';
+        } else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) {
+            os = 'iOS';
+        }
+        
+        return {
+            deviceType,
+            browser,
+            os,
+            screenResolution: `${screen.width}x${screen.height}`,
+            language: navigator.language || navigator.userLanguage,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            userAgent: ua
+        };
+    }
+
+    // Parse UTM parameters from URL
+    function getUtmParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            source: params.get('utm_source') || document.referrer ? getReferrerSource(document.referrer) : 'direct',
+            medium: params.get('utm_medium') || 'organic',
+            campaign: params.get('utm_campaign') || '',
+            term: params.get('utm_term') || '',
+            content: params.get('utm_content') || ''
+        };
+    }
+
+    // Determine referrer source
+    function getReferrerSource(referrer) {
+        if (!referrer) return 'direct';
+        
+        const referrerUrl = new URL(referrer);
+        const hostname = referrerUrl.hostname;
+        
+        if (hostname.includes('google') || hostname.includes('bing') || hostname.includes('yahoo')) {
+            return 'organic';
+        } else if (hostname.includes('facebook') || hostname.includes('instagram') || hostname.includes('tiktok')) {
+            return 'social';
+        } else {
+            return 'referral';
+        }
+    }
+
+    // Start session tracking
+    async function startSessionTracking() {
+        try {
+            const isFirstVisit = !localStorage.getItem('gg_first_visit');
+            if (isFirstVisit) {
+                localStorage.setItem('gg_first_visit', 'true');
+            }
+            
+            const sessionData = {
+                session_id: analytics.sessionId,
+                user_id: getUserId(),
+                device_type: analytics.deviceInfo.deviceType,
+                browser: analytics.deviceInfo.browser,
+                os: analytics.deviceInfo.os,
+                screen_resolution: analytics.deviceInfo.screenResolution,
+                language: analytics.deviceInfo.language,
+                timezone: analytics.deviceInfo.timezone,
+                ip_address: await getIPAddress(),
+                is_first_visit: isFirstVisit,
+                utm_source: analytics.utmParams.source,
+                utm_medium: analytics.utmParams.medium,
+                utm_campaign: analytics.utmParams.campaign,
+                utm_term: analytics.utmParams.term,
+                utm_content: analytics.utmParams.content,
+                referrer: document.referrer || '',
+                landing_page: window.location.pathname
+            };
+            
+            // Store session data locally
+            sessionStorage.setItem('current_session', JSON.stringify(sessionData));
+            
+            // Send to Supabase if client is available
+            if (analytics.supabaseClient) {
+                const { error } = await analytics.supabaseClient
+                    .from('analytics_sessions')
+                    .insert([sessionData]);
+                
+                if (error) {
+                    console.error('[Analytics] Error logging session:', error);
+                    // Store locally for retry
+                    storeFailedEvent('session', sessionData);
+                }
+            }
+            
+            // Update active users
+            updateActiveUsers();
+            
+        } catch (error) {
+            console.error('[Analytics] Error starting session:', error);
+        }
+    }
+
+    // Get user ID (from cookie or generate anonymous)
+    function getUserId() {
+        let userId = localStorage.getItem('gg_user_id');
+        if (!userId) {
+            userId = 'anon_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('gg_user_id', userId);
+        }
+        return userId;
+    }
+
+    // Get IP address (approximate)
+    async function getIPAddress() {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip;
+        } catch (error) {
+            return 'unknown';
+        }
+    }
+
+    // Track page view
+    async function trackPageView() {
+        try {
+            analytics.currentPage = window.location.href;
+            analytics.pageStartTime = Date.now();
+            analytics.scrollDepth = 0;
+            
+            const pageviewData = {
+                session_id: analytics.sessionId,
+                page_url: window.location.href,
+                page_title: document.title,
+                page_path: window.location.pathname,
+                referrer: document.referrer || '',
+                metadata: {
+                    scroll_depth: 0,
+                    time_on_page: 0
+                }
+            };
+            
+            // Store pageview data
+            if (analytics.supabaseClient) {
+                const { error } = await analytics.supabaseClient
+                    .from('analytics_pageviews')
+                    .insert([pageviewData]);
+                
+                if (error) {
+                    console.error('[Analytics] Error logging pageview:', error);
+                    storeFailedEvent('pageview', pageviewData);
+                }
+            }
+            
+            // Update last activity
+            analytics.lastActivity = Date.now();
+            
+            // Track time on page when leaving
+            window.addEventListener('beforeunload', trackTimeOnPage);
+            
+            // Start scroll tracking
+            startScrollTracking();
+            
+        } catch (error) {
+            console.error('[Analytics] Error tracking pageview:', error);
+        }
+    }
+
+    // Track time on page
+    function trackTimeOnPage() {
+        const timeOnPage = Math.round((Date.now() - analytics.pageStartTime) / 1000);
+        
+        // Store time on page data
+        const timeData = {
+            session_id: analytics.sessionId,
+            page_url: analytics.currentPage,
+            time_on_page: timeOnPage,
+            scroll_depth: analytics.scrollDepth
+        };
+        
+        // Send via Beacon API for reliability
+        const blob = new Blob([JSON.stringify(timeData)], {type: 'application/json'});
+        navigator.sendBeacon(`${ANALYTICS_CONFIG.supabaseUrl}/rest/v1/analytics_pageviews?select=*`, blob);
+    }
+
+    // Start scroll tracking
+    function startScrollTracking() {
+        let scrollTracked25 = false;
+        let scrollTracked50 = false;
+        let scrollTracked75 = false;
+        let scrollTracked100 = false;
+        
+        window.addEventListener('scroll', function() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercentage = (scrollTop / scrollHeight) * 100;
+            
+            analytics.scrollDepth = Math.max(analytics.scrollDepth, scrollPercentage);
+            
+            // Track scroll milestones
+            if (scrollPercentage >= 25 && !scrollTracked25) {
+                scrollTracked25 = true;
+                trackEvent('scroll', 'page_scroll', '25%', scrollPercentage);
+            }
+            if (scrollPercentage >= 50 && !scrollTracked50) {
+                scrollTracked50 = true;
+                trackEvent('scroll', 'page_scroll', '50%', scrollPercentage);
+            }
+            if (scrollPercentage >= 75 && !scrollTracked75) {
+                scrollTracked75 = true;
+                trackEvent('scroll', 'page_scroll', '75%', scrollPercentage);
+            }
+            if (scrollPercentage >= 95 && !scrollTracked100) {
+                scrollTracked100 = true;
+                trackEvent('scroll', 'page_scroll', '100%', scrollPercentage);
+            }
+        });
+    }
+
+    // Track user events
+    async function trackEvent(eventType, category, label, value = null, element = null) {
+        try {
+            const eventData = {
+                session_id: analytics.sessionId,
+                event_type: eventType,
+                event_category: category,
+                event_label: label,
+                event_value: value,
+                element_id: element?.id || null,
+                element_class: element?.className || null,
+                element_text: element?.textContent?.substring(0, 100) || null,
+                page_url: window.location.href,
+                metadata: {
+                    timestamp: Date.now(),
+                    scroll_position: window.pageYOffset
+                }
+            };
+            
+            // Update last activity
+            analytics.lastActivity = Date.now();
+            
+            // Send to Supabase
+            if (analytics.supabaseClient) {
+                const { error } = await analytics.supabaseClient
+                    .from('analytics_events')
+                    .insert([eventData]);
+                
+                if (error) {
+                    console.error('[Analytics] Error logging event:', error);
+                    storeFailedEvent('event', eventData);
+                }
+            }
+            
+            // Log for debugging
+            if (ANALYTICS_CONFIG.debugMode) {
+                console.log(`[Analytics] Event: ${category} - ${label}`, eventData);
+            }
+            
+        } catch (error) {
+            console.error('[Analytics] Error tracking event:', error);
+        }
+    }
+
+    // Track conversion
+    async function trackConversion(conversionType, bookingId = null, customerEmail = null, serviceType = null, estimatedValue = null) {
+        try {
+            const conversionData = {
+                session_id: analytics.sessionId,
+                conversion_type: conversionType,
+                booking_id: bookingId,
+                customer_email: customerEmail,
+                service_type: serviceType,
+                estimated_value: estimatedValue,
+                pageviews_to_convert: getPageviewCount(),
+                days_to_convert: Math.round((Date.now() - analytics.sessionStartTime) / (1000 * 60 * 60 * 24)),
+                utm_source: analytics.utmParams.source,
+                utm_medium: analytics.utmParams.medium,
+                utm_campaign: analytics.utmParams.campaign
+            };
+            
+            // Send to Supabase
+            if (analytics.supabaseClient) {
+                const { error } = await analytics.supabaseClient
+                    .from('analytics_conversions')
+                    .insert([conversionData]);
+                
+                if (error) {
+                    console.error('[Analytics] Error logging conversion:', error);
+                    storeFailedEvent('conversion', conversionData);
+                }
+            }
+            
+            // Update session as converted
+            if (analytics.supabaseClient) {
+                await analytics.supabaseClient
+                    .from('analytics_sessions')
+                    .update({ is_converted: true, conversion_type: conversionType })
+                    .eq('session_id', analytics.sessionId);
+            }
+            
+            console.log(`[Analytics] Conversion tracked: ${conversionType}`);
+            
+        } catch (error) {
+            console.error('[Analytics] Error tracking conversion:', error);
+        }
+    }
+
+    // Get pageview count for current session
+    function getPageviewCount() {
+        return parseInt(sessionStorage.getItem('pageview_count') || '1');
+    }
+
+    // Update active users
+    async function updateActiveUsers() {
+        try {
+            const activeUserData = {
+                session_id: analytics.sessionId,
+                user_id: getUserId(),
+                page_url: window.location.href,
+                last_activity: new Date().toISOString(),
+                active_duration: Math.round((Date.now() - analytics.sessionStartTime) / 1000),
+                is_mobile: analytics.deviceInfo.deviceType === 'mobile',
+                city: await getCityFromIP()
+            };
+            
+            if (analytics.supabaseClient) {
+                const { error } = await analytics.supabaseClient
+                    .from('analytics_active_users')
+                    .upsert([activeUserData], { onConflict: 'session_id' });
+                
+                if (error) {
+                    console.error('[Analytics] Error updating active users:', error);
+                }
+            }
+            
+        } catch (error) {
+            console.error('[Analytics] Error updating active users:', error);
+        }
+    }
+
+    // Get city from IP (simplified)
+    async function getCityFromIP() {
+        try {
+            const response = await fetch('https://ipapi.co/json/');
+            const data = await response.json();
+            return data.city || 'Unknown';
+        } catch (error) {
+            return 'Unknown';
+        }
+    }
+
+    // Check session timeout
+    function checkSessionTimeout() {
+        const inactiveTime = Date.now() - analytics.lastActivity;
+        if (inactiveTime > ANALYTICS_CONFIG.sessionTimeout) {
+            // Session expired, create new one
+            analytics.sessionId = generateSessionId();
+            startSessionTracking();
+        }
+    }
+
+    // Store failed events for retry
+    function storeFailedEvent(type, data) {
+        try {
+            const failedEvents = JSON.parse(localStorage.getItem('gg_failed_events') || '[]');
+            failedEvents.push({
+                type: type,
+                data: data,
+                timestamp: Date.now()
+            });
+            
+            // Keep only last 50 failed events
+            if (failedEvents.length > 50) {
+                failedEvents.shift();
+            }
+            
+            localStorage.setItem('gg_failed_events', JSON.stringify(failedEvents));
+        } catch (error) {
+            console.error('[Analytics] Error storing failed event:', error);
+        }
+    }
+
+    // Retry failed events
+    async function retryFailedEvents() {
+        try {
+            const failedEvents = JSON.parse(localStorage.getItem('gg_failed_events') || '[]');
+            if (failedEvents.length === 0) return;
+            
+            for (const event of failedEvents) {
+                if (analytics.supabaseClient) {
+                    const { error } = await analytics.supabaseClient
+                        .from(`analytics_${event.type}s`)
+                        .insert([event.data]);
+                    
+                    if (!error) {
+                        // Remove successful event
+                        const index = failedEvents.indexOf(event);
+                        failedEvents.splice(index, 1);
+                    }
+                }
+            }
+            
+            localStorage.setItem('gg_failed_events', JSON.stringify(failedEvents));
+        } catch (error) {
+            console.error('[Analytics] Error retrying failed events:', error);
+        }
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+        // Track button clicks
+        document.addEventListener('click', function(e) {
+            const target = e.target;
+            
+            // Check if it's a button or link
+            if (target.tagName === 'BUTTON' || target.tagName === 'A' || target.closest('button') || target.closest('a')) {
+                const button = target.tagName === 'BUTTON' || target.closest('button') ? 
+                              (target.tagName === 'BUTTON' ? target : target.closest('button')) :
+                              (target.tagName === 'A' ? target : target.closest('a'));
+                
+                const text = button.textContent.trim().substring(0, 50) || button.getAttribute('aria-label') || 'Unknown';
+                const id = button.id || 'no-id';
+                
+                trackEvent('click', 'button', text, null, button);
+                
+                // Special tracking for important buttons
+                if (button.textContent.includes('Quote') || button.textContent.includes('Get Quote') || button.textContent.includes('Free Quote')) {
+                    trackEvent('click', 'conversion', 'quote_request_click', null, button);
+                }
+                if (button.textContent.includes('Book') || button.textContent.includes('Schedule') || button.textContent.includes('Appointment')) {
+                    trackEvent('click', 'conversion', 'booking_click', null, button);
+                }
+                if (button.textContent.includes('WhatsApp') || button.getAttribute('href')?.includes('whatsapp')) {
+                    trackEvent('click', 'messaging', 'whatsapp_click', null, button);
+                }
+            }
+        });
+        
+        // Track form submissions
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            trackEvent('submit', 'form', form.id || 'form_submission', null, form);
+        });
+        
+        // Track coverage checker submissions
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'checkButton' || e.target.closest('#checkButton')) {
+                const postcodeInput = document.getElementById('postcodeInput');
+                if (postcodeInput && postcodeInput.value) {
+                    trackEvent('submit', 'coverage_check', 'postcode_check', postcodeInput.value);
+                }
+            }
+        });
+        
+        // Track outbound links
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a');
+            if (link && link.href && link.hostname !== window.location.hostname) {
+                trackEvent('click', 'outbound_link', link.href, null, link);
+            }
+        });
+        
+        // Track visibility change (tab switch)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                trackEvent('view', 'page_visibility', 'tab_hidden');
+            } else {
+                trackEvent('view', 'page_visibility', 'tab_visible');
+            }
+        });
+        
+        // Track mobile menu toggle
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'mobileMenuBtn' || e.target.closest('#mobileMenuBtn')) {
+                trackEvent('click', 'navigation', 'mobile_menu_toggle');
+            }
+        });
+        
+        // Track video plays (if any)
+        document.addEventListener('play', function(e) {
+            if (e.target.tagName === 'VIDEO') {
+                trackEvent('play', 'video', e.target.src || 'video_play');
+            }
+        }, true);
+        
+        // Track newsletter signups
+        const newsletterForm = document.querySelector('.newsletter-form form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', function() {
+                trackEvent('submit', 'newsletter', 'signup');
+            });
+        }
+    }
+
+    // Google Analytics 4 Integration
+    function initGoogleAnalytics() {
+        // Add GA4 script
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-YOUR_GA4_ID'; // Replace with your GA4 ID
+        document.head.appendChild(script);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YOUR_GA4_ID'); // Replace with your GA4 ID
+        
+        // Enhanced ecommerce tracking for bookings
+        gtag('event', 'page_view', {
+            page_location: window.location.href,
+            page_title: document.title
+        });
+    }
+
+    // Privacy compliance (GDPR)
+    function initPrivacyCompliance() {
+        // Check if user has consented to tracking
+        const hasConsent = localStorage.getItem('gg_analytics_consent');
+        
+        if (hasConsent === 'true') {
+            // User has consented, initialize tracking
+            initAnalytics();
+            initGoogleAnalytics();
+        } else if (hasConsent === 'false') {
+            // User has declined, don't track
+            ANALYTICS_CONFIG.trackingEnabled = false;
+        } else {
+            // First visit, show consent banner
+            showConsentBanner();
+        }
+    }
+
+    // Show consent banner
+    function showConsentBanner() {
+        const bannerHTML = `
+            <div id="analyticsConsentBanner" style="
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: var(--dark-green);
+                color: white;
+                padding: 20px;
+                z-index: 9999;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            ">
+                <div style="flex: 1;">
+                    <h4 style="margin-bottom: 8px; font-size: 16px;">Privacy Preferences</h4>
+                    <p style="font-size: 14px; opacity: 0.9;">
+                        We use cookies and analytics to improve your experience on our website.
+                        Your data helps us provide better cleaning services.
+                    </p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="acceptAnalytics()" style="
+                        padding: 10px 20px;
+                        background: var(--primary-green);
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-weight: 600;
+                        cursor: pointer;
+                    ">
+                        Accept All
+                    </button>
+                    <button onclick="rejectAnalytics()" style="
+                        padding: 10px 20px;
+                        background: transparent;
+                        color: white;
+                        border: 2px solid white;
+                        border-radius: 6px;
+                        font-weight: 600;
+                        cursor: pointer;
+                    ">
+                        Reject All
+                    </button>
+                    <button onclick="showPrivacySettings()" style="
+                        padding: 10px 20px;
+                        background: transparent;
+                        color: white;
+                        border: none;
+                        font-weight: 600;
+                        cursor: pointer;
+                    ">
+                        Settings
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', bannerHTML);
+    }
+
+    // Accept analytics
+    window.acceptAnalytics = function() {
+        localStorage.setItem('gg_analytics_consent', 'true');
+        document.getElementById('analyticsConsentBanner').remove();
+        initAnalytics();
+        initGoogleAnalytics();
+    };
+
+    // Reject analytics
+    window.rejectAnalytics = function() {
+        localStorage.setItem('gg_analytics_consent', 'false');
+        document.getElementById('analyticsConsentBanner').remove();
+    };
+
+    // Show privacy settings
+    window.showPrivacySettings = function() {
+        const settingsHTML = `
+            <div id="privacySettings" style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: var(--shadow-xl);
+                z-index: 10000;
+                max-width: 500px;
+                width: 90%;
+            ">
+                <h3 style="margin-bottom: 20px; color: var(--dark-green);">Privacy Settings</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <input type="checkbox" id="essentialCookies" checked disabled style="width: 18px; height: 18px;">
+                        <div>
+                            <strong>Essential Cookies</strong>
+                            <p style="font-size: 14px; color: var(--medium-gray); margin-top: 5px;">
+                                Required for basic site functionality. Cannot be disabled.
+                            </p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <input type="checkbox" id="analyticsCookies" checked style="width: 18px; height: 18px;">
+                        <div>
+                            <strong>Analytics Cookies</strong>
+                            <p style="font-size: 14px; color: var(--medium-gray); margin-top: 5px;">
+                                Help us understand how visitors use our site to improve our services.
+                            </p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: center; gap: 10px;">
+                        <input type="checkbox" id="marketingCookies" style="width: 18px; height: 18px;">
+                        <div>
+                            <strong>Marketing Cookies</strong>
+                            <p style="font-size: 14px; color: var(--medium-gray); margin-top: 5px;">
+                                Used to show relevant ads and measure ad performance.
+                            </p>
+                        </div>
+                    </label>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="savePrivacySettings()" style="
+                        padding: 12px 24px;
+                        background: var(--primary-green);
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        flex: 1;
+                    ">
+                        Save Preferences
+                    </button>
+                    <button onclick="closePrivacySettings()" style="
+                        padding: 12px 24px;
+                        background: var(--light-gray);
+                        color: var(--dark-gray);
+                        border: none;
+                        border-radius: 6px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        flex: 1;
+                    ">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+            <div style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 9999;
+            "></div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', settingsHTML);
+    };
+
+    // Save privacy settings
+    window.savePrivacySettings = function() {
+        const analyticsEnabled = document.getElementById('analyticsCookies').checked;
+        const marketingEnabled = document.getElementById('marketingCookies').checked;
+        
+        localStorage.setItem('gg_analytics_consent', analyticsEnabled ? 'true' : 'false');
+        localStorage.setItem('gg_marketing_consent', marketingEnabled ? 'true' : 'false');
+        
+        closePrivacySettings();
+        document.getElementById('analyticsConsentBanner')?.remove();
+        
+        if (analyticsEnabled) {
+            initAnalytics();
+            initGoogleAnalytics();
+        }
+    };
+
+    // Close privacy settings
+    window.closePrivacySettings = function() {
+        document.getElementById('privacySettings')?.remove();
+        document.querySelector('div[style*="background: rgba(0,0,0,0.5)"]')?.remove();
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Start privacy compliance check
+        initPrivacyCompliance();
+        
+        // Retry failed events every 5 minutes
+        setInterval(retryFailedEvents, 5 * 60 * 1000);
+        
+        // Update active users every minute
+        setInterval(updateActiveUsers, 60 * 1000);
+        
+        // Track page load time
+        window.addEventListener('load', function() {
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            trackEvent('performance', 'page_load', 'complete', loadTime);
+        });
+        
+        // Track service area checker specifically
+        const postcodeForm = document.getElementById('postcodeForm');
+        if (postcodeForm) {
+            postcodeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const postcode = document.getElementById('postcodeInput').value;
+                if (postcode) {
+                    // Track search term
+                    trackEvent('search', 'postcode_check', postcode);
+                    
+                    // Store in analytics_search_terms
+                    if (analytics.supabaseClient) {
+                        analytics.supabaseClient
+                            .from('analytics_search_terms')
+                            .upsert({
+                                search_term: postcode,
+                                postcode_area: postcode.split(' ')[0],
+                                last_searched_at: new Date().toISOString()
+                            }, { onConflict: 'search_term' })
+                            .then(({ error }) => {
+                                if (error) console.error('Error saving search term:', error);
+                            });
+                    }
+                }
+            });
+        }
+        
+        // Track WhatsApp conversions
+        const whatsappButtons = document.querySelectorAll('a[href*="whatsapp"], button[onclick*="whatsapp"]');
+        whatsappButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                trackEvent('click', 'messaging', 'whatsapp_conversion');
+                trackConversion('whatsapp_contact');
+            });
+        });
+    });
+
+    // Make tracking functions available globally
+    window.GreenGloAnalytics = {
+        trackEvent: trackEvent,
+        trackConversion: trackConversion,
+        getSessionId: () => analytics.sessionId,
+        getDeviceInfo: () => analytics.deviceInfo
+    };
+
+    // Debug mode
+    if (ANALYTICS_CONFIG.debugMode) {
+        console.log('[Analytics] Debug mode enabled');
+        window.analyticsDebug = analytics;
+    }
+
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>GreenGlo Cleaners | Premium Eco-Friendly Cleaning Services London</title>
@@ -2893,3 +3797,4 @@
 </body>
 
 </html>
+
