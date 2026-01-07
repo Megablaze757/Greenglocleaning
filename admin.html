@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GreenGlo Admin | 24/7 Availability Management</title>
+    <title>GreenGlo Admin | 24/7 Availability & Analytics Management</title>
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -202,7 +204,7 @@
             font-weight: 500;
         }
 
-        /* Calendar sections - Mobile optimized */
+        /* Calendar sections */
         .quick-calendar-section,
         .main-calendar-section,
         .time-slots-section,
@@ -233,7 +235,7 @@
             font-weight: 600;
         }
 
-        /* Calendar navigation - Touch friendly */
+        /* Calendar navigation */
         .quick-calendar-nav,
         .month-navigation,
         .analytics-nav {
@@ -271,7 +273,7 @@
             flex: 1;
         }
 
-        /* Calendar grids - Mobile responsive */
+        /* Calendar grids */
         .quick-calendar-grid,
         .main-calendar-grid,
         .analytics-grid {
@@ -343,7 +345,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* Time slots grid - Mobile optimized */
+        /* Time slots grid */
         .time-slots-grid {
             padding: 12px;
             display: grid;
@@ -429,7 +431,7 @@
             cursor: not-allowed;
         }
 
-        /* Action buttons - Mobile friendly */
+        /* Action buttons */
         .quick-calendar-actions,
         .time-slots-actions,
         .analytics-actions {
@@ -503,7 +505,7 @@
             color: white;
         }
 
-        /* Modals - Mobile optimized */
+        /* Modals */
         .modal {
             background: white;
             border-radius: var(--border-radius-lg);
@@ -568,7 +570,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Mobile-specific improvements */
+        /* Mobile-specific */
         .mobile-only {
             display: block;
         }
@@ -577,7 +579,7 @@
             display: none;
         }
 
-        /* Booking cards - Mobile optimized */
+        /* Booking cards */
         .booking-card {
             padding: 12px;
             background: var(--off-white);
@@ -632,7 +634,7 @@
             font-weight: 500;
         }
 
-        /* Status badges - Mobile */
+        /* Status badges */
         .week-day-status,
         .time-slot-status {
             font-size: 9px;
@@ -665,7 +667,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Notification - Mobile positioning */
+        /* Notification */
         .notification {
             position: fixed;
             top: 70px;
@@ -866,78 +868,66 @@
             background: var(--red);
         }
 
-        /* Analytics stats - Using only Supabase data */
-        .analytics-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+        /* Analytics specific styles */
+        .analytics-chart-container {
+            padding: 12px;
+            height: 250px;
+            position: relative;
         }
 
-        .analytics-card {
+        .metric-card {
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            border: 1px solid rgba(209, 250, 229, 0.5);
+            margin-bottom: 8px;
+            border-left: 4px solid var(--primary-green);
         }
 
-        .analytics-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
+        .metric-card h4 {
+            font-size: 13px;
+            color: var(--medium-gray);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .metric-card .value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark-green);
+        }
+
+        .metric-card .trend {
+            font-size: 11px;
+            margin-top: 4px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            margin-bottom: 12px;
+            gap: 4px;
         }
 
-        .analytics-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--dark-green);
-            margin-bottom: 4px;
-            line-height: 1;
+        .trend.up {
+            color: var(--primary-green);
         }
 
-        .analytics-label {
-            color: var(--medium-gray);
-            font-size: 13px;
-            font-weight: 500;
+        .trend.down {
+            color: var(--red);
         }
 
-        /* Improved touch targets */
-        button,
-        .btn,
-        .nav-btn,
-        .week-day,
-        .month-day,
-        .time-slot-card,
-        .admin-nav-link {
-            min-height: 44px;
-            cursor: pointer;
+        /* Live indicator */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
-        /* Prevent text selection on interactive elements */
-        .no-select {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        /* iOS-specific fixes */
-        @supports (-webkit-touch-callout: none) {
-            .admin-sidebar {
-                height: 100vh;
-                height: -webkit-fill-available;
-            }
-            
-            body {
-                min-height: 100vh;
-                min-height: -webkit-fill-available;
-            }
+        .live-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: pulse 2s infinite;
         }
 
         /* Sidebar close button */
@@ -960,6 +950,39 @@
 
         .sidebar-close:active {
             background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Improved touch targets */
+        button,
+        .btn,
+        .nav-btn,
+        .week-day,
+        .month-day,
+        .time-slot-card,
+        .admin-nav-link {
+            min-height: 44px;
+            cursor: pointer;
+        }
+
+        /* Prevent text selection */
+        .no-select {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* iOS-specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            .admin-sidebar {
+                height: 100vh;
+                height: -webkit-fill-available;
+            }
+            
+            body {
+                min-height: 100vh;
+                min-height: -webkit-fill-available;
+            }
         }
 
         /* Tablet styles */
@@ -986,8 +1009,7 @@
                 padding-bottom: 90px;
             }
             
-            .dashboard-stats,
-            .analytics-stats {
+            .dashboard-stats {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 15px;
             }
@@ -1055,18 +1077,15 @@
                 padding-bottom: 100px;
             }
             
-            .dashboard-stats,
-            .analytics-stats {
+            .dashboard-stats {
                 gap: 20px;
             }
             
-            .stat-card,
-            .analytics-card {
+            .stat-card {
                 padding: 20px;
             }
             
-            .stat-value,
-            .analytics-value {
+            .stat-value {
                 font-size: 28px;
             }
             
@@ -1082,8 +1101,7 @@
 
         /* Very small phones */
         @media (max-width: 360px) {
-            .dashboard-stats,
-            .analytics-stats {
+            .dashboard-stats {
                 grid-template-columns: 1fr;
             }
             
@@ -1111,8 +1129,7 @@
                 font-size: 18px;
             }
             
-            .stat-value,
-            .analytics-value {
+            .stat-value {
                 font-size: 20px;
             }
             
@@ -1122,36 +1139,7 @@
             }
         }
 
-        /* Landscape orientation improvements */
-        @media (max-height: 600px) and (orientation: landscape) {
-            .admin-sidebar {
-                padding: 15px 12px;
-            }
-            
-            .admin-logo {
-                margin-bottom: 15px;
-            }
-            
-            .admin-nav-item {
-                margin-bottom: 3px;
-            }
-            
-            .admin-nav-link {
-                padding: 8px 12px;
-                font-size: 13px;
-            }
-            
-            .modal {
-                max-height: 70vh;
-                margin: 10px auto;
-            }
-            
-            .time-slots-grid {
-                max-height: 200px;
-            }
-        }
-
-        /* Improve form inputs for mobile */
+        /* Optimize form inputs */
         input[type="text"],
         input[type="email"],
         input[type="tel"],
@@ -1171,128 +1159,191 @@
             appearance: none;
         }
 
-        /* Ensure modal is visible on small screens */
-        @media (max-height: 500px) {
-            .modal {
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-            
-            .modal-overlay {
-                align-items: flex-start;
-                padding-top: 10px;
-            }
+        /* Analytics grid improvements */
+        .analytics-grid-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
         }
 
-        /* Optimize button spacing for mobile */
-        .btn-group {
+        .analytics-grid-item h4 {
+            color: var(--dark-green);
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Search terms styles */
+        .search-term-item {
             display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn-group .btn {
-            flex: 1;
-            min-width: 120px;
-        }
-
-        /* Improve calendar swipe area */
-        .calendar-swipe-area {
-            position: relative;
-            overflow: hidden;
-            touch-action: pan-y pinch-zoom;
-        }
-
-        /* Better focus states for accessibility */
-        button:focus-visible,
-        .btn:focus-visible,
-        input:focus-visible,
-        select:focus-visible {
-            outline: 2px solid var(--primary-green);
-            outline-offset: 2px;
-        }
-
-        /* Prevent horizontal scroll on mobile */
-        html, body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-
-        /* Loading overlay */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.9);
-            display: none;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            z-index: 3000;
-            flex-direction: column;
-            gap: 15px;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--primary-green);
         }
 
-        /* Backdrop for modals */
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1999;
-            display: none;
+        .search-term-item.in-coverage {
+            border-left-color: var(--primary-green);
+        }
+
+        .search-term-item.out-coverage {
+            border-left-color: var(--orange);
+        }
+
+        .search-term-text {
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 14px;
+        }
+
+        .search-term-count {
+            background: var(--light-green);
+            color: var(--dark-green);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        /* Sessions table */
+        .session-item {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .session-id {
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--medium-gray);
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .session-converted {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary-green);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .session-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .session-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .session-label {
+            color: var(--medium-gray);
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .session-value {
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        /* Active users widget */
+        .active-user-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .active-user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .active-user-info {
+            flex: 1;
+        }
+
+        .active-user-location {
+            font-size: 11px;
+            color: var(--medium-gray);
+        }
+
+        .active-user-time {
+            font-size: 10px;
+            color: var(--medium-gray);
         }
     </style>
 </head>
 <body>
     <!-- Mobile Menu Toggle -->
-    <button id="mobileMenuToggle" class="mobile-menu-toggle no-select" aria-label="Toggle menu">
+    <button id="mobileMenuToggle" class="mobile-menu-toggle no-select">
         <i class="fas fa-bars"></i>
     </button>
     
     <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-bottom-nav" aria-label="Main navigation">
-        <button class="mobile-bottom-nav-item active" data-section="dashboard" aria-label="Dashboard">
+    <div class="mobile-bottom-nav">
+        <button class="mobile-bottom-nav-item active" data-section="dashboard">
             <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </button>
-        <button class="mobile-bottom-nav-item" data-section="calendar" aria-label="Calendar">
+        <button class="mobile-bottom-nav-item" data-section="calendar">
             <i class="fas fa-calendar-alt"></i>
             <span>Calendar</span>
         </button>
-        <button class="mobile-bottom-nav-item" data-section="bookings" aria-label="Bookings">
+        <button class="mobile-bottom-nav-item" data-section="bookings">
             <i class="fas fa-book"></i>
             <span>Bookings</span>
         </button>
-        <button class="mobile-bottom-nav-item" data-section="analytics" aria-label="Analytics">
+        <button class="mobile-bottom-nav-item" data-section="analytics">
             <i class="fas fa-chart-line"></i>
             <span>Analytics</span>
         </button>
-        <button class="mobile-bottom-nav-item" id="mobileDatabaseBtn" aria-label="Database Setup">
+        <button class="mobile-bottom-nav-item" id="mobileDatabaseBtn">
             <i class="fas fa-database"></i>
             <span>DB Setup</span>
         </button>
-    </nav>
-    
-    <!-- Notification System -->
-    <div id="notification" class="notification" role="alert" aria-live="polite"></div>
-    
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-        <div id="loadingMessage">Loading...</div>
     </div>
     
+    <!-- Notification System -->
+    <div id="notification" class="notification"></div>
+    
     <!-- Database Setup Modal -->
-    <div class="modal-backdrop" id="modalBackdrop"></div>
-    <div id="databaseSetupModal" class="modal-overlay" role="dialog" aria-labelledby="databaseSetupTitle">
+    <div id="databaseSetupModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
-                <h3 id="databaseSetupTitle">Database Setup Required</h3>
-                <button class="modal-close" id="closeDatabaseSetupModal" aria-label="Close">&times;</button>
+                <h3>Database Setup Required</h3>
+                <button class="modal-close" id="closeDatabaseSetupModal">&times;</button>
             </div>
             <div class="modal-body">
                 <p style="margin-bottom: 15px; font-size: 14px;">You need to configure your Supabase database to allow the admin panel to work.</p>
@@ -1318,11 +1369,11 @@
     </div>
     
     <!-- Booking Details Modal -->
-    <div id="bookingDetailsModal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="bookingDetailsTitle">
+    <div id="bookingDetailsModal" class="modal-overlay" style="display: none;">
         <div class="modal booking-details-modal">
             <div class="modal-header">
-                <h3 id="bookingDetailsTitle">Booking Details</h3>
-                <button class="modal-close" id="closeBookingDetailsModal" aria-label="Close">&times;</button>
+                <h3>Booking Details</h3>
+                <button class="modal-close" id="closeBookingDetailsModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div id="bookingDetailsContent">
@@ -1339,11 +1390,11 @@
     </div>
     
     <!-- 24/7 Bulk Setup Modal -->
-    <div id="bulkSetupModal" class="modal-overlay" style="display: none;" role="dialog" aria-labelledby="bulkSetupTitle">
+    <div id="bulkSetupModal" class="modal-overlay" style="display: none;">
         <div class="modal">
             <div class="modal-header">
-                <h3 id="bulkSetupTitle">24/7 Bulk Availability Setup</h3>
-                <button class="modal-close" id="closeBulkSetupModal" aria-label="Close">&times;</button>
+                <h3>24/7 Bulk Availability Setup</h3>
+                <button class="modal-close" id="closeBulkSetupModal">&times;</button>
             </div>
             <div class="modal-body">
                 <div style="margin-bottom: 20px;">
@@ -1352,7 +1403,7 @@
                     <div style="background: #f3f4f6; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
                         <h4 style="margin-bottom: 8px; font-size: 16px;">Settings</h4>
                         <div style="margin-bottom: 10px;">
-                            <label for="leadTimeHours" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Lead Time</label>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Lead Time</label>
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <input type="number" id="leadTimeHours" value="24" min="0" max="720" style="width: 100px; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                 <span>hours</span>
@@ -1366,16 +1417,16 @@
                         <div style="margin-bottom: 10px;">
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                                 <div>
-                                    <label for="bulkStartTime" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Start Time</label>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Start Time</label>
                                     <input type="time" id="bulkStartTime" value="00:00" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                 </div>
                                 <div>
-                                    <label for="bulkEndTime" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">End Time</label>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">End Time</label>
                                     <input type="time" id="bulkEndTime" value="23:59" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                 </div>
                             </div>
                             <div>
-                                <label for="bulkSlotDuration" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Slot Duration</label>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Slot Duration</label>
                                 <select id="bulkSlotDuration" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                     <option value="60">60 minutes</option>
                                     <option value="90">90 minutes</option>
@@ -1390,11 +1441,11 @@
                         <h4 style="margin-bottom: 8px; font-size: 16px;">Date Range</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                             <div>
-                                <label for="bulkStartDate" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Start Date</label>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Start Date</label>
                                 <input type="date" id="bulkStartDate" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                             </div>
                             <div>
-                                <label for="bulkEndDate" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">End Date</label>
+                                <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">End Date</label>
                                 <input type="date" id="bulkEndDate" style="width: 100%; padding: 8px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                             </div>
                         </div>
@@ -1427,7 +1478,7 @@
     <!-- Main App -->
     <div class="admin-container">
         <!-- Sidebar -->
-        <aside class="admin-sidebar closed" aria-label="Sidebar navigation">
+        <aside class="admin-sidebar closed">
             <div class="admin-logo">
                 <div class="admin-logo-icon">
                     <i class="fas fa-leaf"></i>
@@ -1436,44 +1487,44 @@
                     <h2>GreenGlo</h2>
                     <div style="font-size: 12px; opacity: 0.8;">24/7 Admin Dashboard</div>
                 </div>
-                <button class="mobile-only sidebar-close" aria-label="Close sidebar">
+                <button class="mobile-only sidebar-close" style="margin-left: auto; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
             <ul class="admin-nav">
                 <li class="admin-nav-item">
-                    <a class="admin-nav-link active" data-section="dashboard" href="#">
+                    <a class="admin-nav-link active" data-section="dashboard">
                         <i class="fas fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="admin-nav-item">
-                    <a class="admin-nav-link" data-section="calendar" href="#">
+                    <a class="admin-nav-link" data-section="calendar">
                         <i class="fas fa-calendar-alt"></i>
                         <span>Calendar</span>
                     </a>
                 </li>
                 <li class="admin-nav-item">
-                    <a class="admin-nav-link" data-section="bookings" href="#">
+                    <a class="admin-nav-link" data-section="bookings">
                         <i class="fas fa-book"></i>
                         <span>Bookings</span>
                     </a>
                 </li>
                 <li class="admin-nav-item">
-                    <a class="admin-nav-link" data-section="analytics" href="#">
+                    <a class="admin-nav-link" data-section="analytics">
                         <i class="fas fa-chart-line"></i>
                         <span>Analytics</span>
                     </a>
                 </li>
                 <li class="admin-nav-item">
-                    <a class="admin-nav-link" id="bulkSetupBtn" href="#">
+                    <a class="admin-nav-link" id="bulkSetupBtn">
                         <i class="fas fa-bolt"></i>
                         <span>24/7 Bulk Setup</span>
                     </a>
                 </li>
                 <li class="admin-nav-item">
-                    <a class="admin-nav-link" id="databaseSetupBtn" href="#">
+                    <a class="admin-nav-link" id="databaseSetupBtn">
                         <i class="fas fa-database"></i>
                         <span>Database Setup</span>
                     </a>
@@ -1494,14 +1545,14 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="admin-main" id="mainContent">
+        <main class="admin-main">
             <!-- Dashboard Section -->
-            <div id="dashboardSection" class="admin-section" role="region" aria-label="Dashboard">
+            <div id="dashboardSection" class="admin-section">
                 <div class="admin-header">
                     <h1>24/7 Dashboard Overview</h1>
                     <div class="header-actions">
                         <div id="lastUpdatedTime" style="font-size: 12px; color: var(--medium-gray);"></div>
-                        <button id="refreshDashboardBtn" class="btn btn-secondary" aria-label="Refresh dashboard">
+                        <button id="refreshDashboardBtn" class="btn btn-secondary">
                             <i class="fas fa-sync-alt"></i>
                             <span class="desktop-only">Refresh</span>
                         </button>
@@ -1544,11 +1595,11 @@
                     <div class="quick-calendar-header">
                         <h3>Quick Calendar - This Week</h3>
                         <div class="quick-calendar-nav">
-                            <button id="prevWeekBtn" class="nav-btn" aria-label="Previous week">
+                            <button id="prevWeekBtn" class="nav-btn">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
                             <div class="current-week" id="currentWeekDisplay"></div>
-                            <button id="nextWeekBtn" class="nav-btn" aria-label="Next week">
+                            <button id="nextWeekBtn" class="nav-btn">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         </div>
@@ -1591,11 +1642,11 @@
             </div>
 
             <!-- Calendar Section -->
-            <div id="calendarSection" class="admin-section" style="display: none;" role="region" aria-label="Calendar">
+            <div id="calendarSection" class="admin-section" style="display: none;">
                 <div class="admin-header">
                     <h1>24/7 Calendar Management</h1>
                     <div class="header-actions">
-                        <button id="todayBtn" class="btn btn-secondary" aria-label="Go to today">
+                        <button id="todayBtn" class="btn btn-secondary">
                             <i class="fas fa-calendar-day"></i>
                             <span class="desktop-only">Today</span>
                         </button>
@@ -1604,22 +1655,22 @@
                             <span class="desktop-only">24/7 This Month</span>
                             <span class="mobile-only">24/7 Month</span>
                         </button>
-                        <button id="refreshCalendarBtn" class="btn btn-primary" aria-label="Refresh calendar">
+                        <button id="refreshCalendarBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
                             <span class="desktop-only">Refresh</span>
                         </button>
                     </div>
                 </div>
 
-                <div class="main-calendar-section calendar-swipe-area">
+                <div class="main-calendar-section">
                     <div class="main-calendar-header">
                         <h3>Monthly Calendar</h3>
                         <div class="month-navigation">
-                            <button id="prevMonthBtn" class="nav-btn" aria-label="Previous month">
+                            <button id="prevMonthBtn" class="nav-btn">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
                             <div class="current-month" id="currentMonthDisplay"></div>
-                            <button id="nextMonthBtn" class="nav-btn" aria-label="Next month">
+                            <button id="nextMonthBtn" class="nav-btn">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         </div>
@@ -1691,11 +1742,11 @@
             </div>
 
             <!-- Bookings Section -->
-            <div id="bookingsSection" class="admin-section" style="display: none;" role="region" aria-label="Bookings">
+            <div id="bookingsSection" class="admin-section" style="display: none;">
                 <div class="admin-header">
                     <h1>24/7 Bookings Management</h1>
                     <div class="header-actions">
-                        <button id="refreshBookingsBtn" class="btn btn-primary" aria-label="Refresh bookings">
+                        <button id="refreshBookingsBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
                             <span class="desktop-only">Refresh</span>
                         </button>
@@ -1710,10 +1761,10 @@
                 </div>
             </div>
 
-            <!-- Analytics Section (Using only Supabase data) -->
-            <div id="analyticsSection" class="admin-section" style="display: none;" role="region" aria-label="Analytics">
+            <!-- Analytics Section -->
+            <div id="analyticsSection" class="admin-section" style="display: none;">
                 <div class="admin-header">
-                    <h1>Booking Analytics Dashboard</h1>
+                    <h1>Web Analytics Dashboard</h1>
                     <div class="header-actions">
                         <select id="analyticsDateRange" class="btn btn-secondary" style="padding: 10px 15px; border-radius: 10px; background: white; border: 2px solid #e5e7eb; color: var(--dark-gray);">
                             <option value="today">Today</option>
@@ -1723,7 +1774,7 @@
                             <option value="90days">Last 90 Days</option>
                             <option value="custom">Custom Range</option>
                         </select>
-                        <button id="refreshAnalyticsBtn" class="btn btn-primary" aria-label="Refresh analytics">
+                        <button id="refreshAnalyticsBtn" class="btn btn-primary">
                             <i class="fas fa-sync-alt"></i>
                             <span class="desktop-only">Refresh</span>
                         </button>
@@ -1734,15 +1785,15 @@
                     </div>
                 </div>
 
-                <!-- Date Range Selector for Custom Range -->
+                <!-- Date Range Selector -->
                 <div id="customDateRange" style="display: none; background: white; border-radius: var(--border-radius); padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow);">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
-                            <label for="customStartDate" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark-gray);">Start Date</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark-gray);">Start Date</label>
                             <input type="date" id="customStartDate" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px;">
                         </div>
                         <div>
-                            <label for="customEndDate" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark-gray);">End Date</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--dark-gray);">End Date</label>
                             <input type="date" id="customEndDate" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px;">
                         </div>
                     </div>
@@ -1752,114 +1803,220 @@
                     </div>
                 </div>
 
-                <!-- Analytics Stats Cards - Using only Supabase data -->
-                <div class="analytics-stats">
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #3B82F6, #2563EB);">
+                <!-- Analytics Stats Cards -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #3B82F6, #2563EB);">
                             <i class="fas fa-users"></i>
                         </div>
-                        <div class="analytics-value" id="totalCustomers">0</div>
-                        <div class="analytics-label">Total Customers</div>
+                        <div class="stat-value" id="totalVisitors">0</div>
+                        <div class="stat-label">Total Visitors</div>
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
-                            <i class="fas fa-calendar-check"></i>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
+                            <i class="fas fa-eye"></i>
                         </div>
-                        <div class="analytics-value" id="totalBookings">0</div>
-                        <div class="analytics-label">Total Bookings</div>
+                        <div class="stat-value" id="totalPageviews">0</div>
+                        <div class="stat-label">Total Pageviews</div>
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #8B5CF6, #7C3AED);">
-                            <i class="fas fa-money-bill-wave"></i>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #8B5CF6, #7C3AED);">
+                            <i class="fas fa-shopping-cart"></i>
                         </div>
-                        <div class="analytics-value" id="totalRevenue">£0</div>
-                        <div class="analytics-label">Total Revenue</div>
+                        <div class="stat-value" id="totalConversions">0</div>
+                        <div class="stat-label">Total Conversions</div>
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
                             <i class="fas fa-percentage"></i>
                         </div>
-                        <div class="analytics-value" id="bookingRate">0%</div>
-                        <div class="analytics-label">Booking Rate</div>
+                        <div class="stat-value" id="conversionRate">0%</div>
+                        <div class="stat-label">Conversion Rate</div>
                     </div>
                 </div>
 
-                <!-- Booking Status Distribution -->
-                <div class="quick-calendar-section" style="margin-bottom: 20px;">
-                    <div class="quick-calendar-header">
-                        <h3>Booking Status Distribution</h3>
+                <!-- Charts Section -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Traffic Over Time</h3>
+                            <div class="quick-calendar-nav">
+                                <button class="nav-btn active" data-chart="visitors">
+                                    <i class="fas fa-users"></i>
+                                </button>
+                                <button class="nav-btn" data-chart="pageviews">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="nav-btn" data-chart="sessions">
+                                    <i class="fas fa-chart-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px;">
+                            <div class="analytics-chart-container">
+                                <canvas id="trafficChart"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <div class="quick-calendar-grid" style="padding: 20px;">
-                        <div id="bookingStatusChart" style="height: 200px; display: flex; align-items: center; justify-content: center;">
-                            <div class="loading">
-                                <div class="spinner"></div>
-                                <div>Loading status data...</div>
+                    
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Traffic Sources</h3>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px;">
+                            <div class="analytics-chart-container">
+                                <canvas id="sourcesChart"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Recent Bookings Table -->
-                <div class="quick-calendar-section" style="margin-bottom: 20px;">
-                    <div class="quick-calendar-header">
-                        <h3>Recent Bookings</h3>
-                        <button id="refreshRecentBookings" class="nav-btn" aria-label="Refresh recent bookings">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
+                <!-- Active Users & Search Terms -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Active Users Right Now</h3>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="live-indicator"></span>
+                                <span style="font-size: 14px;" id="activeUsersCount">0</span>
+                            </div>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px; max-height: 200px; overflow-y: auto;">
+                            <div id="activeUsersList" class="loading">
+                                <div class="spinner"></div>
+                                <div>Loading active users...</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="quick-calendar-grid" style="padding: 20px; max-height: 400px; overflow-y: auto;">
-                        <div id="recentBookingsTable" class="loading">
-                            <div class="spinner"></div>
-                            <div>Loading recent bookings...</div>
+                    
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Recent Search Terms</h3>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px; max-height: 200px; overflow-y: auto;">
+                            <div id="searchTermsList" class="loading">
+                                <div class="spinner"></div>
+                                <div>Loading search terms...</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Top Services -->
-                <div class="quick-calendar-section" style="margin-bottom: 20px;">
-                    <div class="quick-calendar-header">
-                        <h3>Top Services</h3>
-                        <button id="refreshTopServices" class="nav-btn" aria-label="Refresh top services">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
+                <!-- Additional Charts -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Device Usage</h3>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px;">
+                            <div class="analytics-chart-container">
+                                <canvas id="deviceChart"></canvas>
+                            </div>
+                        </div>
                     </div>
-                    <div class="quick-calendar-grid" style="padding: 20px; max-height: 300px; overflow-y: auto;">
-                        <div id="topServicesList" class="loading">
-                            <div class="spinner"></div>
-                            <div>Loading top services...</div>
+                    
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Geographic Distribution</h3>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px;">
+                            <div id="geoData" class="loading">
+                                <div class="spinner"></div>
+                                <div>Loading geographic data...</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Availability Stats -->
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #6366F1, #4F46E5);">
+                <!-- Detailed Tables -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Recent Sessions</h3>
+                            <button id="refreshSessions" class="nav-btn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px; max-height: 300px; overflow-y: auto;">
+                            <div id="sessionsList" class="loading">
+                                <div class="spinner"></div>
+                                <div>Loading sessions...</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-calendar-section">
+                        <div class="quick-calendar-header">
+                            <h3>Recent Conversions</h3>
+                            <button id="refreshConversions" class="nav-btn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="quick-calendar-grid" style="padding: 15px; max-height: 300px; overflow-y: auto;">
+                            <div id="recentConversions" class="loading">
+                                <div class="spinner"></div>
+                                <div>Loading conversions...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 20px;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #6366F1, #4F46E5);">
                             <i class="fas fa-clock"></i>
                         </div>
-                        <div class="analytics-value" id="totalSlots">0</div>
-                        <div class="analytics-label">Total Time Slots</div>
+                        <div class="stat-value" id="avgSessionDuration">0s</div>
+                        <div class="stat-label">Avg. Session Duration</div>
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #EC4899, #BE185D);">
-                            <i class="fas fa-ban"></i>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #EC4899, #BE185D);">
+                            <i class="fas fa-signal"></i>
                         </div>
-                        <div class="analytics-value" id="blockedSlots">0</div>
-                        <div class="analytics-label">Blocked Slots</div>
+                        <div class="stat-value" id="bounceRate">0%</div>
+                        <div class="stat-label">Bounce Rate</div>
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #14B8A6, #0D9488);">
-                            <i class="fas fa-calendar-alt"></i>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #14B8A6, #0D9488);">
+                            <i class="fas fa-money-bill-wave"></i>
                         </div>
-                        <div class="analytics-value" id="availableDays">0</div>
-                        <div class="analytics-label">Available Days</div>
+                        <div class="stat-value" id="revenueGenerated">£0</div>
+                        <div class="stat-label">Revenue Generated</div>
                     </div>
-                    <div class="analytics-card">
-                        <div class="analytics-icon" style="background: linear-gradient(135deg, #F97316, #EA580C);">
-                            <i class="fas fa-chart-line"></i>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #F97316, #EA580C);">
+                            <i class="fas fa-pound-sign"></i>
                         </div>
-                        <div class="analytics-value" id="utilizationRate">0%</div>
-                        <div class="analytics-label">Utilization Rate</div>
+                        <div class="stat-value" id="avgOrderValue">£0</div>
+                        <div class="stat-label">Avg. Order Value</div>
+                    </div>
+                </div>
+
+                <!-- Analytics Export Options -->
+                <div class="quick-calendar-section" style="margin-top: 20px;">
+                    <div class="quick-calendar-header">
+                        <h3>Export Analytics Data</h3>
+                    </div>
+                    <div class="quick-calendar-grid" style="padding: 15px;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <button id="exportSessionsBtn" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                <span>Sessions CSV</span>
+                            </button>
+                            <button id="exportConversionsBtn" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                <span>Conversions CSV</span>
+                            </button>
+                            <button id="exportPageviewsBtn" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                <span>Pageviews CSV</span>
+                            </button>
+                            <button id="exportSearchTermsBtn" class="btn btn-secondary">
+                                <i class="fas fa-download"></i>
+                                <span>Search Terms CSV</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1867,7 +2024,7 @@
     </div>
 
     <script>
-        // MAIN APPLICATION - USING ONLY SUPABASE TABLES
+        // MAIN APPLICATION
         (function() {
             'use strict';
             
@@ -1884,6 +2041,11 @@
                 currentYear: new Date().getFullYear(),
                 weekOffset: 0,
                 timeSlots: [],
+                analyticsCharts: {
+                    traffic: null,
+                    sources: null,
+                    devices: null
+                },
                 defaultSettings: {
                     startTime: '00:00',
                     endTime: '23:59',
@@ -1897,8 +2059,7 @@
                 isMobile: window.innerWidth <= 767,
                 sidebarOpen: false,
                 analyticsDateRange: '7days',
-                touchStartX: 0,
-                touchStartY: 0
+                activeUsersInterval: null
             };
             
             // Initialize
@@ -1912,7 +2073,7 @@
                         throw new Error('Supabase SDK not loaded');
                     }
                     
-                    // Load default settings
+                    // Load default settings from localStorage
                     loadDefaultSettings();
                     
                     // Setup event listeners
@@ -1931,9 +2092,6 @@
                     // Set default dates for bulk modal
                     setDefaultBulkDates();
                     
-                    // Setup touch gestures
-                    setupTouchGestures();
-                    
                 } catch (error) {
                     console.error('Initialization error:', error);
                     showNotification('Error initializing application', 'error');
@@ -1942,7 +2100,161 @@
             
             // Initialize SQL content
             function initSqlContent() {
-                const createTableSql = `-- Create bookings table for 24/7 system
+                const createTableSql = `-- Create all analytics tables
+CREATE TABLE IF NOT EXISTS analytics_active_users (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    session_id text NOT NULL UNIQUE,
+    user_id text,
+    page_url text,
+    last_activity timestamp without time zone DEFAULT now(),
+    active_duration integer DEFAULT 0,
+    is_mobile boolean DEFAULT false,
+    city text,
+    current_action text,
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT analytics_active_users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics_conversions (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    session_id text NOT NULL,
+    conversion_type text NOT NULL,
+    conversion_value numeric,
+    booking_id bigint,
+    customer_email text,
+    customer_phone text,
+    service_type text,
+    estimated_value numeric,
+    funnel_stage text,
+    utm_source text,
+    utm_medium text,
+    utm_campaign text,
+    days_to_convert integer,
+    pageviews_to_convert integer,
+    metadata jsonb,
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT analytics_conversions_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics_daily_stats (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    date date NOT NULL UNIQUE,
+    total_sessions integer DEFAULT 0,
+    total_visitors integer DEFAULT 0,
+    new_visitors integer DEFAULT 0,
+    returning_visitors integer DEFAULT 0,
+    total_pageviews integer DEFAULT 0,
+    unique_pageviews integer DEFAULT 0,
+    avg_session_duration integer DEFAULT 0,
+    bounce_rate numeric DEFAULT 0,
+    total_conversions integer DEFAULT 0,
+    booking_conversions integer DEFAULT 0,
+    quote_conversions integer DEFAULT 0,
+    contact_conversions integer DEFAULT 0,
+    conversion_rate numeric DEFAULT 0,
+    organic_search integer DEFAULT 0,
+    direct_traffic integer DEFAULT 0,
+    social_media integer DEFAULT 0,
+    referral_traffic integer DEFAULT 0,
+    email_campaigns integer DEFAULT 0,
+    mobile_users integer DEFAULT 0,
+    desktop_users integer DEFAULT 0,
+    tablet_users integer DEFAULT 0,
+    london_visitors integer DEFAULT 0,
+    kent_visitors integer DEFAULT 0,
+    essex_visitors integer DEFAULT 0,
+    other_visitors integer DEFAULT 0,
+    popular_pages jsonb DEFAULT '[]'::jsonb,
+    revenue_generated numeric DEFAULT 0,
+    avg_order_value numeric DEFAULT 0,
+    created_at timestamp without time zone DEFAULT now(),
+    updated_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT analytics_daily_stats_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics_events (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    session_id text NOT NULL,
+    event_type text NOT NULL,
+    event_category text,
+    event_label text,
+    event_value text,
+    element_id text,
+    element_class text,
+    element_text text,
+    page_url text,
+    metadata jsonb,
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT analytics_events_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics_pageviews (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    session_id text NOT NULL,
+    page_url text NOT NULL,
+    page_title text,
+    page_path text,
+    referrer text,
+    time_on_page integer,
+    scroll_depth integer,
+    is_bounce boolean DEFAULT true,
+    previous_page text,
+    next_page text,
+    metadata jsonb,
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT analytics_pageviews_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics_search_terms (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    search_term text NOT NULL,
+    postcode_area text,
+    is_in_coverage_area boolean,
+    result_type text,
+    search_count integer DEFAULT 1,
+    last_searched_at timestamp without time zone DEFAULT now(),
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT analytics_search_terms_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS analytics_sessions (
+    id uuid NOT NULL DEFAULT gen_random_uuid(),
+    session_id text NOT NULL UNIQUE,
+    user_id text,
+    device_type text,
+    browser text,
+    browser_version text,
+    os text,
+    os_version text,
+    screen_resolution text,
+    language text,
+    timezone text,
+    ip_address text,
+    country text,
+    region text,
+    city text,
+    postal_code text,
+    latitude numeric,
+    longitude numeric,
+    is_first_visit boolean DEFAULT true,
+    utm_source text,
+    utm_medium text,
+    utm_campaign text,
+    utm_term text,
+    utm_content text,
+    referrer text,
+    landing_page text,
+    entry_timestamp timestamp without time zone DEFAULT now(),
+    exit_timestamp timestamp without time zone,
+    session_duration integer,
+    pageviews_count integer DEFAULT 0,
+    is_converted boolean DEFAULT false,
+    conversion_type text,
+    created_at timestamp without time zone DEFAULT now(),
+    CONSTRAINT analytics_sessions_pkey PRIMARY KEY (id)
+);
+
+-- Create bookings and availability tables
 CREATE TABLE IF NOT EXISTS bookings (
     id BIGSERIAL PRIMARY KEY,
     booking_reference TEXT UNIQUE DEFAULT 'GG' || LPAD(CAST(nextval('bookings_id_seq') AS TEXT), 6, '0'),
@@ -1960,7 +2272,6 @@ CREATE TABLE IF NOT EXISTS bookings (
     price DECIMAL(10,2)
 );
 
--- Create 24/7 availability slots table
 CREATE TABLE IF NOT EXISTS availability_slots (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     slot_date DATE NOT NULL,
@@ -1973,9 +2284,12 @@ CREATE TABLE IF NOT EXISTS availability_slots (
     UNIQUE(slot_date, start_time, end_time)
 );
 
--- Create index for faster queries
+-- Create indexes for faster queries
 CREATE INDEX IF NOT EXISTS idx_availability_slots_date ON availability_slots(slot_date);
 CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(booking_date);
+CREATE INDEX IF NOT EXISTS idx_analytics_sessions_date ON analytics_sessions(created_at);
+CREATE INDEX IF NOT EXISTS idx_analytics_conversions_date ON analytics_conversions(created_at);
+CREATE INDEX IF NOT EXISTS idx_analytics_active_users_time ON analytics_active_users(last_activity);
 
 -- Insert sample 24-hour time slots for next 30 days
 INSERT INTO availability_slots (slot_date, start_time, end_time, is_blocked, max_capacity)
@@ -2006,36 +2320,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 document.getElementById('bulkEndDate').value = endDate.toISOString().split('T')[0];
             }
             
-            // Setup touch gestures for swipe navigation
-            function setupTouchGestures() {
-                const calendarGrid = document.querySelector('.calendar-swipe-area');
-                if (calendarGrid) {
-                    calendarGrid.addEventListener('touchstart', handleTouchStart, { passive: true });
-                    calendarGrid.addEventListener('touchend', handleTouchEnd, { passive: true });
-                }
-            }
-            
-            function handleTouchStart(e) {
-                state.touchStartX = e.changedTouches[0].screenX;
-                state.touchStartY = e.changedTouches[0].screenY;
-            }
-            
-            function handleTouchEnd(e) {
-                const touchEndX = e.changedTouches[0].screenX;
-                const touchEndY = e.changedTouches[0].screenY;
-                
-                const xDiff = state.touchStartX - touchEndX;
-                const yDiff = state.touchStartY - touchEndY;
-                
-                if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > 50) {
-                    if (xDiff > 0) {
-                        nextMonth();
-                    } else {
-                        prevMonth();
-                    }
-                }
-            }
-            
             // Toggle sidebar
             function toggleSidebar() {
                 const sidebar = document.querySelector('.admin-sidebar');
@@ -2044,11 +2328,9 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 if (state.sidebarOpen) {
                     sidebar.classList.remove('closed');
                     sidebar.classList.add('active');
-                    document.body.style.overflow = 'hidden';
                 } else {
                     sidebar.classList.remove('active');
                     sidebar.classList.add('closed');
-                    document.body.style.overflow = 'auto';
                 }
             }
             
@@ -2059,7 +2341,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     sidebar.classList.remove('active');
                     sidebar.classList.add('closed');
                     state.sidebarOpen = false;
-                    document.body.style.overflow = 'auto';
                 }
             }
             
@@ -2103,12 +2384,11 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                             showSection('analytics');
                         }
                         
+                        // Update active state
                         document.querySelectorAll('.mobile-bottom-nav-item').forEach(item => {
                             item.classList.remove('active');
                         });
                         this.classList.add('active');
-                        
-                        closeSidebar();
                     });
                 });
                 
@@ -2166,8 +2446,22 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 document.getElementById('analyticsDateRange').addEventListener('change', handleDateRangeChange);
                 document.getElementById('applyCustomRange').addEventListener('click', applyCustomDateRange);
                 document.getElementById('cancelCustomRange').addEventListener('click', cancelCustomDateRange);
-                document.getElementById('refreshRecentBookings').addEventListener('click', loadRecentBookingsTable);
-                document.getElementById('refreshTopServices').addEventListener('click', loadTopServices);
+                document.getElementById('refreshSessions').addEventListener('click', loadSessions);
+                document.getElementById('refreshConversions').addEventListener('click', loadRecentConversions);
+                
+                // Export buttons
+                document.getElementById('exportSessionsBtn').addEventListener('click', () => exportData('sessions'));
+                document.getElementById('exportConversionsBtn').addEventListener('click', () => exportData('conversions'));
+                document.getElementById('exportPageviewsBtn').addEventListener('click', () => exportData('pageviews'));
+                document.getElementById('exportSearchTermsBtn').addEventListener('click', () => exportData('search_terms'));
+                
+                // Chart navigation
+                document.querySelectorAll('[data-chart]').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const chartType = this.dataset.chart;
+                        updateChartType(chartType);
+                    });
+                });
                 
                 // Booking details modal
                 document.getElementById('closeBookingDetailsModal').addEventListener('click', closeBookingDetailsModal);
@@ -2204,8 +2498,8 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 // Window resize
                 window.addEventListener('resize', handleResize);
                 
-                // Handle orientation change
-                window.addEventListener('orientationchange', handleOrientationChange);
+                // Touch gestures for calendar navigation
+                setupTouchGestures();
             }
             
             // Handle window resize
@@ -2213,54 +2507,78 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 state.isMobile = window.innerWidth <= 767;
                 
                 if (!state.isMobile) {
+                    // On desktop, ensure sidebar is visible
                     const sidebar = document.querySelector('.admin-sidebar');
                     sidebar.classList.remove('closed');
                     sidebar.classList.add('active');
                     state.sidebarOpen = true;
-                    document.body.style.overflow = 'auto';
                 }
             }
             
-            // Handle orientation change
-            function handleOrientationChange() {
-                setTimeout(() => {
-                    if (state.currentView === 'calendar' && state.selectedDate) {
-                        renderMonthCalendar();
+            // Setup touch gestures
+            function setupTouchGestures() {
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let touchEndX = 0;
+                let touchEndY = 0;
+                
+                const calendarGrid = document.querySelector('.main-calendar-grid');
+                if (calendarGrid) {
+                    calendarGrid.addEventListener('touchstart', function(e) {
+                        touchStartX = e.changedTouches[0].screenX;
+                        touchStartY = e.changedTouches[0].screenY;
+                    }, { passive: true });
+                    
+                    calendarGrid.addEventListener('touchend', function(e) {
+                        touchEndX = e.changedTouches[0].screenX;
+                        touchEndY = e.changedTouches[0].screenY;
+                        handleSwipe();
+                    }, { passive: true });
+                }
+                
+                function handleSwipe() {
+                    const minSwipeDistance = 50;
+                    const xDiff = touchStartX - touchEndX;
+                    const yDiff = touchStartY - touchEndY;
+                    
+                    // Only consider horizontal swipes
+                    if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > minSwipeDistance) {
+                        if (xDiff > 0) {
+                            // Swipe left - next month
+                            nextMonth();
+                        } else {
+                            // Swipe right - previous month
+                            prevMonth();
+                        }
                     }
-                }, 300);
+                }
             }
             
             // Modal Functions
             function openDatabaseSetupModal() {
                 document.getElementById('databaseSetupModal').style.display = 'flex';
-                document.getElementById('modalBackdrop').style.display = 'block';
                 closeSidebar();
             }
             
             function closeDatabaseSetupModal() {
                 document.getElementById('databaseSetupModal').style.display = 'none';
-                document.getElementById('modalBackdrop').style.display = 'none';
             }
             
             function openBulkSetupModal() {
                 document.getElementById('bulkSetupModal').style.display = 'flex';
-                document.getElementById('modalBackdrop').style.display = 'block';
                 closeSidebar();
             }
             
             function closeBulkSetupModal() {
                 document.getElementById('bulkSetupModal').style.display = 'none';
-                document.getElementById('modalBackdrop').style.display = 'none';
             }
             
             function openBookingDetailsModal() {
                 document.getElementById('bookingDetailsModal').style.display = 'flex';
-                document.getElementById('modalBackdrop').style.display = 'block';
             }
             
             function closeBookingDetailsModal() {
                 document.getElementById('bookingDetailsModal').style.display = 'none';
-                document.getElementById('modalBackdrop').style.display = 'none';
             }
             
             function printBookingDetails() {
@@ -2327,8 +2645,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
             
             // Apply 24/7 bulk settings
             async function apply247Bulk() {
-                showLoading('Applying 24/7 settings...');
-                
                 const startDate = document.getElementById('bulkStartDate').value;
                 const endDate = document.getElementById('bulkEndDate').value;
                 const leadTime = parseInt(document.getElementById('leadTimeHours').value) || 24;
@@ -2347,15 +2663,8 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 localStorage.setItem('greenglo_247_settings', JSON.stringify(state.defaultSettings));
                 
                 // Apply to date range
-                try {
-                    await apply247AvailabilityRange(new Date(startDate), new Date(endDate));
-                    closeBulkSetupModal();
-                    hideLoading();
-                    showNotification('24/7 settings applied successfully!', 'success');
-                } catch (error) {
-                    hideLoading();
-                    showNotification('Error applying settings: ' + error.message, 'error');
-                }
+                await apply247AvailabilityRange(new Date(startDate), new Date(endDate));
+                closeBulkSetupModal();
             }
             
             // Copy to clipboard helper
@@ -2366,16 +2675,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 navigator.clipboard.writeText(element.value)
                     .then(() => showNotification('SQL copied to clipboard!', 'success'))
                     .catch(err => showNotification('Failed to copy: ' + err, 'error'));
-            }
-            
-            // Loading overlay
-            function showLoading(message) {
-                document.getElementById('loadingMessage').textContent = message || 'Loading...';
-                document.getElementById('loadingOverlay').style.display = 'flex';
-            }
-            
-            function hideLoading() {
-                document.getElementById('loadingOverlay').style.display = 'none';
             }
             
             // Notification System
@@ -2439,16 +2738,13 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         break;
                     case 'analytics':
                         loadAnalytics();
+                        // Start active users polling
+                        startActiveUsersPolling();
                         break;
                 }
                 
                 // Close sidebar on mobile
                 closeSidebar();
-                
-                // Scroll to top on mobile
-                if (state.isMobile) {
-                    window.scrollTo(0, 0);
-                }
             }
             
             // Lead time validation
@@ -2499,8 +2795,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     const dayElement = document.createElement('div');
                     dayElement.className = 'week-day no-select';
                     dayElement.dataset.date = dateStr;
-                    dayElement.setAttribute('role', 'button');
-                    dayElement.setAttribute('tabindex', '0');
                     
                     if (day.toDateString() === today.toDateString()) {
                         dayElement.classList.add('today');
@@ -2556,14 +2850,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         goToDate(day);
                     });
                     
-                    // Add keyboard support
-                    dayElement.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            dayElement.click();
-                        }
-                    });
-                    
                     container.appendChild(dayElement);
                 }
             }
@@ -2594,7 +2880,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 try {
                     const today = new Date().toISOString().split('T')[0];
                     
-                    // Get today's bookings from Supabase
+                    // Get today's bookings
                     const { data: bookings, error } = await state.db
                         .from('bookings')
                         .select('*')
@@ -2608,7 +2894,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         document.getElementById('pendingRequests').textContent = pending;
                     }
                     
-                    // Get available slots for next 7 days (excluding lead time) from Supabase
+                    // Get available slots for next 7 days (excluding lead time)
                     const startDate = new Date();
                     startDate.setDate(startDate.getDate() + Math.ceil(state.defaultSettings.minBookingHours / 24));
                     const endDate = new Date();
@@ -2643,16 +2929,9 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 endDate.setDate(startDate.getDate() + 6);
                 
                 if (confirm('Apply 24/7 availability to the next week (excluding lead time)?')) {
-                    showLoading('Applying 24/7 availability...');
-                    try {
-                        await apply247AvailabilityRange(startDate, endDate);
-                        await loadQuickCalendar();
-                        hideLoading();
-                        showNotification('24/7 availability applied to next week!', 'success');
-                    } catch (error) {
-                        hideLoading();
-                        showNotification('Error applying 24/7: ' + error.message, 'error');
-                    }
+                    await apply247AvailabilityRange(startDate, endDate);
+                    await loadQuickCalendar();
+                    showNotification('24/7 availability applied to next week!', 'success');
                 }
             }
             
@@ -2663,16 +2942,9 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
                 
                 if (confirm('Apply 24/7 availability to the next month (excluding lead time)?')) {
-                    showLoading('Applying 24/7 availability...');
-                    try {
-                        await apply247AvailabilityRange(startDate, endDate);
-                        await loadCalendar();
-                        hideLoading();
-                        showNotification('24/7 availability applied to next month!', 'success');
-                    } catch (error) {
-                        hideLoading();
-                        showNotification('Error applying 24/7: ' + error.message, 'error');
-                    }
+                    await apply247AvailabilityRange(startDate, endDate);
+                    await loadCalendar();
+                    showNotification('24/7 availability applied to next month!', 'success');
                 }
             }
             
@@ -2688,17 +2960,10 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 }
                 
                 if (confirm(`Apply 24/7 availability to ${state.selectedDate.toLocaleDateString()}?`)) {
-                    showLoading('Applying 24/7 availability...');
-                    try {
-                        await apply247Availability(state.selectedDate);
-                        await loadTimeSlots(state.selectedDate);
-                        await renderMonthCalendar();
-                        hideLoading();
-                        showNotification('24/7 availability applied!', 'success');
-                    } catch (error) {
-                        hideLoading();
-                        showNotification('Error applying 24/7: ' + error.message, 'error');
-                    }
+                    await apply247Availability(state.selectedDate);
+                    await loadTimeSlots(state.selectedDate);
+                    await renderMonthCalendar();
+                    showNotification('24/7 availability applied!', 'success');
                 }
             }
             
@@ -2748,7 +3013,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 document.getElementById('currentMonthDisplay').textContent = 
                     firstDay.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
                 
-                // Get availability data for the month from Supabase
+                // Get availability data for the month
                 const startDate = new Date(state.currentYear, state.currentMonth, 1);
                 const endDate = new Date(state.currentYear, state.currentMonth + 1, 0);
                 
@@ -2792,8 +3057,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     const dayElement = document.createElement('div');
                     dayElement.className = 'month-day no-select';
                     dayElement.dataset.date = dateStr;
-                    dayElement.setAttribute('role', 'button');
-                    dayElement.setAttribute('tabindex', '0');
                     
                     if (date.toDateString() === today.toDateString()) {
                         dayElement.classList.add('today');
@@ -2808,7 +3071,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         dayElement.classList.add('within-lead-time');
                     }
                     
-                    // Determine day status from Supabase data
+                    // Determine day status
                     const dayAvailability = availabilityByDate[dateStr] || [];
                     let availableSlots = 0;
                     let blockedSlots = 0;
@@ -2862,18 +3125,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         selectDate(date);
                     });
                     
-                    // Keyboard support
-                    dayElement.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            if (isWithinLeadTime(dateStr)) {
-                                showNotification('This date is within the lead time period', 'warning');
-                                return;
-                            }
-                            selectDate(date);
-                        }
-                    });
-                    
                     container.appendChild(dayElement);
                 }
             }
@@ -2890,9 +3141,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 const dayElement = document.querySelector(`.month-day[data-date="${dateStr}"]`);
                 if (dayElement) {
                     dayElement.classList.add('selected');
-                    if (state.isMobile) {
-                        dayElement.focus();
-                    }
                 }
                 
                 updateSelectedDateDisplay();
@@ -2943,7 +3191,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 }
                 
                 try {
-                    // Get time slots from Supabase
                     const { data: existingSlots, error } = await state.db
                         .from('availability_slots')
                         .select('*')
@@ -2986,10 +3233,8 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         slotElement.className = `time-slot-card no-select`;
                         slotElement.dataset.slotId = slot.id || 'new';
                         slotElement.dataset.timeSlot = timeSlot;
-                        slotElement.setAttribute('role', 'button');
-                        slotElement.setAttribute('tabindex', '0');
                         
-                        // Determine slot status from Supabase data
+                        // Determine slot status
                         if (slot.booked_count >= slot.max_capacity) {
                             slotElement.classList.add('booked');
                             slotElement.dataset.isAvailable = 'false';
@@ -3030,18 +3275,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                             } else {
                                 status.textContent = 'Blocked';
                                 status.className = 'time-slot-status slot-blocked';
-                            }
-                        });
-                        
-                        // Keyboard support
-                        slotElement.addEventListener('keypress', (e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                if (slotElement.classList.contains('booked')) {
-                                    showNotification('Cannot modify booked time slots', 'warning');
-                                    return;
-                                }
-                                slotElement.click();
                             }
                         });
                         
@@ -3121,8 +3354,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     return;
                 }
                 
-                showLoading('Saving time slots...');
-                
                 const dateStr = state.selectedDate.toISOString().split('T')[0];
                 const slotsToSave = [];
                 
@@ -3161,14 +3392,12 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         if (insertError) throw insertError;
                     }
                     
-                    hideLoading();
                     showNotification('24/7 time slots saved successfully!', 'success');
                     
                     await renderMonthCalendar();
                     await loadTimeSlots(state.selectedDate);
                     
                 } catch (err) {
-                    hideLoading();
                     console.error('Error saving time slots:', err);
                     showNotification('Error saving time slots: ' + err.message, 'error');
                 }
@@ -3277,7 +3506,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 }
                 
                 if (confirm('Block all time slots for this day? This cannot be undone.')) {
-                    showLoading('Blocking day...');
                     try {
                         const dateStr = state.selectedDate.toISOString().split('T')[0];
                         
@@ -3288,12 +3516,10 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         
                         if (error) throw error;
                         
-                        hideLoading();
                         showNotification('Day blocked successfully!', 'success');
                         await loadTimeSlots(state.selectedDate);
                         await renderMonthCalendar();
                     } catch (err) {
-                        hideLoading();
                         console.error('Error blocking day:', err);
                         showNotification('Error blocking day: ' + err.message, 'error');
                     }
@@ -3308,9 +3534,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 
                 // Scroll to calendar section on mobile
                 if (state.isMobile) {
-                    setTimeout(() => {
-                        document.getElementById('calendarSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
+                    document.getElementById('calendarSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }
             
@@ -3322,7 +3546,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading bookings...</div></div>';
                 
                 try {
-                    // Get bookings from Supabase
                     const { data: bookings, error } = await state.db
                         .from('bookings')
                         .select('*')
@@ -3376,12 +3599,12 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                             <h3 style="color: var(--dark-green); margin-bottom: 10px; font-size: 16px;">Filters</h3>
                             <div style="display: flex; flex-direction: column; gap: 10px;">
                                 <div>
-                                    <label for="bookingSearch" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Search by name, email, or service</label>
+                                    <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Search by name, email, or service</label>
                                     <input type="text" id="bookingSearch" placeholder="Search..." style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                 </div>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                     <div>
-                                        <label for="bookingStatusFilter" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Status</label>
+                                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Status</label>
                                         <select id="bookingStatusFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                             <option value="all">All Status</option>
                                             <option value="pending">Pending</option>
@@ -3390,7 +3613,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                                         </select>
                                     </div>
                                     <div>
-                                        <label for="bookingDateFilter" style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Date Range</label>
+                                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--dark-gray); font-size: 13px;">Date Range</label>
                                         <select id="bookingDateFilter" style="width: 100%; padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px;">
                                             <option value="all">All Dates</option>
                                             <option value="today">Today</option>
@@ -3557,7 +3780,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
             }
             
             // Filter bookings
-            function applyBookingFilters() {
+            async function applyBookingFilters() {
                 const searchTerm = document.getElementById('bookingSearch')?.value.toLowerCase() || '';
                 const statusFilter = document.getElementById('bookingStatusFilter')?.value || 'all';
                 const dateFilter = document.getElementById('bookingDateFilter')?.value || 'all';
@@ -3621,8 +3844,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 const newStatus = statusMap[action];
                 if (!newStatus) return;
                 
-                showLoading('Updating booking status...');
-                
                 try {
                     const { error } = await state.db
                         .from('bookings')
@@ -3631,12 +3852,10 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     
                     if (error) throw error;
                     
-                    hideLoading();
                     showNotification(`Booking ${newStatus} successfully!`, 'success');
                     await loadBookings();
                     
                 } catch (err) {
-                    hideLoading();
                     console.error('Error updating booking:', err);
                     showNotification('Error updating booking: ' + err.message, 'error');
                 }
@@ -3644,8 +3863,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
             
             // Show booking details
             async function showBookingDetails(bookingId) {
-                showLoading('Loading booking details...');
-                
                 try {
                     const { data: booking, error } = await state.db
                         .from('bookings')
@@ -3654,8 +3871,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         .single();
                     
                     if (error) throw error;
-                    
-                    hideLoading();
                     
                     const detailsHtml = `
                         <div class="details-grid">
@@ -3747,40 +3962,59 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     openBookingDetailsModal();
                     
                 } catch (err) {
-                    hideLoading();
                     console.error('Error loading booking details:', err);
                     showNotification('Error loading booking details: ' + err.message, 'error');
                 }
             }
             
-            // ANALYTICS FUNCTIONS - USING ONLY SUPABASE DATA
+            // ANALYTICS FUNCTIONS
             async function loadAnalytics() {
-                showLoading('Loading analytics...');
-                
                 try {
-                    // Clear previous data
-                    document.getElementById('totalCustomers').textContent = '0';
-                    document.getElementById('totalBookings').textContent = '0';
-                    document.getElementById('totalRevenue').textContent = '£0';
-                    document.getElementById('bookingRate').textContent = '0%';
-                    document.getElementById('totalSlots').textContent = '0';
-                    document.getElementById('blockedSlots').textContent = '0';
-                    document.getElementById('availableDays').textContent = '0';
-                    document.getElementById('utilizationRate').textContent = '0%';
+                    // Update UI to show loading state
+                    document.getElementById('totalVisitors').textContent = '0';
+                    document.getElementById('totalPageviews').textContent = '0';
+                    document.getElementById('totalConversions').textContent = '0';
+                    document.getElementById('conversionRate').textContent = '0%';
+                    document.getElementById('avgSessionDuration').textContent = '0s';
+                    document.getElementById('bounceRate').textContent = '0%';
+                    document.getElementById('revenueGenerated').textContent = '£0';
+                    document.getElementById('avgOrderValue').textContent = '£0';
                     
-                    // Load all analytics data from Supabase
-                    await loadBookingAnalytics();
-                    await loadAvailabilityAnalytics();
-                    await loadBookingStatusChart();
-                    await loadRecentBookingsTable();
-                    await loadTopServices();
-                    
-                    hideLoading();
+                    // Load all analytics data
+                    await loadAnalyticsStats();
+                    await loadTrafficChart();
+                    await loadSourcesChart();
+                    await loadDeviceChart();
+                    await loadActiveUsers();
+                    await loadSearchTerms();
+                    await loadSessions();
+                    await loadRecentConversions();
+                    await loadGeoData();
                     
                 } catch (err) {
-                    hideLoading();
                     console.error('Error loading analytics:', err);
                     showNotification('Error loading analytics data: ' + err.message, 'error');
+                }
+            }
+            
+            // Start active users polling
+            function startActiveUsersPolling() {
+                if (state.activeUsersInterval) {
+                    clearInterval(state.activeUsersInterval);
+                }
+                
+                // Load immediately
+                loadActiveUsers();
+                
+                // Poll every 30 seconds
+                state.activeUsersInterval = setInterval(loadActiveUsers, 30000);
+            }
+            
+            // Stop active users polling
+            function stopActiveUsersPolling() {
+                if (state.activeUsersInterval) {
+                    clearInterval(state.activeUsersInterval);
+                    state.activeUsersInterval = null;
                 }
             }
             
@@ -3831,258 +4065,596 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 return date.toISOString().split('T')[0];
             }
             
-            // Load booking analytics from Supabase
-            async function loadBookingAnalytics() {
+            // Load analytics statistics
+            async function loadAnalyticsStats() {
                 try {
                     const dateRange = getDateRange();
                     const startStr = formatDateForDisplay(dateRange.start);
                     const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Get bookings data from Supabase for the date range
-                    const { data: bookings, error } = await state.db
-                        .from('bookings')
+                    // Load daily stats
+                    const { data: dailyStats, error: statsError } = await state.db
+                        .from('analytics_daily_stats')
                         .select('*')
-                        .gte('booking_date', startStr)
-                        .lte('booking_date', endStr);
+                        .gte('date', startStr)
+                        .lte('date', endStr)
+                        .order('date', { ascending: true });
                     
-                    if (error) {
-                        console.error('Error loading booking analytics:', error);
-                        return;
-                    }
-                    
-                    if (!bookings || bookings.length === 0) {
-                        return;
-                    }
-                    
-                    // Calculate analytics from Supabase data
-                    const totalBookings = bookings.length;
-                    
-                    // Count unique customers (by email)
-                    const uniqueEmails = new Set();
-                    bookings.forEach(booking => {
-                        if (booking.customer_email) {
-                            uniqueEmails.add(booking.customer_email);
+                    if (statsError) {
+                        console.error('Error loading daily stats:', statsError);
+                        if (statsError.message.includes('does not exist')) {
+                            showNotification('Analytics tables need to be created. Check database setup.', 'warning');
                         }
+                        return;
+                    }
+                    
+                    if (!dailyStats || dailyStats.length === 0) {
+                        console.log('No analytics data found for the selected date range');
+                        return;
+                    }
+                    
+                    // Calculate totals
+                    const totals = dailyStats.reduce((acc, day) => {
+                        acc.totalVisitors += day.total_visitors || 0;
+                        acc.totalSessions += day.total_sessions || 0;
+                        acc.totalPageviews += day.total_pageviews || 0;
+                        acc.totalConversions += day.total_conversions || 0;
+                        acc.totalRevenue += parseFloat(day.revenue_generated) || 0;
+                        acc.avgSessionDuration += day.avg_session_duration || 0;
+                        acc.bounceRate += day.bounce_rate || 0;
+                        return acc;
+                    }, {
+                        totalVisitors: 0,
+                        totalSessions: 0,
+                        totalPageviews: 0,
+                        totalConversions: 0,
+                        totalRevenue: 0,
+                        avgSessionDuration: 0,
+                        bounceRate: 0
                     });
-                    const totalCustomers = uniqueEmails.size;
                     
-                    // Calculate total revenue
-                    const totalRevenue = bookings.reduce((sum, booking) => {
-                        return sum + (parseFloat(booking.price) || 0);
-                    }, 0);
+                    // Calculate averages
+                    const avgSessionDuration = totals.avgSessionDuration / dailyStats.length;
+                    const avgBounceRate = totals.bounceRate / dailyStats.length;
+                    const conversionRate = totals.totalSessions > 0 ? (totals.totalConversions / totals.totalSessions) * 100 : 0;
+                    const avgOrderValue = totals.totalConversions > 0 ? totals.totalRevenue / totals.totalConversions : 0;
                     
-                    // Calculate booking rate (bookings per day)
-                    const daysInRange = Math.ceil((dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24)) || 1;
-                    const bookingRate = ((totalBookings / daysInRange) * 100).toFixed(1);
-                    
-                    // Update UI with Supabase data
-                    document.getElementById('totalCustomers').textContent = totalCustomers.toLocaleString();
-                    document.getElementById('totalBookings').textContent = totalBookings.toLocaleString();
-                    document.getElementById('totalRevenue').textContent = '£' + totalRevenue.toFixed(2);
-                    document.getElementById('bookingRate').textContent = bookingRate + '%';
+                    // Update UI
+                    document.getElementById('totalVisitors').textContent = totals.totalVisitors.toLocaleString();
+                    document.getElementById('totalPageviews').textContent = totals.totalPageviews.toLocaleString();
+                    document.getElementById('totalConversions').textContent = totals.totalConversions.toLocaleString();
+                    document.getElementById('conversionRate').textContent = conversionRate.toFixed(1) + '%';
+                    document.getElementById('avgSessionDuration').textContent = formatDuration(avgSessionDuration);
+                    document.getElementById('bounceRate').textContent = avgBounceRate.toFixed(1) + '%';
+                    document.getElementById('revenueGenerated').textContent = '£' + totals.totalRevenue.toFixed(0);
+                    document.getElementById('avgOrderValue').textContent = '£' + avgOrderValue.toFixed(2);
                     
                 } catch (err) {
-                    console.error('Error loading booking analytics:', err);
+                    console.error('Error loading analytics stats:', err);
                 }
             }
             
-            // Load availability analytics from Supabase
-            async function loadAvailabilityAnalytics() {
+            // Format duration from seconds
+            function formatDuration(seconds) {
+                if (!seconds) return '0s';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+            }
+            
+            // Load traffic chart
+            async function loadTrafficChart() {
                 try {
                     const dateRange = getDateRange();
                     const startStr = formatDateForDisplay(dateRange.start);
                     const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Get availability data from Supabase for the date range
-                    const { data: availability, error } = await state.db
-                        .from('availability_slots')
-                        .select('*')
-                        .gte('slot_date', startStr)
-                        .lte('slot_date', endStr);
+                    const { data: dailyStats, error } = await state.db
+                        .from('analytics_daily_stats')
+                        .select('date, total_visitors, total_pageviews, total_sessions')
+                        .gte('date', startStr)
+                        .lte('date', endStr)
+                        .order('date', { ascending: true });
                     
-                    if (error) {
-                        console.error('Error loading availability analytics:', error);
+                    if (error || !dailyStats || dailyStats.length === 0) {
+                        createEmptyChart('trafficChart', 'No traffic data available');
                         return;
                     }
                     
-                    if (!availability || availability.length === 0) {
-                        return;
+                    const dates = dailyStats.map(day => {
+                        const date = new Date(day.date);
+                        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    });
+                    
+                    const visitors = dailyStats.map(day => day.total_visitors || 0);
+                    const pageviews = dailyStats.map(day => day.total_pageviews || 0);
+                    const sessions = dailyStats.map(day => day.total_sessions || 0);
+                    
+                    const ctx = document.getElementById('trafficChart').getContext('2d');
+                    
+                    // Destroy existing chart if it exists
+                    if (state.analyticsCharts.traffic) {
+                        state.analyticsCharts.traffic.destroy();
                     }
                     
-                    // Calculate analytics from Supabase data
-                    const totalSlots = availability.length;
-                    const blockedSlots = availability.filter(slot => slot.is_blocked).length;
-                    
-                    // Count unique available days
-                    const availableDaysSet = new Set();
-                    availability.forEach(slot => {
-                        if (!slot.is_blocked && slot.booked_count < slot.max_capacity) {
-                            availableDaysSet.add(slot.slot_date);
+                    state.analyticsCharts.traffic = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: dates,
+                            datasets: [
+                                {
+                                    label: 'Visitors',
+                                    data: visitors,
+                                    borderColor: '#3B82F6',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Pageviews',
+                                    data: pageviews,
+                                    borderColor: '#10B981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                },
+                                {
+                                    label: 'Sessions',
+                                    data: sessions,
+                                    borderColor: '#8B5CF6',
+                                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                                    borderWidth: 2,
+                                    fill: true,
+                                    tension: 0.4
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                tooltip: {
+                                    mode: 'index',
+                                    intersect: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            if (value >= 1000) {
+                                                return (value / 1000).toFixed(1) + 'k';
+                                            }
+                                            return value;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     });
-                    const availableDays = availableDaysSet.size;
-                    
-                    // Calculate utilization rate
-                    const bookedSlots = availability.reduce((sum, slot) => sum + (slot.booked_count || 0), 0);
-                    const totalCapacity = availability.reduce((sum, slot) => sum + (slot.max_capacity || 1), 0);
-                    const utilizationRate = totalCapacity > 0 ? ((bookedSlots / totalCapacity) * 100).toFixed(1) : 0;
-                    
-                    // Update UI with Supabase data
-                    document.getElementById('totalSlots').textContent = totalSlots.toLocaleString();
-                    document.getElementById('blockedSlots').textContent = blockedSlots.toLocaleString();
-                    document.getElementById('availableDays').textContent = availableDays.toLocaleString();
-                    document.getElementById('utilizationRate').textContent = utilizationRate + '%';
                     
                 } catch (err) {
-                    console.error('Error loading availability analytics:', err);
+                    console.error('Error loading traffic chart:', err);
+                    createEmptyChart('trafficChart', 'Error loading traffic data');
                 }
             }
             
-            // Load booking status chart from Supabase data
-            async function loadBookingStatusChart() {
+            // Load sources chart
+            async function loadSourcesChart() {
                 try {
                     const dateRange = getDateRange();
                     const startStr = formatDateForDisplay(dateRange.start);
                     const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Get bookings by status from Supabase
-                    const { data: bookings, error } = await state.db
-                        .from('bookings')
-                        .select('status')
-                        .gte('booking_date', startStr)
-                        .lte('booking_date', endStr);
+                    const { data: dailyStats, error } = await state.db
+                        .from('analytics_daily_stats')
+                        .select('organic_search, direct_traffic, social_media, referral_traffic, email_campaigns')
+                        .gte('date', startStr)
+                        .lte('date', endStr);
                     
-                    if (error || !bookings || bookings.length === 0) {
-                        document.getElementById('bookingStatusChart').innerHTML = `
-                            <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
-                                <i class="fas fa-chart-pie" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
-                                <div>No booking data available</div>
-                            </div>
-                        `;
+                    if (error || !dailyStats || dailyStats.length === 0) {
+                        createEmptyChart('sourcesChart', 'No traffic sources data');
                         return;
                     }
                     
-                    // Count bookings by status
-                    const statusCounts = {
-                        pending: 0,
-                        confirmed: 0,
-                        cancelled: 0
-                    };
+                    // Calculate totals
+                    const totals = dailyStats.reduce((acc, day) => {
+                        acc.organic += day.organic_search || 0;
+                        acc.direct += day.direct_traffic || 0;
+                        acc.social += day.social_media || 0;
+                        acc.referral += day.referral_traffic || 0;
+                        acc.email += day.email_campaigns || 0;
+                        return acc;
+                    }, { organic: 0, direct: 0, social: 0, referral: 0, email: 0 });
                     
-                    bookings.forEach(booking => {
-                        const status = booking.status || 'pending';
-                        if (statusCounts[status] !== undefined) {
-                            statusCounts[status]++;
-                        } else {
-                            statusCounts.pending++;
+                    const totalTraffic = totals.organic + totals.direct + totals.social + totals.referral + totals.email;
+                    
+                    if (totalTraffic === 0) {
+                        createEmptyChart('sourcesChart', 'No traffic data available');
+                        return;
+                    }
+                    
+                    const ctx = document.getElementById('sourcesChart').getContext('2d');
+                    
+                    // Destroy existing chart if it exists
+                    if (state.analyticsCharts.sources) {
+                        state.analyticsCharts.sources.destroy();
+                    }
+                    
+                    state.analyticsCharts.sources = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Organic Search', 'Direct Traffic', 'Social Media', 'Referral', 'Email'],
+                            datasets: [{
+                                data: [
+                                    totals.organic,
+                                    totals.direct,
+                                    totals.social,
+                                    totals.referral,
+                                    totals.email
+                                ],
+                                backgroundColor: [
+                                    'rgba(16, 185, 129, 0.8)',
+                                    'rgba(59, 130, 246, 0.8)',
+                                    'rgba(236, 72, 153, 0.8)',
+                                    'rgba(245, 158, 11, 0.8)',
+                                    'rgba(139, 92, 246, 0.8)'
+                                ],
+                                borderColor: [
+                                    '#10B981',
+                                    '#3B82F6',
+                                    '#EC4899',
+                                    '#F59E0B',
+                                    '#8B5CF6'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const value = context.raw;
+                                            const percentage = ((value / totalTraffic) * 100).toFixed(1);
+                                            return `${context.label}: ${value.toLocaleString()} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     });
                     
-                    // Create simple chart with HTML/CSS
-                    const total = bookings.length;
-                    const pendingPercent = total > 0 ? (statusCounts.pending / total * 100) : 0;
-                    const confirmedPercent = total > 0 ? (statusCounts.confirmed / total * 100) : 0;
-                    const cancelledPercent = total > 0 ? (statusCounts.cancelled / total * 100) : 0;
-                    
-                    const chartHtml = `
-                        <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
-                            <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
-                                <div style="text-align: center;">
-                                    <div style="width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(
-                                        var(--orange) 0% ${pendingPercent}%,
-                                        var(--primary-green) ${pendingPercent}% ${pendingPercent + confirmedPercent}%,
-                                        var(--red) ${pendingPercent + confirmedPercent}% 100%
-                                    ); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-                                        <div style="width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--dark-green);">
-                                            ${total}
-                                        </div>
-                                    </div>
-                                    <div style="font-size: 12px; color: var(--medium-gray);">Total Bookings</div>
-                                </div>
-                            </div>
-                            
-                            <div style="display: flex; flex-direction: column; gap: 10px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 12px; height: 12px; background: var(--orange); border-radius: 2px;"></div>
-                                    <div style="flex: 1; font-size: 13px; font-weight: 600; color: var(--dark-gray);">Pending</div>
-                                    <div style="font-size: 13px; font-weight: 700; color: var(--orange);">${statusCounts.pending} (${pendingPercent.toFixed(1)}%)</div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 12px; height: 12px; background: var(--primary-green); border-radius: 2px;"></div>
-                                    <div style="flex: 1; font-size: 13px; font-weight: 600; color: var(--dark-gray);">Confirmed</div>
-                                    <div style="font-size: 13px; font-weight: 700; color: var(--primary-green);">${statusCounts.confirmed} (${confirmedPercent.toFixed(1)}%)</div>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 12px; height: 12px; background: var(--red); border-radius: 2px;"></div>
-                                    <div style="flex: 1; font-size: 13px; font-weight: 600; color: var(--dark-gray);">Cancelled</div>
-                                    <div style="font-size: 13px; font-weight: 700; color: var(--red);">${statusCounts.cancelled} (${cancelledPercent.toFixed(1)}%)</div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById('bookingStatusChart').innerHTML = chartHtml;
-                    
                 } catch (err) {
-                    console.error('Error loading booking status chart:', err);
-                    document.getElementById('bookingStatusChart').innerHTML = `
-                        <div style="text-align: center; padding: 20px; color: var(--red);">
-                            Error loading status chart
-                        </div>
-                    `;
+                    console.error('Error loading sources chart:', err);
+                    createEmptyChart('sourcesChart', 'Error loading sources data');
                 }
             }
             
-            // Load recent bookings table from Supabase
-            async function loadRecentBookingsTable() {
+            // Load device chart
+            async function loadDeviceChart() {
                 try {
-                    const container = document.getElementById('recentBookingsTable');
+                    const dateRange = getDateRange();
+                    const startStr = formatDateForDisplay(dateRange.start);
+                    const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Get recent bookings from Supabase
-                    const { data: bookings, error } = await state.db
-                        .from('bookings')
+                    const { data: dailyStats, error } = await state.db
+                        .from('analytics_daily_stats')
+                        .select('mobile_users, desktop_users, tablet_users')
+                        .gte('date', startStr)
+                        .lte('date', endStr);
+                    
+                    if (error || !dailyStats || dailyStats.length === 0) {
+                        createEmptyChart('deviceChart', 'No device data available');
+                        return;
+                    }
+                    
+                    // Calculate totals
+                    const totals = dailyStats.reduce((acc, day) => {
+                        acc.mobile += day.mobile_users || 0;
+                        acc.desktop += day.desktop_users || 0;
+                        acc.tablet += day.tablet_users || 0;
+                        return acc;
+                    }, { mobile: 0, desktop: 0, tablet: 0 });
+                    
+                    const totalDevices = totals.mobile + totals.desktop + totals.tablet;
+                    
+                    if (totalDevices === 0) {
+                        createEmptyChart('deviceChart', 'No device data available');
+                        return;
+                    }
+                    
+                    const ctx = document.getElementById('deviceChart').getContext('2d');
+                    
+                    // Destroy existing chart if it exists
+                    if (state.analyticsCharts.devices) {
+                        state.analyticsCharts.devices.destroy();
+                    }
+                    
+                    state.analyticsCharts.devices = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Mobile', 'Desktop', 'Tablet'],
+                            datasets: [{
+                                data: [totals.mobile, totals.desktop, totals.tablet],
+                                backgroundColor: [
+                                    'rgba(59, 130, 246, 0.8)',
+                                    'rgba(16, 185, 129, 0.8)',
+                                    'rgba(139, 92, 246, 0.8)'
+                                ],
+                                borderColor: [
+                                    '#3B82F6',
+                                    '#10B981',
+                                    '#8B5CF6'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const value = context.raw;
+                                            const percentage = ((value / totalDevices) * 100).toFixed(1);
+                                            return `${context.label}: ${value.toLocaleString()} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                } catch (err) {
+                    console.error('Error loading device chart:', err);
+                    createEmptyChart('deviceChart', 'Error loading device data');
+                }
+            }
+            
+            // Load active users
+            async function loadActiveUsers() {
+                try {
+                    const container = document.getElementById('activeUsersList');
+                    const now = new Date();
+                    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
+                    
+                    const { data: activeUsers, error } = await state.db
+                        .from('analytics_active_users')
                         .select('*')
-                        .order('created_at', { ascending: false })
-                        .limit(10);
+                        .gte('last_activity', fiveMinutesAgo.toISOString())
+                        .order('last_activity', { ascending: false })
+                        .limit(20);
                     
-                    if (error || !bookings || bookings.length === 0) {
-                        container.innerHTML = `
-                            <div style="text-align: center; padding: 20px; color: var(--medium-gray);">
-                                <i class="fas fa-calendar-check" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
-                                <div>No recent bookings</div>
-                            </div>
-                        `;
+                    if (error || !activeUsers) {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No active users data</div>';
+                        return;
+                    }
+                    
+                    // Update count
+                    document.getElementById('activeUsersCount').textContent = activeUsers.length;
+                    
+                    if (activeUsers.length === 0) {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No users active right now</div>';
                         return;
                     }
                     
                     let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
                     
-                    bookings.forEach(booking => {
-                        const date = new Date(booking.created_at);
+                    activeUsers.forEach(user => {
+                        const lastActive = new Date(user.last_activity);
+                        const timeAgo = Math.floor((now - lastActive) / 1000);
+                        const minutesAgo = Math.floor(timeAgo / 60);
+                        
+                        html += `
+                            <div class="active-user-item">
+                                <div class="active-user-avatar">
+                                    ${user.city ? user.city.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                                <div class="active-user-info">
+                                    <div style="font-weight: 600; color: var(--dark-gray); font-size: 13px;">
+                                        ${user.city || 'Unknown location'}
+                                    </div>
+                                    <div class="active-user-location">
+                                        ${user.current_action || 'Browsing'} • ${user.is_mobile ? 'Mobile' : 'Desktop'}
+                                    </div>
+                                </div>
+                                <div class="active-user-time">
+                                    ${minutesAgo === 0 ? 'Just now' : `${minutesAgo}m ago`}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                    
+                } catch (err) {
+                    console.error('Error loading active users:', err);
+                    document.getElementById('activeUsersList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading active users</div>';
+                }
+            }
+            
+            // Load search terms
+            async function loadSearchTerms() {
+                try {
+                    const container = document.getElementById('searchTermsList');
+                    
+                    const { data: searchTerms, error } = await state.db
+                        .from('analytics_search_terms')
+                        .select('*')
+                        .order('search_count', { ascending: false })
+                        .limit(10);
+                    
+                    if (error || !searchTerms || searchTerms.length === 0) {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No search terms data</div>';
+                        return;
+                    }
+                    
+                    let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+                    
+                    searchTerms.forEach(term => {
+                        html += `
+                            <div class="search-term-item ${term.is_in_coverage_area ? 'in-coverage' : 'out-coverage'}">
+                                <div class="search-term-text" title="${term.search_term}">
+                                    ${term.search_term.length > 30 ? term.search_term.substring(0, 30) + '...' : term.search_term}
+                                </div>
+                                <div class="search-term-count">
+                                    ${term.search_count}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                    
+                } catch (err) {
+                    console.error('Error loading search terms:', err);
+                    document.getElementById('searchTermsList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading search terms</div>';
+                }
+            }
+            
+            // Load sessions
+            async function loadSessions() {
+                try {
+                    const container = document.getElementById('sessionsList');
+                    const dateRange = getDateRange();
+                    const startStr = formatDateForDisplay(dateRange.start);
+                    const endStr = formatDateForDisplay(dateRange.end);
+                    
+                    const { data: sessions, error } = await state.db
+                        .from('analytics_sessions')
+                        .select('*')
+                        .gte('created_at', startStr)
+                        .lte('created_at', endStr)
+                        .order('created_at', { ascending: false })
+                        .limit(15);
+                    
+                    if (error || !sessions || sessions.length === 0) {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No sessions data available</div>';
+                        return;
+                    }
+                    
+                    let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+                    
+                    sessions.forEach(session => {
+                        const created = new Date(session.created_at);
+                        const timeStr = created.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        
+                        html += `
+                            <div class="session-item">
+                                <div class="session-header">
+                                    <div class="session-id" title="${session.session_id}">
+                                        ${session.session_id.substring(0, 8)}...
+                                    </div>
+                                    ${session.is_converted ? `
+                                        <div class="session-converted">
+                                            <i class="fas fa-check-circle"></i> Converted
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                
+                                <div class="session-details">
+                                    <div class="session-detail">
+                                        <div class="session-label">Device</div>
+                                        <div class="session-value">${session.device_type || 'Unknown'}</div>
+                                    </div>
+                                    
+                                    <div class="session-detail">
+                                        <div class="session-label">Location</div>
+                                        <div class="session-value">${session.city || session.region || session.country || 'Unknown'}</div>
+                                    </div>
+                                    
+                                    <div class="session-detail">
+                                        <div class="session-label">Source</div>
+                                        <div class="session-value">${session.utm_source || 'Direct'}</div>
+                                    </div>
+                                    
+                                    <div class="session-detail">
+                                        <div class="session-label">Time</div>
+                                        <div class="session-value">${timeStr}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                    
+                } catch (err) {
+                    console.error('Error loading sessions:', err);
+                    document.getElementById('sessionsList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading sessions</div>';
+                }
+            }
+            
+            // Load recent conversions
+            async function loadRecentConversions() {
+                try {
+                    const container = document.getElementById('recentConversions');
+                    const dateRange = getDateRange();
+                    const startStr = formatDateForDisplay(dateRange.start);
+                    const endStr = formatDateForDisplay(dateRange.end);
+                    
+                    const { data: conversions, error } = await state.db
+                        .from('analytics_conversions')
+                        .select('*')
+                        .gte('created_at', startStr)
+                        .lte('created_at', endStr)
+                        .order('created_at', { ascending: false })
+                        .limit(10);
+                    
+                    if (error || !conversions || conversions.length === 0) {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No conversion data available</div>';
+                        return;
+                    }
+                    
+                    let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+                    
+                    conversions.forEach(conversion => {
+                        const date = new Date(conversion.created_at);
                         const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                         const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                         
                         html += `
-                            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid ${booking.status === 'confirmed' ? 'var(--primary-green)' : booking.status === 'pending' ? 'var(--orange)' : 'var(--red)'};">
+                            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid var(--primary-green);">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
                                     <div style="font-weight: 700; color: var(--dark-gray); font-size: 14px;">
-                                        ${booking.customer_name || 'Anonymous'}
+                                        ${conversion.conversion_type || 'Conversion'}
                                     </div>
                                     <div style="font-size: 11px; color: var(--medium-gray);">
                                         ${dateStr} ${timeStr}
                                     </div>
                                 </div>
                                 <div style="font-size: 12px; color: var(--dark-gray); margin-bottom: 5px;">
-                                    ${booking.service_title || 'No service specified'}
+                                    ${conversion.customer_email || conversion.customer_phone || 'Anonymous'}
                                 </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div style="font-size: 11px; color: var(--medium-gray);">
-                                        ${booking.time_slot || 'No time specified'}
+                                ${conversion.conversion_value ? `
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div style="font-size: 11px; color: var(--medium-gray);">
+                                            Value
+                                        </div>
+                                        <div style="font-weight: 700; color: var(--primary-green); font-size: 14px;">
+                                            £${parseFloat(conversion.conversion_value).toFixed(2)}
+                                        </div>
                                     </div>
-                                    <div style="font-weight: 700; color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : booking.status === 'pending' ? 'var(--orange)' : 'var(--red)'}; font-size: 12px;">
-                                        ${booking.status || 'pending'}
-                                    </div>
-                                </div>
+                                ` : ''}
                             </div>
                         `;
                     });
@@ -4091,72 +4663,65 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     container.innerHTML = html;
                     
                 } catch (err) {
-                    console.error('Error loading recent bookings table:', err);
-                    document.getElementById('recentBookingsTable').innerHTML = `
-                        <div style="text-align: center; padding: 20px; color: var(--red);">
-                            Error loading recent bookings
-                        </div>
-                    `;
+                    console.error('Error loading recent conversions:', err);
+                    document.getElementById('recentConversions').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading conversions</div>';
                 }
             }
             
-            // Load top services from Supabase
-            async function loadTopServices() {
+            // Load geographic data
+            async function loadGeoData() {
                 try {
-                    const container = document.getElementById('topServicesList');
+                    const container = document.getElementById('geoData');
+                    const dateRange = getDateRange();
+                    const startStr = formatDateForDisplay(dateRange.start);
+                    const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Get bookings with service titles from Supabase
-                    const { data: bookings, error } = await state.db
-                        .from('bookings')
-                        .select('service_title')
-                        .not('service_title', 'is', null);
+                    const { data: sessions, error } = await state.db
+                        .from('analytics_sessions')
+                        .select('city, region, country')
+                        .not('city', 'is', null)
+                        .gte('created_at', startStr)
+                        .lte('created_at', endStr)
+                        .limit(50);
                     
-                    if (error || !bookings || bookings.length === 0) {
-                        container.innerHTML = `
-                            <div style="text-align: center; padding: 20px; color: var(--medium-gray);">
-                                <i class="fas fa-concierge-bell" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
-                                <div>No service data available</div>
-                            </div>
-                        `;
+                    if (error || !sessions || sessions.length === 0) {
+                        container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--medium-gray);">No geographic data available</div>';
                         return;
                     }
                     
-                    // Count services
-                    const serviceCounts = {};
-                    bookings.forEach(booking => {
-                        const service = booking.service_title || 'Unknown';
-                        serviceCounts[service] = (serviceCounts[service] || 0) + 1;
+                    // Count locations
+                    const locations = {};
+                    sessions.forEach(session => {
+                        const key = session.city || session.region || session.country || 'Unknown';
+                        locations[key] = (locations[key] || 0) + 1;
                     });
                     
                     // Convert to array and sort
-                    const topServices = Object.entries(serviceCounts)
-                        .map(([service, count]) => ({ service, count }))
+                    const topLocations = Object.entries(locations)
+                        .map(([location, count]) => ({ location, count }))
                         .sort((a, b) => b.count - a.count)
                         .slice(0, 8);
                     
                     let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
                     
-                    topServices.forEach((item, index) => {
-                        const percentage = (item.count / bookings.length * 100).toFixed(1);
+                    topLocations.forEach(loc => {
+                        const percentage = (loc.count / sessions.length * 100).toFixed(1);
                         
                         html += `
                             <div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <div style="font-weight: 600; color: var(--dark-gray); font-size: 13px; display: flex; align-items: center; gap: 8px;">
-                                        <div style="width: 20px; height: 20px; background: var(--light-green); color: var(--primary-green); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 10px;">
-                                            ${index + 1}
-                                        </div>
-                                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.service}</span>
+                                    <div style="font-weight: 600; color: var(--dark-gray); font-size: 13px;">
+                                        ${loc.location}
                                     </div>
                                     <div style="font-weight: 700; color: var(--primary-green); font-size: 13px;">
-                                        ${item.count}
+                                        ${loc.count}
                                     </div>
                                 </div>
                                 <div style="height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
                                     <div style="height: 100%; background: var(--primary-green); width: ${percentage}%; border-radius: 3px;"></div>
                                 </div>
                                 <div style="font-size: 11px; color: var(--medium-gray); margin-top: 3px;">
-                                    ${percentage}% of bookings
+                                    ${percentage}% of traffic
                                 </div>
                             </div>
                         `;
@@ -4166,13 +4731,48 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     container.innerHTML = html;
                     
                 } catch (err) {
-                    console.error('Error loading top services:', err);
-                    document.getElementById('topServicesList').innerHTML = `
-                        <div style="text-align: center; padding: 20px; color: var(--red);">
-                            Error loading top services
-                        </div>
-                    `;
+                    console.error('Error loading geographic data:', err);
+                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading geographic data</div>';
                 }
+            }
+            
+            // Create empty chart placeholder
+            function createEmptyChart(canvasId, message) {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (state.analyticsCharts[canvasId]) {
+                    state.analyticsCharts[canvasId].destroy();
+                }
+                
+                state.analyticsCharts[canvasId] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: []
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: message,
+                                color: '#9CA3AF',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { display: false },
+                            y: { display: false }
+                        }
+                    }
+                });
             }
             
             // Handle date range change
@@ -4222,63 +4822,137 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 loadAnalytics();
             }
             
-            // Export analytics data as CSV
+            // Update chart type
+            function updateChartType(chartType) {
+                // Update button states
+                document.querySelectorAll('[data-chart]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-chart="${chartType}"]`).classList.add('active');
+                
+                // In a real app, you would update the chart data here
+                // For now, just reload the traffic chart
+                loadTrafficChart();
+            }
+            
+            // Export analytics data
             async function exportAnalytics() {
                 try {
                     const dateRange = getDateRange();
                     const startStr = formatDateForDisplay(dateRange.start);
                     const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Get bookings data for export
-                    const { data: bookings, error } = await state.db
-                        .from('bookings')
+                    const { data: dailyStats, error } = await state.db
+                        .from('analytics_daily_stats')
                         .select('*')
-                        .gte('booking_date', startStr)
-                        .lte('booking_date', endStr)
-                        .order('booking_date', { ascending: false });
+                        .gte('date', startStr)
+                        .lte('date', endStr)
+                        .order('date', { ascending: true });
                     
-                    if (error || !bookings || bookings.length === 0) {
-                        showNotification('No data to export for the selected date range', 'warning');
+                    if (error || !dailyStats || dailyStats.length === 0) {
+                        showNotification('No analytics data to export', 'warning');
                         return;
                     }
                     
-                    // Create CSV headers
-                    const headers = ['Booking Date', 'Customer Name', 'Email', 'Phone', 'Service', 'Time Slot', 'Status', 'Price', 'Created At'];
+                    // Convert to CSV
+                    const headers = Object.keys(dailyStats[0]).join(',');
+                    const rows = dailyStats.map(day => 
+                        Object.values(day).map(value => 
+                            typeof value === 'string' ? `"${value.replace(/"/g, '""')}"` : value
+                        ).join(',')
+                    );
                     
-                    // Create CSV rows
-                    const rows = bookings.map(booking => [
-                        booking.booking_date,
-                        `"${booking.customer_name || ''}"`,
-                        `"${booking.customer_email || ''}"`,
-                        `"${booking.customer_phone || ''}"`,
-                        `"${booking.service_title || ''}"`,
-                        `"${booking.time_slot || ''}"`,
-                        booking.status || 'pending',
-                        booking.price || '0',
-                        new Date(booking.created_at).toISOString()
-                    ]);
-                    
-                    const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+                    const csvContent = [headers, ...rows].join('\n');
                     const blob = new Blob([csvContent], { type: 'text/csv' });
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `greenglo-bookings-${startStr}-to-${endStr}.csv`;
+                    a.download = `greenglo-analytics-${startStr}-to-${endStr}.csv`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
                     
-                    showNotification('Booking data exported successfully!', 'success');
+                    showNotification('Analytics data exported successfully!', 'success');
                     
                 } catch (err) {
                     console.error('Error exporting analytics:', err);
-                    showNotification('Error exporting data: ' + err.message, 'error');
+                    showNotification('Error exporting analytics data: ' + err.message, 'error');
+                }
+            }
+            
+            // Export specific data type
+            async function exportData(dataType) {
+                try {
+                    const dateRange = getDateRange();
+                    const startStr = formatDateForDisplay(dateRange.start);
+                    const endStr = formatDateForDisplay(dateRange.end);
+                    
+                    let tableName;
+                    switch(dataType) {
+                        case 'sessions':
+                            tableName = 'analytics_sessions';
+                            break;
+                        case 'conversions':
+                            tableName = 'analytics_conversions';
+                            break;
+                        case 'pageviews':
+                            tableName = 'analytics_pageviews';
+                            break;
+                        case 'search_terms':
+                            tableName = 'analytics_search_terms';
+                            break;
+                        default:
+                            throw new Error('Invalid data type');
+                    }
+                    
+                    const { data: records, error } = await state.db
+                        .from(tableName)
+                        .select('*')
+                        .gte('created_at', startStr)
+                        .lte('created_at', endStr)
+                        .order('created_at', { ascending: true });
+                    
+                    if (error || !records || records.length === 0) {
+                        showNotification(`No ${dataType} data to export`, 'warning');
+                        return;
+                    }
+                    
+                    // Convert to CSV
+                    const headers = Object.keys(records[0]).join(',');
+                    const rows = records.map(record => 
+                        Object.values(record).map(value => {
+                            if (value === null || value === undefined) return '';
+                            if (typeof value === 'object') return `"${JSON.stringify(value).replace(/"/g, '""')}"`;
+                            if (typeof value === 'string') return `"${value.replace(/"/g, '""')}"`;
+                            return value;
+                        }).join(',')
+                    );
+                    
+                    const csvContent = [headers, ...rows].join('\n');
+                    const blob = new Blob([csvContent], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `greenglo-${dataType}-${startStr}-to-${endStr}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    showNotification(`${dataType} data exported successfully!`, 'success');
+                    
+                } catch (err) {
+                    console.error(`Error exporting ${dataType}:`, err);
+                    showNotification(`Error exporting ${dataType} data: ${err.message}`, 'error');
                 }
             }
             
             // Initialize when DOM is loaded
             document.addEventListener('DOMContentLoaded', init);
+            
+            // Clean up on page unload
+            window.addEventListener('beforeunload', stopActiveUsersPolling);
             
             // Expose some functions globally for onclick handlers
             window.apply247ToSelectedDay = apply247ToSelectedDay;
@@ -4293,10 +4967,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
             window.openBulkSetupModal = openBulkSetupModal;
             window.loadAnalytics = loadAnalytics;
             window.exportAnalytics = exportAnalytics;
-            window.toggleSidebar = toggleSidebar;
-            window.closeSidebar = closeSidebar;
-            window.loadRecentBookingsTable = loadRecentBookingsTable;
-            window.loadTopServices = loadTopServices;
+            window.exportData = exportData;
             
         })();
     </script>
