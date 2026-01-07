@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GreenGlo Admin | 24/7 Availability & Analytics Management</title>
+    <title>GreenGlo Admin | 24/7 Availability Management</title>
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-    <!-- Chart.js for Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -868,104 +866,45 @@
             background: var(--red);
         }
 
-        /* Analytics specific styles */
-        .analytics-chart-container {
-            padding: 12px;
-            height: 250px;
-            position: relative;
+        /* Analytics stats - Using only Supabase data */
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .metric-card {
+        .analytics-card {
             background: white;
-            padding: 12px;
+            padding: 15px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            margin-bottom: 8px;
-            border-left: 4px solid var(--primary-green);
+            border: 1px solid rgba(209, 250, 229, 0.5);
         }
 
-        .metric-card h4 {
-            font-size: 13px;
-            color: var(--medium-gray);
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .metric-card .value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--dark-green);
-        }
-
-        .metric-card .trend {
-            font-size: 11px;
-            margin-top: 4px;
+        .analytics-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 12px;
         }
 
-        .trend.up {
-            color: var(--primary-green);
-        }
-
-        .trend.down {
-            color: var(--red);
-        }
-
-        .analytics-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 12px;
-        }
-
-        .analytics-table th {
-            background: var(--light-green);
+        .analytics-value {
+            font-size: 24px;
+            font-weight: 800;
             color: var(--dark-green);
-            font-weight: 600;
-            padding: 8px;
-            text-align: left;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            line-height: 1;
         }
 
-        .analytics-table td {
-            padding: 8px;
-            border-bottom: 1px solid #e5e7eb;
+        .analytics-label {
+            color: var(--medium-gray);
             font-size: 13px;
-        }
-
-        .traffic-source-badge {
-            display: inline-block;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .source-organic { background: rgba(16, 185, 129, 0.1); color: var(--primary-green); }
-        .source-direct { background: rgba(59, 130, 246, 0.1); color: var(--blue); }
-        .source-social { background: rgba(236, 72, 153, 0.1); color: var(--pink); }
-        .source-referral { background: rgba(245, 158, 11, 0.1); color: var(--orange); }
-        .source-email { background: rgba(139, 92, 246, 0.1); color: var(--purple); }
-
-        /* Live indicator */
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .live-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #EF4444;
-            border-radius: 50%;
-            margin-right: 4px;
-            animation: pulse 2s infinite;
+            font-weight: 500;
         }
 
         /* Improved touch targets */
@@ -1047,7 +986,8 @@
                 padding-bottom: 90px;
             }
             
-            .dashboard-stats {
+            .dashboard-stats,
+            .analytics-stats {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 15px;
             }
@@ -1115,15 +1055,18 @@
                 padding-bottom: 100px;
             }
             
-            .dashboard-stats {
+            .dashboard-stats,
+            .analytics-stats {
                 gap: 20px;
             }
             
-            .stat-card {
+            .stat-card,
+            .analytics-card {
                 padding: 20px;
             }
             
-            .stat-value {
+            .stat-value,
+            .analytics-value {
                 font-size: 28px;
             }
             
@@ -1139,7 +1082,8 @@
 
         /* Very small phones */
         @media (max-width: 360px) {
-            .dashboard-stats {
+            .dashboard-stats,
+            .analytics-stats {
                 grid-template-columns: 1fr;
             }
             
@@ -1167,7 +1111,8 @@
                 font-size: 18px;
             }
             
-            .stat-value {
+            .stat-value,
+            .analytics-value {
                 font-size: 20px;
             }
             
@@ -1204,21 +1149,6 @@
             .time-slots-grid {
                 max-height: 200px;
             }
-        }
-
-        /* Optimize charts for mobile */
-        .chart-container-small {
-            height: 200px !important;
-        }
-
-        /* Hide scrollbars but keep functionality */
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
         }
 
         /* Improve form inputs for mobile */
@@ -1288,11 +1218,6 @@
             overflow-x: hidden;
         }
 
-        /* Smooth transitions */
-        .smooth-transition {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         /* Loading overlay */
         .loading-overlay {
             position: fixed;
@@ -1319,23 +1244,6 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 1999;
             display: none;
-        }
-
-        /* Swipe hint for calendar */
-        .swipe-hint {
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            color: var(--medium-gray);
-            display: none;
-        }
-
-        @media (max-width: 767px) {
-            .swipe-hint {
-                display: block;
-            }
         }
     </style>
 </head>
@@ -1802,10 +1710,10 @@
                 </div>
             </div>
 
-            <!-- Analytics Section -->
+            <!-- Analytics Section (Using only Supabase data) -->
             <div id="analyticsSection" class="admin-section" style="display: none;" role="region" aria-label="Analytics">
                 <div class="admin-header">
-                    <h1>Web Analytics Dashboard</h1>
+                    <h1>Booking Analytics Dashboard</h1>
                     <div class="header-actions">
                         <select id="analyticsDateRange" class="btn btn-secondary" style="padding: 10px 15px; border-radius: 10px; background: white; border: 2px solid #e5e7eb; color: var(--dark-gray);">
                             <option value="today">Today</option>
@@ -1844,179 +1752,114 @@
                     </div>
                 </div>
 
-                <!-- Analytics Stats Cards -->
-                <div class="dashboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #3B82F6, #2563EB);">
+                <!-- Analytics Stats Cards - Using only Supabase data -->
+                <div class="analytics-stats">
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #3B82F6, #2563EB);">
                             <i class="fas fa-users"></i>
                         </div>
-                        <div class="stat-value" id="totalVisitors">0</div>
-                        <div class="stat-label">Total Visitors</div>
+                        <div class="analytics-value" id="totalCustomers">0</div>
+                        <div class="analytics-label">Total Customers</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
-                            <i class="fas fa-eye"></i>
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #10B981, #059669);">
+                            <i class="fas fa-calendar-check"></i>
                         </div>
-                        <div class="stat-value" id="totalPageviews">0</div>
-                        <div class="stat-label">Total Pageviews</div>
+                        <div class="analytics-value" id="totalBookings">0</div>
+                        <div class="analytics-label">Total Bookings</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #8B5CF6, #7C3AED);">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <div class="stat-value" id="totalConversions">0</div>
-                        <div class="stat-label">Total Conversions</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
-                            <i class="fas fa-percentage"></i>
-                        </div>
-                        <div class="stat-value" id="conversionRate">0%</div>
-                        <div class="stat-label">Conversion Rate</div>
-                    </div>
-                </div>
-
-                <!-- Charts Section -->
-                <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px;">
-                    <div class="quick-calendar-section">
-                        <div class="quick-calendar-header">
-                            <h3>Traffic Over Time</h3>
-                            <div class="quick-calendar-nav">
-                                <button class="nav-btn active" data-chart="visitors" aria-label="Show visitors chart">
-                                    <i class="fas fa-users"></i>
-                                </button>
-                                <button class="nav-btn" data-chart="pageviews" aria-label="Show pageviews chart">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="nav-btn" data-chart="sessions" aria-label="Show sessions chart">
-                                    <i class="fas fa-chart-line"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="quick-calendar-grid" style="padding: 20px;">
-                            <div class="analytics-chart-container">
-                                <canvas id="trafficChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-calendar-section">
-                        <div class="quick-calendar-header">
-                            <h3>Traffic Sources</h3>
-                        </div>
-                        <div class="quick-calendar-grid" style="padding: 20px;">
-                            <div class="analytics-chart-container">
-                                <canvas id="sourcesChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional Metrics -->
-                <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px;">
-                    <div class="quick-calendar-section">
-                        <div class="quick-calendar-header">
-                            <h3>Device Usage</h3>
-                        </div>
-                        <div class="quick-calendar-grid" style="padding: 20px;">
-                            <div class="analytics-chart-container">
-                                <canvas id="deviceChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-calendar-section">
-                        <div class="quick-calendar-header">
-                            <h3>Geographic Distribution</h3>
-                        </div>
-                        <div class="quick-calendar-grid" style="padding: 20px;">
-                            <div id="geoData" class="loading">
-                                <div class="spinner"></div>
-                                <div>Loading geographic data...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Detailed Tables -->
-                <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px;">
-                    <div class="quick-calendar-section">
-                        <div class="quick-calendar-header">
-                            <h3>Top Pages</h3>
-                            <button id="refreshTopPages" class="nav-btn" aria-label="Refresh top pages">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                        </div>
-                        <div class="quick-calendar-grid" style="padding: 20px; max-height: 400px; overflow-y: auto;">
-                            <div id="topPagesList" class="loading">
-                                <div class="spinner"></div>
-                                <div>Loading top pages...</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="quick-calendar-section">
-                        <div class="quick-calendar-header">
-                            <h3>Recent Conversions</h3>
-                            <button id="refreshConversions" class="nav-btn" aria-label="Refresh conversions">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                        </div>
-                        <div class="quick-calendar-grid" style="padding: 20px; max-height: 400px; overflow-y: auto;">
-                            <div id="recentConversions" class="loading">
-                                <div class="spinner"></div>
-                                <div>Loading conversions...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Real-time Activity -->
-                <div class="quick-calendar-section">
-                    <div class="quick-calendar-header">
-                        <h3>Recent Activity</h3>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span class="live-indicator"></span>
-                            <span style="font-size: 14px;">Last 24 Hours</span>
-                        </div>
-                    </div>
-                    <div class="quick-calendar-grid" style="padding: 20px; max-height: 300px; overflow-y: auto;">
-                        <div id="recentActivity" class="loading">
-                            <div class="spinner"></div>
-                            <div>Loading recent activity...</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Performance Metrics -->
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #6366F1, #4F46E5);">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="stat-value" id="avgSessionDuration">0s</div>
-                        <div class="stat-label">Avg. Session Duration</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #EC4899, #BE185D);">
-                            <i class="fas fa-signal"></i>
-                        </div>
-                        <div class="stat-value" id="bounceRate">0%</div>
-                        <div class="stat-label">Bounce Rate</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #14B8A6, #0D9488);">
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #8B5CF6, #7C3AED);">
                             <i class="fas fa-money-bill-wave"></i>
                         </div>
-                        <div class="stat-value" id="revenueGenerated">£0</div>
-                        <div class="stat-label">Revenue Generated</div>
+                        <div class="analytics-value" id="totalRevenue">£0</div>
+                        <div class="analytics-label">Total Revenue</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background: linear-gradient(135deg, #F97316, #EA580C);">
-                            <i class="fas fa-pound-sign"></i>
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706);">
+                            <i class="fas fa-percentage"></i>
                         </div>
-                        <div class="stat-value" id="avgOrderValue">£0</div>
-                        <div class="stat-label">Avg. Order Value</div>
+                        <div class="analytics-value" id="bookingRate">0%</div>
+                        <div class="analytics-label">Booking Rate</div>
+                    </div>
+                </div>
+
+                <!-- Booking Status Distribution -->
+                <div class="quick-calendar-section" style="margin-bottom: 20px;">
+                    <div class="quick-calendar-header">
+                        <h3>Booking Status Distribution</h3>
+                    </div>
+                    <div class="quick-calendar-grid" style="padding: 20px;">
+                        <div id="bookingStatusChart" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                            <div class="loading">
+                                <div class="spinner"></div>
+                                <div>Loading status data...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Bookings Table -->
+                <div class="quick-calendar-section" style="margin-bottom: 20px;">
+                    <div class="quick-calendar-header">
+                        <h3>Recent Bookings</h3>
+                        <button id="refreshRecentBookings" class="nav-btn" aria-label="Refresh recent bookings">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="quick-calendar-grid" style="padding: 20px; max-height: 400px; overflow-y: auto;">
+                        <div id="recentBookingsTable" class="loading">
+                            <div class="spinner"></div>
+                            <div>Loading recent bookings...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Services -->
+                <div class="quick-calendar-section" style="margin-bottom: 20px;">
+                    <div class="quick-calendar-header">
+                        <h3>Top Services</h3>
+                        <button id="refreshTopServices" class="nav-btn" aria-label="Refresh top services">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="quick-calendar-grid" style="padding: 20px; max-height: 300px; overflow-y: auto;">
+                        <div id="topServicesList" class="loading">
+                            <div class="spinner"></div>
+                            <div>Loading top services...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Availability Stats -->
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #6366F1, #4F46E5);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="analytics-value" id="totalSlots">0</div>
+                        <div class="analytics-label">Total Time Slots</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #EC4899, #BE185D);">
+                            <i class="fas fa-ban"></i>
+                        </div>
+                        <div class="analytics-value" id="blockedSlots">0</div>
+                        <div class="analytics-label">Blocked Slots</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #14B8A6, #0D9488);">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="analytics-value" id="availableDays">0</div>
+                        <div class="analytics-label">Available Days</div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-icon" style="background: linear-gradient(135deg, #F97316, #EA580C);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="analytics-value" id="utilizationRate">0%</div>
+                        <div class="analytics-label">Utilization Rate</div>
                     </div>
                 </div>
             </div>
@@ -2024,7 +1867,7 @@
     </div>
 
     <script>
-        // MAIN APPLICATION - MOBILE OPTIMIZED
+        // MAIN APPLICATION - USING ONLY SUPABASE TABLES
         (function() {
             'use strict';
             
@@ -2041,11 +1884,6 @@
                 currentYear: new Date().getFullYear(),
                 weekOffset: 0,
                 timeSlots: [],
-                analyticsCharts: {
-                    traffic: null,
-                    sources: null,
-                    devices: null
-                },
                 defaultSettings: {
                     startTime: '00:00',
                     endTime: '23:59',
@@ -2189,13 +2027,10 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 const xDiff = state.touchStartX - touchEndX;
                 const yDiff = state.touchStartY - touchEndY;
                 
-                // Only consider horizontal swipes with minimal vertical movement
                 if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > 50) {
                     if (xDiff > 0) {
-                        // Swipe left - next month
                         nextMonth();
                     } else {
-                        // Swipe right - previous month
                         prevMonth();
                     }
                 }
@@ -2268,13 +2103,11 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                             showSection('analytics');
                         }
                         
-                        // Update active state
                         document.querySelectorAll('.mobile-bottom-nav-item').forEach(item => {
                             item.classList.remove('active');
                         });
                         this.classList.add('active');
                         
-                        // Close sidebar if open
                         closeSidebar();
                     });
                 });
@@ -2333,16 +2166,8 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 document.getElementById('analyticsDateRange').addEventListener('change', handleDateRangeChange);
                 document.getElementById('applyCustomRange').addEventListener('click', applyCustomDateRange);
                 document.getElementById('cancelCustomRange').addEventListener('click', cancelCustomDateRange);
-                document.getElementById('refreshTopPages').addEventListener('click', loadTopPages);
-                document.getElementById('refreshConversions').addEventListener('click', loadRecentConversions);
-                
-                // Chart navigation
-                document.querySelectorAll('[data-chart]').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const chartType = this.dataset.chart;
-                        updateChartType(chartType);
-                    });
-                });
+                document.getElementById('refreshRecentBookings').addEventListener('click', loadRecentBookingsTable);
+                document.getElementById('refreshTopServices').addEventListener('click', loadTopServices);
                 
                 // Booking details modal
                 document.getElementById('closeBookingDetailsModal').addEventListener('click', closeBookingDetailsModal);
@@ -2381,17 +2206,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 
                 // Handle orientation change
                 window.addEventListener('orientationchange', handleOrientationChange);
-                
-                // Prevent zoom on double tap
-                let lastTap = 0;
-                document.addEventListener('touchend', function(e) {
-                    const currentTime = new Date().getTime();
-                    const tapLength = currentTime - lastTap;
-                    if (tapLength < 500 && tapLength > 0) {
-                        e.preventDefault();
-                    }
-                    lastTap = currentTime;
-                }, { passive: false });
             }
             
             // Handle window resize
@@ -2399,7 +2213,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 state.isMobile = window.innerWidth <= 767;
                 
                 if (!state.isMobile) {
-                    // On desktop, ensure sidebar is visible
                     const sidebar = document.querySelector('.admin-sidebar');
                     sidebar.classList.remove('closed');
                     sidebar.classList.add('active');
@@ -2781,7 +2594,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 try {
                     const today = new Date().toISOString().split('T')[0];
                     
-                    // Get today's bookings
+                    // Get today's bookings from Supabase
                     const { data: bookings, error } = await state.db
                         .from('bookings')
                         .select('*')
@@ -2795,7 +2608,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         document.getElementById('pendingRequests').textContent = pending;
                     }
                     
-                    // Get available slots for next 7 days (excluding lead time)
+                    // Get available slots for next 7 days (excluding lead time) from Supabase
                     const startDate = new Date();
                     startDate.setDate(startDate.getDate() + Math.ceil(state.defaultSettings.minBookingHours / 24));
                     const endDate = new Date();
@@ -2935,7 +2748,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 document.getElementById('currentMonthDisplay').textContent = 
                     firstDay.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
                 
-                // Get availability data for the month
+                // Get availability data for the month from Supabase
                 const startDate = new Date(state.currentYear, state.currentMonth, 1);
                 const endDate = new Date(state.currentYear, state.currentMonth + 1, 0);
                 
@@ -2995,7 +2808,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         dayElement.classList.add('within-lead-time');
                     }
                     
-                    // Determine day status
+                    // Determine day status from Supabase data
                     const dayAvailability = availabilityByDate[dateStr] || [];
                     let availableSlots = 0;
                     let blockedSlots = 0;
@@ -3077,7 +2890,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 const dayElement = document.querySelector(`.month-day[data-date="${dateStr}"]`);
                 if (dayElement) {
                     dayElement.classList.add('selected');
-                    // Focus on mobile for accessibility
                     if (state.isMobile) {
                         dayElement.focus();
                     }
@@ -3131,6 +2943,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 }
                 
                 try {
+                    // Get time slots from Supabase
                     const { data: existingSlots, error } = await state.db
                         .from('availability_slots')
                         .select('*')
@@ -3176,7 +2989,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         slotElement.setAttribute('role', 'button');
                         slotElement.setAttribute('tabindex', '0');
                         
-                        // Determine slot status
+                        // Determine slot status from Supabase data
                         if (slot.booked_count >= slot.max_capacity) {
                             slotElement.classList.add('booked');
                             slotElement.dataset.isAvailable = 'false';
@@ -3509,6 +3322,7 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 container.innerHTML = '<div class="loading"><div class="spinner"></div><div>Loading bookings...</div></div>';
                 
                 try {
+                    // Get bookings from Supabase
                     const { data: bookings, error } = await state.db
                         .from('bookings')
                         .select('*')
@@ -3776,7 +3590,6 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                         const today = new Date();
                         const weekFromNow = new Date();
                         weekFromNow.setDate(today.getDate() + 7);
-                        // Simple week filter
                         matchesDate = true;
                     }
                     
@@ -3940,30 +3753,27 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 }
             }
             
-            // ANALYTICS FUNCTIONS
+            // ANALYTICS FUNCTIONS - USING ONLY SUPABASE DATA
             async function loadAnalytics() {
                 showLoading('Loading analytics...');
                 
                 try {
-                    // Update UI to show loading state
-                    document.getElementById('totalVisitors').textContent = '0';
-                    document.getElementById('totalPageviews').textContent = '0';
-                    document.getElementById('totalConversions').textContent = '0';
-                    document.getElementById('conversionRate').textContent = '0%';
-                    document.getElementById('avgSessionDuration').textContent = '0s';
-                    document.getElementById('bounceRate').textContent = '0%';
-                    document.getElementById('revenueGenerated').textContent = '£0';
-                    document.getElementById('avgOrderValue').textContent = '£0';
+                    // Clear previous data
+                    document.getElementById('totalCustomers').textContent = '0';
+                    document.getElementById('totalBookings').textContent = '0';
+                    document.getElementById('totalRevenue').textContent = '£0';
+                    document.getElementById('bookingRate').textContent = '0%';
+                    document.getElementById('totalSlots').textContent = '0';
+                    document.getElementById('blockedSlots').textContent = '0';
+                    document.getElementById('availableDays').textContent = '0';
+                    document.getElementById('utilizationRate').textContent = '0%';
                     
-                    // Load all analytics data
-                    await loadAnalyticsStats();
-                    await loadTrafficChart();
-                    await loadSourcesChart();
-                    await loadDeviceChart();
-                    await loadTopPages();
-                    await loadRecentConversions();
-                    await loadRecentActivity();
-                    await loadGeoData();
+                    // Load all analytics data from Supabase
+                    await loadBookingAnalytics();
+                    await loadAvailabilityAnalytics();
+                    await loadBookingStatusChart();
+                    await loadRecentBookingsTable();
+                    await loadTopServices();
                     
                     hideLoading();
                     
@@ -4021,433 +3831,257 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 return date.toISOString().split('T')[0];
             }
             
-            // Load analytics statistics
-            async function loadAnalyticsStats() {
+            // Load booking analytics from Supabase
+            async function loadBookingAnalytics() {
                 try {
                     const dateRange = getDateRange();
                     const startStr = formatDateForDisplay(dateRange.start);
                     const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Try to load analytics data
-                    // Note: This assumes you have analytics tables set up
-                    // In a real implementation, you would query your analytics tables
+                    // Get bookings data from Supabase for the date range
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('*')
+                        .gte('booking_date', startStr)
+                        .lte('booking_date', endStr);
                     
-                    // For demo purposes, generate sample data
-                    generateSampleAnalyticsData();
+                    if (error) {
+                        console.error('Error loading booking analytics:', error);
+                        return;
+                    }
+                    
+                    if (!bookings || bookings.length === 0) {
+                        return;
+                    }
+                    
+                    // Calculate analytics from Supabase data
+                    const totalBookings = bookings.length;
+                    
+                    // Count unique customers (by email)
+                    const uniqueEmails = new Set();
+                    bookings.forEach(booking => {
+                        if (booking.customer_email) {
+                            uniqueEmails.add(booking.customer_email);
+                        }
+                    });
+                    const totalCustomers = uniqueEmails.size;
+                    
+                    // Calculate total revenue
+                    const totalRevenue = bookings.reduce((sum, booking) => {
+                        return sum + (parseFloat(booking.price) || 0);
+                    }, 0);
+                    
+                    // Calculate booking rate (bookings per day)
+                    const daysInRange = Math.ceil((dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24)) || 1;
+                    const bookingRate = ((totalBookings / daysInRange) * 100).toFixed(1);
+                    
+                    // Update UI with Supabase data
+                    document.getElementById('totalCustomers').textContent = totalCustomers.toLocaleString();
+                    document.getElementById('totalBookings').textContent = totalBookings.toLocaleString();
+                    document.getElementById('totalRevenue').textContent = '£' + totalRevenue.toFixed(2);
+                    document.getElementById('bookingRate').textContent = bookingRate + '%';
                     
                 } catch (err) {
-                    console.error('Error loading analytics stats:', err);
+                    console.error('Error loading booking analytics:', err);
                 }
             }
             
-            // Generate sample analytics data for demo
-            function generateSampleAnalyticsData() {
-                // Generate random data for demo
-                const totalVisitors = Math.floor(Math.random() * 10000) + 5000;
-                const totalPageviews = Math.floor(totalVisitors * (Math.random() * 3 + 1));
-                const totalConversions = Math.floor(totalVisitors * 0.05);
-                const conversionRate = ((totalConversions / totalVisitors) * 100).toFixed(1);
-                const avgSessionDuration = Math.floor(Math.random() * 300) + 60;
-                const bounceRate = (Math.random() * 40 + 20).toFixed(1);
-                const revenueGenerated = Math.floor(totalConversions * (Math.random() * 100 + 50));
-                const avgOrderValue = (revenueGenerated / totalConversions || 0).toFixed(2);
-                
-                // Update UI
-                document.getElementById('totalVisitors').textContent = totalVisitors.toLocaleString();
-                document.getElementById('totalPageviews').textContent = totalPageviews.toLocaleString();
-                document.getElementById('totalConversions').textContent = totalConversions.toLocaleString();
-                document.getElementById('conversionRate').textContent = conversionRate + '%';
-                document.getElementById('avgSessionDuration').textContent = formatDuration(avgSessionDuration);
-                document.getElementById('bounceRate').textContent = bounceRate + '%';
-                document.getElementById('revenueGenerated').textContent = '£' + revenueGenerated.toLocaleString();
-                document.getElementById('avgOrderValue').textContent = '£' + avgOrderValue;
-            }
-            
-            // Format duration from seconds
-            function formatDuration(seconds) {
-                if (!seconds) return '0s';
-                const mins = Math.floor(seconds / 60);
-                const secs = Math.floor(seconds % 60);
-                return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
-            }
-            
-            // Load traffic chart
-            async function loadTrafficChart() {
+            // Load availability analytics from Supabase
+            async function loadAvailabilityAnalytics() {
                 try {
                     const dateRange = getDateRange();
-                    const days = Math.ceil((dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24));
+                    const startStr = formatDateForDisplay(dateRange.start);
+                    const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Generate sample data
-                    const dates = [];
-                    const visitors = [];
-                    const pageviews = [];
-                    const sessions = [];
+                    // Get availability data from Supabase for the date range
+                    const { data: availability, error } = await state.db
+                        .from('availability_slots')
+                        .select('*')
+                        .gte('slot_date', startStr)
+                        .lte('slot_date', endStr);
                     
-                    for (let i = 0; i < days; i++) {
-                        const date = new Date(dateRange.start);
-                        date.setDate(date.getDate() + i);
-                        dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-                        
-                        visitors.push(Math.floor(Math.random() * 500) + 200);
-                        pageviews.push(Math.floor(visitors[i] * (Math.random() * 3 + 1)));
-                        sessions.push(Math.floor(visitors[i] * 0.8));
+                    if (error) {
+                        console.error('Error loading availability analytics:', error);
+                        return;
                     }
                     
-                    const ctx = document.getElementById('trafficChart').getContext('2d');
-                    
-                    // Destroy existing chart if it exists
-                    if (state.analyticsCharts.traffic) {
-                        state.analyticsCharts.traffic.destroy();
+                    if (!availability || availability.length === 0) {
+                        return;
                     }
                     
-                    state.analyticsCharts.traffic = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: dates,
-                            datasets: [
-                                {
-                                    label: 'Visitors',
-                                    data: visitors,
-                                    borderColor: '#3B82F6',
-                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                    borderWidth: 2,
-                                    fill: true,
-                                    tension: 0.4
-                                },
-                                {
-                                    label: 'Pageviews',
-                                    data: pageviews,
-                                    borderColor: '#10B981',
-                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                    borderWidth: 2,
-                                    fill: true,
-                                    tension: 0.4
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                },
-                                tooltip: {
-                                    mode: 'index',
-                                    intersect: false
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    ticks: {
-                                        callback: function(value) {
-                                            if (value >= 1000) {
-                                                return (value / 1000).toFixed(1) + 'k';
-                                            }
-                                            return value;
-                                        }
-                                    }
-                                }
-                            }
+                    // Calculate analytics from Supabase data
+                    const totalSlots = availability.length;
+                    const blockedSlots = availability.filter(slot => slot.is_blocked).length;
+                    
+                    // Count unique available days
+                    const availableDaysSet = new Set();
+                    availability.forEach(slot => {
+                        if (!slot.is_blocked && slot.booked_count < slot.max_capacity) {
+                            availableDaysSet.add(slot.slot_date);
                         }
                     });
+                    const availableDays = availableDaysSet.size;
+                    
+                    // Calculate utilization rate
+                    const bookedSlots = availability.reduce((sum, slot) => sum + (slot.booked_count || 0), 0);
+                    const totalCapacity = availability.reduce((sum, slot) => sum + (slot.max_capacity || 1), 0);
+                    const utilizationRate = totalCapacity > 0 ? ((bookedSlots / totalCapacity) * 100).toFixed(1) : 0;
+                    
+                    // Update UI with Supabase data
+                    document.getElementById('totalSlots').textContent = totalSlots.toLocaleString();
+                    document.getElementById('blockedSlots').textContent = blockedSlots.toLocaleString();
+                    document.getElementById('availableDays').textContent = availableDays.toLocaleString();
+                    document.getElementById('utilizationRate').textContent = utilizationRate + '%';
                     
                 } catch (err) {
-                    console.error('Error loading traffic chart:', err);
-                    createEmptyChart('trafficChart', 'Error loading traffic data');
+                    console.error('Error loading availability analytics:', err);
                 }
             }
             
-            // Load sources chart
-            async function loadSourcesChart() {
+            // Load booking status chart from Supabase data
+            async function loadBookingStatusChart() {
                 try {
-                    const sources = [
-                        { name: 'Organic Search', value: 45, color: 'rgba(16, 185, 129, 0.8)' },
-                        { name: 'Direct Traffic', value: 25, color: 'rgba(59, 130, 246, 0.8)' },
-                        { name: 'Social Media', value: 15, color: 'rgba(236, 72, 153, 0.8)' },
-                        { name: 'Referral', value: 10, color: 'rgba(245, 158, 11, 0.8)' },
-                        { name: 'Email', value: 5, color: 'rgba(139, 92, 246, 0.8)' }
-                    ];
+                    const dateRange = getDateRange();
+                    const startStr = formatDateForDisplay(dateRange.start);
+                    const endStr = formatDateForDisplay(dateRange.end);
                     
-                    const totalTraffic = sources.reduce((sum, source) => sum + source.value, 0);
+                    // Get bookings by status from Supabase
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('status')
+                        .gte('booking_date', startStr)
+                        .lte('booking_date', endStr);
                     
-                    const ctx = document.getElementById('sourcesChart').getContext('2d');
-                    
-                    // Destroy existing chart if it exists
-                    if (state.analyticsCharts.sources) {
-                        state.analyticsCharts.sources.destroy();
-                    }
-                    
-                    state.analyticsCharts.sources = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: sources.map(s => s.name),
-                            datasets: [{
-                                data: sources.map(s => s.value),
-                                backgroundColor: sources.map(s => s.color),
-                                borderColor: sources.map(s => s.color.replace('0.8', '1')),
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'right',
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            const value = context.raw;
-                                            const percentage = ((value / totalTraffic) * 100).toFixed(1);
-                                            return `${context.label}: ${value}% (${percentage}%)`;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    
-                } catch (err) {
-                    console.error('Error loading sources chart:', err);
-                    createEmptyChart('sourcesChart', 'Error loading sources data');
-                }
-            }
-            
-            // Load device chart
-            async function loadDeviceChart() {
-                try {
-                    const devices = [
-                        { name: 'Mobile', value: 65, color: 'rgba(59, 130, 246, 0.8)' },
-                        { name: 'Desktop', value: 30, color: 'rgba(16, 185, 129, 0.8)' },
-                        { name: 'Tablet', value: 5, color: 'rgba(139, 92, 246, 0.8)' }
-                    ];
-                    
-                    const totalDevices = devices.reduce((sum, device) => sum + device.value, 0);
-                    
-                    const ctx = document.getElementById('deviceChart').getContext('2d');
-                    
-                    // Destroy existing chart if it exists
-                    if (state.analyticsCharts.devices) {
-                        state.analyticsCharts.devices.destroy();
-                    }
-                    
-                    state.analyticsCharts.devices = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: devices.map(d => d.name),
-                            datasets: [{
-                                data: devices.map(d => d.value),
-                                backgroundColor: devices.map(d => d.color),
-                                borderColor: devices.map(d => d.color.replace('0.8', '1')),
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'right',
-                                },
-                                tooltip: {
-                                    callbacks: {
-                                        label: function(context) {
-                                            const value = context.raw;
-                                            const percentage = ((value / totalDevices) * 100).toFixed(1);
-                                            return `${context.label}: ${value}% (${percentage}%)`;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    
-                } catch (err) {
-                    console.error('Error loading device chart:', err);
-                    createEmptyChart('deviceChart', 'Error loading device data');
-                }
-            }
-            
-            // Create empty chart placeholder
-            function createEmptyChart(canvasId, message) {
-                const ctx = document.getElementById(canvasId).getContext('2d');
-                
-                if (state.analyticsCharts[canvasId]) {
-                    state.analyticsCharts[canvasId].destroy();
-                }
-                
-                state.analyticsCharts[canvasId] = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: []
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: message,
-                                color: '#9CA3AF',
-                                font: {
-                                    size: 14
-                                }
-                            }
-                        },
-                        scales: {
-                            x: { display: false },
-                            y: { display: false }
-                        }
-                    }
-                });
-            }
-            
-            // Load top pages
-            async function loadTopPages() {
-                try {
-                    const container = document.getElementById('topPagesList');
-                    
-                    // Sample top pages data
-                    const topPages = [
-                        { title: 'Home Page', url: '/', count: 12500 },
-                        { title: 'Services', url: '/services', count: 8500 },
-                        { title: 'Book Now', url: '/book', count: 7200 },
-                        { title: 'About Us', url: '/about', count: 5400 },
-                        { title: 'Contact', url: '/contact', count: 4200 },
-                        { title: 'Blog', url: '/blog', count: 3800 },
-                        { title: 'Pricing', url: '/pricing', count: 3100 },
-                        { title: 'FAQ', url: '/faq', count: 2800 }
-                    ];
-                    
-                    let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
-                    
-                    topPages.forEach((page, index) => {
-                        html += `
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #f9fafb; border-radius: 8px;">
-                                <div style="width: 24px; height: 24px; background: var(--light-green); color: var(--primary-green); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px;">
-                                    ${index + 1}
-                                </div>
-                                <div style="flex: 1; overflow: hidden;">
-                                    <div style="font-weight: 600; color: var(--dark-gray); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${page.title}">
-                                        ${page.title}
-                                    </div>
-                                    <div style="font-size: 11px; color: var(--medium-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${page.url}">
-                                        ${page.url}
-                                    </div>
-                                </div>
-                                <div style="font-weight: 700; color: var(--primary-green); font-size: 14px;">
-                                    ${page.count.toLocaleString()}
-                                </div>
+                    if (error || !bookings || bookings.length === 0) {
+                        document.getElementById('bookingStatusChart').innerHTML = `
+                            <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
+                                <i class="fas fa-chart-pie" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
+                                <div>No booking data available</div>
                             </div>
                         `;
+                        return;
+                    }
+                    
+                    // Count bookings by status
+                    const statusCounts = {
+                        pending: 0,
+                        confirmed: 0,
+                        cancelled: 0
+                    };
+                    
+                    bookings.forEach(booking => {
+                        const status = booking.status || 'pending';
+                        if (statusCounts[status] !== undefined) {
+                            statusCounts[status]++;
+                        } else {
+                            statusCounts.pending++;
+                        }
                     });
                     
-                    html += '</div>';
-                    container.innerHTML = html;
+                    // Create simple chart with HTML/CSS
+                    const total = bookings.length;
+                    const pendingPercent = total > 0 ? (statusCounts.pending / total * 100) : 0;
+                    const confirmedPercent = total > 0 ? (statusCounts.confirmed / total * 100) : 0;
+                    const cancelledPercent = total > 0 ? (statusCounts.cancelled / total * 100) : 0;
+                    
+                    const chartHtml = `
+                        <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
+                                <div style="text-align: center;">
+                                    <div style="width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(
+                                        var(--orange) 0% ${pendingPercent}%,
+                                        var(--primary-green) ${pendingPercent}% ${pendingPercent + confirmedPercent}%,
+                                        var(--red) ${pendingPercent + confirmedPercent}% 100%
+                                    ); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                                        <div style="width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--dark-green);">
+                                            ${total}
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 12px; color: var(--medium-gray);">Total Bookings</div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 12px; height: 12px; background: var(--orange); border-radius: 2px;"></div>
+                                    <div style="flex: 1; font-size: 13px; font-weight: 600; color: var(--dark-gray);">Pending</div>
+                                    <div style="font-size: 13px; font-weight: 700; color: var(--orange);">${statusCounts.pending} (${pendingPercent.toFixed(1)}%)</div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 12px; height: 12px; background: var(--primary-green); border-radius: 2px;"></div>
+                                    <div style="flex: 1; font-size: 13px; font-weight: 600; color: var(--dark-gray);">Confirmed</div>
+                                    <div style="font-size: 13px; font-weight: 700; color: var(--primary-green);">${statusCounts.confirmed} (${confirmedPercent.toFixed(1)}%)</div>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 12px; height: 12px; background: var(--red); border-radius: 2px;"></div>
+                                    <div style="flex: 1; font-size: 13px; font-weight: 600; color: var(--dark-gray);">Cancelled</div>
+                                    <div style="font-size: 13px; font-weight: 700; color: var(--red);">${statusCounts.cancelled} (${cancelledPercent.toFixed(1)}%)</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('bookingStatusChart').innerHTML = chartHtml;
                     
                 } catch (err) {
-                    console.error('Error loading top pages:', err);
-                    document.getElementById('topPagesList').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading top pages</div>';
+                    console.error('Error loading booking status chart:', err);
+                    document.getElementById('bookingStatusChart').innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--red);">
+                            Error loading status chart
+                        </div>
+                    `;
                 }
             }
             
-            // Load recent conversions
-            async function loadRecentConversions() {
+            // Load recent bookings table from Supabase
+            async function loadRecentBookingsTable() {
                 try {
-                    const container = document.getElementById('recentConversions');
+                    const container = document.getElementById('recentBookingsTable');
                     
-                    // Sample conversions data
-                    const conversions = [
-                        { type: 'Booking', email: 'john@example.com', value: 149.99, date: new Date(Date.now() - 3600000) },
-                        { type: 'Consultation', email: 'sarah@example.com', value: 0, date: new Date(Date.now() - 7200000) },
-                        { type: 'Product Purchase', email: 'mike@example.com', value: 89.99, date: new Date(Date.now() - 10800000) },
-                        { type: 'Booking', email: 'lisa@example.com', value: 199.99, date: new Date(Date.now() - 14400000) },
-                        { type: 'Service Upgrade', email: 'david@example.com', value: 75.00, date: new Date(Date.now() - 18000000) }
-                    ];
+                    // Get recent bookings from Supabase
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('*')
+                        .order('created_at', { ascending: false })
+                        .limit(10);
                     
-                    let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
+                    if (error || !bookings || bookings.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 20px; color: var(--medium-gray);">
+                                <i class="fas fa-calendar-check" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
+                                <div>No recent bookings</div>
+                            </div>
+                        `;
+                        return;
+                    }
                     
-                    conversions.forEach(conversion => {
-                        const dateStr = conversion.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                        const timeStr = conversion.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                    let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+                    
+                    bookings.forEach(booking => {
+                        const date = new Date(booking.created_at);
+                        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                         
                         html += `
-                            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid var(--primary-green);">
+                            <div style="padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid ${booking.status === 'confirmed' ? 'var(--primary-green)' : booking.status === 'pending' ? 'var(--orange)' : 'var(--red)'};">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
                                     <div style="font-weight: 700; color: var(--dark-gray); font-size: 14px;">
-                                        ${conversion.type}
+                                        ${booking.customer_name || 'Anonymous'}
                                     </div>
                                     <div style="font-size: 11px; color: var(--medium-gray);">
                                         ${dateStr} ${timeStr}
                                     </div>
                                 </div>
                                 <div style="font-size: 12px; color: var(--dark-gray); margin-bottom: 5px;">
-                                    ${conversion.email}
+                                    ${booking.service_title || 'No service specified'}
                                 </div>
-                                ${conversion.value > 0 ? `
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div style="font-size: 11px; color: var(--medium-gray);">
-                                            Value
-                                        </div>
-                                        <div style="font-weight: 700; color: var(--primary-green); font-size: 14px;">
-                                            £${conversion.value.toFixed(2)}
-                                        </div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    });
-                    
-                    html += '</div>';
-                    container.innerHTML = html;
-                    
-                } catch (err) {
-                    console.error('Error loading recent conversions:', err);
-                    document.getElementById('recentConversions').innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading conversions</div>';
-                }
-            }
-            
-            // Load recent activity
-            async function loadRecentActivity() {
-                try {
-                    const container = document.getElementById('recentActivity');
-                    
-                    // Sample activity data
-                    const activities = [
-                        { type: 'Visitor', location: 'London, UK', device: 'Mobile', time: new Date(Date.now() - 300000) },
-                        { type: 'Returning Visitor', location: 'Manchester, UK', device: 'Desktop', time: new Date(Date.now() - 600000) },
-                        { type: 'Conversion', location: 'Birmingham, UK', device: 'Tablet', time: new Date(Date.now() - 900000) },
-                        { type: 'Visitor', location: 'Glasgow, UK', device: 'Mobile', time: new Date(Date.now() - 1200000) },
-                        { type: 'Page View', location: 'Leeds, UK', device: 'Desktop', time: new Date(Date.now() - 1500000) }
-                    ];
-                    
-                    let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
-                    
-                    activities.forEach(activity => {
-                        const timeStr = activity.time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-                        
-                        html += `
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #f9fafb; border-radius: 8px;">
-                                <div style="width: 32px; height: 32px; background: rgba(16, 185, 129, 0.1); color: var(--primary-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px;">
-                                    <i class="fas fa-${activity.type === 'Conversion' ? 'shopping-cart' : 'user'}"></i>
-                                </div>
-                                <div style="flex: 1;">
-                                    <div style="font-weight: 600; color: var(--dark-gray); font-size: 13px;">
-                                        ${activity.type}
-                                    </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div style="font-size: 11px; color: var(--medium-gray);">
-                                        ${activity.location} • ${activity.device}
+                                        ${booking.time_slot || 'No time specified'}
                                     </div>
-                                </div>
-                                <div style="font-size: 11px; color: var(--medium-gray);">
-                                    ${timeStr}
+                                    <div style="font-weight: 700; color: ${booking.status === 'confirmed' ? 'var(--primary-green)' : booking.status === 'pending' ? 'var(--orange)' : 'var(--red)'}; font-size: 12px;">
+                                        ${booking.status || 'pending'}
+                                    </div>
                                 </div>
                             </div>
                         `;
@@ -4457,46 +4091,72 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     container.innerHTML = html;
                     
                 } catch (err) {
-                    console.error('Error loading recent activity:', err);
-                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading recent activity</div>';
+                    console.error('Error loading recent bookings table:', err);
+                    document.getElementById('recentBookingsTable').innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--red);">
+                            Error loading recent bookings
+                        </div>
+                    `;
                 }
             }
             
-            // Load geographic data
-            async function loadGeoData() {
+            // Load top services from Supabase
+            async function loadTopServices() {
                 try {
-                    const container = document.getElementById('geoData');
+                    const container = document.getElementById('topServicesList');
                     
-                    // Sample geographic data
-                    const locations = [
-                        { location: 'London, UK', count: 45, percentage: 45 },
-                        { location: 'Manchester, UK', count: 18, percentage: 18 },
-                        { location: 'Birmingham, UK', count: 12, percentage: 12 },
-                        { location: 'Glasgow, UK', count: 8, percentage: 8 },
-                        { location: 'Leeds, UK', count: 6, percentage: 6 },
-                        { location: 'Liverpool, UK', count: 5, percentage: 5 },
-                        { location: 'Edinburgh, UK', count: 4, percentage: 4 },
-                        { location: 'Bristol, UK', count: 2, percentage: 2 }
-                    ];
+                    // Get bookings with service titles from Supabase
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('service_title')
+                        .not('service_title', 'is', null);
+                    
+                    if (error || !bookings || bookings.length === 0) {
+                        container.innerHTML = `
+                            <div style="text-align: center; padding: 20px; color: var(--medium-gray);">
+                                <i class="fas fa-concierge-bell" style="font-size: 30px; margin-bottom: 10px; opacity: 0.5;"></i>
+                                <div>No service data available</div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Count services
+                    const serviceCounts = {};
+                    bookings.forEach(booking => {
+                        const service = booking.service_title || 'Unknown';
+                        serviceCounts[service] = (serviceCounts[service] || 0) + 1;
+                    });
+                    
+                    // Convert to array and sort
+                    const topServices = Object.entries(serviceCounts)
+                        .map(([service, count]) => ({ service, count }))
+                        .sort((a, b) => b.count - a.count)
+                        .slice(0, 8);
                     
                     let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
                     
-                    locations.forEach(loc => {
+                    topServices.forEach((item, index) => {
+                        const percentage = (item.count / bookings.length * 100).toFixed(1);
+                        
                         html += `
                             <div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <div style="font-weight: 600; color: var(--dark-gray); font-size: 13px;">
-                                        ${loc.location}
+                                    <div style="font-weight: 600; color: var(--dark-gray); font-size: 13px; display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 20px; height: 20px; background: var(--light-green); color: var(--primary-green); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 10px;">
+                                            ${index + 1}
+                                        </div>
+                                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.service}</span>
                                     </div>
                                     <div style="font-weight: 700; color: var(--primary-green); font-size: 13px;">
-                                        ${loc.count}%
+                                        ${item.count}
                                     </div>
                                 </div>
                                 <div style="height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden;">
-                                    <div style="height: 100%; background: var(--primary-green); width: ${loc.percentage}%; border-radius: 3px;"></div>
+                                    <div style="height: 100%; background: var(--primary-green); width: ${percentage}%; border-radius: 3px;"></div>
                                 </div>
                                 <div style="font-size: 11px; color: var(--medium-gray); margin-top: 3px;">
-                                    ${loc.percentage}% of traffic
+                                    ${percentage}% of bookings
                                 </div>
                             </div>
                         `;
@@ -4506,8 +4166,12 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                     container.innerHTML = html;
                     
                 } catch (err) {
-                    console.error('Error loading geographic data:', err);
-                    container.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--red);">Error loading geographic data</div>';
+                    console.error('Error loading top services:', err);
+                    document.getElementById('topServicesList').innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--red);">
+                            Error loading top services
+                        </div>
+                    `;
                 }
             }
             
@@ -4558,67 +4222,58 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
                 loadAnalytics();
             }
             
-            // Update chart type
-            function updateChartType(chartType) {
-                // Update button states
-                document.querySelectorAll('[data-chart]').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector(`[data-chart="${chartType}"]`).classList.add('active');
-                
-                // In a real app, you would update the chart data here
-                loadTrafficChart();
-            }
-            
-            // Export analytics data
+            // Export analytics data as CSV
             async function exportAnalytics() {
                 try {
                     const dateRange = getDateRange();
                     const startStr = formatDateForDisplay(dateRange.start);
                     const endStr = formatDateForDisplay(dateRange.end);
                     
-                    // Create sample CSV data
-                    const headers = ['Date', 'Visitors', 'Pageviews', 'Sessions', 'Conversions', 'Revenue'];
-                    const rows = [];
+                    // Get bookings data for export
+                    const { data: bookings, error } = await state.db
+                        .from('bookings')
+                        .select('*')
+                        .gte('booking_date', startStr)
+                        .lte('booking_date', endStr)
+                        .order('booking_date', { ascending: false });
                     
-                    // Generate sample data for the date range
-                    const days = Math.ceil((dateRange.end - dateRange.start) / (1000 * 60 * 60 * 24));
-                    
-                    for (let i = 0; i < days; i++) {
-                        const date = new Date(dateRange.start);
-                        date.setDate(date.getDate() + i);
-                        const visitors = Math.floor(Math.random() * 500) + 200;
-                        const pageviews = Math.floor(visitors * (Math.random() * 3 + 1));
-                        const sessions = Math.floor(visitors * 0.8);
-                        const conversions = Math.floor(visitors * 0.05);
-                        const revenue = conversions * (Math.random() * 100 + 50);
-                        
-                        rows.push([
-                            date.toISOString().split('T')[0],
-                            visitors,
-                            pageviews,
-                            sessions,
-                            conversions,
-                            revenue.toFixed(2)
-                        ]);
+                    if (error || !bookings || bookings.length === 0) {
+                        showNotification('No data to export for the selected date range', 'warning');
+                        return;
                     }
+                    
+                    // Create CSV headers
+                    const headers = ['Booking Date', 'Customer Name', 'Email', 'Phone', 'Service', 'Time Slot', 'Status', 'Price', 'Created At'];
+                    
+                    // Create CSV rows
+                    const rows = bookings.map(booking => [
+                        booking.booking_date,
+                        `"${booking.customer_name || ''}"`,
+                        `"${booking.customer_email || ''}"`,
+                        `"${booking.customer_phone || ''}"`,
+                        `"${booking.service_title || ''}"`,
+                        `"${booking.time_slot || ''}"`,
+                        booking.status || 'pending',
+                        booking.price || '0',
+                        new Date(booking.created_at).toISOString()
+                    ]);
                     
                     const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
                     const blob = new Blob([csvContent], { type: 'text/csv' });
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `greenglo-analytics-${startStr}-to-${endStr}.csv`;
+                    a.download = `greenglo-bookings-${startStr}-to-${endStr}.csv`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
                     
-                    showNotification('Analytics data exported successfully!', 'success');
+                    showNotification('Booking data exported successfully!', 'success');
                     
                 } catch (err) {
                     console.error('Error exporting analytics:', err);
-                    showNotification('Error exporting analytics data: ' + err.message, 'error');
+                    showNotification('Error exporting data: ' + err.message, 'error');
                 }
             }
             
@@ -4640,6 +4295,8 @@ ON CONFLICT (slot_date, start_time, end_time) DO NOTHING;`;
             window.exportAnalytics = exportAnalytics;
             window.toggleSidebar = toggleSidebar;
             window.closeSidebar = closeSidebar;
+            window.loadRecentBookingsTable = loadRecentBookingsTable;
+            window.loadTopServices = loadTopServices;
             
         })();
     </script>
