@@ -869,6 +869,22 @@
             border-top: 1px solid var(--light-gray);
         }
 
+        /* ===== Venue Cleaning Section ===== */
+        .venue-section {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(13, 148, 136, 0.05));
+            border-radius: var(--border-radius-lg);
+            margin-top: 4rem;
+            padding: 4rem 0;
+        }
+
+        .venue-section .section-title h2 {
+            color: var(--dark-green);
+        }
+
+        .venue-section .section-title p {
+            color: var(--dark-gray);
+        }
+
         /* ===== Services CTA ===== */
         .services-cta {
             background: var(--gradient-dark);
@@ -1311,12 +1327,13 @@
     <section class="services-hero">
         <div class="container">
             <div class="services-hero-content">
-                <h1>Event & Venue Cleaning Services</h1>
-                <p>Professional post-event cleaning for venues across London. From small parties to large conferences, we ensure your space is spotless and ready for the next event.</p>
+                <h1>Our Complete Cleaning Services</h1>
+                <p>Explore our comprehensive range of professional cleaning services, all using eco-friendly products
+                    and performed by our vetted, background-checked professionals.</p>
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                     <a href="#servicesGrid" class="btn btn-large">
                         <i class="fas fa-broom"></i>
-                        View Event Packages
+                        View Services
                     </a>
                     <a href="index.html" class="btn btn-outline btn-large">
                         <i class="fas fa-home"></i>
@@ -1331,15 +1348,16 @@
     <section class="section section-light">
         <div class="container">
             <div class="section-title">
-                <h2>Event Cleaning Packages</h2>
-                <p>Choose the perfect cleaning package for your event size and requirements</p>
+                <h2>Browse by Category</h2>
+                <p>Find the perfect cleaning service for your needs</p>
             </div>
             <div class="category-filters">
-                <button class="category-btn active" data-category="all">All Packages</button>
-                <button class="category-btn" data-category="small">Small Events</button>
-                <button class="category-btn" data-category="medium">Medium Events</button>
-                <button class="category-btn" data-category="large">Large Events</button>
-                <button class="category-btn" data-category="special">Special Cleaning</button>
+                <button class="category-btn active" data-category="all">All Services</button>
+                <button class="category-btn" data-category="domestic">Domestic Cleaning</button>
+                <button class="category-btn" data-category="office">Office Cleaning</button>
+                <button class="category-btn" data-category="deep">Deep Cleaning</button>
+                <button class="category-btn" data-category="special">Specialized Services</button>
+                <button class="category-btn" data-category="venue">Venue Cleaning</button>
             </div>
         </div>
     </section>
@@ -1348,7 +1366,20 @@
     <section class="section section-gray">
         <div class="container">
             <div class="services-grid" id="servicesGrid">
-                <!-- Event cleaning service cards will be inserted here by JavaScript -->
+                <!-- Service cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue Cleaning Section -->
+    <section class="section venue-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Event & Venue Cleaning</h2>
+                <p>Professional post-event cleaning for venues across London. From small parties to large conferences, we ensure your space is spotless and ready for the next event.</p>
+            </div>
+            <div class="services-grid" id="venueServicesGrid">
+                <!-- Venue service cards will be inserted here by JavaScript -->
             </div>
         </div>
     </section>
@@ -1357,13 +1388,14 @@
     <section class="section">
         <div class="container">
             <div class="services-cta">
-                <h2>Need a Custom Quote for Your Event?</h2>
-                <p>Every event is unique. Contact us for a personalized quote based on your venue size, guest numbers, and specific requirements.</p>
+                <h2>Need Help Choosing the Right Service?</h2>
+                <p>Our cleaning experts are ready to help you select the perfect service for your needs. Get a
+                    personalized quote or book a consultation today.</p>
                 <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners,%20I%20need%20a%20quote%20for%20event%20cleaning." 
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners,%20I%20need%20help%20choosing%20a%20cleaning%20service." 
                        class="btn btn-whatsapp btn-large">
                         <i class="fab fa-whatsapp"></i>
-                        Get Custom Quote
+                        Chat on WhatsApp
                     </a>
                     <a href="tel:+447827784204" class="btn btn-outline btn-large" style="color: var(--white);">
                         <i class="fas fa-phone"></i>
@@ -1400,10 +1432,11 @@
                     <h3>Our Services</h3>
                     <ul class="footer-links">
                         <li><a href="services.html">Domestic cleaning</a></li>
-                        <li><a href="services.html">Event & venue cleaning</a></li>
+                        <li><a href="services.html">One-off cleaning</a></li>
                         <li><a href="services.html">End of tenancy cleaning</a></li>
                         <li><a href="services.html">Carpet cleaning</a></li>
                         <li><a href="services.html">Office cleaning</a></li>
+                        <li><a href="services.html">Venue & event cleaning</a></li>
                         <li><a href="services.html">View all services</a></li>
                     </ul>
                 </div>
@@ -1444,7 +1477,7 @@
 
     <!-- WhatsApp Button -->
     <div class="whatsapp-float">
-        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners,%20I%20would%20like%20more%20information%20about%20your%20event%20cleaning%20services"
+        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners,%20I%20would%20like%20more%20information%20about%20your%20services"
            target="_blank" class="whatsapp-button">
             <i class="fab fa-whatsapp" style="color: white; font-size: 32px;"></i>
         </a>
@@ -1810,7 +1843,7 @@
                 last_activity: new Date().toISOString(),
                 active_duration: Math.floor((new Date() - analyticsState.sessionStartTime) / 1000),
                 is_mobile: analyticsState.deviceInfo.is_mobile,
-                current_action: 'viewing_event_services'
+                current_action: 'viewing_services'
             };
             
             const locationInfo = getLocationInfo();
@@ -2307,12 +2340,308 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             return null;
         }
 
-        // ===== Event Cleaning Services Data =====
-        const eventServicesData = [
+        // ===== Original Services Data =====
+        const servicesData = [
             {
                 id: 1,
+                title: "Living Room Deep Clean",
+                category: "domestic",
+                description: "Complete living room cleaning and organization with eco-friendly products.",
+                features: ["Complete dust removal", "Furniture cleaning", "Floor sanitization", "Window sills"],
+                duration: "2-3 hours",
+                hasBedrooms: false,
+                basePrice: 75,
+                displayPrice: "£75",
+                image: "livingroom.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 2,
+                title: "Office Cleaning",
+                category: "office",
+                description: "Professional office cleaning for businesses and startups.",
+                features: ["Workstation sanitization", "Meeting room cleaning", "Kitchenette cleaning", "Floor care"],
+                duration: "2-6 hours",
+                hasBedrooms: false,
+                basePrice: 18,
+                displayPrice: "£18/hour",
+                image: "office.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 3,
+                title: "Kitchen Deep Cleaning",
+                category: "domestic",
+                description: "Complete kitchen deep clean including appliances and cabinets.",
+                features: ["Oven cleaning included", "Appliance sanitization", "Cabinet cleaning", "Surface degreasing"],
+                duration: "2-3 hours",
+                hasBedrooms: false,
+                basePrice: 85,
+                displayPrice: "£85",
+                image: "kitchen.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 4,
+                title: "Oven Deep Clean",
+                category: "deep",
+                description: "Professional oven cleaning for single and double ovens.",
+                features: ["Complete interior clean", "Door and glass", "Rack cleaning", "Exterior polish"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 40,
+                displayPrice: "From £40",
+                image: "ovenafter.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 5,
+                title: "Bathroom Deep Clean",
+                category: "deep",
+                description: "Complete bathroom sanitization and deep cleaning.",
+                features: ["Tile and grout cleaning", "Sanitization", "Fixture polishing", "Mould treatment"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 65,
+                displayPrice: "£65",
+                image: "bathroom.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 6,
+                title: "End of Tenancy Cleaning",
+                category: "deep",
+                description: "Professional cleaning to ensure full deposit return.",
+                features: ["Inventory check ready", "Complete property clean", "Carpet cleaning available", "Guaranteed satisfaction"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 220,
+                perBedroomPrice: 30,
+                displayPrice: "From £220",
+                image: "tenancy.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 7,
+                title: "Carpet Cleaning",
+                category: "deep",
+                description: "Professional hot water extraction carpet cleaning.",
+                features: ["Hot water extraction", "Stain removal", "Quick drying", "Deodorizing"],
+                duration: "1-3 hours",
+                hasBedrooms: false,
+                basePrice: 15,
+                displayPrice: "From £15/room",
+                image: "carpet.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 8,
+                title: "Regular Domestic Cleaning",
+                category: "domestic",
+                description: "Weekly or fortnightly cleaning service.",
+                features: ["Dusting & vacuuming", "Kitchen & bathroom", "Surface cleaning", "Floor mopping"],
+                duration: "2-4 hours",
+                hasBedrooms: false,
+                basePrice: 18,
+                displayPrice: "£18/hour",
+                image: "domestic.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 9,
+                title: "One-Off Deep Clean",
+                category: "deep",
+                description: "Thorough one-time cleaning for your entire home.",
+                features: ["Complete home clean", "Inside cabinets", "Appliance cleaning", "Detailed attention"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 150,
+                perBedroomPrice: 35,
+                displayPrice: "From £150",
+                image: "deep.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 10,
+                title: "Window Cleaning",
+                category: "special",
+                description: "Interior and exterior window cleaning service.",
+                features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment"],
+                duration: "1-3 hours",
+                hasBedrooms: false,
+                basePrice: 30,
+                displayPrice: "Flat: £30 | House: £45",
+                image: "window.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 11,
+                title: "Upholstery Cleaning",
+                category: "deep",
+                description: "Sofa, armchair, and car seat deep cleaning.",
+                features: ["Stain removal", "Fabric protection", "Deodorizing", "Professional equipment"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 55,
+                displayPrice: "Sofa 3-seater: £55",
+                image: "furniture.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 12,
+                title: "After Builders Cleaning",
+                category: "deep",
+                description: "Post-construction cleanup for renovation projects.",
+                features: ["Debris removal", "Dust elimination", "Surface cleaning", "Final touch-up"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 200,
+                perBedroomPrice: 40,
+                displayPrice: "From £200",
+                image: "afterbuilders.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 13,
+                title: "Hard Floor Cleaning",
+                category: "deep",
+                description: "Professional hard floor scrubbing and polishing.",
+                features: ["Scrubbing & cleaning", "Polishing", "Sealing available", "Protective coating"],
+                duration: "2-4 hours",
+                hasBedrooms: false,
+                basePrice: 3.5,
+                displayPrice: "£3.50/m²",
+                image: "hardfloor.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 14,
+                title: "Gutter Cleaning",
+                category: "special",
+                description: "Gutter clearing and downpipe unblocking service.",
+                features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first"],
+                duration: "1-3 hours",
+                hasBedrooms: false,
+                basePrice: 75,
+                displayPrice: "Terraced house: £75",
+                image: "gutter.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 15,
+                title: "Antiviral Sanitisation",
+                category: "special",
+                description: "Professional sanitisation against germs and viruses.",
+                features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage"],
+                duration: "1-2 hours",
+                hasBedrooms: true,
+                basePrice: 120,
+                perBedroomPrice: 25,
+                displayPrice: "From £120",
+                image: "sanitisation.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 16,
+                title: "BBQ Cleaning",
+                category: "special",
+                description: "Deep cleaning of BBQs and outdoor cooking equipment.",
+                features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 45,
+                displayPrice: "Small BBQ: £45",
+                image: "bbq.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 17,
+                title: "Commercial Cleaning",
+                category: "office",
+                description: "Regular commercial cleaning for businesses.",
+                features: ["Daily/weekly service", "Floor maintenance", "Restroom cleaning", "Waste removal"],
+                duration: "2-8 hours",
+                hasBedrooms: false,
+                basePrice: 25,
+                displayPrice: "£25/hour",
+                image: "commercial.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 18,
+                title: "Move In/Move Out Cleaning",
+                category: "deep",
+                description: "Complete cleaning for moving properties.",
+                features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround"],
+                duration: "3-6 hours",
+                hasBedrooms: true,
+                basePrice: 180,
+                perBedroomPrice: 40,
+                displayPrice: "From £180",
+                image: "moveclean.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 19,
+                title: "Patio & Decking Cleaning",
+                category: "special",
+                description: "Pressure washing for patios and decking areas.",
+                features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration"],
+                duration: "2-4 hours",
+                hasBedrooms: false,
+                basePrice: 70,
+                displayPrice: "From £70",
+                image: "patio.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 20,
+                title: "Spring Cleaning",
+                category: "deep",
+                description: "Seasonal deep cleaning service.",
+                features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 175,
+                perBedroomPrice: 35,
+                displayPrice: "From £175",
+                image: "spring.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 21,
+                title: "Carpet Stain Removal",
+                category: "deep",
+                description: "Specialized treatment for stubborn carpet stains.",
+                features: ["Professional treatment", "Odor removal", "Color restoration", "Guaranteed results"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 35,
+                displayPrice: "From £35/stain",
+                image: "stain.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 22,
+                title: "Emergency Cleaning",
+                category: "special",
+                description: "24/7 emergency cleaning services.",
+                features: ["24/7 availability", "Fast response", "Flood cleanup", "Accident cleanup"],
+                duration: "2-6 hours",
+                hasBedrooms: false,
+                basePrice: 35,
+                displayPrice: "£35/hour",
+                image: "emergency.png",
+                fallbackColor: "#10B981"
+            }
+        ];
+
+        // ===== Venue Cleaning Services Data =====
+        const venueServicesData = [
+            {
+                id: 100,
                 title: "Small Event / Hall Clean",
-                category: "small",
+                category: "venue",
                 description: "Perfect for birthday parties, community events, and small corporate gatherings up to 100 guests.",
                 features: [
                     "Floor sweeping & mopping",
@@ -2325,12 +2654,12 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 140,
                 displayPrice: "£140 - £260",
                 stripeLink: "https://buy.stripe.com/4gM8wI3n06ev5T45gv8AE0H",
-                fallbackColor: "#10B981"
+                fallbackColor: "#0D9488"
             },
             {
-                id: 2,
+                id: 101,
                 title: "Medium Event / Venue Clean",
-                category: "medium",
+                category: "venue",
                 description: "Ideal for weddings, school/council halls, and corporate events with 100-250 guests.",
                 features: [
                     "Full floor clean (including spill areas)",
@@ -2343,12 +2672,12 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 280,
                 displayPrice: "£280 - £460",
                 stripeLink: "https://buy.stripe.com/7sY3coaPseL11CO10f8AE0I",
-                fallbackColor: "#10B981"
+                fallbackColor: "#0D9488"
             },
             {
-                id: 3,
+                id: 102,
                 title: "Large Event / Full Venue Clean",
-                category: "large",
+                category: "venue",
                 description: "Comprehensive cleaning for large weddings, conferences, and ticketed events with 250+ guests.",
                 features: [
                     "Heavy-duty floor cleaning",
@@ -2361,12 +2690,12 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 500,
                 displayPrice: "£500 - £800+",
                 stripeLink: "https://buy.stripe.com/4gMdR2cXAdGXa9k8sH8AE0J",
-                fallbackColor: "#10B981"
+                fallbackColor: "#0D9488"
             },
             {
-                id: 4,
+                id: 103,
                 title: "After-Party / Heavy Soiling Clean",
-                category: "special",
+                category: "venue",
                 description: "Recommended for alcohol-heavy events, late-night parties, and events with high foot traffic.",
                 features: [
                     "Spill and stain removal",
@@ -2379,12 +2708,12 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 180,
                 displayPrice: "£180+",
                 stripeLink: "https://buy.stripe.com/8x26oAaPsfP581c8sH8AE0K",
-                fallbackColor: "#10B981"
+                fallbackColor: "#0D9488"
             },
             {
-                id: 5,
+                id: 104,
                 title: "Same-Night / Overnight Cleaning",
-                category: "special",
+                category: "venue",
                 description: "Priority cleaning service for venues requiring immediate turnaround between events.",
                 features: [
                     "Emergency team deployment",
@@ -2397,12 +2726,12 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 250,
                 displayPrice: "From £250",
                 stripeLink: "https://buy.stripe.com/9B628kbTw5ar0yKbET8AE0L",
-                fallbackColor: "#10B981"
+                fallbackColor: "#0D9488"
             },
             {
-                id: 6,
+                id: 105,
                 title: "Priority Next-Morning Clean",
-                category: "special",
+                category: "venue",
                 description: "Early morning cleaning service to prepare venues for next-day events.",
                 features: [
                     "Early crew start (5AM-7AM)",
@@ -2415,14 +2744,17 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 220,
                 displayPrice: "From £220",
                 stripeLink: "https://buy.stripe.com/7sY5kw8Hk1Yfa9k7oD8AE0M",
-                fallbackColor: "#10B981"
+                fallbackColor: "#0D9488"
             }
         ];
 
-        // Add stripe links to services data
-        eventServicesData.forEach(service => {
-            // Links are already assigned above
+        // Add stripe links to all services data
+        servicesData.forEach(service => {
+            service.stripeLink = findStripeLink(service.title);
         });
+
+        // Combine all services for filtering
+        const allServicesData = [...servicesData, ...venueServicesData];
 
         // ===== Supabase Configuration =====
         const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
@@ -2584,6 +2916,19 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             const serviceData = currentBooking.service.data;
             
             let priceDisplay = serviceData.displayPrice;
+            if (serviceData.hasBedrooms) {
+                priceDisplay = `From £${serviceData.basePrice}`;
+            }
+            
+            let bedroomInfo = '';
+            if (serviceData.hasBedrooms) {
+                bedroomInfo = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--dark-gray);">Bedrooms:</span>
+                        <span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms > 1 ? 's' : ''}</span>
+                    </div>
+                `;
+            }
             
             let dateTimeInfo = '';
             if (currentBooking.date && currentBooking.timeSlot) {
@@ -2609,6 +2954,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     <span style="color: var(--dark-gray);">Service:</span>
                     <span style="font-weight: 600; color: var(--dark-green);">${currentBooking.service.title}</span>
                 </div>
+                ${bedroomInfo}
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="color: var(--dark-gray);">Duration:</span>
                     <span>${serviceData.duration}</span>
@@ -2630,6 +2976,19 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             const serviceData = currentBooking.service.data;
             
             let priceDisplay = serviceData.displayPrice;
+            if (serviceData.hasBedrooms) {
+                priceDisplay = `From £${serviceData.basePrice}`;
+            }
+            
+            let bedroomInfo = '';
+            if (serviceData.hasBedrooms) {
+                bedroomInfo = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: var(--dark-gray);">Bedrooms:</span>
+                        <span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms > 1 ? 's' : ''}</span>
+                    </div>
+                `;
+            }
             
             const [start, end] = currentBooking.timeSlot.split('-');
             
@@ -2638,6 +2997,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     <span style="color: var(--dark-gray);">Service:</span>
                     <span style="font-weight: 600; color: var(--dark-green);">${currentBooking.service.title}</span>
                 </div>
+                ${bedroomInfo}
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="color: var(--dark-gray);">Date:</span>
                     <span>${formatDate(currentBooking.date)}</span>
@@ -2956,6 +3316,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                                 bookingData.notes = bookingNotes;
                             }
                             
+                            if (serviceData.hasBedrooms) {
+                                bookingData.notes = (bookingData.notes || '') + `\nBedrooms: ${currentBooking.bedrooms}`;
+                            }
+                            
                             // Save booking
                             const { error: insertError } = await supabaseClient
                                 .from('bookings')
@@ -3023,6 +3387,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     whatsappMessage += `⏱️ Duration: ${serviceData.duration}\n`;
                     whatsappMessage += `💰 Price: ${serviceData.displayPrice}\n`;
                     
+                    if (serviceData.hasBedrooms) {
+                        whatsappMessage += `🛏️ Bedrooms: ${currentBooking.bedrooms}\n`;
+                    }
+                    
                     if (bookingNotes) {
                         whatsappMessage += `📝 Notes: ${bookingNotes}\n`;
                     }
@@ -3078,89 +3446,26 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
 
         // ===== Render Services =====
         const servicesGrid = document.getElementById('servicesGrid');
+        const venueServicesGrid = document.getElementById('venueServicesGrid');
 
         function renderServices(category = 'all') {
             servicesGrid.innerHTML = '';
+            venueServicesGrid.innerHTML = '';
 
             const filteredServices = category === 'all'
-                ? eventServicesData
-                : eventServicesData.filter(service => service.category === category);
+                ? servicesData
+                : category === 'venue'
+                ? [] // Venue services are handled separately
+                : servicesData.filter(service => service.category === category);
 
+            // Render main services
             filteredServices.forEach(service => {
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card';
-                serviceCard.setAttribute('data-category', service.category);
-                serviceCard.setAttribute('data-service-id', service.id);
+                renderServiceCard(service, servicesGrid);
+            });
 
-                const priceContent = `
-                    <div class="service-price-container" style="text-align: center;">
-                        <div class="price-tag-main">${service.displayPrice}</div>
-                    </div>
-                `;
-
-                // Determine badge and button based on stripe link availability
-                let badgeHTML = '';
-                let buttonClass = '';
-                
-                if (service.stripeLink) {
-                    badgeHTML = '<span class="payment-badge stripe-badge"><i class="fab fa-stripe"></i> Instant Payment</span>';
-                    buttonClass = 'btn-stripe';
-                } else {
-                    badgeHTML = '<span class="payment-badge whatsapp-badge"><i class="fab fa-whatsapp"></i> Book Now</span>';
-                    buttonClass = 'btn-whatsapp';
-                }
-                
-                const buttonHTML = `
-                    <button class="btn book-service-btn ${buttonClass}" 
-                            data-service-id="${service.id}" 
-                            data-service-title="${service.title}"
-                            style="padding: 1rem 2rem; font-size: 1.125rem;">
-                        ${service.stripeLink ? '<i class="fab fa-stripe"></i> Book & Pay Now' : '<i class="fab fa-whatsapp"></i> Book Now'}
-                    </button>
-                `;
-
-                serviceCard.innerHTML = `
-                    <div class="service-image" style="background: linear-gradient(135deg, ${service.fallbackColor || 'var(--primary-green)'}, var(--teal)); background-color: var(--light-green);">
-                        <div class="service-overlay">
-                            <h3>${service.title} ${badgeHTML}</h3>
-                        </div>
-                    </div>
-                    <div class="service-content">
-                        ${priceContent}
-                        
-                        <div style="text-align: center; margin: 1rem 0;">
-                            <span class="service-duration-badge">
-                                <i class="far fa-clock"></i> ${service.duration}
-                            </span>
-                        </div>
-                        
-                        <p class="service-description">${service.description}</p>
-                        <ul class="service-features">
-                            ${service.features.map(feature => `
-                                <li><i class="fas fa-check"></i>${feature}</li>
-                            `).join('')}
-                        </ul>
-                        <div class="service-meta">
-                            <div class="service-cta">
-                                ${buttonHTML}
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                servicesGrid.appendChild(serviceCard);
-                
-                // Track service view when card becomes visible
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            trackServiceView(service.id, service.title, service.category);
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.5 });
-                
-                observer.observe(serviceCard);
+            // Always render venue services in the separate section
+            venueServicesData.forEach(service => {
+                renderServiceCard(service, venueServicesGrid);
             });
 
             // Add event listeners to buttons
@@ -3168,7 +3473,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 button.addEventListener('click', function() {
                     const serviceId = this.getAttribute('data-service-id');
                     const serviceTitle = this.getAttribute('data-service-title');
-                    const serviceData = eventServicesData.find(s => s.id == serviceId);
+                    
+                    // Find service in combined data
+                    const serviceData = allServicesData.find(s => s.id == serviceId);
                     const paymentType = serviceData.stripeLink ? 'stripe' : 'whatsapp';
                     
                     // Track service click
@@ -3191,6 +3498,107 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     el.style.transform = 'translateY(0)';
                 }, 100 + (index * 100));
             });
+        }
+
+        function renderServiceCard(service, container) {
+            const serviceCard = document.createElement('div');
+            serviceCard.className = 'service-card';
+            serviceCard.setAttribute('data-category', service.category);
+            serviceCard.setAttribute('data-service-id', service.id);
+
+            let priceContent = '';
+            if (service.hasBedrooms) {
+                const tiers = [
+                    { bedrooms: 1, price: service.basePrice, badge: 'gold' },
+                    { bedrooms: 2, price: service.basePrice + service.perBedroomPrice, badge: 'silver' },
+                    { bedrooms: 3, price: service.basePrice + (service.perBedroomPrice * 2), badge: 'bronze' }
+                ];
+                
+                priceContent = `
+                    <div class="service-price-container">
+                        <div class="price-tag-main">£${service.basePrice}</div>
+                        <div class="price-tier-container">
+                            ${tiers.map(tier => `
+                                <div class="price-tier">
+                                    <div class="tier-badge ${tier.badge}">${tier.bedrooms} BED</div>
+                                    <div class="tier-bedrooms">${tier.bedrooms} Bedroom${tier.bedrooms > 1 ? 's' : ''}</div>
+                                    <div class="tier-price">£${tier.price}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                priceContent = `
+                    <div class="service-price-container" style="text-align: center;">
+                        <div class="price-tag-main">${service.displayPrice}</div>
+                    </div>
+                `;
+            }
+
+            // Determine badge and button based on stripe link availability
+            let badgeHTML = '';
+            let buttonClass = '';
+            
+            if (service.stripeLink) {
+                badgeHTML = '<span class="payment-badge stripe-badge"><i class="fab fa-stripe"></i> Instant Payment</span>';
+                buttonClass = 'btn-stripe';
+            } else {
+                badgeHTML = '<span class="payment-badge whatsapp-badge"><i class="fab fa-whatsapp"></i> Book Now</span>';
+                buttonClass = 'btn-whatsapp';
+            }
+            
+            const buttonHTML = `
+                <button class="btn book-service-btn ${buttonClass}" 
+                        data-service-id="${service.id}" 
+                        data-service-title="${service.title}"
+                        style="padding: 1rem 2rem; font-size: 1.125rem;">
+                    ${service.stripeLink ? '<i class="fab fa-stripe"></i> Book & Pay Now' : '<i class="fab fa-whatsapp"></i> Book Now'}
+                </button>
+            `;
+
+            serviceCard.innerHTML = `
+                <div class="service-image" style="${service.image ? `background-image: url('${service.image}');` : `background: linear-gradient(135deg, ${service.fallbackColor || 'var(--primary-green)'}, var(--teal));`} background-color: var(--light-green);">
+                    <div class="service-overlay">
+                        <h3>${service.title} ${badgeHTML}</h3>
+                    </div>
+                </div>
+                <div class="service-content">
+                    ${priceContent}
+                    
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <span class="service-duration-badge">
+                            <i class="far fa-clock"></i> ${service.duration}
+                        </span>
+                    </div>
+                    
+                    <p class="service-description">${service.description}</p>
+                    <ul class="service-features">
+                        ${service.features.map(feature => `
+                            <li><i class="fas fa-check"></i>${feature}</li>
+                        `).join('')}
+                    </ul>
+                    <div class="service-meta">
+                        <div class="service-cta">
+                            ${buttonHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(serviceCard);
+            
+            // Track service view when card becomes visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        trackServiceView(service.id, service.title, service.category);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            observer.observe(serviceCard);
         }
 
         // ===== Category Filtering =====
@@ -3258,10 +3666,12 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             console.log('- Device:', analyticsState.deviceInfo.device_type);
             console.log('- UTM:', analyticsState.utmParams);
             
-            // Log stripe links info
-            console.log('📊 Event Cleaning Services Summary:');
-            console.log(`- Total event packages: ${eventServicesData.length}`);
-            console.log(`- Services with Stripe links: ${eventServicesData.filter(s => s.stripeLink).length}`);
+            // Log services info
+            console.log('📊 Services Summary:');
+            console.log(`- Total domestic/office services: ${servicesData.length}`);
+            console.log(`- Total venue/event services: ${venueServicesData.length}`);
+            console.log(`- Domestic services with Stripe links: ${servicesData.filter(s => s.stripeLink).length}`);
+            console.log(`- Venue services with Stripe links: ${venueServicesData.filter(s => s.stripeLink).length}`);
             
             // Set up periodic analytics updates
             setInterval(updateActiveUser, 60000); // Update active user every minute
