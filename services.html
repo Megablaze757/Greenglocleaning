@@ -700,21 +700,6 @@
             color: white;
         }
 
-        /* ===== 24/7 Availability Badge ===== */
-        .availability-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-
         /* ===== Booking Modal ===== */
         .booking-modal-overlay {
             position: fixed;
@@ -875,11 +860,6 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
-        .time-slot-option.available-247 {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 142, 83, 0.05));
-            border: 2px solid #FF6B6B;
-        }
-
         .booking-steps {
             display: flex;
             align-items: center;
@@ -887,43 +867,6 @@
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid var(--light-gray);
-        }
-
-        /* ===== 24/7 Availability Notice ===== */
-        .availability-notice {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 142, 83, 0.05));
-            border: 2px solid #FF6B6B;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .availability-notice i {
-            color: #FF6B6B;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .availability-notice h4 {
-            color: #FF6B6B;
-            margin-bottom: 8px;
-        }
-
-        /* ===== Venue Cleaning Section ===== */
-        .venue-section {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(13, 148, 136, 0.05));
-            border-radius: var(--border-radius-lg);
-            margin-top: 4rem;
-            padding: 4rem 0;
-        }
-
-        .venue-section .section-title h2 {
-            color: var(--dark-green);
-        }
-
-        .venue-section .section-title p {
-            color: var(--dark-gray);
         }
 
         /* ===== Services CTA ===== */
@@ -1297,20 +1240,14 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>Select Preferred Date</label>
+                        <label>Select Date</label>
                         <input type="date" id="bookingDate" class="form-control" min="" required>
                     </div>
                     
-                    <div class="availability-notice">
-                        <i class="fas fa-clock"></i>
-                        <h4>24/7 Availability</h4>
-                        <p>We operate 24 hours a day, 7 days a week! Select your preferred date and we'll confirm the exact timing.</p>
-                    </div>
-                    
                     <div class="form-group">
-                        <label>Select Preferred Time Slot</label>
+                        <label>Available Time Slots</label>
                         <div id="timeSlotsContainer" class="time-slots-grid">
-                            <!-- 24/7 time slots will be generated here -->
+                            <!-- Time slots will load here -->
                         </div>
                     </div>
                     
@@ -1404,29 +1341,29 @@
                 <button class="category-btn" data-category="office">Office Cleaning</button>
                 <button class="category-btn" data-category="deep">Deep Cleaning</button>
                 <button class="category-btn" data-category="special">Specialized Services</button>
-                <button class="category-btn" data-category="venue">Venue Cleaning</button>
+                <button class="category-btn" data-category="venue">Venue & Event Cleaning</button>
             </div>
         </div>
     </section>
 
-    <!-- Services Grid -->
+    <!-- Domestic Services Grid -->
     <section class="section section-gray">
         <div class="container">
-            <div class="services-grid" id="servicesGrid">
-                <!-- Service cards will be inserted here by JavaScript -->
+            <div class="services-grid" id="domesticServicesGrid">
+                <!-- Domestic service cards will be inserted here by JavaScript -->
             </div>
         </div>
     </section>
 
-    <!-- Venue Cleaning Section -->
-    <section class="section venue-section">
+    <!-- Venue & Event Cleaning Section -->
+    <section class="section section-light" id="venueCleaning">
         <div class="container">
             <div class="section-title">
-                <h2>Event & Venue Cleaning</h2>
-                <p>Professional post-event cleaning for venues across London. From small parties to large conferences, we ensure your space is spotless and ready for the next event.</p>
+                <h2>Venue & Event Cleaning</h2>
+                <p>Professional post-event cleaning for venues across London. From small parties to large conferences.</p>
             </div>
             <div class="services-grid" id="venueServicesGrid">
-                <!-- Venue service cards will be inserted here by JavaScript -->
+                <!-- Venue cleaning service cards will be inserted here by JavaScript -->
             </div>
         </div>
     </section>
@@ -1460,7 +1397,7 @@
                 <div class="footer-col">
                     <h3>GreenGlo Cleaners</h3>
                     <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
-                        Professional eco-friendly cleaning services for homes, offices, and events across London.
+                        Professional eco-friendly cleaning services for homes, offices, and venues across London.
                     </p>
                     <div class="social-links">
                         <a href="https://instagram.com/greenglocleaningco" class="social-link" target="_blank" aria-label="Instagram">
@@ -1478,12 +1415,11 @@
                 <div class="footer-col">
                     <h3>Our Services</h3>
                     <ul class="footer-links">
-                        <li><a href="services.html">Domestic cleaning</a></li>
-                        <li><a href="services.html">One-off cleaning</a></li>
+                        <li><a href="services.html#domesticServicesGrid">Domestic cleaning</a></li>
+                        <li><a href="services.html#venueCleaning">Event & venue cleaning</a></li>
                         <li><a href="services.html">End of tenancy cleaning</a></li>
                         <li><a href="services.html">Carpet cleaning</a></li>
                         <li><a href="services.html">Office cleaning</a></li>
-                        <li><a href="services.html">Venue & event cleaning</a></li>
                         <li><a href="services.html">View all services</a></li>
                     </ul>
                 </div>
@@ -2387,326 +2323,304 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             return null;
         }
 
-        // ===== Original Services Data =====
-        const servicesData = [
+        // ===== Original Domestic Services Data =====
+        const domesticServicesData = [
             {
                 id: 1,
                 title: "Living Room Deep Clean",
                 category: "domestic",
                 description: "Complete living room cleaning and organization with eco-friendly products.",
-                features: ["Complete dust removal", "Furniture cleaning", "Floor sanitization", "Window sills", "24/7 availability"],
+                features: ["Complete dust removal", "Furniture cleaning", "Floor sanitization", "Window sills"],
                 duration: "2-3 hours",
                 hasBedrooms: false,
                 basePrice: 75,
                 displayPrice: "£75",
                 image: "livingroom.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 2,
                 title: "Office Cleaning",
                 category: "office",
                 description: "Professional office cleaning for businesses and startups.",
-                features: ["Workstation sanitization", "Meeting room cleaning", "Kitchenette cleaning", "Floor care", "24/7 availability"],
+                features: ["Workstation sanitization", "Meeting room cleaning", "Kitchenette cleaning", "Floor care"],
                 duration: "2-6 hours",
                 hasBedrooms: false,
                 basePrice: 18,
                 displayPrice: "£18/hour",
                 image: "office.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 3,
                 title: "Kitchen Deep Cleaning",
                 category: "domestic",
                 description: "Complete kitchen deep clean including appliances and cabinets.",
-                features: ["Oven cleaning included", "Appliance sanitization", "Cabinet cleaning", "Surface degreasing", "24/7 availability"],
+                features: ["Oven cleaning included", "Appliance sanitization", "Cabinet cleaning", "Surface degreasing"],
                 duration: "2-3 hours",
                 hasBedrooms: false,
                 basePrice: 85,
                 displayPrice: "£85",
                 image: "kitchen.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 4,
                 title: "Oven Deep Clean",
                 category: "deep",
                 description: "Professional oven cleaning for single and double ovens.",
-                features: ["Complete interior clean", "Door and glass", "Rack cleaning", "Exterior polish", "24/7 availability"],
+                features: ["Complete interior clean", "Door and glass", "Rack cleaning", "Exterior polish"],
                 duration: "1-2 hours",
                 hasBedrooms: false,
                 basePrice: 40,
                 displayPrice: "From £40",
                 image: "ovenafter.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 5,
                 title: "Bathroom Deep Clean",
                 category: "deep",
                 description: "Complete bathroom sanitization and deep cleaning.",
-                features: ["Tile and grout cleaning", "Sanitization", "Fixture polishing", "Mould treatment", "24/7 availability"],
+                features: ["Tile and grout cleaning", "Sanitization", "Fixture polishing", "Mould treatment"],
                 duration: "1-2 hours",
                 hasBedrooms: false,
                 basePrice: 65,
                 displayPrice: "£65",
                 image: "bathroom.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 6,
                 title: "End of Tenancy Cleaning",
                 category: "deep",
                 description: "Professional cleaning to ensure full deposit return.",
-                features: ["Inventory check ready", "Complete property clean", "Carpet cleaning available", "Guaranteed satisfaction", "24/7 availability"],
+                features: ["Inventory check ready", "Complete property clean", "Carpet cleaning available", "Guaranteed satisfaction"],
                 duration: "4-8 hours",
                 hasBedrooms: true,
                 basePrice: 220,
                 perBedroomPrice: 30,
                 displayPrice: "From £220",
                 image: "tenancy.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 7,
                 title: "Carpet Cleaning",
                 category: "deep",
                 description: "Professional hot water extraction carpet cleaning.",
-                features: ["Hot water extraction", "Stain removal", "Quick drying", "Deodorizing", "24/7 availability"],
+                features: ["Hot water extraction", "Stain removal", "Quick drying", "Deodorizing"],
                 duration: "1-3 hours",
                 hasBedrooms: false,
                 basePrice: 15,
                 displayPrice: "From £15/room",
                 image: "carpet.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 8,
                 title: "Regular Domestic Cleaning",
                 category: "domestic",
                 description: "Weekly or fortnightly cleaning service.",
-                features: ["Dusting & vacuuming", "Kitchen & bathroom", "Surface cleaning", "Floor mopping", "24/7 availability"],
+                features: ["Dusting & vacuuming", "Kitchen & bathroom", "Surface cleaning", "Floor mopping"],
                 duration: "2-4 hours",
                 hasBedrooms: false,
                 basePrice: 18,
                 displayPrice: "£18/hour",
                 image: "domestic.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 9,
                 title: "One-Off Deep Clean",
                 category: "deep",
                 description: "Thorough one-time cleaning for your entire home.",
-                features: ["Complete home clean", "Inside cabinets", "Appliance cleaning", "Detailed attention", "24/7 availability"],
+                features: ["Complete home clean", "Inside cabinets", "Appliance cleaning", "Detailed attention"],
                 duration: "4-8 hours",
                 hasBedrooms: true,
                 basePrice: 150,
                 perBedroomPrice: 35,
                 displayPrice: "From £150",
                 image: "deep.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 10,
                 title: "Window Cleaning",
                 category: "special",
                 description: "Interior and exterior window cleaning service.",
-                features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment", "24/7 availability"],
+                features: ["Streak-free finish", "Inside & outside", "Frame cleaning", "Safety equipment"],
                 duration: "1-3 hours",
                 hasBedrooms: false,
                 basePrice: 30,
                 displayPrice: "Flat: £30 | House: £45",
                 image: "window.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 11,
                 title: "Upholstery Cleaning",
                 category: "deep",
                 description: "Sofa, armchair, and car seat deep cleaning.",
-                features: ["Stain removal", "Fabric protection", "Deodorizing", "Professional equipment", "24/7 availability"],
+                features: ["Stain removal", "Fabric protection", "Deodorizing", "Professional equipment"],
                 duration: "1-2 hours",
                 hasBedrooms: false,
                 basePrice: 55,
                 displayPrice: "Sofa 3-seater: £55",
                 image: "furniture.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 12,
                 title: "After Builders Cleaning",
                 category: "deep",
                 description: "Post-construction cleanup for renovation projects.",
-                features: ["Debris removal", "Dust elimination", "Surface cleaning", "Final touch-up", "24/7 availability"],
+                features: ["Debris removal", "Dust elimination", "Surface cleaning", "Final touch-up"],
                 duration: "4-8 hours",
                 hasBedrooms: true,
                 basePrice: 200,
                 perBedroomPrice: 40,
                 displayPrice: "From £200",
                 image: "afterbuilders.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 13,
                 title: "Hard Floor Cleaning",
                 category: "deep",
                 description: "Professional hard floor scrubbing and polishing.",
-                features: ["Scrubbing & cleaning", "Polishing", "Sealing available", "Protective coating", "24/7 availability"],
+                features: ["Scrubbing & cleaning", "Polishing", "Sealing available", "Protective coating"],
                 duration: "2-4 hours",
                 hasBedrooms: false,
                 basePrice: 3.5,
                 displayPrice: "£3.50/m²",
                 image: "hardfloor.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 14,
                 title: "Gutter Cleaning",
                 category: "special",
                 description: "Gutter clearing and downpipe unblocking service.",
-                features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first", "24/7 availability"],
+                features: ["Debris removal", "Downpipe clearing", "Flow testing", "Safety first"],
                 duration: "1-3 hours",
                 hasBedrooms: false,
                 basePrice: 75,
                 displayPrice: "Terraced house: £75",
                 image: "gutter.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 15,
                 title: "Antiviral Sanitisation",
                 category: "special",
                 description: "Professional sanitisation against germs and viruses.",
-                features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage", "24/7 availability"],
+                features: ["99.99% germ kill", "COVID-19 effective", "Safe detergents", "Complete coverage"],
                 duration: "1-2 hours",
                 hasBedrooms: true,
                 basePrice: 120,
                 perBedroomPrice: 25,
                 displayPrice: "From £120",
                 image: "sanitisation.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 16,
                 title: "BBQ Cleaning",
                 category: "special",
                 description: "Deep cleaning of BBQs and outdoor cooking equipment.",
-                features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish", "24/7 availability"],
+                features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
                 duration: "1-2 hours",
                 hasBedrooms: false,
                 basePrice: 45,
                 displayPrice: "Small BBQ: £45",
                 image: "bbq.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 17,
                 title: "Commercial Cleaning",
                 category: "office",
                 description: "Regular commercial cleaning for businesses.",
-                features: ["Daily/weekly service", "Floor maintenance", "Restroom cleaning", "Waste removal", "24/7 availability"],
+                features: ["Daily/weekly service", "Floor maintenance", "Restroom cleaning", "Waste removal"],
                 duration: "2-8 hours",
                 hasBedrooms: false,
                 basePrice: 25,
                 displayPrice: "£25/hour",
                 image: "commercial.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 18,
                 title: "Move In/Move Out Cleaning",
                 category: "deep",
                 description: "Complete cleaning for moving properties.",
-                features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround", "24/7 availability"],
+                features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround"],
                 duration: "3-6 hours",
                 hasBedrooms: true,
                 basePrice: 180,
                 perBedroomPrice: 40,
                 displayPrice: "From £180",
                 image: "moveclean.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 19,
                 title: "Patio & Decking Cleaning",
                 category: "special",
                 description: "Pressure washing for patios and decking areas.",
-                features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration", "24/7 availability"],
+                features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration"],
                 duration: "2-4 hours",
                 hasBedrooms: false,
                 basePrice: 70,
                 displayPrice: "From £70",
                 image: "patio.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 20,
                 title: "Spring Cleaning",
                 category: "deep",
                 description: "Seasonal deep cleaning service.",
-                features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help", "24/7 availability"],
+                features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help"],
                 duration: "4-8 hours",
                 hasBedrooms: true,
                 basePrice: 175,
                 perBedroomPrice: 35,
                 displayPrice: "From £175",
                 image: "spring.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 21,
                 title: "Carpet Stain Removal",
                 category: "deep",
                 description: "Specialized treatment for stubborn carpet stains.",
-                features: ["Professional treatment", "Odor removal", "Color restoration", "Guaranteed results", "24/7 availability"],
+                features: ["Professional treatment", "Odor removal", "Color restoration", "Guaranteed results"],
                 duration: "1-2 hours",
                 hasBedrooms: false,
                 basePrice: 35,
                 displayPrice: "From £35/stain",
                 image: "stain.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 22,
                 title: "Emergency Cleaning",
                 category: "special",
                 description: "24/7 emergency cleaning services.",
-                features: ["24/7 availability", "Fast response", "Flood cleanup", "Accident cleanup", "Immediate dispatch"],
+                features: ["24/7 availability", "Fast response", "Flood cleanup", "Accident cleanup"],
                 duration: "2-6 hours",
                 hasBedrooms: false,
                 basePrice: 35,
                 displayPrice: "£35/hour",
                 image: "emergency.png",
-                fallbackColor: "#10B981",
-                available247: true
+                fallbackColor: "#10B981"
             }
         ];
 
-        // ===== Venue Cleaning Services Data =====
-        const venueServicesData = [
+        // ===== Event Cleaning Services Data =====
+        const eventServicesData = [
             {
                 id: 100,
                 title: "Small Event / Hall Clean",
@@ -2717,15 +2631,13 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     "Bin emptying and waste consolidation",
                     "Tables and chairs wipe-down",
                     "Light restroom cleaning",
-                    "Eco-friendly products",
-                    "24/7 availability"
+                    "Eco-friendly products"
                 ],
                 duration: "2-3 hours",
                 basePrice: 140,
                 displayPrice: "£140 - £260",
                 stripeLink: "https://buy.stripe.com/4gM8wI3n06ev5T45gv8AE0H",
-                fallbackColor: "#0D9488",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 101,
@@ -2737,15 +2649,13 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     "Surface sanitisation",
                     "Restroom cleaning & replenishment",
                     "Rubbish removal to onsite bins",
-                    "Complete venue reset",
-                    "24/7 availability"
+                    "Complete venue reset"
                 ],
                 duration: "3-5 hours",
                 basePrice: 280,
                 displayPrice: "£280 - £460",
                 stripeLink: "https://buy.stripe.com/7sY3coaPseL11CO10f8AE0I",
-                fallbackColor: "#0D9488",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 102,
@@ -2757,15 +2667,13 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     "Large-scale waste removal",
                     "Full restroom deep clean",
                     "Touch-point sanitisation throughout",
-                    "Multi-team cleaning crew",
-                    "24/7 availability"
+                    "Multi-team cleaning crew"
                 ],
                 duration: "4-8 hours",
                 basePrice: 500,
                 displayPrice: "£500 - £800+",
                 stripeLink: "https://buy.stripe.com/4gMdR2cXAdGXa9k8sH8AE0J",
-                fallbackColor: "#0D9488",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 103,
@@ -2777,15 +2685,13 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     "Floor deep clean",
                     "Bar/kitchen area clean",
                     "High-touch surface sanitisation",
-                    "Emergency cleaning response",
-                    "24/7 availability"
+                    "Emergency cleaning response"
                 ],
                 duration: "2-4 hours",
                 basePrice: 180,
                 displayPrice: "£180+",
                 stripeLink: "https://buy.stripe.com/8x26oAaPsfP581c8sH8AE0K",
-                fallbackColor: "#0D9488",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 104,
@@ -2803,8 +2709,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 250,
                 displayPrice: "From £250",
                 stripeLink: "https://buy.stripe.com/9B628kbTw5ar0yKbET8AE0L",
-                fallbackColor: "#0D9488",
-                available247: true
+                fallbackColor: "#10B981"
             },
             {
                 id: 105,
@@ -2816,35 +2721,20 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     "Complete venue preparation",
                     "Emergency spot cleaning",
                     "Guaranteed completion time",
-                    "Rapid response",
-                    "24/7 booking"
+                    "Rapid response"
                 ],
                 duration: "2-4 hours",
                 basePrice: 220,
                 displayPrice: "From £220",
                 stripeLink: "https://buy.stripe.com/7sY5kw8Hk1Yfa9k7oD8AE0M",
-                fallbackColor: "#0D9488",
-                available247: true
+                fallbackColor: "#10B981"
             }
         ];
 
-        // Add stripe links to all services data
-        servicesData.forEach(service => {
+        // Add stripe links to domestic services data
+        domesticServicesData.forEach(service => {
             service.stripeLink = findStripeLink(service.title);
         });
-
-        // Combine all services for filtering
-        const allServicesData = [...servicesData, ...venueServicesData];
-
-        // ===== 24/7 Time Slots =====
-        const timeSlots247 = [
-            { id: 'morning', time: '08:00-12:00', label: 'Morning', description: '8:00 AM - 12:00 PM' },
-            { id: 'afternoon', time: '12:00-16:00', label: 'Afternoon', description: '12:00 PM - 4:00 PM' },
-            { id: 'evening', time: '16:00-20:00', label: 'Evening', description: '4:00 PM - 8:00 PM' },
-            { id: 'night', time: '20:00-00:00', label: 'Night', description: '8:00 PM - 12:00 AM' },
-            { id: 'late_night', time: '00:00-04:00', label: 'Late Night', description: '12:00 AM - 4:00 AM' },
-            { id: 'early_morning', time: '04:00-08:00', label: 'Early Morning', description: '4:00 AM - 8:00 AM' }
-        ];
 
         // ===== Supabase Configuration =====
         const SUPABASE_URL = 'https://faxjeniohetefqwcsefi.supabase.co';
@@ -2997,8 +2887,8 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             document.getElementById('customerAddress').value = '';
             document.getElementById('bookingNotes').value = '';
             
-            // Load 24/7 time slots
-            loadTimeSlots247();
+            // Load time slots for today
+            loadTimeSlots(today);
         }
 
         function updateBookingSummary() {
@@ -3022,6 +2912,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             
             let dateTimeInfo = '';
             if (currentBooking.date && currentBooking.timeSlot) {
+                const [start, end] = currentBooking.timeSlot.split('-');
                 dateTimeInfo = `
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="color: var(--dark-gray);">Date:</span>
@@ -3029,7 +2920,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span style="color: var(--dark-gray);">Time:</span>
-                        <span>${currentBooking.timeSlot}</span>
+                        <span>${formatTime(start)} - ${formatTime(end)}</span>
                     </div>
                 `;
             }
@@ -3079,6 +2970,8 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 `;
             }
             
+            const [start, end] = currentBooking.timeSlot.split('-');
+            
             summary.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="color: var(--dark-gray);">Service:</span>
@@ -3091,7 +2984,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="color: var(--dark-gray);">Time:</span>
-                    <span style="font-weight: 600; color: var(--primary-green);">${currentBooking.timeSlot}</span>
+                    <span style="font-weight: 600; color: var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                     <span style="color: var(--dark-gray);">Duration:</span>
@@ -3140,53 +3033,151 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
         // Date change handler
         document.getElementById('bookingDate').addEventListener('change', function() {
             currentBooking.date = this.value;
+            loadTimeSlots(this.value);
             updateBookingSummary();
         });
 
-        // ===== 24/7 Time Slots Functions =====
-        function loadTimeSlots247() {
+        // ===== Time Slots Functions =====
+        async function loadTimeSlots(date) {
             const container = document.getElementById('timeSlotsContainer');
-            container.innerHTML = '';
+            container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top: 10px;">Loading available time slots...</div></div>';
             
-            currentBooking.timeSlot = null;
-            currentBooking.slotId = null;
-            
-            timeSlots247.forEach(slot => {
-                const slotElement = document.createElement('div');
-                slotElement.className = 'time-slot-option available-247';
-                slotElement.dataset.slotId = slot.id;
-                slotElement.dataset.timeSlot = slot.description;
-                
-                slotElement.innerHTML = `
-                    <div style="font-weight: 700; color: #FF6B6B; margin-bottom: 5px; font-size: 18px;">
-                        ${slot.label}
-                    </div>
-                    <div style="font-size: 13px; color: var(--medium-gray); margin-bottom: 5px;">
-                        ${slot.description}
-                    </div>
-                    <div style="font-size: 11px; color: #FF6B6B;">
-                        <i class="fas fa-clock"></i> 24/7 Available
+            if (!supabaseClient) {
+                container.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                        <i class="fas fa-calendar-check fa-2x"></i>
+                        <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Book via WhatsApp</div>
+                        <div>For ${formatDate(date)}, please contact us to check availability.</div>
+                        <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                            <i class="fas fa-phone"></i> Call 07827 784204
+                        </div>
+                        <button onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Booking%20inquiry%20for%20${encodeURIComponent(formatDate(date))}'" 
+                                class="btn btn-whatsapp" style="margin-top: 20px; padding: 10px 20px;">
+                            <i class="fab fa-whatsapp"></i> Book via WhatsApp
+                        </button>
                     </div>
                 `;
+                return;
+            }
+            
+            try {
+                // First, test the connection
+                const connectionTest = await testSupabaseConnection();
+                if (!connectionTest.success) {
+                    // If database fails, show manual booking option
+                    container.innerHTML = `
+                        <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                            <i class="fas fa-calendar-check fa-2x"></i>
+                            <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Manual Booking Required</div>
+                            <div>For ${formatDate(date)}, please contact us to check availability.</div>
+                            <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                                <i class="fas fa-phone"></i> Call 07827 784204
+                            </div>
+                            <button onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Booking%20inquiry%20for%20${encodeURIComponent(formatDate(date))}'" 
+                                    class="btn btn-whatsapp" style="margin-top: 20px; padding: 10px 20px;">
+                                <i class="fab fa-whatsapp"></i> Book via WhatsApp
+                            </button>
+                        </div>
+                    `;
+                    return;
+                }
                 
-                slotElement.addEventListener('click', function() {
-                    document.querySelectorAll('.time-slot-option').forEach(s => {
-                        s.classList.remove('selected');
+                // Try to load availability
+                const { data: availability, error } = await supabaseClient
+                    .from('availability')
+                    .select('id, date, time_slot, is_available')
+                    .eq('date', date)
+                    .eq('is_available', true)
+                    .order('time_slot');
+                
+                if (error) {
+                    console.error('❌ Availability fetch error:', error);
+                    throw new Error('Unable to load time slots from database');
+                }
+                
+                container.innerHTML = '';
+                
+                if (!availability || availability.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                            <i class="fas fa-calendar-times fa-2x"></i>
+                            <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">No Available Slots</div>
+                            <div>No time slots available for ${formatDate(date)}</div>
+                            <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                                <i class="fas fa-phone"></i> Call us at 07827 784204 for alternative times
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                currentBooking.timeSlot = null;
+                currentBooking.slotId = null;
+                
+                availability.forEach(slot => {
+                    const slotElement = document.createElement('div');
+                    slotElement.className = 'time-slot-option';
+                    slotElement.dataset.slotId = slot.id;
+                    slotElement.dataset.timeSlot = slot.time_slot;
+                    
+                    const [start, end] = slot.time_slot.split('-');
+                    
+                    slotElement.innerHTML = `
+                        <div style="font-weight: 700; color: var(--dark-green); margin-bottom: 5px; font-size: 18px;">
+                            ${formatTime(start)}
+                        </div>
+                        <div style="font-size: 13px; color: var(--medium-gray); margin-bottom: 5px;">
+                            to ${formatTime(end)}
+                        </div>
+                        <div style="font-size: 11px; color: var(--primary-green);">
+                            <i class="fas fa-check-circle"></i> Available
+                        </div>
+                    `;
+                    
+                    slotElement.addEventListener('click', function() {
+                        document.querySelectorAll('.time-slot-option').forEach(s => {
+                            s.classList.remove('selected');
+                        });
+                        
+                        this.classList.add('selected');
+                        
+                        currentBooking.timeSlot = slot.time_slot;
+                        currentBooking.slotId = String(slot.id);
+                        
+                        updateBookingSummary();
+                        
+                        // Track time slot selection
+                        trackEvent('time_slot_select', 'booking', slot.time_slot, currentBooking.service.title);
                     });
                     
-                    this.classList.add('selected');
-                    
-                    currentBooking.timeSlot = slot.description;
-                    currentBooking.slotId = slot.id;
-                    
-                    updateBookingSummary();
-                    
-                    // Track time slot selection
-                    trackEvent('time_slot_select', 'booking', slot.description, currentBooking.service.title);
+                    container.appendChild(slotElement);
                 });
                 
-                container.appendChild(slotElement);
-            });
+            } catch (err) {
+                console.error('❌ Error loading time slots:', err);
+                container.innerHTML = `
+                    <div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);">
+                        <i class="fas fa-calendar-check fa-2x"></i>
+                        <div style="margin-top: 15px; font-size: 18px; margin-bottom: 10px;">Book Manually</div>
+                        <div>Please contact us to check availability for ${formatDate(date)}</div>
+                        <div style="margin-top: 15px; font-size: 14px; color: var(--primary-green);">
+                            <i class="fas fa-phone"></i> Call 07827 784204
+                        </div>
+                        <button onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Booking%20inquiry%20for%20${encodeURIComponent(formatDate(date))}'" 
+                                class="btn btn-whatsapp" style="margin-top: 20px; padding: 10px 20px;">
+                            <i class="fab fa-whatsapp"></i> Book via WhatsApp
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function formatTime(time) {
+            const [hour, minute] = time.split(':');
+            const hourNum = parseInt(hour);
+            const suffix = hourNum >= 12 ? 'PM' : 'AM';
+            const displayHour = hourNum > 12 ? hourNum - 12 : (hourNum === 0 ? 12 : hourNum);
+            return `${displayHour}:${minute} ${suffix}`;
         }
 
         function formatDate(dateString) {
@@ -3261,6 +3252,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             
             try {
                 const serviceData = currentBooking.service.data;
+                const [start, end] = currentBooking.timeSlot.split('-');
                 
                 // Generate booking reference
                 const bookingRef = 'GG' + Date.now().toString().slice(-8);
@@ -3272,43 +3264,57 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 let supabaseSuccess = false;
                 if (supabaseClient) {
                     try {
-                        // Prepare booking data for 24/7 service
-                        const bookingData = {
-                            service_title: currentBooking.service.title,
-                            service_type: currentBooking.service.title,
-                            customer_name: customerName,
-                            customer_phone: customerPhone,
-                            customer_email: customerEmail,
-                            customer_address: customerAddress,
-                            service_address: customerAddress,
-                            booking_date: currentBooking.date,
-                            time_slot: currentBooking.timeSlot,
-                            status: 'pending',
-                            booking_reference: bookingRef,
-                            price: serviceData.displayPrice,
-                            duration: serviceData.duration,
-                            created_at: new Date().toISOString(),
-                            available_247: true,
-                            booking_notes: `24/7 Service - Preferred Time: ${currentBooking.timeSlot}`
-                        };
+                        // Check if time slot is still available
+                        const { data: slotCheck, error: checkError } = await supabaseClient
+                            .from('availability')
+                            .select('*')
+                            .eq('id', currentBooking.slotId)
+                            .eq('is_available', true)
+                            .single();
                         
-                        if (bookingNotes) {
-                            bookingData.special_instructions = bookingNotes;
-                            bookingData.notes = bookingNotes;
-                        }
-                        
-                        if (serviceData.hasBedrooms) {
-                            bookingData.notes = (bookingData.notes || '') + `\nBedrooms: ${currentBooking.bedrooms}`;
-                        }
-                        
-                        // Save booking
-                        const { error: insertError } = await supabaseClient
-                            .from('bookings')
-                            .insert([bookingData]);
-                        
-                        if (!insertError) {
-                            supabaseSuccess = true;
-                            console.log('✅ 24/7 Booking saved to Supabase');
+                        if (!checkError && slotCheck) {
+                            // Prepare booking data
+                            const bookingData = {
+                                service_title: currentBooking.service.title,
+                                service_type: currentBooking.service.title,
+                                customer_name: customerName,
+                                customer_phone: customerPhone,
+                                customer_email: customerEmail,
+                                customer_address: customerAddress,
+                                service_address: customerAddress,
+                                booking_date: currentBooking.date,
+                                time_slot: currentBooking.timeSlot,
+                                status: 'pending',
+                                booking_reference: bookingRef,
+                                price: serviceData.displayPrice,
+                                duration: serviceData.duration,
+                                created_at: new Date().toISOString()
+                            };
+                            
+                            if (bookingNotes) {
+                                bookingData.special_instructions = bookingNotes;
+                                bookingData.notes = bookingNotes;
+                            }
+                            
+                            if (serviceData.hasBedrooms) {
+                                bookingData.notes = (bookingData.notes || '') + `\nBedrooms: ${currentBooking.bedrooms}`;
+                            }
+                            
+                            // Save booking
+                            const { error: insertError } = await supabaseClient
+                                .from('bookings')
+                                .insert([bookingData]);
+                            
+                            if (!insertError) {
+                                supabaseSuccess = true;
+                                console.log('✅ Booking saved to Supabase');
+                                
+                                // Mark slot as unavailable
+                                await supabaseClient
+                                    .from('availability')
+                                    .update({ is_available: false })
+                                    .eq('id', currentBooking.slotId);
+                            }
                         }
                     } catch (dbError) {
                         console.warn('⚠️ Database save failed, continuing with manual booking:', dbError);
@@ -3320,10 +3326,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 successMessage += `Booking Reference: ${bookingRef}\n`;
                 successMessage += `Service: ${currentBooking.service.title}\n`;
                 successMessage += `Date: ${formatDate(currentBooking.date)}\n`;
-                successMessage += `Preferred Time: ${currentBooking.timeSlot}\n`;
+                successMessage += `Time: ${formatTime(start)} - ${formatTime(end)}\n`;
                 successMessage += `Customer: ${customerName}\n`;
-                successMessage += `Status: ${supabaseSuccess ? 'Saved to system' : 'Manual booking required'}\n`;
-                successMessage += `Service Type: 24/7 Available\n\n`;
+                successMessage += `Status: ${supabaseSuccess ? 'Saved to system' : 'Manual booking required'}\n\n`;
                 
                 // Process based on payment type
                 if (serviceData.stripeLink) {
@@ -3351,17 +3356,16 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     trackBookingComplete(currentBooking.service.id, currentBooking.service.title, 'whatsapp', amount, bookingRef);
                     
                     // Prepare WhatsApp message
-                    let whatsappMessage = `📋 24/7 BOOKING CONFIRMED - ${currentBooking.service.title}\n\n`;
+                    let whatsappMessage = `📋 BOOKING CONFIRMED - ${currentBooking.service.title}\n\n`;
                     whatsappMessage += `🔢 Booking Reference: ${bookingRef}\n`;
                     whatsappMessage += `👤 Customer: ${customerName}\n`;
                     whatsappMessage += `📞 Phone: ${customerPhone}\n`;
                     whatsappMessage += `📧 Email: ${customerEmail}\n`;
                     whatsappMessage += `🏠 Address: ${customerAddress}\n`;
                     whatsappMessage += `📅 Date: ${formatDate(currentBooking.date)}\n`;
-                    whatsappMessage += `🕒 Preferred Time: ${currentBooking.timeSlot}\n`;
+                    whatsappMessage += `🕒 Time: ${formatTime(start)} - ${formatTime(end)}\n`;
                     whatsappMessage += `⏱️ Duration: ${serviceData.duration}\n`;
                     whatsappMessage += `💰 Price: ${serviceData.displayPrice}\n`;
-                    whatsappMessage += `🌙 Service Type: 24/7 Available\n`;
                     
                     if (serviceData.hasBedrooms) {
                         whatsappMessage += `🛏️ Bedrooms: ${currentBooking.bedrooms}\n`;
@@ -3395,16 +3399,15 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 
                 // Fallback to WhatsApp booking
                 const fallbackWhatsApp = encodeURIComponent(
-                    `📋 24/7 BOOKING REQUEST - ${currentBooking.service.title}\n\n` +
+                    `📋 BOOKING REQUEST - ${currentBooking.service.title}\n\n` +
                     `👤 Customer: ${customerName}\n` +
                     `📞 Phone: ${customerPhone}\n` +
                     `📧 Email: ${customerEmail}\n` +
                     `🏠 Address: ${customerAddress}\n` +
                     `📅 Date: ${currentBooking.date || 'Not specified'}\n` +
-                    `🕒 Preferred Time: ${currentBooking.timeSlot || 'Not specified'}\n` +
+                    `🕒 Time: ${currentBooking.timeSlot || 'Not specified'}\n` +
                     `⏱️ Service: ${currentBooking.service.data.duration}\n` +
-                    `💰 Price: ${currentBooking.service.data.displayPrice}\n` +
-                    `🌙 Service Type: 24/7 Available\n\n` +
+                    `💰 Price: ${currentBooking.service.data.displayPrice}\n\n` +
                     `⚠️ Online booking system experienced an error.\n` +
                     `Please help complete this booking manually.`
                 );
@@ -3421,63 +3424,38 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             }
         }
 
-        // ===== Render Services =====
-        const servicesGrid = document.getElementById('servicesGrid');
-        const venueServicesGrid = document.getElementById('venueServicesGrid');
+        // ===== Render Domestic Services =====
+        const domesticServicesGrid = document.getElementById('domesticServicesGrid');
 
-        function renderServices(category = 'all') {
-            servicesGrid.innerHTML = '';
-            venueServicesGrid.innerHTML = '';
+        function renderDomesticServices(category = 'all') {
+            domesticServicesGrid.innerHTML = '';
 
-            const filteredServices = category === 'all'
-                ? servicesData
-                : category === 'venue'
-                ? [] // Venue services are handled separately
-                : servicesData.filter(service => service.category === category);
+            const filteredServices = category === 'all' || category === 'venue'
+                ? domesticServicesData
+                : domesticServicesData.filter(service => service.category === category);
 
-            // Render main services
             filteredServices.forEach(service => {
-                renderServiceCard(service, servicesGrid);
+                createServiceCard(service, domesticServicesGrid);
             });
 
-            // Always render venue services in the separate section
-            venueServicesData.forEach(service => {
-                renderServiceCard(service, venueServicesGrid);
-            });
-
-            // Add event listeners to buttons
-            document.querySelectorAll('.book-service-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const serviceId = this.getAttribute('data-service-id');
-                    const serviceTitle = this.getAttribute('data-service-title');
-                    
-                    // Find service in combined data
-                    const serviceData = allServicesData.find(s => s.id == serviceId);
-                    const paymentType = serviceData.stripeLink ? 'stripe' : 'whatsapp';
-                    
-                    // Track service click
-                    trackServiceClick(serviceId, serviceTitle, serviceData.category, paymentType);
-                    
-                    // Open booking modal
-                    openBookingModal(serviceTitle, serviceId, serviceData);
-                });
-            });
-
-            // Animation for service cards
-            const serviceCards = document.querySelectorAll('.service-card');
-            serviceCards.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-                
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, 100 + (index * 100));
-            });
+            setupServiceCardListeners();
         }
 
-        function renderServiceCard(service, container) {
+        // ===== Render Venue Services =====
+        const venueServicesGrid = document.getElementById('venueServicesGrid');
+
+        function renderVenueServices() {
+            venueServicesGrid.innerHTML = '';
+
+            eventServicesData.forEach(service => {
+                createServiceCard(service, venueServicesGrid);
+            });
+
+            setupServiceCardListeners();
+        }
+
+        // ===== Create Service Card =====
+        function createServiceCard(service, container) {
             const serviceCard = document.createElement('div');
             serviceCard.className = 'service-card';
             serviceCard.setAttribute('data-category', service.category);
@@ -3523,11 +3501,6 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             } else {
                 badgeHTML = '<span class="payment-badge whatsapp-badge"><i class="fab fa-whatsapp"></i> Book Now</span>';
                 buttonClass = 'btn-whatsapp';
-            }
-            
-            // Add 24/7 availability badge
-            if (service.available247) {
-                badgeHTML += '<span class="availability-badge"><i class="fas fa-clock"></i> 24/7</span>';
             }
             
             const buttonHTML = `
@@ -3583,6 +3556,44 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             observer.observe(serviceCard);
         }
 
+        // ===== Setup Service Card Listeners =====
+        function setupServiceCardListeners() {
+            // Add event listeners to buttons
+            document.querySelectorAll('.book-service-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const serviceId = this.getAttribute('data-service-id');
+                    const serviceTitle = this.getAttribute('data-service-title');
+                    
+                    // Find service in domestic or event data
+                    let serviceData = domesticServicesData.find(s => s.id == serviceId);
+                    if (!serviceData) {
+                        serviceData = eventServicesData.find(s => s.id == serviceId);
+                    }
+                    
+                    const paymentType = serviceData.stripeLink ? 'stripe' : 'whatsapp';
+                    
+                    // Track service click
+                    trackServiceClick(serviceId, serviceTitle, serviceData.category, paymentType);
+                    
+                    // Open booking modal
+                    openBookingModal(serviceTitle, serviceId, serviceData);
+                });
+            });
+
+            // Animation for service cards
+            const serviceCards = document.querySelectorAll('.service-card');
+            serviceCards.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 + (index * 100));
+            });
+        }
+
         // ===== Category Filtering =====
         const categoryButtons = document.querySelectorAll('.category-btn');
 
@@ -3596,7 +3607,11 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 // Track category filter
                 trackCategoryFilter(category);
                 
-                renderServices(category);
+                // Filter domestic services
+                renderDomesticServices(category);
+                
+                // Always show venue services in their own section
+                renderVenueServices();
             });
         });
 
@@ -3626,14 +3641,15 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             // Initialize analytics first
             initAnalytics();
             
-            // Then render services
-            renderServices();
+            // Then render all services
+            renderDomesticServices();
+            renderVenueServices();
             
             // Test Supabase connection
             if (supabaseClient) {
                 testSupabaseConnection().then(result => {
                     if (result.success) {
-                        console.log('✅ Supabase ready for 24/7 bookings');
+                        console.log('✅ Supabase ready for bookings & availability');
                     } else {
                         console.warn('⚠️ Supabase connection failed:', result.message);
                         console.log('Booking system will use WhatsApp fallback mode');
@@ -3650,9 +3666,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             
             // Log services info
             console.log('📊 Services Summary:');
-            console.log(`- Total domestic/office services: ${servicesData.length}`);
-            console.log(`- Total venue/event services: ${venueServicesData.length}`);
-            console.log(`- All services are 24/7 available`);
+            console.log(`- Total domestic services: ${domesticServicesData.length}`);
+            console.log(`- Total event services: ${eventServicesData.length}`);
+            console.log(`- Domestic services with Stripe links: ${domesticServicesData.filter(s => s.stripeLink).length}`);
+            console.log(`- Event services with Stripe links: ${eventServicesData.filter(s => s.stripeLink).length}`);
             
             // Set up periodic analytics updates
             setInterval(updateActiveUser, 60000); // Update active user every minute
