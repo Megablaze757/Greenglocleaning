@@ -397,6 +397,59 @@
             margin: 0 auto;
         }
 
+        /* Image Showcase Styles */
+        .image-showcase {
+            margin-top: 4rem;
+        }
+
+        .image-showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .image-showcase-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .image-showcase-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .image-showcase-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .image-showcase-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-showcase-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .image-showcase-content h4 {
+            margin-bottom: 0.75rem;
+            color: var(--dark-green);
+        }
+
+        .image-showcase-content p {
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
         /* Pricing Plans */
         .pricing-grid {
             display: grid;
@@ -567,6 +620,48 @@
             font-size: 1.5rem;
         }
 
+        /* How It Works Steps */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
         /* Confirmation Section */
         .confirmation-section {
             background: linear-gradient(135deg, rgba(209, 250, 229, 0.3) 0%, rgba(255, 255, 255, 0.95) 100%);
@@ -634,6 +729,12 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary-green);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
         }
 
         .faq-question {
@@ -660,17 +761,56 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition);
+            flex-shrink: 0;
+            margin-left: 1rem;
         }
 
         .faq-answer {
             padding: 0 2rem;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
         }
 
         .faq-answer.open {
             padding: 0 2rem 2rem;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--dark-gray);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--gradient-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 6rem 0;
+            border-radius: var(--border-radius-lg);
+            margin: 4rem auto;
+            max-width: 1200px;
+        }
+
+        .cta-section h2 {
+            color: var(--white);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         /* Footer */
@@ -853,6 +993,10 @@
                 padding: 2rem;
             }
 
+            .image-showcase-grid {
+                grid-template-columns: 1fr;
+            }
+
             /* Mobile Close Button */
             .mobile-menu-close {
                 position: absolute;
@@ -951,23 +1095,55 @@
         </div>
     </nav>
 
-    <!-- Show different content based on URL 
-    
-    <!-- Success Confirmation Section -->
+    <!-- Hero Section -->
     <section class="membership-hero">
         <div class="container">
             <div class="membership-hero-content">
-                <h1>Welcome to the GreenGlo Club!</h1>
-                <p>Thank you for joining the <?php echo $currentPlan['name']; ?> plan. Your membership is now active and you can start enjoying premium benefits immediately.</p>
-                <a href="#confirmation" class="btn btn-large">
-                    <i class="fas fa-check-circle"></i>
-                    View Membership Details
+                <h1>Join the GreenGlo Club</h1>
+                <p>Experience premium cleaning services with exclusive member benefits, priority booking, and significant savings on every clean.</p>
+                <a href="#pricing" class="btn btn-large">
+                    <i class="fas fa-crown"></i>
+                    View Membership Plans
                 </a>
             </div>
         </div>
     </section>
 
-    
+    <!-- Benefits Showcase Section -->
+    <section class="section section-gray">
+        <div class="container">
+            <div class="section-title">
+                <h2>Premium Member Benefits</h2>
+                <p>Exclusive advantages for GreenGlo Club members</p>
+            </div>
+            
+            <div class="image-showcase-grid">
+                <div class="image-showcase-card">
+                    <img src="afterbuilders.png" alt="Priority booking for members">
+                    <div class="image-showcase-content">
+                        <h4>Priority Booking</h4>
+                        <p>Get preferred time slots and same-day bookings</p>
+                    </div>
+                </div>
+                
+                <div class="image-showcase-card">
+                    <img src="domestic.png" alt="Member discounts on cleaning">
+                    <div class="image-showcase-content">
+                        <h4>Exclusive Discounts</h4>
+                        <p>Save £5-£15 on every cleaning service</p>
+                    </div>
+                </div>
+                
+                <div class="image-showcase-card">
+                    <img src="commercial.png" alt="Eco-friendly cleaning">
+                    <div class="image-showcase-content">
+                        <h4>Premium Service</h4>
+                        <p>Same-cleaner guarantee and eco-friendly products</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Pricing Plans Section -->
     <section class="section section-light" id="pricing">
@@ -1120,43 +1296,80 @@
         </div>
     </section>
 
-    <!-- How It Works Section -->
+    <!-- Member Results Gallery -->
     <section class="section section-light">
+        <div class="container">
+            <div class="section-title">
+                <h2>Member Results Gallery</h2>
+                <p>See the premium results our members enjoy</p>
+            </div>
+            
+            <div class="image-showcase-grid">
+                <div class="image-showcase-card">
+                    <img src="bathroom.png" alt="Bathroom cleaning results">
+                    <div class="image-showcase-content">
+                        <h4>Sparkling Bathrooms</h4>
+                        <p>Professional bathroom cleaning with eco-friendly products</p>
+                    </div>
+                </div>
+                
+                <div class="image-showcase-card">
+                    <img src="carpet.png" alt="Carpet cleaning results">
+                    <div class="image-showcase-content">
+                        <h4>Fresh Carpets</h4>
+                        <p>Deep carpet cleaning for a fresh, clean home</p>
+                    </div>
+                </div>
+                
+                <div class="image-showcase-card">
+                    <img src="furniture.png" alt="Furniture cleaning results">
+                    <div class="image-showcase-content">
+                        <h4>Upholstery Care</h4>
+                        <p>Professional furniture and upholstery cleaning</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="section section-gray">
         <div class="container">
             <div class="section-title">
                 <h2>How It Works</h2>
                 <p>Simple steps to start enjoying premium cleaning benefits</p>
             </div>
 
-            <div class="services-grid">
-                <div class="service-item">
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
                     <div class="service-icon">
                         <i class="fas fa-credit-card"></i>
                     </div>
-                    <h3>1. Choose Your Plan</h3>
-                    <p>Select the membership level that fits your needs and budget</p>
+                    <h3>Choose Your Plan</h3>
+                    <p>Select the membership level that fits your needs and budget. All plans are month-to-month with no long-term contracts.</p>
                 </div>
                 
-                <div class="service-item">
+                <div class="step-card">
+                    <div class="step-number">2</div>
                     <div class="service-icon">
                         <i class="fas fa-user-check"></i>
                     </div>
-                    <h3>2. Secure Sign Up</h3>
-                    <p>Complete the secure payment via Stripe's trusted platform</p>
+                    <h3>Secure Sign Up</h3>
+                    <p>Complete the secure payment via Stripe's trusted platform. Your membership activates immediately.</p>
                 </div>
                 
-                <div class="service-item">
+                <div class="step-card">
+                    <div class="step-number">3</div>
                     <div class="service-icon">
                         <i class="fas fa-spray-can"></i>
                     </div>
-                    <h3>3. Start Saving</h3>
-                    <p>Use your membership discounts immediately on your next cleaning</p>
+                    <h3>Start Saving</h3>
+                    <p>Use your membership discounts immediately on your next cleaning. Simply mention you're a GreenGlo Club member when booking.</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <?php } ?>
 
     <!-- FAQ Section -->
     <section class="section section-light" id="faq">
@@ -1223,10 +1436,10 @@
     <!-- CTA Section -->
     <section class="section">
         <div class="container">
-            <div class="cta-section" style="background: var(--gradient-dark); color: var(--white); text-align: center; padding: 6rem 0; border-radius: var(--border-radius-lg); margin: 4rem auto; max-width: 1200px;">
-                <h2 style="color: var(--white);">Ready to Transform Your Cleaning Experience?</h2>
+            <div class="cta-section">
+                <h2>Ready to Transform Your Cleaning Experience?</h2>
                 <p style="font-size: 1.25rem; opacity: 0.9; max-width: 700px; margin: 0 auto 3rem;">Join hundreds of satisfied members enjoying premium cleaning services with exclusive benefits.</p>
-                <div class="cta-buttons" style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                <div class="cta-buttons">
                     <a href="#pricing" class="btn btn-large" style="background: var(--white); color: var(--dark-green);">
                         <i class="fas fa-crown"></i>
                         View Plans
@@ -1241,7 +1454,7 @@
         </div>
     </section>
 
- <!-- Footer -->
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
@@ -1432,6 +1645,3 @@
     </script>
 </body>
 </html>
-
-
-
