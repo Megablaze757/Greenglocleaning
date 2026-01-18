@@ -1132,6 +1132,148 @@
             border: 2px solid;
         }
 
+        /* ===== NEW: Image Showcase Styles ===== */
+        .image-showcase {
+            margin-top: 4rem;
+        }
+
+        .image-showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .image-showcase-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .image-showcase-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .image-showcase-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .image-showcase-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-showcase-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .image-showcase-content h4 {
+            margin-bottom: 0.75rem;
+            color: var(--dark-green);
+        }
+
+        .image-showcase-content p {
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        /* ===== NEW: Services Showcase Styles ===== */
+        .services-showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .service-showcase-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+
+        .service-showcase-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .service-showcase-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .service-showcase-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .service-showcase-card:hover .service-showcase-image img {
+            transform: scale(1.05);
+        }
+
+        .service-showcase-content {
+            padding: 1.5rem;
+        }
+
+        .service-showcase-content h3 {
+            margin-bottom: 0.75rem;
+            color: var(--dark-green);
+        }
+
+        .service-showcase-content p {
+            color: var(--medium-gray);
+            margin-bottom: 1rem;
+        }
+
+        /* ===== NEW: Results Gallery Styles ===== */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .result-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .result-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .result-card h4 {
+            margin-bottom: 0.5rem;
+            color: var(--dark-green);
+        }
+
+        .result-card p {
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
         /* ===== Premium Footer ===== */
         .footer {
             background: var(--dark-green);
@@ -1327,7 +1469,10 @@
 
             .features-grid,
             .services-grid,
-            .testimonials-grid {
+            .testimonials-grid,
+            .image-showcase-grid,
+            .services-showcase-grid,
+            .results-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -1563,7 +1708,7 @@
             </div>
 
             <div class="hero-image">
-                <!-- Replace with actual cleaning image -->
+                <!-- Original hero image placeholder -->
                 <div
                     style="width: 100%; height: 600px; background: var(--gradient-primary); border-radius: var(--border-radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
                     <i class="fas fa-spray-can-sparkles" style="font-size: 4rem; opacity: 0.8;"></i>
@@ -1609,8 +1754,44 @@
         </div>
     </section>
 
+    <!-- Image Showcase Section -->
+    <section class="section section-gray" id="image-showcase">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Cleaning Services in Action</h2>
+                <p>Professional results you can trust</p>
+            </div>
+            
+            <div class="image-showcase-grid">
+                <div class="image-showcase-card">
+                    <img src="bathroom.png" alt="Professional bathroom cleaning service">
+                    <div class="image-showcase-content">
+                        <h4>Bathroom Cleaning</h4>
+                        <p>Sparkling clean bathrooms with eco-friendly products</p>
+                    </div>
+                </div>
+                
+                <div class="image-showcase-card">
+                    <img src="carpet.png" alt="Professional carpet cleaning service">
+                    <div class="image-showcase-content">
+                        <h4>Carpet Cleaning</h4>
+                        <p>Deep cleaning for carpets and rugs of all types</p>
+                    </div>
+                </div>
+                
+                <div class="image-showcase-card">
+                    <img src="afterbuilders.png" alt="After builders cleaning service">
+                    <div class="image-showcase-content">
+                        <h4>After Builders Clean</h4>
+                        <p>Post-construction cleanup for a spotless finish</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Testimonials Carousel Section -->
-    <section class="section section-gray" id="testimonials">
+    <section class="section section-light" id="testimonials">
         <div class="container">
             <div class="section-title">
                 <h2>Home Cleaning Services London Reviews</h2>
@@ -1739,6 +1920,51 @@
         </div>
     </section>
 
+    <!-- Services Showcase Section -->
+    <section class="section section-gray" id="services-showcase">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Professional Cleaning Services</h2>
+                <p>Comprehensive cleaning solutions for every need</p>
+            </div>
+            
+            <div class="services-showcase-grid">
+                <div class="service-showcase-card">
+                    <div class="service-showcase-image">
+                        <img src="domestic.png" alt="Domestic cleaning service">
+                    </div>
+                    <div class="service-showcase-content">
+                        <h3>Domestic Cleaning</h3>
+                        <p>Regular home cleaning services tailored to your schedule and needs. Perfect for busy families and professionals.</p>
+                        <a href="services.html" class="btn" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; width: 100%;">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="service-showcase-card">
+                    <div class="service-showcase-image">
+                        <img src="commercial.png" alt="Commercial cleaning service">
+                    </div>
+                    <div class="service-showcase-content">
+                        <h3>Commercial Cleaning</h3>
+                        <p>Office and commercial space cleaning for a productive work environment. Customized cleaning plans for businesses.</p>
+                        <a href="services.html" class="btn" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; width: 100%;">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="service-showcase-card">
+                    <div class="service-showcase-image">
+                        <img src="deep.png" alt="Deep cleaning service">
+                    </div>
+                    <div class="service-showcase-content">
+                        <h3>Deep Cleaning</h3>
+                        <p>Thorough cleaning service for move-in/move-out or seasonal deep cleans. Attention to every detail.</p>
+                        <a href="services.html" class="btn" style="padding: 0.75rem 1.5rem; font-size: 0.9rem; width: 100%;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- GreenGlo Club Section -->
     <section class="section section-light" id="club">
         <div class="container">
@@ -1747,20 +1973,53 @@
                 <p>Join GreenGlo</p>
             </div>
 
-            <div class="feature-card" style="max-width: 800px; margin: 0 auto;">
-                <div class="feature-icon-large">
-                    <i class="fas fa-crown"></i>
+            <div class="feature-card" style="max-width: 800px; margin: 0 auto; display: flex; align-items: center; padding: 2rem;">
+                <div style="flex: 1; padding-right: 2rem;">
+                    <div class="feature-icon-large" style="margin: 0 0 1.5rem;">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 style="font-size: 2rem; margin-bottom: 1rem;">Enjoy premium booking slots & preferential member rates</h3>
+                    <p style="font-size: 1.125rem; color: var(--medium-gray); margin-bottom: 2rem;">
+                        Join our exclusive membership club and enjoy benefits like priority booking, exclusive discounts, £300 in credits, and much more.
+                    </p>
+                    <a href="greengloclub.html" class="btn btn-large">
+                        <i class="fas fa-gem"></i>
+                        Learn about the club
+                    </a>
                 </div>
-                <h3 style="font-size: 2rem; margin-bottom: 1rem;">Enjoy premium booking slots & preferential member
-                    rates</h3>
-                <p style="font-size: 1.125rem; color: var(--medium-gray); margin-bottom: 2rem;">
-                    Join our exclusive membership club and enjoy benefits like priority booking, exclusive discounts,
-                    £300 in credits, and much more.
-                </p>
-                <a href="greengloclub.html" class="btn btn-large">
-                    <i class="fas fa-gem"></i>
-                    Learn about the club
-                </a>
+                <div style="flex: 1;">
+                    <img src="afterbuilders.png" alt="GreenGlo Club member benefits" style="width: 100%; border-radius: var(--border-radius);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Gallery Section -->
+    <section class="section section-light" id="results-gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Cleaning Results</h2>
+                <p>See the transformation our professional cleaning services provide</p>
+            </div>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <img src="furniture.png" alt="Furniture cleaning results">
+                    <h4>Upholstery & Furniture</h4>
+                    <p>Professional deep cleaning for all fabric surfaces</p>
+                </div>
+                
+                <div class="result-card">
+                    <img src="flooring.png" alt="Floor cleaning results">
+                    <h4>Floor & Carpet Care</h4>
+                    <p>Expert floor and carpet cleaning services</p>
+                </div>
+                
+                <div class="result-card">
+                    <img src="emergency.png" alt="Emergency cleaning service">
+                    <h4>Emergency Response</h4>
+                    <p>24/7 emergency cleaning solutions</p>
+                </div>
             </div>
         </div>
     </section>
