@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Commercial & Event Cleaning | GreenGlo Cleaners</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===== CSS Reset & Variables ===== */
+        :root {
+            --primary-green: #10B981;
+            --secondary-green: #34D399;
+            --dark-green: #065F46;
+            --light-green: #D1FAE5;
+            --accent-green: #059669;
+            --emerald: #10B981;
+            --teal: #0D9488;
+            --mint: #A7F3D0;
+            --white: #FFFFFF;
+            --off-white: #F9FAFB;
+            --light-gray: #F3F4F6;
+            --medium-gray: #9CA3AF;
+            --dark-gray: #4B5563;
+            --black: #111827;
+            --gold: #FBBF24;
+            --ruby: #DC2626;
+            --sapphire: #2563EB;
+            --amethyst: #7C3AED;
+            --corporate-blue: #1E40AF;
+            --corporate-teal: #0D9488;
+            --shadow: 0 20px 40px rgba(16, 185, 129, 0.12);
+            --shadow-lg: 0 25px 50px rgba(16, 185, 129, 0.15);
+            --shadow-blue: 0 20px 40px rgba(30, 64, 175, 0.15);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--teal));
+            --gradient-dark: linear-gradient(135deg, var(--dark-green), var(--teal));
+            --gradient-corporate: linear-gradient(135deg, var(--corporate-blue), var(--corporate-teal));
+            --gradient-gold: linear-gradient(135deg, #FBBF24, #F59E0B);
+            --gradient-silver: linear-gradient(135deg, #9CA3AF, #6B7280);
+            --gradient-bronze: linear-gradient(135deg, #92400E, #B45309);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.7;
+            color: var(--dark-gray);
+            background-color: var(--off-white);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--dark-green);
+            letter-spacing: -0.5px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: var(--shadow);
+            gap: 0.75rem;
+            min-height: 56px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-dark);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-corporate {
+            background: var(--gradient-corporate);
+        }
+
+        .btn-corporate::before {
+            background: linear-gradient(135deg, #1E3A8A, #0F766E);
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        .btn-whatsapp::before {
+            background: linear-gradient(135deg, #1da851, #0d7c5a);
+        }
+
+        .btn-large {
+            padding: 1.25rem 3rem;
+            font-size: 1.125rem;
+            min-height: 64px;
+        }
+
+        /* ===== Navigation Bar ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.1);
+            padding: 0.5rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .nav-logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.75rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            color: var(--medium-gray);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-green);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            margin-left: 1rem;
+        }
+
+        .nav-cta .btn {
+            padding: 0.75rem 1.75rem;
+            min-height: auto;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            width: 48px;
+            height: 48px;
+            background: var(--light-green);
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            background: var(--mint);
+            transform: rotate(90deg);
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ===== Commercial Hero Section ===== */
+        .commercial-hero {
+            min-height: 70vh;
+            padding: 160px 0 80px;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, rgba(209, 250, 229, 0.8) 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .commercial-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .commercial-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .commercial-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-blue);
+            margin-bottom: 2.5rem;
+            border: 1px solid rgba(30, 64, 175, 0.2);
+        }
+
+        .commercial-badge i {
+            color: var(--corporate-blue);
+            font-size: 1.25rem;
+        }
+
+        .commercial-badge span {
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 0.9375rem;
+        }
+
+        .commercial-hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            background: linear-gradient(to right, var(--corporate-blue), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .commercial-subtitle {
+            font-size: clamp(1.125rem, 3vw, 1.5rem);
+            color: var(--dark-gray);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== Modern Section Styles ===== */
+        .section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-light {
+            background: var(--white);
+        }
+
+        .section-gray {
+            background: var(--off-white);
+        }
+
+        .section-corporate {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.05) 0%, rgba(209, 250, 229, 0.2) 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-corporate);
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            font-size: 1.125rem;
+            color: var(--medium-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ===== Commercial Services Grid ===== */
+        .commercial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .commercial-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(30, 64, 175, 0.1);
+            position: relative;
+        }
+
+        .commercial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-blue);
+            border-color: var(--corporate-blue);
+        }
+
+        .commercial-card.featured {
+            border: 2px solid var(--corporate-blue);
+            transform: scale(1.05);
+        }
+
+        .commercial-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .commercial-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--gradient-corporate);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .commercial-header {
+            padding: 2.5rem 2rem;
+            background: var(--gradient-corporate);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .commercial-header.featured-header {
+            background: var(--gradient-corporate);
+        }
+
+        .commercial-header h3 {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .commercial-header .price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .commercial-header .price-range {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+
+        .commercial-header .price-note {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .commercial-features {
+            padding: 2rem;
+        }
+
+        .commercial-features ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .commercial-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .commercial-features li:last-child {
+            border-bottom: none;
+        }
+
+        .commercial-features i {
+            color: var(--corporate-blue);
+            font-size: 1.125rem;
+            margin-top: 0.25rem;
+        }
+
+        .commercial-features.featured-list i {
+            color: var(--corporate-blue);
+        }
+
+        .commercial-cta {
+            padding: 0 2rem 2rem;
+            text-align: center;
+        }
+
+        /* ===== Event Venue Cleaning Grid ===== */
+        .venue-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .venue-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(30, 64, 175, 0.1);
+        }
+
+        .venue-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-blue);
+            border-color: var(--corporate-blue);
+        }
+
+        .venue-header {
+            background: var(--gradient-corporate);
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .venue-header h3 {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .venue-header .price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .venue-header .price-range {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .venue-content {
+            padding: 2rem;
+        }
+
+        .venue-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .venue-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(30, 64, 175, 0.1);
+        }
+
+        .venue-features li:last-child {
+            border-bottom: none;
+        }
+
+        .venue-features i {
+            color: var(--corporate-blue);
+            font-size: 1.125rem;
+            margin-top: 0.25rem;
+        }
+
+        .venue-details {
+            background: rgba(30, 64, 175, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .venue-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(30, 64, 175, 0.1);
+        }
+
+        .venue-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        /* ===== Service Packages Grid ===== */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .package-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(30, 64, 175, 0.1);
+            text-align: center;
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-blue);
+            border-color: var(--corporate-blue);
+        }
+
+        .package-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-corporate);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            color: var(--white);
+            font-size: 2rem;
+        }
+
+        .package-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--corporate-blue);
+        }
+
+        .package-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--corporate-blue);
+            margin-bottom: 1rem;
+        }
+
+        .package-duration {
+            color: var(--medium-gray);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .package-features {
+            list-style: none;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .package-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(30, 64, 175, 0.1);
+        }
+
+        .package-features li:last-child {
+            border-bottom: none;
+        }
+
+        .package-features i {
+            color: var(--corporate-blue);
+            margin-right: 0.75rem;
+        }
+
+        /* ===== Regular Office Cleaning Section ===== */
+        .office-cleaning {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 4rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+        }
+
+        .office-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .office-plan {
+            text-align: center;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            background: rgba(30, 64, 175, 0.05);
+            transition: var(--transition);
+        }
+
+        .office-plan:hover {
+            background: rgba(30, 64, 175, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .office-plan h4 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--corporate-blue);
+        }
+
+        .office-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--corporate-blue);
+            margin-bottom: 1rem;
+        }
+
+        .office-details {
+            list-style: none;
+            text-align: left;
+        }
+
+        .office-details li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .office-details i {
+            color: var(--corporate-blue);
+        }
+
+        /* ===== Contact Form ===== */
+        .contact-form {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 4rem;
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--corporate-blue);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        /* ===== CTA Section ===== */
+        .commercial-cta-section {
+            background: var(--gradient-corporate);
+            color: var(--white);
+            text-align: center;
+            padding: 6rem 0;
+            border-radius: var(--border-radius-lg);
+            margin: 4rem auto;
+            max-width: 1200px;
+        }
+
+        .commercial-cta-section h2 {
+            color: var(--white);
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .commercial-cta-section p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== Premium Footer ===== */
+        .footer {
+            background: var(--dark-green);
+            color: var(--white);
+            padding: 6rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-col h3 {
+            color: var(--white);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-green);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--primary-green);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+        }
+
+        .footer-bottom a {
+            color: var(--primary-green);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-bottom a:hover {
+            color: var(--secondary-green);
+            text-decoration: underline;
+        }
+
+        /* ===== WhatsApp Button ===== */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+        }
+
+        .whatsapp-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background: var(--white);
+                flex-direction: column;
+                padding: 100px 2rem 2rem;
+                gap: 0;
+                transition: var(--transition);
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+                z-index: 1001;
+                overflow-y: auto;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-item {
+                width: 100%;
+            }
+
+            .nav-link {
+                display: block;
+                padding: 1.25rem 1rem;
+                border-bottom: 1px solid rgba(16, 185, 129, 0.1);
+                font-size: 1.1rem;
+            }
+
+            .nav-cta {
+                margin: 2rem 0 0;
+                width: 100%;
+            }
+
+            .nav-cta .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 1rem 2rem;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+                z-index: 1002;
+                position: relative;
+            }
+
+            .mobile-menu-btn.active {
+                background: var(--primary-green);
+                color: var(--white);
+            }
+
+            .commercial-hero {
+                padding: 140px 0 4rem;
+            }
+
+            .commercial-grid,
+            .venue-grid,
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .commercial-card.featured {
+                transform: none;
+            }
+
+            .commercial-card.featured:hover {
+                transform: translateY(-10px);
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .contact-form,
+            .office-cleaning {
+                padding: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            /* Mobile Close Button */
+            .mobile-menu-close {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                width: 44px;
+                height: 44px;
+                background: var(--light-green);
+                border-radius: 12px;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--primary-green);
+                font-size: 1.25rem;
+                transition: var(--transition);
+                z-index: 1003;
+            }
+
+            .mobile-menu-close:hover {
+                background: var(--mint);
+                transform: rotate(90deg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .nav-menu {
+                width: 85%;
+            }
+
+            .commercial-card {
+                margin-bottom: 1.5rem;
+            }
+
+            .commercial-features {
+                padding: 1.5rem;
+            }
+
+            .office-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Premium Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">
+                <div class="logo-icon">
+                    <img src="logo.png" alt="GreenGlo Cleaners Logo"
+                        style="width: 100%; height: 100%; object-fit: contain; border-radius: 12px;">
+                </div>
+                <div class="logo-text">
+                    <h1>GreenGlo</h1>
+                    <span>Cleaners</span>
+                </div>
+            </a>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <button class="mobile-menu-close" id="mobileCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a href="airbnb.html" class="nav-link">Airbnb</a>
+                </li>
+                <li class="nav-item">
+                    <a href="commercial.html" class="nav-link active">Commercial</a>
+                </li>
+                <li class="nav-item">
+                    <a href="gallery.html" class="nav-link">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#club" class="nav-link">Green Glo Club</a>
+                </li>
+                <li class="nav-item nav-cta">
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20commercial%20cleaning"
+                        class="btn btn-corporate">Get Quote</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Commercial Hero Section -->
+    <section class="commercial-hero">
+        <div class="container">
+            <div class="commercial-hero-content">
+                <div class="commercial-badge">
+                    <i class="fas fa-building"></i>
+                    <span>Professional Commercial & Event Cleaning</span>
+                </div>
+
+                <h1>Commercial Cleaning Solutions for London Businesses</h1>
+
+                <p class="commercial-subtitle">
+                    Professional cleaning services for offices, venues, retail spaces, and events. Customized
+                    commercial cleaning packages for businesses of all sizes across London, Kent, and Essex.
+                </p>
+
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#officeCleaning" class="btn btn-large btn-corporate">
+                        <i class="fas fa-desktop"></i>
+                        Office Cleaning
+                    </a>
+                    <a href="#venueCleaning" class="btn btn-large btn-whatsapp">
+                        <i class="fas fa-calendar-star"></i>
+                        Event & Venue Cleaning
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regular Office Cleaning Section -->
+    <section class="section section-light" id="officeCleaning">
+        <div class="container">
+            <div class="section-title">
+                <h2>Regular Office Cleaning</h2>
+                <p>Weekly, fortnightly, or monthly office cleaning packages for businesses</p>
+            </div>
+
+            <div class="office-cleaning">
+                <div class="office-grid">
+                    <div class="office-plan">
+                        <h4>Small Office Package</h4>
+                        <div class="office-price">£25/hour</div>
+                        <p>Perfect for startups & small businesses</p>
+                        <ul class="office-details">
+                            <li><i class="fas fa-check"></i> Up to 10 workstations</li>
+                            <li><i class="fas fa-check"></i> Weekly cleaning</li>
+                            <li><i class="fas fa-check"></i> Kitchen & restroom cleaning</li>
+                            <li><i class="fas fa-check"></i> Waste removal</li>
+                            <li><i class="fas fa-check"></i> Floor vacuuming & mopping</li>
+                        </ul>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20small%20office%20cleaning"
+                            class="btn btn-corporate" target="_blank" style="margin-top: 1rem;">
+                            <i class="fab fa-whatsapp"></i>
+                            Get Quote
+                        </a>
+                    </div>
+
+                    <div class="office-plan" style="border: 2px solid var(--corporate-blue);">
+                        <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gradient-corporate); color: white; padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: 600; font-size: 0.875rem;">
+                            MOST POPULAR
+                        </div>
+                        <h4>Medium Office Package</h4>
+                        <div class="office-price">£22/hour</div>
+                        <p>Ideal for growing businesses</p>
+                        <ul class="office-details">
+                            <li><i class="fas fa-check"></i> 11-30 workstations</li>
+                            <li><i class="fas fa-check"></i> Flexible scheduling</li>
+                            <li><i class="fas fa-check"></i> Complete facility cleaning</li>
+                            <li><i class="fas fa-check"></i> Meeting room sanitization</li>
+                            <li><i class="fas fa-check"></i> Window cleaning (monthly)</li>
+                        </ul>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20medium%20office%20cleaning"
+                            class="btn btn-corporate" target="_blank" style="margin-top: 1rem;">
+                            <i class="fab fa-whatsapp"></i>
+                            Get Quote
+                        </a>
+                    </div>
+
+                    <div class="office-plan">
+                        <h4>Large Office Package</h4>
+                        <div class="office-price">£19/hour</div>
+                        <p>For corporate offices & HQ</p>
+                        <ul class="office-details">
+                            <li><i class="fas fa-check"></i> 31+ workstations</li>
+                            <li><i class="fas fa-check"></i> Daily/weekly scheduling</li>
+                            <li><i class="fas fa-check"></i> Multi-team cleaning crew</li>
+                            <li><i class="fas fa-check"></i> Specialist floor care</li>
+                            <li><i class="fas fa-check"></i> Priority service</li>
+                        </ul>
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20large%20office%20cleaning"
+                            class="btn btn-corporate" target="_blank" style="margin-top: 1rem;">
+                            <i class="fab fa-whatsapp"></i>
+                            Get Quote
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue & Event Cleaning Section -->
+    <section class="section section-corporate" id="venueCleaning">
+        <div class="container">
+            <div class="section-title">
+                <h2>Event & Venue Cleaning</h2>
+                <p>Post-event cleaning for venues across London. From small parties to large conferences.</p>
+            </div>
+
+            <div class="venue-grid">
+                <!-- Small Event / Hall Clean -->
+                <div class="venue-card">
+                    <div class="venue-header">
+                        <h3>Small Event / Hall Clean</h3>
+                        <div class="price">£140</div>
+                        <div class="price-range">- £260</div>
+                    </div>
+                    <div class="venue-content">
+                        <p style="color: var(--medium-gray); margin-bottom: 1.5rem;">Perfect for birthday parties, community events, and small corporate gatherings up to 100 guests.</p>
+                        
+                        <ul class="venue-features">
+                            <li><i class="fas fa-check"></i> Floor sweeping & mopping</li>
+                            <li><i class="fas fa-check"></i> Bin emptying and waste consolidation</li>
+                            <li><i class="fas fa-check"></i> Tables and chairs wipe-down</li>
+                            <li><i class="fas fa-check"></i> Light restroom cleaning</li>
+                            <li><i class="fas fa-check"></i> Eco-friendly products</li>
+                        </ul>
+
+                        <div class="venue-details">
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Duration:</span>
+                                <span>2-3 hours</span>
+                            </div>
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Crew:</span>
+                                <span>2 cleaners</span>
+                            </div>
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Equipment:</span>
+                                <span>Professional grade</span>
+                            </div>
+                        </div>
+
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20Small%20Event%20Cleaning"
+                            class="btn btn-corporate" target="_blank" style="width: 100%; margin-top: 1.5rem;">
+                            <i class="fab fa-whatsapp"></i>
+                            Book This Service
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Medium Event / Venue Clean -->
+                <div class="venue-card" style="border: 2px solid var(--corporate-blue);">
+                    <div class="venue-header">
+                        <h3>Medium Event / Venue Clean</h3>
+                        <div class="price">£280</div>
+                        <div class="price-range">- £460</div>
+                    </div>
+                    <div class="venue-content">
+                        <p style="color: var(--medium-gray); margin-bottom: 1.5rem;">Ideal for weddings, school/council halls, and corporate events with 100-250 guests.</p>
+                        
+                        <ul class="venue-features">
+                            <li><i class="fas fa-check"></i> Full floor clean (including spill areas)</li>
+                            <li><i class="fas fa-check"></i> Surface sanitisation</li>
+                            <li><i class="fas fa-check"></i> Restroom cleaning & replenishment</li>
+                            <li><i class="fas fa-check"></i> Rubbish removal to onsite bins</li>
+                            <li><i class="fas fa-check"></i> Complete venue reset</li>
+                        </ul>
+
+                        <div class="venue-details">
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Duration:</span>
+                                <span>3-5 hours</span>
+                            </div>
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Crew:</span>
+                                <span>3-4 cleaners</span>
+                            </div>
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Equipment:</span>
+                                <span>Heavy-duty</span>
+                            </div>
+                        </div>
+
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20Medium%20Event%20Cleaning"
+                            class="btn btn-corporate" target="_blank" style="width: 100%; margin-top: 1.5rem;">
+                            <i class="fab fa-whatsapp"></i>
+                            Book This Service
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Large Event / Full Venue Clean -->
+                <div class="venue-card">
+                    <div class="venue-header">
+                        <h3>Large Event / Full Venue Clean</h3>
+                        <div class="price">£500</div>
+                        <div class="price-range">- £800+</div>
+                    </div>
+                    <div class="venue-content">
+                        <p style="color: var(--medium-gray); margin-bottom: 1.5rem;">Comprehensive cleaning for large weddings, conferences, and ticketed events with 250+ guests.</p>
+                        
+                        <ul class="venue-features">
+                            <li><i class="fas fa-check"></i> Heavy-duty floor cleaning</li>
+                            <li><i class="fas fa-check"></i> Large-scale waste removal</li>
+                            <li><i class="fas fa-check"></i> Full restroom deep clean</li>
+                            <li><i class="fas fa-check"></i> Touch-point sanitisation throughout</li>
+                            <li><i class="fas fa-check"></i> Multi-team cleaning crew</li>
+                        </ul>
+
+                        <div class="venue-details">
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Duration:</span>
+                                <span>4-8 hours</span>
+                            </div>
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Crew:</span>
+                                <span>5+ cleaners</span>
+                            </div>
+                            <div class="venue-detail-row">
+                                <span style="font-weight: 600;">Equipment:</span>
+                                <span>Industrial grade</span>
+                            </div>
+                        </div>
+
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20Large%20Event%20Cleaning"
+                            class="btn btn-corporate" target="_blank" style="width: 100%; margin-top: 1.5rem;">
+                            <i class="fab fa-whatsapp"></i>
+                            Book This Service
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Additional Commercial Services -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-title">
+                <h2>Additional Commercial Services</h2>
+                <p>Specialized cleaning solutions for commercial clients</p>
+            </div>
+
+            <div class="packages-grid">
+                <!-- After-Party / Heavy Soiling Clean -->
+                <div class="package-card">
+                    <div class="package-icon">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3>After-Party / Heavy Soiling</h3>
+                    <div class="package-price">£180+</div>
+                    <div class="package-duration">2-4 hours</div>
+                    <ul class="package-features">
+                        <li><i class="fas fa-check"></i> Spill and stain removal</li>
+                        <li><i class="fas fa-check"></i> Floor deep clean</li>
+                        <li><i class="fas fa-check"></i> Bar/kitchen area clean</li>
+                        <li><i class="fas fa-check"></i> High-touch surface sanitisation</li>
+                        <li><i class="fas fa-check"></i> Emergency cleaning response</li>
+                    </ul>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20After-Party%20Cleaning"
+                        class="btn btn-corporate" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Book Now
+                    </a>
+                </div>
+
+                <!-- Same-Night / Overnight Cleaning -->
+                <div class="package-card">
+                    <div class="package-icon">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <h3>Same-Night / Overnight</h3>
+                    <div class="package-price">From £250</div>
+                    <div class="package-duration">2-6 hours</div>
+                    <ul class="package-features">
+                        <li><i class="fas fa-check"></i> Emergency team deployment</li>
+                        <li><i class="fas fa-check"></i> Quick venue reset</li>
+                        <li><i class="fas fa-check"></i> 24/7 availability</li>
+                        <li><i class="fas fa-check"></i> Priority service guarantee</li>
+                        <li><i class="fas fa-check"></i> Immediate response</li>
+                    </ul>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20Overnight%20Cleaning"
+                        class="btn btn-corporate" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Book Now
+                    </a>
+                </div>
+
+                <!-- Priority Next-Morning Clean -->
+                <div class="package-card">
+                    <div class="package-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <h3>Priority Next-Morning</h3>
+                    <div class="package-price">From £220</div>
+                    <div class="package-duration">2-4 hours</div>
+                    <ul class="package-features">
+                        <li><i class="fas fa-check"></i> Early crew start (5AM-7AM)</li>
+                        <li><i class="fas fa-check"></i> Complete venue preparation</li>
+                        <li><i class="fas fa-check"></i> Emergency spot cleaning</li>
+                        <li><i class="fas fa-check"></i> Guaranteed completion time</li>
+                        <li><i class="fas fa-check"></i> Rapid response</li>
+                    </ul>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20book%20Next-Morning%20Cleaning"
+                        class="btn btn-corporate" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Book Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Retail & Commercial Space Cleaning -->
+    <section class="section section-corporate">
+        <div class="container">
+            <div class="section-title">
+                <h2>Retail & Commercial Space Cleaning</h2>
+                <p>Specialized cleaning for shops, restaurants, and commercial premises</p>
+            </div>
+
+            <div class="commercial-grid">
+                <!-- Retail Shop Cleaning -->
+                <div class="commercial-card">
+                    <div class="commercial-header">
+                        <h3>Retail Shop Cleaning</h3>
+                        <div class="price">£35/hour</div>
+                        <div class="price-note">Minimum 3 hours</div>
+                    </div>
+                    <div class="commercial-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Floor sweeping & mopping</li>
+                            <li><i class="fas fa-check"></i> Display case cleaning</li>
+                            <li><i class="fas fa-check"></i> Fitting room sanitization</li>
+                            <li><i class="fas fa-check"></i> Window and glass cleaning</li>
+                            <li><i class="fas fa-check"></i> Waste removal</li>
+                            <li><i class="fas fa-check"></i> Stock room organization</li>
+                        </ul>
+                        <div style="background: rgba(30, 64, 175, 0.05); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Ideal for:</span>
+                                <span>Boutiques, clothing stores, gift shops</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Frequency:</span>
+                                <span>Daily/Weekly/Monthly</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="commercial-cta">
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20Retail%20Shop%20Cleaning"
+                            class="btn btn-corporate" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            Get Quote
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Restaurant & Café Cleaning -->
+                <div class="commercial-card featured">
+                    <div class="commercial-badge">Most Popular</div>
+                    <div class="commercial-header featured-header">
+                        <h3>Restaurant & Café Cleaning</h3>
+                        <div class="price">£40/hour</div>
+                        <div class="price-note">Food safety certified</div>
+                    </div>
+                    <div class="commercial-features featured-list">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Kitchen deep clean</li>
+                            <li><i class="fas fa-check"></i> Dining area sanitization</li>
+                            <li><i class="fas fa-check"></i> Grease extraction</li>
+                            <li><i class="fas fa-check"></i> Equipment cleaning</li>
+                            <li><i class="fas fa-check"></i> Floor degreasing</li>
+                            <li><i class="fas fa-check"></i> Compliance ready</li>
+                        </ul>
+                        <div style="background: rgba(30, 64, 175, 0.1); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Ideal for:</span>
+                                <span>Restaurants, cafes, pubs, takeaway</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Certification:</span>
+                                <span>Food hygiene compliant</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="commercial-cta">
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20Restaurant%20Cleaning"
+                            class="btn btn-corporate" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            Get Quote
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Gym & Fitness Center -->
+                <div class="commercial-card">
+                    <div class="commercial-header">
+                        <h3>Gym & Fitness Center</h3>
+                        <div class="price">£45/hour</div>
+                        <div class="price-note">Antiviral sanitization</div>
+                    </div>
+                    <div class="commercial-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Equipment sanitization</li>
+                            <li><i class="fas fa-check"></i> Changing room deep clean</li>
+                            <li><i class="fas fa-check"></i> Shower and sauna cleaning</li>
+                            <li><i class="fas fa-check"></i> Mat and floor cleaning</li>
+                            <li><i class="fas fa-check"></i> Odor control</li>
+                            <li><i class="fas fa-check"></i> High-touch surface treatment</li>
+                        </ul>
+                        <div style="background: rgba(30, 64, 175, 0.05); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Ideal for:</span>
+                                <span>Gyms, yoga studios, leisure centers</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Sanitization:</span>
+                                <span>Hospital-grade disinfectants</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="commercial-cta">
+                        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20quote%20for%20Gym%20Cleaning"
+                            class="btn btn-corporate" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            Get Quote
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Commercial CTA Section -->
+    <section class="section">
+        <div class="container">
+            <div class="commercial-cta-section">
+                <h2>Ready to Elevate Your Business Environment?</h2>
+                <p>Join hundreds of satisfied commercial clients who trust GreenGlo with their premises. Consistent
+                    professional cleaning for consistent business excellence.</p>
+                <div class="cta-buttons">
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20to%20discuss%20commercial%20cleaning%20services%20for%20my%20business"
+                        class="btn btn-large btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        Discuss Commercial Services
+                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I'd%20like%20a%20custom%20quote%20for%20my%20commercial%20property"
+                        class="btn btn-large btn-corporate" target="_blank">
+                        <i class="fas fa-file-invoice"></i>
+                        Get Custom Commercial Quote
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Form for Commercial Inquiries -->
+            <div class="contact-form">
+                <h3 style="text-align: center; margin-bottom: 2rem; color: var(--corporate-blue);">Request a Commercial Quote</h3>
+                <form id="commercialQuoteForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="businessName">Business Name *</label>
+                            <input type="text" id="businessName" class="form-control" required placeholder="Your Business Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactName">Contact Name *</label>
+                            <input type="text" id="contactName" class="form-control" required placeholder="Your Full Name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="businessPhone">Phone Number *</label>
+                            <input type="tel" id="businessPhone" class="form-control" required placeholder="Business Phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="businessEmail">Email Address *</label>
+                            <input type="email" id="businessEmail" class="form-control" required placeholder="Business Email">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="businessType">Type of Business *</label>
+                        <select id="businessType" class="form-control" required>
+                            <option value="">Select business type</option>
+                            <option value="office">Office</option>
+                            <option value="retail">Retail Shop</option>
+                            <option value="restaurant">Restaurant/Café</option>
+                            <option value="venue">Event Venue</option>
+                            <option value="gym">Gym/Fitness Center</option>
+                            <option value="medical">Medical/Clinic</option>
+                            <option value="education">School/Education</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="propertySize">Property Size (sq ft)</label>
+                        <input type="number" id="propertySize" class="form-control" placeholder="Approximate square footage">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cleaningNeeds">Cleaning Requirements *</label>
+                        <textarea id="cleaningNeeds" class="form-control" rows="4" required placeholder="Please describe your cleaning needs, frequency, and any special requirements..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="preferredSchedule">Preferred Schedule</label>
+                        <select id="preferredSchedule" class="form-control">
+                            <option value="">Select schedule</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="fortnightly">Fortnightly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="one-time">One-Time/Event</option>
+                            <option value="custom">Custom Schedule</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn btn-corporate btn-large" style="width: 100%; margin-top: 1rem;"
+                            onclick="submitCommercialQuote()">
+                        <i class="fas fa-paper-plane"></i>
+                        Submit Quote Request
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.875rem; color: var(--medium-gray);">
+                        We'll contact you within 24 hours to discuss your requirements.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>GreenGlo Cleaners</h3>
+                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
+                        Professional commercial cleaning services for businesses across London, Kent, and Essex.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://instagram.com/greenglocleaningco" class="social-link" target="_blank"
+                            aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://tiktok.com/@greenglocleaningco" class="social-link" target="_blank"
+                            aria-label="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        <a href="https://facebook.com/greenglocleaningco" class="social-link" target="_blank"
+                            aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Commercial Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#officeCleaning">Office Cleaning</a></li>
+                        <li><a href="#venueCleaning">Event & Venue Cleaning</a></li>
+                        <li><a href="#venueCleaning">Retail Shop Cleaning</a></li>
+                        <li><a href="#venueCleaning">Restaurant Cleaning</a></li>
+                        <li><a href="#venueCleaning">Gym & Fitness Cleaning</a></li>
+                        <li><a href="services.html">View All Services</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="airbnb.html">Airbnb Cleaning</a></li>
+                        <li><a href="commercial.html">Commercial Cleaning</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="index.html#faq">FAQ</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Contact Us</h3>
+                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
+                        <i class="fas fa-phone" style="margin-right: 0.5rem;"></i> 07827 784204
+                    </p>
+                    <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">
+                        <i class="fas fa-envelope" style="margin-right: 0.5rem;"></i> greenglocleaningco@gmail.com
+                    </p>
+                    <p style="color: rgba(255, 255, 255, 0.8);">
+                        <i class="fab fa-whatsapp" style="margin-right: 0.5rem;"></i> WhatsApp: 07827 784204
+                    </p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>GreenGlo Cleaners London © 2025. All rights reserved | <a href="#">Privacy Policy</a> | <a
+                        href="#">Terms of Service</a></p>
+                <p style="margin-top: 0.5rem;">Created by <a
+                        href="https://api.whatsapp.com/send?phone=447543737488&text=" target="_blank">Sacha
+                        Raif</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <div class="whatsapp-float">
+        <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners,%20I%20would%20like%20more%20information%20about%20commercial%20cleaning%20services"
+           target="_blank" class="whatsapp-button">
+            <i class="fab fa-whatsapp" style="color: white; font-size: 32px;"></i>
+        </a>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== Mobile Navigation =====
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const navMenu = document.getElementById('navMenu');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // Function to open mobile menu
+        const openMobileMenu = () => {
+            navMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
+        };
+
+        // Function to close mobile menu
+        const closeMobileMenu = () => {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        };
+
+        // Toggle Mobile Menu
+        mobileMenuBtn.addEventListener('click', () => {
+            if (navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        // Close Mobile Menu with Close Button
+        mobileCloseBtn.addEventListener('click', closeMobileMenu);
+
+        // Close Mobile Menu with Overlay Click
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        // Close Mobile Menu on Link Click
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu on Escape key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== Commercial Quote Form =====
+        function submitCommercialQuote() {
+            const businessName = document.getElementById('businessName').value.trim();
+            const contactName = document.getElementById('contactName').value.trim();
+            const businessPhone = document.getElementById('businessPhone').value.trim();
+            const businessEmail = document.getElementById('businessEmail').value.trim();
+            const businessType = document.getElementById('businessType').value;
+            const propertySize = document.getElementById('propertySize').value.trim();
+            const cleaningNeeds = document.getElementById('cleaningNeeds').value.trim();
+            const preferredSchedule = document.getElementById('preferredSchedule').value;
+
+            // Validate required fields
+            if (!businessName || !contactName || !businessPhone || !businessEmail || !businessType || !cleaningNeeds) {
+                alert('❌ Please fill in all required fields:\n\n• Business Name\n• Contact Name\n• Phone Number\n• Email Address\n• Business Type\n• Cleaning Requirements');
+                return;
+            }
+
+            // Prepare WhatsApp message
+            let whatsappMessage = `🏢 COMMERCIAL CLEANING QUOTE REQUEST\n\n`;
+            whatsappMessage += `🏢 Business: ${businessName}\n`;
+            whatsappMessage += `👤 Contact: ${contactName}\n`;
+            whatsappMessage += `📞 Phone: ${businessPhone}\n`;
+            whatsappMessage += `📧 Email: ${businessEmail}\n`;
+            whatsappMessage += `🏭 Business Type: ${businessType}\n`;
+            
+            if (propertySize) {
+                whatsappMessage += `📏 Property Size: ${propertySize} sq ft\n`;
+            }
+            
+            if (preferredSchedule) {
+                whatsappMessage += `📅 Preferred Schedule: ${preferredSchedule}\n`;
+            }
+            
+            whatsappMessage += `\n🧹 CLEANING REQUIREMENTS:\n${cleaningNeeds}\n\n`;
+            whatsappMessage += `✅ Please provide a quote for the above requirements.`;
+
+            // Encode for WhatsApp URL
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+
+            // Show confirmation
+            alert('✅ Thank you for your commercial quote request!\n\nYou will now be redirected to WhatsApp to send your request to our team.\n\nWe will respond within 24 hours.');
+
+            // Redirect to WhatsApp
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 500);
+
+            // Optional: Clear form
+            document.getElementById('commercialQuoteForm').reset();
+        }
+
+        // ===== Smooth Scrolling =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href') === '#') return;
+
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ===== Animation for Service Cards =====
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Commercial Cleaning page loaded');
+            
+            // Add animation to service cards
+            const serviceCards = document.querySelectorAll('.commercial-card, .venue-card, .package-card, .office-plan');
+            serviceCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s ease ${index * 0.2}s, transform 0.6s ease ${index * 0.2}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 + (index * 100));
+            });
+
+            // Track page view for commercial services
+            console.log('📊 Commercial services page loaded');
+            console.log('📍 Services available: Office, Event Venue, Retail, Restaurant, Gym');
+            
+            // Log commercial pricing
+            const commercialServices = [
+                { type: 'Small Office', price: '£25/hour' },
+                { type: 'Medium Office', price: '£22/hour' },
+                { type: 'Large Office', price: '£19/hour' },
+                { type: 'Small Event', price: '£140-£260' },
+                { type: 'Medium Event', price: '£280-£460' },
+                { type: 'Large Event', price: '£500-£800+' },
+                { type: 'Retail Shop', price: '£35/hour' },
+                { type: 'Restaurant', price: '£40/hour' },
+                { type: 'Gym', price: '£45/hour' }
+            ];
+            
+            console.log('💰 Commercial Pricing Summary:');
+            commercialServices.forEach(service => {
+                console.log(`- ${service.type}: ${service.price}`);
+            });
+        });
+
+        // ===== Form validation =====
+        document.getElementById('commercialQuoteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+        });
+
+        // ===== Track button clicks =====
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn')) {
+                const button = e.target.closest('.btn');
+                const buttonText = button.textContent.trim();
+                const serviceType = button.closest('.commercial-card, .venue-card, .package-card, .office-plan');
+                
+                if (serviceType) {
+                    let serviceName = 'General Commercial';
+                    const cardTitle = serviceType.querySelector('h3, h4');
+                    if (cardTitle) {
+                        serviceName = cardTitle.textContent.trim();
+                    }
+                    
+                    console.log(`🎯 Commercial service interest: ${serviceName} - Button: ${buttonText}`);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
