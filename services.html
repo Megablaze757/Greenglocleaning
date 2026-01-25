@@ -1276,7 +1276,7 @@
                     </div>
                     <div class="form-group">
                         <label>Email Address *</label>
-                        <input type="email" id="customerEmail" class="form-control" required placeholder="john@example.com">
+                        <input type="email" id="customerEmail" class="form-control" required placeholder="info@greenglocleaningco.com">
                     </div>
                     <div class="form-group">
                         <label>Service Address *</label>
@@ -1315,7 +1315,7 @@
                 <p>Explore our comprehensive range of professional cleaning services, all using eco-friendly products
                     and performed by our vetted, background-checked professionals.</p>
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="#domesticServicesGrid" class="btn btn-large">
+                    <a href="#servicesGrid" class="btn btn-large">
                         <i class="fas fa-broom"></i>
                         View Services
                     </a>
@@ -1341,15 +1341,29 @@
                 <button class="category-btn" data-category="office">Office Cleaning</button>
                 <button class="category-btn" data-category="deep">Deep Cleaning</button>
                 <button class="category-btn" data-category="special">Specialized Services</button>
+                <button class="category-btn" data-category="venue">Venue & Event Cleaning</button>
             </div>
         </div>
     </section>
 
     <!-- Domestic Services Grid -->
-    <section class="section section-gray" id="domesticServicesGrid">
+    <section class="section section-gray">
         <div class="container">
-            <div class="services-grid" id="servicesGrid">
+            <div class="services-grid" id="domesticServicesGrid">
                 <!-- Domestic service cards will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue & Event Cleaning Section -->
+    <section class="section section-light" id="venueCleaning">
+        <div class="container">
+            <div class="section-title">
+                <h2>Venue & Event Cleaning</h2>
+                <p>Professional post-event cleaning for venues across London. From small parties to large conferences.</p>
+            </div>
+            <div class="services-grid" id="venueServicesGrid">
+                <!-- Venue cleaning service cards will be inserted here by JavaScript -->
             </div>
         </div>
     </section>
@@ -1401,11 +1415,12 @@
                 <div class="footer-col">
                     <h3>Our Services</h3>
                     <ul class="footer-links">
-                        <li><a href="#domesticServicesGrid">Domestic cleaning</a></li>
-                        <li><a href="#domesticServicesGrid">End of tenancy cleaning</a></li>
-                        <li><a href="#domesticServicesGrid">Carpet cleaning</a></li>
-                        <li><a href="#domesticServicesGrid">Office cleaning</a></li>
-                        <li><a href="#domesticServicesGrid">View all services</a></li>
+                        <li><a href="services.html#domesticServicesGrid">Domestic cleaning</a></li>
+                        <li><a href="services.html#venueCleaning">Event & venue cleaning</a></li>
+                        <li><a href="services.html">End of tenancy cleaning</a></li>
+                        <li><a href="services.html">Carpet cleaning</a></li>
+                        <li><a href="services.html">Office cleaning</a></li>
+                        <li><a href="services.html">View all services</a></li>
                     </ul>
                 </div>
 
@@ -2308,7 +2323,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             return null;
         }
 
-        // ===== Updated Domestic Services Data (removed specified services) =====
+        // ===== Updated Domestic Services Data (Removed Window Cleaning, Gutter Cleaning, and other specified services) =====
         const domesticServicesData = [
             {
                 id: 1,
@@ -2484,6 +2499,19 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 fallbackColor: "#10B981"
             },
             {
+                id: 16,
+                title: "BBQ Cleaning",
+                category: "special",
+                description: "Deep cleaning of BBQs and outdoor cooking equipment.",
+                features: ["Grease removal", "Burner cleaning", "Grate scrubbing", "Exterior polish"],
+                duration: "1-2 hours",
+                hasBedrooms: false,
+                basePrice: 45,
+                displayPrice: "Small BBQ: £45",
+                image: "bbq.png",
+                fallbackColor: "#10B981"
+            },
+            {
                 id: 17,
                 title: "Commercial Cleaning",
                 category: "office",
@@ -2494,6 +2522,47 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 25,
                 displayPrice: "£25/hour",
                 image: "commercial.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 18,
+                title: "Move In/Move Out Cleaning",
+                category: "deep",
+                description: "Complete cleaning for moving properties.",
+                features: ["Empty property clean", "Deep sanitization", "Ready for new tenants", "Quick turnaround"],
+                duration: "3-6 hours",
+                hasBedrooms: true,
+                basePrice: 180,
+                perBedroomPrice: 40,
+                displayPrice: "From £180",
+                image: "moveclean.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 19,
+                title: "Patio & Decking Cleaning",
+                category: "special",
+                description: "Pressure washing for patios and decking areas.",
+                features: ["Pressure washing", "Moss removal", "Stain treatment", "Restoration"],
+                duration: "2-4 hours",
+                hasBedrooms: false,
+                basePrice: 70,
+                displayPrice: "From £70",
+                image: "patio.png",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 20,
+                title: "Spring Cleaning",
+                category: "deep",
+                description: "Seasonal deep cleaning service.",
+                features: ["Complete home refresh", "Behind furniture", "Wardrobe organization", "Decluttering help"],
+                duration: "4-8 hours",
+                hasBedrooms: true,
+                basePrice: 175,
+                perBedroomPrice: 35,
+                displayPrice: "From £175",
+                image: "spring.png",
                 fallbackColor: "#10B981"
             },
             {
@@ -2520,6 +2589,118 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 basePrice: 35,
                 displayPrice: "£35/hour",
                 image: "emergency.png",
+                fallbackColor: "#10B981"
+            }
+        ];
+
+        // ===== Event Cleaning Services Data =====
+        const eventServicesData = [
+            {
+                id: 100,
+                title: "Small Event / Hall Clean",
+                category: "venue",
+                description: "Perfect for birthday parties, community events, and small corporate gatherings up to 100 guests.",
+                features: [
+                    "Floor sweeping & mopping",
+                    "Bin emptying and waste consolidation",
+                    "Tables and chairs wipe-down",
+                    "Light restroom cleaning",
+                    "Eco-friendly products"
+                ],
+                duration: "2-3 hours",
+                basePrice: 140,
+                displayPrice: "£140 - £260",
+                stripeLink: "https://buy.stripe.com/4gM8wI3n06ev5T45gv8AE0H",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 101,
+                title: "Medium Event / Venue Clean",
+                category: "venue",
+                description: "Ideal for weddings, school/council halls, and corporate events with 100-250 guests.",
+                features: [
+                    "Full floor clean (including spill areas)",
+                    "Surface sanitisation",
+                    "Restroom cleaning & replenishment",
+                    "Rubbish removal to onsite bins",
+                    "Complete venue reset"
+                ],
+                duration: "3-5 hours",
+                basePrice: 280,
+                displayPrice: "£280 - £460",
+                stripeLink: "https://buy.stripe.com/7sY3coaPseL11CO10f8AE0I",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 102,
+                title: "Large Event / Full Venue Clean",
+                category: "venue",
+                description: "Comprehensive cleaning for large weddings, conferences, and ticketed events with 250+ guests.",
+                features: [
+                    "Heavy-duty floor cleaning",
+                    "Large-scale waste removal",
+                    "Full restroom deep clean",
+                    "Touch-point sanitisation throughout",
+                    "Multi-team cleaning crew"
+                ],
+                duration: "4-8 hours",
+                basePrice: 500,
+                displayPrice: "£500 - £800+",
+                stripeLink: "https://buy.stripe.com/4gMdR2cXAdGXa9k8sH8AE0J",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 103,
+                title: "After-Party / Heavy Soiling Clean",
+                category: "venue",
+                description: "Recommended for alcohol-heavy events, late-night parties, and events with high foot traffic.",
+                features: [
+                    "Spill and stain removal",
+                    "Floor deep clean",
+                    "Bar/kitchen area clean",
+                    "High-touch surface sanitisation",
+                    "Emergency cleaning response"
+                ],
+                duration: "2-4 hours",
+                basePrice: 180,
+                displayPrice: "£180+",
+                stripeLink: "https://buy.stripe.com/8x26oAaPsfP581c8sH8AE0K",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 104,
+                title: "Same-Night / Overnight Cleaning",
+                category: "venue",
+                description: "Priority cleaning service for venues requiring immediate turnaround between events.",
+                features: [
+                    "Emergency team deployment",
+                    "Quick venue reset",
+                    "24/7 availability",
+                    "Priority service guarantee",
+                    "Immediate response"
+                ],
+                duration: "2-6 hours",
+                basePrice: 250,
+                displayPrice: "From £250",
+                stripeLink: "https://buy.stripe.com/9B628kbTw5ar0yKbET8AE0L",
+                fallbackColor: "#10B981"
+            },
+            {
+                id: 105,
+                title: "Priority Next-Morning Clean",
+                category: "venue",
+                description: "Early morning cleaning service to prepare venues for next-day events.",
+                features: [
+                    "Early crew start (5AM-7AM)",
+                    "Complete venue preparation",
+                    "Emergency spot cleaning",
+                    "Guaranteed completion time",
+                    "Rapid response"
+                ],
+                duration: "2-4 hours",
+                basePrice: 220,
+                displayPrice: "From £220",
+                stripeLink: "https://buy.stripe.com/7sY5kw8Hk1Yfa9k7oD8AE0M",
                 fallbackColor: "#10B981"
             }
         ];
@@ -3217,18 +3398,31 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             }
         }
 
-        // ===== Render Services =====
-        const servicesGrid = document.getElementById('servicesGrid');
+        // ===== Render Domestic Services =====
+        const domesticServicesGrid = document.getElementById('domesticServicesGrid');
 
-        function renderServices(category = 'all') {
-            servicesGrid.innerHTML = '';
+        function renderDomesticServices(category = 'all') {
+            domesticServicesGrid.innerHTML = '';
 
-            const filteredServices = category === 'all' 
+            const filteredServices = category === 'all' || category === 'venue'
                 ? domesticServicesData
                 : domesticServicesData.filter(service => service.category === category);
 
             filteredServices.forEach(service => {
-                createServiceCard(service, servicesGrid);
+                createServiceCard(service, domesticServicesGrid);
+            });
+
+            setupServiceCardListeners();
+        }
+
+        // ===== Render Venue Services =====
+        const venueServicesGrid = document.getElementById('venueServicesGrid');
+
+        function renderVenueServices() {
+            venueServicesGrid.innerHTML = '';
+
+            eventServicesData.forEach(service => {
+                createServiceCard(service, venueServicesGrid);
             });
 
             setupServiceCardListeners();
@@ -3344,8 +3538,11 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                     const serviceId = this.getAttribute('data-service-id');
                     const serviceTitle = this.getAttribute('data-service-title');
                     
-                    // Find service in domestic data
+                    // Find service in domestic or event data
                     let serviceData = domesticServicesData.find(s => s.id == serviceId);
+                    if (!serviceData) {
+                        serviceData = eventServicesData.find(s => s.id == serviceId);
+                    }
                     
                     const paymentType = serviceData.stripeLink ? 'stripe' : 'whatsapp';
                     
@@ -3384,8 +3581,11 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 // Track category filter
                 trackCategoryFilter(category);
                 
-                // Filter services
-                renderServices(category);
+                // Filter domestic services
+                renderDomesticServices(category);
+                
+                // Always show venue services in their own section
+                renderVenueServices();
             });
         });
 
@@ -3416,7 +3616,8 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             initAnalytics();
             
             // Then render all services
-            renderServices();
+            renderDomesticServices();
+            renderVenueServices();
             
             // Test Supabase connection
             if (supabaseClient) {
@@ -3440,7 +3641,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             // Log services info
             console.log('📊 Services Summary:');
             console.log(`- Total domestic services: ${domesticServicesData.length}`);
+            console.log(`- Total event services: ${eventServicesData.length}`);
             console.log(`- Domestic services with Stripe links: ${domesticServicesData.filter(s => s.stripeLink).length}`);
+            console.log(`- Event services with Stripe links: ${eventServicesData.filter(s => s.stripeLink).length}`);
             
             // Set up periodic analytics updates
             setInterval(updateActiveUser, 60000); // Update active user every minute
