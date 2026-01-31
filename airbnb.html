@@ -777,6 +777,335 @@
             flex-wrap: wrap;
         }
 
+        /* ===== Enhanced Form Styles ===== */
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1rem;
+            letter-spacing: -0.25px;
+        }
+
+        /* ===== Enhanced Dropdown ===== */
+        .select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .select-wrapper::after {
+            content: '';
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid var(--primary-green);
+            border-bottom: 2px solid var(--primary-green);
+            transform: translateY(-70%) rotate(45deg);
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .select-wrapper:hover::after {
+            border-color: var(--accent-green);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            background: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-select:hover {
+            border-color: var(--secondary-green);
+            background: var(--light-green);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+            background: var(--white);
+        }
+
+        .form-select option {
+            padding: 1rem;
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--dark-gray);
+        }
+
+        .form-select option:hover {
+            background: var(--light-green);
+        }
+
+        /* ===== Enhanced Checkbox/Radio Container ===== */
+        .checkbox-group {
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Enhanced Checkbox Design ===== */
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .checkbox-label:hover {
+            border-color: var(--secondary-green);
+            background: var(--light-green);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .checkbox-label:active {
+            transform: translateY(0);
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkbox-custom {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            background: var(--white);
+            border: 2px solid var(--medium-gray);
+            border-radius: 6px;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .checkbox-custom::after {
+            content: '';
+            position: absolute;
+            display: none;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .checkbox-label input:checked ~ .checkbox-custom {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-label input:checked ~ .checkbox-custom::after {
+            display: block;
+        }
+
+        .checkbox-label input:focus ~ .checkbox-custom {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .checkbox-content {
+            flex: 1;
+        }
+
+        .checkbox-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .checkbox-name {
+            font-weight: 600;
+            color: var(--dark-green);
+            font-size: 1rem;
+        }
+
+        .checkbox-price {
+            font-weight: 700;
+            color: var(--primary-green);
+            font-size: 1.125rem;
+            margin-left: 0.5rem;
+        }
+
+        .checkbox-price.from {
+            font-size: 1rem;
+            color: var(--medium-gray);
+        }
+
+        .checkbox-price.from span {
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+
+        .checkbox-description {
+            color: var(--medium-gray);
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        /* Checkbox checked state styles */
+        .checkbox-label input:checked ~ .checkbox-content .checkbox-name {
+            color: var(--dark-green);
+        }
+
+        .checkbox-label input:checked ~ .checkbox-content .checkbox-price {
+            color: var(--accent-green);
+        }
+
+        /* ===== Enhanced Add-Ons Section ===== */
+        .addons-container .checkbox-label {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .addons-container .checkbox-label:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .addons-container .checkbox-custom {
+            margin-right: 1.25rem;
+        }
+
+        /* ===== Enhanced Radio Buttons (for future use) ===== */
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            background: var(--white);
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .radio-label:hover {
+            border-color: var(--secondary-green);
+            background: var(--light-green);
+        }
+
+        .radio-custom {
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            background: var(--white);
+            border: 2px solid var(--medium-gray);
+            border-radius: 50%;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .radio-custom::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--white);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .radio-label input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .radio-label input:checked ~ .radio-custom {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+        .radio-label input:checked ~ .radio-custom::after {
+            opacity: 1;
+        }
+
+        /* ===== Enhanced Form Validation ===== */
+        .form-select:invalid {
+            border-color: #FCA5A5;
+            background: #FEF2F2;
+        }
+
+        .form-select:invalid:focus {
+            box-shadow: 0 0 0 4px rgba(252, 165, 165, 0.15);
+        }
+
+        .form-group.required label::after {
+            content: ' *';
+            color: var(--airbnb-red);
+            font-weight: 700;
+        }
+
+        /* ===== Form Focus States ===== */
+        .form-select:focus,
+        .checkbox-label:has(input:focus),
+        .radio-label:has(input:focus) {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
         /* ===== Booking Form ===== */
         .booking-form-container {
             max-width: 600px;
@@ -785,18 +1114,6 @@
             padding: 3rem;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-green);
-            font-size: 1rem;
         }
 
         .form-control {
@@ -819,24 +1136,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            background: var(--white);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .form-select:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
         /* ===== WhatsApp Quote Generator ===== */
@@ -1074,6 +1373,39 @@
                 padding: 2rem;
             }
 
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .checkbox-label {
+                padding: 0.875rem 1rem;
+            }
+            
+            .checkbox-custom {
+                width: 20px;
+                height: 20px;
+                min-width: 20px;
+                margin-right: 0.875rem;
+            }
+            
+            .checkbox-custom::after {
+                width: 5px;
+                height: 9px;
+            }
+            
+            .checkbox-price {
+                font-size: 1rem;
+            }
+            
+            .select-wrapper::after {
+                right: 1.25rem;
+            }
+            
+            .form-select {
+                padding: 0.875rem 1.25rem;
+            }
+
             /* Mobile Close Button */
             .mobile-menu-close {
                 position: absolute;
@@ -1115,6 +1447,25 @@
 
             .addons-container {
                 grid-template-columns: 1fr;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .checkbox-label {
+                padding: 0.75rem;
+            }
+            
+            .checkbox-main {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            
+            .checkbox-price {
+                margin-left: 0;
+                align-self: flex-start;
             }
         }
     </style>
@@ -1526,46 +1877,103 @@
                     <form id="quoteForm">
                         <div class="form-group">
                             <label for="propertyType">Property Type</label>
-                            <select class="form-select" id="propertyType" required>
-                                <option value="">Select property size</option>
-                                <option value="studio">Studio / 1-Bed (£45-£55)</option>
-                                <option value="2bed">2-Bed (£60-£75)</option>
-                                <option value="3bed">3-Bed (£80-£95)</option>
-                                <option value="4bed">4-Bed (£100-£120)</option>
-                                <option value="5plus">5+ Bed (£130+)</option>
-                            </select>
+                            <div class="select-wrapper">
+                                <select class="form-select" id="propertyType" required>
+                                    <option value="">Select property size</option>
+                                    <option value="studio">Studio / 1-Bed (£45-£55)</option>
+                                    <option value="2bed">2-Bed (£60-£75)</option>
+                                    <option value="3bed">3-Bed (£80-£95)</option>
+                                    <option value="4bed">4-Bed (£100-£120)</option>
+                                    <option value="5plus">5+ Bed (£130+)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="cleanType">Cleaning Type</label>
-                            <select class="form-select" id="cleanType" required>
-                                <option value="">Select cleaning type</option>
-                                <option value="standard">Standard Cleaning</option>
-                                <option value="deep">Deep Cleaning (+£30-£50)</option>
-                            </select>
+                            <div class="select-wrapper">
+                                <select class="form-select" id="cleanType" required>
+                                    <option value="">Select cleaning type</option>
+                                    <option value="standard">Standard Cleaning</option>
+                                    <option value="deep">Deep Cleaning (+£30-£50)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label>Add-On Services (Optional)</label>
-                            <div style="margin-top: 0.5rem;">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <input type="checkbox" name="addons" value="linen"> Linen Change (£10/bed)
+                            <div class="checkbox-group">
+                                <div class="checkbox-grid">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="addons" value="linen">
+                                        <span class="checkbox-custom"></span>
+                                        <div class="checkbox-content">
+                                            <div class="checkbox-main">
+                                                <span class="checkbox-name">Linen Change & Laundry</span>
+                                                <span class="checkbox-price">£10</span>
+                                            </div>
+                                            <span class="checkbox-description">Fresh linens washed, dried, and neatly replaced on all beds</span>
+                                        </div>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <input type="checkbox" name="addons" value="fridge"> Fridge Clean (£15)
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="addons" value="fridge">
+                                        <span class="checkbox-custom"></span>
+                                        <div class="checkbox-content">
+                                            <div class="checkbox-main">
+                                                <span class="checkbox-name">Fridge Cleaning</span>
+                                                <span class="checkbox-price">£15</span>
+                                            </div>
+                                            <span class="checkbox-description">Thorough interior fridge cleaning, sanitisation, and odour removal</span>
+                                        </div>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <input type="checkbox" name="addons" value="oven"> Oven Clean (£20)
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="addons" value="oven">
+                                        <span class="checkbox-custom"></span>
+                                        <div class="checkbox-content">
+                                            <div class="checkbox-main">
+                                                <span class="checkbox-name">Oven Clean</span>
+                                                <span class="checkbox-price">£20</span>
+                                            </div>
+                                            <span class="checkbox-description">Professional oven interior cleaning including racks and glass</span>
+                                        </div>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <input type="checkbox" name="addons" value="windows"> Windows (£15)
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="addons" value="windows">
+                                        <span class="checkbox-custom"></span>
+                                        <div class="checkbox-content">
+                                            <div class="checkbox-main">
+                                                <span class="checkbox-name">Inside Windows</span>
+                                                <span class="checkbox-price">£15</span>
+                                            </div>
+                                            <span class="checkbox-description">Streak-free interior window and glass door cleaning</span>
+                                        </div>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <input type="checkbox" name="addons" value="patio"> Patio/Balcony (£15)
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="addons" value="patio">
+                                        <span class="checkbox-custom"></span>
+                                        <div class="checkbox-content">
+                                            <div class="checkbox-main">
+                                                <span class="checkbox-name">Patio/Balcony Clean</span>
+                                                <span class="checkbox-price">£15</span>
+                                            </div>
+                                            <span class="checkbox-description">Outdoor area sweeping, washing, and furniture cleaning</span>
+                                        </div>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <input type="checkbox" name="addons" value="waste"> Waste Removal (£10)
+
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="addons" value="waste">
+                                        <span class="checkbox-custom"></span>
+                                        <div class="checkbox-content">
+                                            <div class="checkbox-main">
+                                                <span class="checkbox-name">Waste Removal</span>
+                                                <span class="checkbox-price">£10</span>
+                                            </div>
+                                            <span class="checkbox-description">Additional bin emptying and waste disposal service</span>
+                                        </div>
                                     </label>
                                 </div>
                             </div>
@@ -1573,20 +1981,24 @@
 
                         <div class="form-group">
                             <label for="urgency">Urgency</label>
-                            <select class="form-select" id="urgency">
-                                <option value="standard">Standard Booking</option>
-                                <option value="same-day">Same-Day Turnaround (+£15)</option>
-                            </select>
+                            <div class="select-wrapper">
+                                <select class="form-select" id="urgency">
+                                    <option value="standard">Standard Booking</option>
+                                    <option value="same-day">Same-Day Turnaround (+£15)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="frequency">Cleaning Frequency</label>
-                            <select class="form-select" id="frequency">
-                                <option value="one-off">One-Off Clean</option>
-                                <option value="weekly">Weekly (Discount Available)</option>
-                                <option value="fortnightly">Fortnightly (Discount Available)</option>
-                                <option value="monthly">Monthly (Discount Available)</option>
-                            </select>
+                            <div class="select-wrapper">
+                                <select class="form-select" id="frequency">
+                                    <option value="one-off">One-Off Clean</option>
+                                    <option value="weekly">Weekly (Discount Available)</option>
+                                    <option value="fortnightly">Fortnightly (Discount Available)</option>
+                                    <option value="monthly">Monthly (Discount Available)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <button type="button" class="btn btn-large" style="width: 100%; margin-top: 1rem;"
