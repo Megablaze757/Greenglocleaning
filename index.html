@@ -330,23 +330,15 @@
             overflow: hidden;
             display: flex;
             align-items: center;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--light-green) 0%, transparent 70%);
-            z-index: 0;
+            text-align: center;
         }
 
         .hero-content {
             position: relative;
             z-index: 1;
-            max-width: 650px;
+            max-width: 850px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .hero-badge {
@@ -359,6 +351,9 @@
             box-shadow: var(--shadow);
             margin-bottom: 2.5rem;
             animation: float 3s ease-in-out infinite;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         @keyframes float {
@@ -410,14 +405,17 @@
             color: var(--dark-gray);
             margin-bottom: 3rem;
             line-height: 1.6;
-            max-width: 600px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-features {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1rem;
             margin-bottom: 3rem;
+            justify-items: center;
         }
 
         .hero-feature {
@@ -430,6 +428,9 @@
             border-radius: var(--border-radius);
             border: 1px solid rgba(16, 185, 129, 0.1);
             transition: var(--transition);
+            text-align: left;
+            max-width: 400px;
+            width: 100%;
         }
 
         .hero-feature:hover {
@@ -448,6 +449,7 @@
             justify-content: center;
             color: var(--white);
             font-size: 1.5rem;
+            flex-shrink: 0;
         }
 
         .feature-text {
@@ -472,23 +474,11 @@
             gap: 1.5rem;
             align-items: center;
             margin-bottom: 3rem;
+            justify-content: center;
         }
 
         .hero-image {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 45%;
-            max-width: 600px;
-            z-index: 0;
-        }
-
-        .hero-image img {
-            width: 100%;
-            height: auto;
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-lg);
+            display: none;
         }
 
         .club-notice {
@@ -500,6 +490,9 @@
             padding: 1.25rem 2rem;
             border-radius: var(--border-radius);
             margin-top: 2rem;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .club-notice i {
@@ -1394,11 +1387,6 @@
                 display: none;
             }
 
-            .hero::before {
-                width: 100%;
-                opacity: 0.3;
-            }
-
             .coverage-container {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -1465,6 +1453,9 @@
 
             .hero-features {
                 grid-template-columns: 1fr;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
             }
 
             .features-grid,
@@ -1498,6 +1489,15 @@
 
             #checkButton {
                 width: 100%;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+            
+            .hero-cta .btn {
+                width: 100%;
+                max-width: 300px;
             }
 
             /* Mobile Close Button */
@@ -1573,6 +1573,12 @@
             
             .bics-logo-container {
                 justify-content: center;
+            }
+            
+            .club-notice {
+                padding: 1rem;
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
@@ -1710,14 +1716,6 @@
                 <div class="club-notice">
                     <i class="fas fa-crown"></i>
                     <p>Enjoy priority booking, £300 in credits & MORE with GreenGlo Club</p>
-                </div>
-            </div>
-
-            <div class="hero-image">
-                <!-- Original hero image placeholder -->
-                <div
-                    style="width: 100%; height: 600px; background: var(--gradient-primary); border-radius: var(--border-radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
-                    <i class="fas fa-spray-can-sparkles" style="font-size: 4rem; opacity: 0.8;"></i>
                 </div>
             </div>
         </div>
@@ -3775,6 +3773,3 @@
     </script>
 </body>
 </html>
-
-
-
