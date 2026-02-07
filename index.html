@@ -3364,13 +3364,13 @@
         // Update status every minute
         setInterval(updateWorkingStatus, 60000);
 
-        // ===== FIXED EMAIL POPUP SYSTEM WITH MAILJET =====
+        // ===== FIXED EMAIL POPUP SYSTEM WITH SUPABASE & MAILJET =====
         const EMAIL_CONFIG = {
             // Supabase configuration
             supabaseUrl: 'https://faxjeniohetefqwcsefi.supabase.co',
-            supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGplbmlvaGV0ZXF3Y3NlZmkiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNzE5MzIyNTM5LCJleHAiOjIwMzQ4OTg1Mzl9.a31689c908b6e163c2135ef0c9093bc8',
+            supabaseKey: 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7',
             
-            // Mailjet API credentials - REPLACE THESE WITH YOUR ACTUAL MAILJET CREDENTIALS
+            // Mailjet API credentials - FROM ORIGINAL CODE
             mailjetApiKey: 'a31689c908b6e163c2135ef0c9093bc8',
             mailjetSecretKey: '1598d2ec1d0606b66744d8b21455681a',
             senderEmail: 'info@greenglocleaningco.com',
@@ -3386,16 +3386,9 @@
         };
 
         // Initialize Supabase client
-        const supabaseClient = supabase.createClient(
+        const supabase = supabaseClient.createClient(
             EMAIL_CONFIG.supabaseUrl,
-            EMAIL_CONFIG.supabaseKey,
-            {
-                auth: {
-                    autoRefreshToken: true,
-                    persistSession: true,
-                    detectSessionInUrl: false
-                }
-            }
+            EMAIL_CONFIG.supabaseKey
         );
 
         // DOM Elements for Email Popup
@@ -3405,7 +3398,7 @@
         const userEmailInput = document.getElementById('userEmail');
         const emailError = document.getElementById('emailError');
         const submitEmailBtn = document.getElementById('submitEmail');
-        const emailForm = document.getElementById('emailForm');
+        const emailFormDiv = document.getElementById('emailForm');
         const successMessage = document.getElementById('successMessage');
         const sentEmail = document.getElementById('sentEmail');
         const couponCodeDisplay = document.getElementById('couponCode');
@@ -3413,6 +3406,12 @@
         // Show popup after delay
         function showEmailPopup() {
             const hasSeenPopup = localStorage.getItem(EMAIL_CONFIG.localStorageKey);
+            
+            // Don't show popup if user has already submitted email
+            const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
+            if (hasSubmittedEmail) {
+                return;
+            }
             
             // Show popup after 3 seconds if user hasn't seen it
             setTimeout(() => {
@@ -3436,12 +3435,13 @@
             return re.test(email);
         }
 
-        // Save email to Supabase
+        // Save email to Supabase (using newsletter_subscribers table)
         async function saveEmailToSupabase(email) {
             try {
                 console.log('Saving email to Supabase:', email);
                 
-                const { data, error } = await supabaseClient
+                // Insert into newsletter_subscribers table
+                const { data, error } = await supabase
                     .from('newsletter_subscribers')
                     .insert([
                         {
@@ -3455,28 +3455,12 @@
 
                 if (error) {
                     console.error('Supabase error:', error);
-                    // Try alternative table name
-                    const { data: altData, error: altError } = await supabaseClient
-                        .from('email_subscribers')
-                        .insert([
-                            {
-                                email: email,
-                                coupon_code: EMAIL_CONFIG.couponCode,
-                                coupon_sent: true,
-                                source: 'website_popup',
-                                created_at: new Date().toISOString()
-                            }
-                        ]);
-
-                    if (altError) {
-                        console.error('Alternative Supabase error:', altError);
-                        throw altError;
-                    }
-                    
-                    return { success: true, data: altData };
+                    throw error;
                 }
                 
+                console.log('Email saved successfully to Supabase:', data);
                 return { success: true, data };
+                
             } catch (error) {
                 console.error('Error saving to Supabase:', error);
                 return { success: false, error };
@@ -3486,25 +3470,14 @@
         // Send email via Mailjet
         async function sendDiscountEmail(email) {
             try {
-                console.log('Sending email via Mailjet to:', email);
-                
-                // IMPORTANT: Replace these with your actual Mailjet API credentials
-                // You can get these from your Mailjet account dashboard
-                const mailjetApiKey = EMAIL_CONFIG.mailjetApiKey;
-                const mailjetSecretKey = EMAIL_CONFIG.mailjetSecretKey;
-                
-                if (mailjetApiKey === 'your-mailjet-api-key-here' || mailjetSecretKey === 'your-mailjet-secret-key-here') {
-                    console.warn('Mailjet API credentials not configured. Email will be saved locally.');
-                    saveEmailLocally(email);
-                    return { success: true, savedLocally: true };
-                }
+                console.log('Attempting to send email via Mailjet to:', email);
                 
                 // Mailjet API call
                 const response = await fetch('https://api.mailjet.com/v3.1/send', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + btoa(`${mailjetApiKey}:${mailjetSecretKey}`)
+                        'Authorization': 'Basic ' + btoa(`${EMAIL_CONFIG.mailjetApiKey}:${EMAIL_CONFIG.mailjetSecretKey}`)
                     },
                     body: JSON.stringify({
                         Messages: [
@@ -3530,8 +3503,6 @@
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('Mailjet API error:', errorData);
-                    // Save locally as backup
-                    saveEmailLocally(email);
                     return { success: false, error: errorData };
                 }
 
@@ -3541,8 +3512,6 @@
                 
             } catch (error) {
                 console.error('Error sending email via Mailjet:', error);
-                // Save locally as backup
-                saveEmailLocally(email);
                 return { success: false, error };
             }
         }
@@ -3627,20 +3596,24 @@ info@greenglocleaningco.com
             `;
         }
 
-        // Save email locally as backup
-        function saveEmailLocally(email) {
-            try {
-                const savedEmails = JSON.parse(localStorage.getItem('greenglo_emails_backup') || '[]');
-                savedEmails.push({
-                    email: email,
-                    couponCode: EMAIL_CONFIG.couponCode,
-                    timestamp: new Date().toISOString()
-                });
-                localStorage.setItem('greenglo_emails_backup', JSON.stringify(savedEmails));
-                console.log('Email saved locally as backup:', email);
-            } catch (error) {
-                console.error('Error saving email locally:', error);
-            }
+        // Show success message
+        function showSuccessMessage(email) {
+            sentEmail.textContent = email;
+            couponCodeDisplay.textContent = EMAIL_CONFIG.couponCode;
+            emailFormDiv.style.display = 'none';
+            successMessage.classList.add('show');
+            
+            // Save success state
+            localStorage.setItem('greenglo_discount_received', 'true');
+            localStorage.setItem('greenglo_user_email', email);
+            localStorage.setItem('greenglo_coupon_code', EMAIL_CONFIG.couponCode);
+            
+            // Close popup after 10 seconds
+            setTimeout(() => {
+                if (emailPopup.classList.contains('active')) {
+                    closePopup();
+                }
+            }, 10000);
         }
 
         // Handle form submission
@@ -3669,33 +3642,29 @@ info@greenglocleaningco.com
                 // Save to Supabase
                 const supabaseResult = await saveEmailToSupabase(email);
                 
-                // Send email via Mailjet
+                // Try to send email via Mailjet
                 const mailjetResult = await sendDiscountEmail(email);
                 
-                // Show success message regardless of Mailjet result
-                sentEmail.textContent = email;
-                couponCodeDisplay.textContent = EMAIL_CONFIG.couponCode;
-                emailForm.style.display = 'none';
-                successMessage.classList.add('show');
-                
-                // Save success state
-                localStorage.setItem('greenglo_discount_received', 'true');
-                localStorage.setItem('greenglo_user_email', email);
-                
-                // Close popup after 10 seconds
-                setTimeout(() => {
-                    if (emailPopup.classList.contains('active')) {
-                        closePopup();
+                if (supabaseResult.success) {
+                    console.log('Email saved successfully to Supabase');
+                    
+                    if (mailjetResult.success) {
+                        console.log('Email also sent via Mailjet');
+                    } else {
+                        console.log('Mailjet email failed, but Supabase saved successfully');
                     }
-                }, 10000);
+                    
+                    showSuccessMessage(email);
+                } else {
+                    // Even if Supabase fails, still show success to user
+                    console.log('Showing success despite Supabase error');
+                    showSuccessMessage(email);
+                }
                 
             } catch (error) {
                 console.error('Error processing request:', error);
-                // Even if there's an error, show success to user
-                sentEmail.textContent = email;
-                couponCodeDisplay.textContent = EMAIL_CONFIG.couponCode;
-                emailForm.style.display = 'none';
-                successMessage.classList.add('show');
+                // Show success to user even if there's an error
+                showSuccessMessage(email);
             } finally {
                 // Re-enable button
                 submitEmailBtn.disabled = false;
@@ -3728,28 +3697,12 @@ info@greenglocleaningco.com
             if (savedEmail) {
                 userEmailInput.value = savedEmail;
             }
+            
+            // Log for debugging
+            console.log('Email popup system initialized with:');
+            console.log('- Supabase URL:', EMAIL_CONFIG.supabaseUrl);
+            console.log('- Mailjet configured:', EMAIL_CONFIG.mailjetApiKey !== 'a31689c908b6e163c2135ef0c9093bc8');
         });
-
-        // =============================================
-        // IMPORTANT: GET YOUR MAILJET CREDENTIALS
-        // =============================================
-        /*
-        To get your Mailjet API credentials:
-        
-        1. Go to https://app.mailjet.com/signin
-        2. Sign in to your Mailjet account
-        3. Go to Account Settings > API Key Management
-        4. Copy your API Key and Secret Key
-        5. Replace these lines in the EMAIL_CONFIG object above:
-        
-        mailjetApiKey: 'your-mailjet-api-key-here',
-        mailjetSecretKey: 'your-mailjet-secret-key-here',
-        
-        With your actual credentials:
-        
-        mailjetApiKey: 'YOUR_ACTUAL_API_KEY',
-        mailjetSecretKey: 'YOUR_ACTUAL_SECRET_KEY',
-        */
     </script>
 </body>
 </html>
