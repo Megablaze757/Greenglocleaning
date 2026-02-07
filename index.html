@@ -5,21 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>GreenGlo Cleaners | Premium Eco-Friendly Cleaning Services London</title>
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="apple-touch-icon" href="logo.png">
     <link rel="shortcut icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-    <!-- Leaflet CSS for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-    <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <style>
-        /* ===== CSS Reset & Variables ===== */
         :root {
             --primary-green: #10B981;
             --secondary-green: #34D399;
@@ -3275,21 +3269,20 @@
         setInterval(updateWorkingStatus, 60000);
 
         // ============================================
-        // EMAILJS POPUP SYSTEM - CONFIGURED AND READY
+        // EMAILJS POPUP SYSTEM - FIXED VARIABLE NAMES
         // ============================================
         
-        // EmailJS Configuration - ALL CREDENTIALS SET
+        // EmailJS Configuration
         const EMAIL_CONFIG = {
             publicKey: 'qS1v1ZEwi4XnBl1As',
             serviceId: 'service_cj7heuj',
             templateId: 'template_xe4rngx',
             couponCode: 'NEWCUSTOMER10',
             couponPercent: 10,
-            popupDelay: 3000,
-            devMode: false
+            popupDelay: 3000
         };
 
-        // DOM Elements for Email Popup
+        // DOM Elements
         const emailPopup = document.getElementById('emailPopup');
         const closeEmailPopup = document.getElementById('closeEmailPopup');
         const discountForm = document.getElementById('discountForm');
@@ -3301,13 +3294,13 @@
         const sentEmail = document.getElementById('sentEmail');
         const couponCodeDisplay = document.getElementById('couponCode');
 
-        // Initialize EmailJS immediately
+        // Initialize EmailJS
         (function() {
             try {
                 emailjs.init(EMAIL_CONFIG.publicKey);
-                console.log('EmailJS initialized successfully');
+                console.log('✅ EmailJS initialized');
             } catch (e) {
-                console.error('EmailJS initialization error:', e);
+                console.error('❌ EmailJS init error:', e);
             }
         })();
 
@@ -3332,7 +3325,7 @@
                 emailPopup.classList.add('active');
                 document.body.style.overflow = 'hidden';
                 localStorage.setItem('greenglo_popup_last_shown', now.toString());
-                console.log('Email popup shown');
+                console.log('📧 Email popup shown');
             }, EMAIL_CONFIG.popupDelay);
         }
 
@@ -3348,18 +3341,20 @@
             return re.test(email);
         }
 
-        // Send email using EmailJS
+        // Send email using EmailJS - FIXED VARIABLE NAMES
         async function sendDiscountEmail(email) {
             try {
-                console.log('Sending email via EmailJS to:', email);
+                console.log('📤 Sending email to:', email);
                 
+                // These variable names MUST match your EmailJS template exactly
                 const templateParams = {
-                    to_email: email,
-                    from_name: 'GreenGlo Cleaning Co',
-                    coupon_code: EMAIL_CONFIG.couponCode,
-                    discount_percent: EMAIL_CONFIG.couponPercent,
-                    reply_to: 'info@greenglocleaningco.com'
+                    to_email: email,                    // Recipient email
+                    from_name: 'GreenGlo Cleaning Co',  // Sender name
+                    coupon_code: EMAIL_CONFIG.couponCode, // Coupon code: NEWCUSTOMER10
+                    discount_percent: EMAIL_CONFIG.couponPercent.toString() // "10" as string
                 };
+                
+                console.log('Template params:', templateParams);
                 
                 const response = await emailjs.send(
                     EMAIL_CONFIG.serviceId,
@@ -3367,11 +3362,12 @@
                     templateParams
                 );
                 
-                console.log('EmailJS email sent successfully:', response);
+                console.log('✅ Email sent successfully:', response);
                 return { success: true, data: response };
                 
             } catch (error) {
-                console.error('Error sending email via EmailJS:', error);
+                console.error('❌ Error sending email:', error);
+                console.error('Error text:', error.text);
                 throw error;
             }
         }
@@ -3417,15 +3413,18 @@
                 const result = await sendDiscountEmail(email);
                 
                 if (result.success) {
-                    console.log('Email sent successfully');
+                    console.log('✅ Email processed successfully');
                     showSuccessMessage(email);
                 } else {
                     throw new Error('Failed to send email');
                 }
                 
             } catch (error) {
-                console.error('Error:', error);
-                alert('Sorry, there was an error sending the email. Please try again or contact us via WhatsApp.');
+                console.error('❌ Error:', error);
+                
+                // Show user-friendly error
+                alert('Sorry, there was an error sending the email. Error: ' + (error.text || error.message) + '\n\nPlease try again or contact us via WhatsApp.');
+                
                 submitEmailBtn.disabled = false;
                 submitEmailBtn.innerHTML = '<i class="fas fa-gift"></i> Get My 10% Discount Code';
             }
@@ -3454,7 +3453,7 @@
                 userEmailInput.value = savedEmail;
             }
             
-            console.log('Email popup system initialized');
+            console.log('📧 Email popup system initialized');
         });
     </script>
 </body>
