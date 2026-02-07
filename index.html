@@ -1240,7 +1240,7 @@
             font-size: 0.9rem;
         }
 
-        .-popup-overlay {
+        .email-popup-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -1258,12 +1258,12 @@
             transition: all 0.3s ease;
         }
 
-        .-popup-overlay.active {
+        .email-popup-overlay.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .-popup-modal {
+        .email-popup-modal {
             background: var(--white);
             border-radius: var(--border-radius-lg);
             max-width: 500px;
@@ -1275,11 +1275,11 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .-popup-overlay.active .-popup-modal {
+        .email-popup-overlay.active .email-popup-modal {
             transform: translateY(0) scale(1);
         }
 
-        .-popup-header {
+        .email-popup-header {
             background: var(--gradient-primary);
             color: var(--white);
             padding: 2rem;
@@ -1287,18 +1287,18 @@
             position: relative;
         }
 
-        .-popup-header h3 {
+        .email-popup-header h3 {
             color: var(--white);
             font-size: 1.75rem;
             margin-bottom: 0.5rem;
         }
 
-        .-popup-header p {
+        .email-popup-header p {
             opacity: 0.9;
             font-size: 1rem;
         }
 
-        .-popup-close {
+        .email-popup-close {
             position: absolute;
             top: 1rem;
             right: 1rem;
@@ -1315,33 +1315,33 @@
             transition: var(--transition);
         }
 
-        .-popup-close:hover {
+        .email-popup-close:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: rotate(90deg);
         }
 
-        .-popup-content {
+        .email-popup-content {
             padding: 2.5rem 2rem;
         }
 
-        .-popup-content p {
+        .email-popup-content p {
             text-align: center;
             color: var(--dark-gray);
             margin-bottom: 1.5rem;
             font-size: 1rem;
         }
 
-        .-popup-form {
+        .email-popup-form {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
 
-        .-popup-input-group {
+        .email-popup-input-group {
             position: relative;
         }
 
-        .-popup-input {
+        .email-popup-input {
             width: 100%;
             padding: 1.25rem 1.5rem;
             border: 2px solid var(--light-gray);
@@ -1352,84 +1352,84 @@
             background: var(--white);
         }
 
-        .-popup-input:focus {
+        .email-popup-input:focus {
             outline: none;
             border-color: var(--primary-green);
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
-        .-popup-input.error {
+        .email-popup-input.error {
             border-color: #EF4444;
         }
 
-        .-popup-error {
+        .email-popup-error {
             color: #EF4444;
             font-size: 0.875rem;
             margin-top: 0.5rem;
             display: none;
         }
 
-        .-popup-error.show {
+        .email-popup-error.show {
             display: block;
         }
 
-        .-popup-checkbox {
+        .email-popup-checkbox {
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
             margin-bottom: 1rem;
         }
 
-        .-popup-checkbox input {
+        .email-popup-checkbox input {
             margin-top: 0.25rem;
             flex-shrink: 0;
         }
 
-        .-popup-checkbox label {
+        .email-popup-checkbox label {
             font-size: 0.875rem;
             color: var(--dark-gray);
             line-height: 1.5;
         }
 
-        .-popup-checkbox a {
+        .email-popup-checkbox a {
             color: var(--primary-green);
             text-decoration: underline;
         }
 
-        .-popup-submit {
+        .email-popup-submit {
             width: 100%;
             padding: 1.25rem;
             font-size: 1.125rem;
         }
 
-        .-popup-submit:disabled {
+        .email-popup-submit:disabled {
             opacity: 0.7;
             cursor: not-allowed;
         }
 
-        .-popup-success {
+        .email-popup-success {
             text-align: center;
             padding: 2rem;
             display: none;
         }
 
-        .-popup-success.show {
+        .email-popup-success.show {
             display: block;
         }
 
-        .-popup-success i {
+        .email-popup-success i {
             font-size: 3rem;
             color: var(--primary-green);
             margin-bottom: 1.5rem;
         }
 
-        .-popup-success h4 {
+        .email-popup-success h4 {
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: var(--dark-green);
         }
 
-        .-popup-success p {
+        .email-popup-success p {
             color: var(--medium-gray);
             margin-bottom: 1.5rem;
         }
@@ -1448,7 +1448,7 @@
             border: 2px dashed var(--primary-green);
         }
 
-        .-popup-footer {
+        .email-popup-footer {
             text-align: center;
             padding: 1rem 2rem 2rem;
             border-top: 1px solid var(--light-gray);
@@ -1724,7 +1724,7 @@
                 padding: 0 1.5rem 1.5rem;
             }
 
-            .-popup-modal {
+            .email-popup-modal {
                 max-width: 95%;
             }
         }
@@ -1771,11 +1771,11 @@
                 text-align: center;
             }
 
-            .-popup-header {
+            .email-popup-header {
                 padding: 1.5rem;
             }
 
-            .-popup-content {
+            .email-popup-content {
                 padding: 1.5rem;
             }
 
@@ -2420,53 +2420,53 @@
         </div>
     </section>
 
-    <!--  Popup Modal -->
-    <div class="-popup-overlay" id="Popup">
-        <div class="-popup-modal">
-            <div class="-popup-header">
+    <!-- Email Popup Modal -->
+    <div class="email-popup-overlay" id="emailPopup">
+        <div class="email-popup-modal">
+            <div class="email-popup-header">
                 <h3>Get 10% Off Your First Clean!</h3>
                 <p>Subscribe to receive your exclusive discount code</p>
-                <button class="-popup-close" id="closePopup">
+                <button class="email-popup-close" id="closeEmailPopup">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div class="-popup-content">
-                <div id="Form">
-                    <p>Enter your  below to receive your 10% discount code valid for first-time customers.</p>
+            <div class="email-popup-content">
+                <div id="emailForm">
+                    <p>Enter your email below to receive your 10% discount code valid for first-time customers.</p>
                     
-                    <form class="-popup-form" id="discountForm">
-                        <div class="-popup-input-group">
-                            <input type="" 
-                                   class="-popup-input" 
-                                   id="user" 
-                                   placeholder="Your  address" 
+                    <form class="email-popup-form" id="discountForm">
+                        <div class="email-popup-input-group">
+                            <input type="email" 
+                                   class="email-popup-input" 
+                                   id="userEmail" 
+                                   placeholder="Your email address" 
                                    required>
-                            <div class="-popup-error" id="Error">
-                                Please enter a valid  address
+                            <div class="email-popup-error" id="emailError">
+                                Please enter a valid email address
                             </div>
                         </div>
                         
-                        <div class="-popup-checkbox">
+                        <div class="email-popup-checkbox">
                             <input type="checkbox" id="agreeTerms" required>
                             <label for="agreeTerms">
-                                I agree to receive marketing s from GreenGlo Cleaners. 
+                                I agree to receive marketing emails from GreenGlo Cleaners. 
                                 You can unsubscribe at any time. 
                                 <a href="#" target="_blank">Privacy Policy</a>
                             </label>
                         </div>
                         
-                        <button type="submit" class="btn -popup-submit" id="submit">
+                        <button type="submit" class="btn email-popup-submit" id="submitEmail">
                             <i class="fas fa-gift"></i> Get My 10% Discount Code
                         </button>
                     </form>
                 </div>
                 
-                <div class="-popup-success" id="successMessage">
+                <div class="email-popup-success" id="successMessage">
                     <i class="fas fa-check-circle"></i>
-                    <h4>Success! Check Your </h4>
+                    <h4>Success! Check Your Email</h4>
                     <p>Your 10% discount code has been sent to:</p>
-                    <p style="font-weight: 600;" id="sent"></p>
+                    <p style="font-weight: 600;" id="sentEmail"></p>
                     <div class="coupon-code" id="couponCode">NEWCUSTOMER10</div>
                     <p style="font-size: 0.9rem;">This code is valid for first-time customers only.</p>
                     <button class="btn" onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20NEWCUSTOMER10'">
@@ -2475,273 +2475,13 @@
                 </div>
             </div>
             
-            <div class="-popup-footer">
+            <div class="email-popup-footer">
                 <p>Limited time offer. One use per customer.</p>
             </div>
         </div>
     </div>
 
     <!-- Floating WhatsApp Button -->
-    <style>
-        .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 9999;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-        }
-
-        .whatsapp-button {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
-        }
-
-        .whatsapp-button:active {
-            transform: scale(0.95);
-        }
-
-        .whatsapp-icon-container {
-            position: relative;
-            width: 30px;
-            height: 30px;
-        }
-
-        .whatsapp-icon {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-            transition: all 0.3s ease;
-        }
-
-        .whatsapp-button:hover .whatsapp-icon {
-            transform: translateY(-2px);
-        }
-
-        .whatsapp-notification {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: linear-gradient(135deg, #FF5252 0%, #FF1744 100%);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: notificationPulse 2s infinite;
-            border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(255, 23, 68, 0.4);
-            z-index: 1;
-        }
-
-        @keyframes notificationPulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
-            }
-
-            70% {
-                transform: scale(1.05);
-                box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
-            }
-        }
-
-        .whatsapp-message-bubble {
-            position: absolute;
-            bottom: 75px;
-            right: 0;
-            background: white;
-            border-radius: 18px 18px 0 18px;
-            padding: 15px;
-            width: 280px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: -1;
-        }
-
-        .whatsapp-message-bubble.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .message-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .message-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .message-info h4 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .message-info p {
-            margin: 2px 0 0;
-            font-size: 12px;
-            color: #25D366;
-            font-weight: 500;
-        }
-
-        .message-content {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.4;
-            margin-bottom: 15px;
-        }
-
-        .message-input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 13px;
-            margin-bottom: 10px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .message-input:focus {
-            border-color: #25D366;
-        }
-
-        .send-button {
-            width: 100%;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .send-button:hover {
-            background: linear-gradient(135deg, #22c55e 0%, #0d8a71 100%);
-        }
-
-        .close-bubble {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #999;
-            font-size: 20px;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .close-bubble:hover {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        .whatsapp-tooltip {
-            position: absolute;
-            right: 75px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            color: #333;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: -1;
-        }
-
-        .whatsapp-button:hover+.whatsapp-tooltip {
-            opacity: 1;
-            visibility: visible;
-            right: 70px;
-        }
-
-        @media (max-width: 768px) {
-            .whatsapp-float {
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .whatsapp-button {
-                width: 56px;
-                height: 56px;
-            }
-
-            .whatsapp-message-bubble {
-                width: calc(100vw - 40px);
-                max-width: 320px;
-                right: 0;
-            }
-
-            .whatsapp-tooltip {
-                display: none;
-            }
-        }
-    </style>
-
     <div class="whatsapp-float">
         <div class="whatsapp-message-bubble" id="whatsappBubble">
             <button class="close-bubble" onclick="closeBubble()">×</button>
@@ -2847,625 +2587,627 @@
     </footer>
 
     <!-- JavaScript -->
-<script>
-    // ===== Mobile Navigation =====
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileCloseBtn = document.getElementById('mobileCloseBtn');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    const navMenu = document.getElementById('navMenu');
-    const navbar = document.getElementById('navbar');
-    const navLinks = document.querySelectorAll('.nav-link');
+    <script>
+        // ===== Mobile Navigation =====
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const navMenu = document.getElementById('navMenu');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
 
-    const openMobileMenu = () => {
-        navMenu.classList.add('active');
-        mobileMenuOverlay.classList.add('active');
-        mobileMenuBtn.classList.add('active');
-        mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-        document.body.style.overflow = 'hidden';
-    };
+        const openMobileMenu = () => {
+            navMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
+        };
 
-    const closeMobileMenu = () => {
-        navMenu.classList.remove('active');
-        mobileMenuOverlay.classList.remove('active');
-        mobileMenuBtn.classList.remove('active');
-        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-        document.body.style.overflow = '';
-    };
+        const closeMobileMenu = () => {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        };
 
-    mobileMenuBtn.addEventListener('click', () => {
-        if (navMenu.classList.contains('active')) {
-            closeMobileMenu();
-        } else {
-            openMobileMenu();
-        }
-    });
-
-    mobileCloseBtn.addEventListener('click', closeMobileMenu);
-    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', closeMobileMenu);
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-            closeMobileMenu();
-        }
-    });
-
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-
-    // ===== Testimonial Carousel =====
-    const carouselContainer = document.getElementById('carouselContainer');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const indicators = document.querySelectorAll('.carousel-indicator');
-    const totalSlides = document.querySelectorAll('.testimonial-card').length;
-    let currentSlide = 0;
-
-    function updateCarousel() {
-        carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-        indicators.forEach((indicator, index) => {
-            if (index === currentSlide) {
-                indicator.classList.add('active');
+        mobileMenuBtn.addEventListener('click', () => {
+            if (navMenu.classList.contains('active')) {
+                closeMobileMenu();
             } else {
-                indicator.classList.remove('active');
+                openMobileMenu();
             }
         });
-    }
 
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        updateCarousel();
-    }
+        mobileCloseBtn.addEventListener('click', closeMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
-    function prevSlide() {
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        updateCarousel();
-    }
-
-    prevBtn.addEventListener('click', prevSlide);
-    nextBtn.addEventListener('click', nextSlide);
-
-    indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => {
-            currentSlide = index;
-            updateCarousel();
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
         });
-    });
 
-    let carouselInterval = setInterval(nextSlide, 5000);
-    const carousel = document.querySelector('.testimonials-carousel');
-    carousel.addEventListener('mouseenter', () => {
-        clearInterval(carouselInterval);
-    });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
 
-    carousel.addEventListener('mouseleave', () => {
-        clearInterval(carouselInterval);
-        carouselInterval = setInterval(nextSlide, 5000);
-    });
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
 
-    // ===== FAQ Accordion =====
-    const faqItems = document.querySelectorAll('.faq-item');
+        // ===== Testimonial Carousel =====
+        const carouselContainer = document.getElementById('carouselContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        const totalSlides = document.querySelectorAll('.testimonial-card').length;
+        let currentSlide = 0;
 
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        
-        question.addEventListener('click', () => {
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item && otherItem.classList.contains('active')) {
-                    otherItem.classList.remove('active');
+        function updateCarousel() {
+            carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
                 }
             });
-            item.classList.toggle('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
         });
-    });
 
-    // ===== Coverage Checker & Map =====
-    const serviceConfig = {
-        coveredAreas: [
-            'E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC',
-            'ME', 'TN', 'CT', 'DA',
-            'IG', 'RM', 'CM', 'SS', 'CO'
-        ],
-        companyName: 'GreenGlo Cleaners',
-        phoneNumber: '447827784204'
-    };
+        let carouselInterval = setInterval(nextSlide, 5000);
+        const carousel = document.querySelector('.testimonials-carousel');
+        carousel.addEventListener('mouseenter', () => {
+            clearInterval(carouselInterval);
+        });
 
-    const postcodeForm = document.getElementById('postcodeForm');
-    const postcodeInput = document.getElementById('postcodeInput');
-    const coverageResult = document.getElementById('coverageResult');
-    const checkButton = document.getElementById('checkButton');
+        carousel.addEventListener('mouseleave', () => {
+            clearInterval(carouselInterval);
+            carouselInterval = setInterval(nextSlide, 5000);
+        });
 
-    let serviceMap = null;
-    let coverageLayer = null;
+        // ===== FAQ Accordion =====
+        const faqItems = document.querySelectorAll('.faq-item');
 
-    function initServiceMap() {
-        serviceMap = L.map('serviceAreaMap').setView([51.507, 0.127], 9);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-            maxZoom: 13,
-            minZoom: 7
-        }).addTo(serviceMap);
-        
-        const serviceAreaCoords = [
-            [51.686, 0.010],
-            [51.686, 0.800],
-            [51.200, 0.800],
-            [51.200, -0.510],
-            [51.686, -0.510],
-            [51.686, 0.010]
-        ];
-        
-        coverageLayer = L.polygon(serviceAreaCoords, {
-            color: 'var(--primary-green)',
-            weight: 2,
-            fillColor: 'rgba(16, 185, 129, 0.3)',
-            fillOpacity: 0.4,
-            className: 'service-coverage-layer'
-        }).addTo(serviceMap);
-        
-        L.marker([51.507, -0.127])
-            .addTo(serviceMap)
-            .bindPopup('<b>GreenGlo Cleaners</b><br>London Headquarters')
-            .openPopup();
-    }
-
-    function validateAndParsePostcode(postcode) {
-        let cleanPostcode = postcode.toUpperCase().replace(/\s+/g, '').trim();
-        
-        const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\d[A-Z]{2}$/;
-        
-        if (!postcodeRegex.test(cleanPostcode)) {
-            const outcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)/;
-            const match = cleanPostcode.match(outcodeRegex);
-            if (match) {
-                return { valid: true, fullPostcode: null, outcode: match[1] };
-            }
-            return { valid: false, error: 'Please enter a valid UK postcode format (e.g., SW1A 1AA or ME14 2TT).' };
-        }
-        
-        const outcodeMatch = cleanPostcode.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
-        const outcode = outcodeMatch ? outcodeMatch[0] : null;
-        
-        return {
-            valid: true,
-            fullPostcode: cleanPostcode.replace(/(.{3})$/, ' $1'),
-            outcode: outcode
-        };
-    }
-
-    function checkServiceCoverage(postcodeData) {
-        const outcode = postcodeData.outcode;
-        if (!outcode) return false;
-        
-        for (const area of serviceConfig.coveredAreas) {
-            if (outcode.startsWith(area)) {
-                return {
-                    covered: true,
-                    area: area,
-                    region: getRegionName(area)
-                };
-            }
-        }
-        return { covered: false };
-    }
-
-    function getRegionName(area) {
-        const londonAreas = ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC'];
-        const kentAreas = ['ME', 'TN', 'CT', 'DA'];
-        const essexAreas = ['IG', 'RM', 'CM', 'SS', 'CO'];
-        
-        if (londonAreas.includes(area)) return 'London';
-        if (kentAreas.includes(area)) return 'Kent';
-        if (essexAreas.includes(area)) return 'Essex';
-        return area;
-    }
-
-    function displayCoverageResult(postcodeData, coverageInfo) {
-        if (coverageInfo.covered) {
-            coverageResult.innerHTML = `
-                <div class="result-success">
-                    <i class="fas fa-check-circle"></i>
-                    <h4>Great News! We Cover Your Area</h4>
-                    <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
-                    <p>Your postcode is in our <strong>${coverageInfo.region}</strong> service area.</p>
-                    <p style="font-size: 0.95rem; color: var(--medium-gray);">
-                        <i class="fas fa-clock"></i> Next available slots in ${coverageInfo.region}
-                    </p>
-                    <div class="result-cta">
-                        <a href="https://api.whatsapp.com/send?phone=${serviceConfig.phoneNumber}&text=Hello%20GreenGlo,%20I'm%20in%20${encodeURIComponent(postcodeData.outcode)}%20and%20would%20like%20a%20quote" 
-                           class="btn" 
-                           target="_blank" 
-                           style="margin-top: 1rem;">
-                            <i class="fas fa-whatsapp"></i> Get a Quote for ${postcodeData.outcode}
-                        </a>
-                    </div>
-                </div>
-            `;
-            coverageResult.style.borderColor = 'var(--primary-green)';
-            coverageResult.style.background = 'rgba(16, 185, 129, 0.05)';
-        } else {
-            coverageResult.innerHTML = `
-                <div class="result-error">
-                    <i class="fas fa-times-circle"></i>
-                    <h4>Currently Not in Your Area</h4>
-                    <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
-                    <p>We don't currently serve <strong>${postcodeData.outcode}</strong>. Our primary areas are London, Kent & Essex.</p>
-                    <p style="font-size: 0.95rem; color: var(--medium-gray);">
-                        <i class="fas fa-info-circle"></i> Service areas expanding soon!
-                    </p>
-                    <div class="result-cta">
-                        <button class="btn btn-outline" onclick="document.getElementById('postcodeInput').focus()" style="margin-top: 1rem;">
-                            <i class="fas fa-redo"></i> Check Another Postcode
-                        </button>
-                    </div>
-                </div>
-            `;
-            coverageResult.style.borderColor = '#EF4444';
-            coverageResult.style.background = 'rgba(239, 68, 68, 0.05)';
-        }
-    }
-
-    postcodeForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const postcode = postcodeInput.value.trim();
-        if (!postcode) {
-            postcodeInput.focus();
-            return;
-        }
-        
-        const originalBtnText = checkButton.innerHTML;
-        checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
-        checkButton.disabled = true;
-        
-        setTimeout(() => {
-            const postcodeData = validateAndParsePostcode(postcode);
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
             
-            if (!postcodeData.valid) {
-                coverageResult.innerHTML = `
-                    <div class="result-error">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h4>Invalid Postcode</h4>
-                        <p>${postcodeData.error}</p>
-                        <p style="font-size: 0.9rem;">Examples: SW1A 1AA (London), ME14 2TT (Kent), CM1 1AA (Essex)</p>
-                    </div>
-                `;
-                coverageResult.style.borderColor = '#F59E0B';
-                coverageResult.style.background = 'rgba(245, 158, 11, 0.05)';
-            } else {
-                const coverageInfo = checkServiceCoverage(postcodeData);
-                displayCoverageResult(postcodeData, coverageInfo);
-                
-                if (coverageInfo.covered && serviceMap) {
-                    const regions = {
-                        'London': { center: [51.507, -0.127], zoom: 10 },
-                        'Kent': { center: [51.278, 0.527], zoom: 9 },
-                        'Essex': { center: [51.759, 0.457], zoom: 9 }
-                    };
-                    
-                    if (regions[coverageInfo.region]) {
-                        const { center, zoom } = regions[coverageInfo.region];
-                        serviceMap.setView(center, zoom);
+            question.addEventListener('click', () => {
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
                     }
+                });
+                item.classList.toggle('active');
+            });
+        });
+
+        // ===== Coverage Checker & Map =====
+        const serviceConfig = {
+            coveredAreas: [
+                'E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC',
+                'ME', 'TN', 'CT', 'DA',
+                'IG', 'RM', 'CM', 'SS', 'CO'
+            ],
+            companyName: 'GreenGlo Cleaners',
+            phoneNumber: '447827784204'
+        };
+
+        const postcodeForm = document.getElementById('postcodeForm');
+        const postcodeInput = document.getElementById('postcodeInput');
+        const coverageResult = document.getElementById('coverageResult');
+        const checkButton = document.getElementById('checkButton');
+
+        let serviceMap = null;
+        let coverageLayer = null;
+
+        function initServiceMap() {
+            serviceMap = L.map('serviceAreaMap').setView([51.507, 0.127], 9);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 13,
+                minZoom: 7
+            }).addTo(serviceMap);
+            
+            const serviceAreaCoords = [
+                [51.686, 0.010],
+                [51.686, 0.800],
+                [51.200, 0.800],
+                [51.200, -0.510],
+                [51.686, -0.510],
+                [51.686, 0.010]
+            ];
+            
+            coverageLayer = L.polygon(serviceAreaCoords, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(16, 185, 129, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap);
+            
+            L.marker([51.507, -0.127])
+                .addTo(serviceMap)
+                .bindPopup('<b>GreenGlo Cleaners</b><br>London Headquarters')
+                .openPopup();
+        }
+
+        function validateAndParsePostcode(postcode) {
+            let cleanPostcode = postcode.toUpperCase().replace(/\s+/g, '').trim();
+            
+            const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\d[A-Z]{2}$/;
+            
+            if (!postcodeRegex.test(cleanPostcode)) {
+                const outcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)/;
+                const match = cleanPostcode.match(outcodeRegex);
+                if (match) {
+                    return { valid: true, fullPostcode: null, outcode: match[1] };
+                }
+                return { valid: false, error: 'Please enter a valid UK postcode format (e.g., SW1A 1AA or ME14 2TT).' };
+            }
+            
+            const outcodeMatch = cleanPostcode.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
+            const outcode = outcodeMatch ? outcodeMatch[0] : null;
+            
+            return {
+                valid: true,
+                fullPostcode: cleanPostcode.replace(/(.{3})$/, ' $1'),
+                outcode: outcode
+            };
+        }
+
+        function checkServiceCoverage(postcodeData) {
+            const outcode = postcodeData.outcode;
+            if (!outcode) return false;
+            
+            for (const area of serviceConfig.coveredAreas) {
+                if (outcode.startsWith(area)) {
+                    return {
+                        covered: true,
+                        area: area,
+                        region: getRegionName(area)
+                    };
                 }
             }
+            return { covered: false };
+        }
+
+        function getRegionName(area) {
+            const londonAreas = ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC'];
+            const kentAreas = ['ME', 'TN', 'CT', 'DA'];
+            const essexAreas = ['IG', 'RM', 'CM', 'SS', 'CO'];
             
-            checkButton.innerHTML = originalBtnText;
-            checkButton.disabled = false;
-        }, 800);
-    });
+            if (londonAreas.includes(area)) return 'London';
+            if (kentAreas.includes(area)) return 'Kent';
+            if (essexAreas.includes(area)) return 'Essex';
+            return area;
+        }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        initServiceMap();
-        
-        const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
-        let exampleIndex = 0;
-        
-        setInterval(() => {
-            postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
-            exampleIndex = (exampleIndex + 1) % examples.length;
-        }, 3000);
-    });
+        function displayCoverageResult(postcodeData, coverageInfo) {
+            if (coverageInfo.covered) {
+                coverageResult.innerHTML = `
+                    <div class="result-success">
+                        <i class="fas fa-check-circle"></i>
+                        <h4>Great News! We Cover Your Area</h4>
+                        <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                        <p>Your postcode is in our <strong>${coverageInfo.region}</strong> service area.</p>
+                        <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                            <i class="fas fa-clock"></i> Next available slots in ${coverageInfo.region}
+                        </p>
+                        <div class="result-cta">
+                            <a href="https://api.whatsapp.com/send?phone=${serviceConfig.phoneNumber}&text=Hello%20GreenGlo,%20I'm%20in%20${encodeURIComponent(postcodeData.outcode)}%20and%20would%20like%20a%20quote" 
+                               class="btn" 
+                               target="_blank" 
+                               style="margin-top: 1rem;">
+                                <i class="fas fa-whatsapp"></i> Get a Quote for ${postcodeData.outcode}
+                            </a>
+                        </div>
+                    </div>
+                `;
+                coverageResult.style.borderColor = 'var(--primary-green)';
+                coverageResult.style.background = 'rgba(16, 185, 129, 0.05)';
+            } else {
+                coverageResult.innerHTML = `
+                    <div class="result-error">
+                        <i class="fas fa-times-circle"></i>
+                        <h4>Currently Not in Your Area</h4>
+                        <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                        <p>We don't currently serve <strong>${postcodeData.outcode}</strong>. Our primary areas are London, Kent & Essex.</p>
+                        <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                            <i class="fas fa-info-circle"></i> Service areas expanding soon!
+                        </p>
+                        <div class="result-cta">
+                            <button class="btn btn-outline" onclick="document.getElementById('postcodeInput').focus()" style="margin-top: 1rem;">
+                                <i class="fas fa-redo"></i> Check Another Postcode
+                            </button>
+                        </div>
+                    </div>
+                `;
+                coverageResult.style.borderColor = '#EF4444';
+                coverageResult.style.background = 'rgba(239, 68, 68, 0.05)';
+            }
+        }
 
-    // ===== WhatsApp Floating Button =====
-    const whatsappConfig = {
-        phoneNumber: "447827784204",
-        companyName: "Green Glo Cleaning Co",
-        defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
-    };
+        postcodeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const postcode = postcodeInput.value.trim();
+            if (!postcode) {
+                postcodeInput.focus();
+                return;
+            }
+            
+            const originalBtnText = checkButton.innerHTML;
+            checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            checkButton.disabled = true;
+            
+            setTimeout(() => {
+                const postcodeData = validateAndParsePostcode(postcode);
+                
+                if (!postcodeData.valid) {
+                    coverageResult.innerHTML = `
+                        <div class="result-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Invalid Postcode</h4>
+                            <p>${postcodeData.error}</p>
+                            <p style="font-size: 0.9rem;">Examples: SW1A 1AA (London), ME14 2TT (Kent), CM1 1AA (Essex)</p>
+                        </div>
+                    `;
+                    coverageResult.style.borderColor = '#F59E0B';
+                    coverageResult.style.background = 'rgba(245, 158, 11, 0.05)';
+                } else {
+                    const coverageInfo = checkServiceCoverage(postcodeData);
+                    displayCoverageResult(postcodeData, coverageInfo);
+                    
+                    if (coverageInfo.covered && serviceMap) {
+                        const regions = {
+                            'London': { center: [51.507, -0.127], zoom: 10 },
+                            'Kent': { center: [51.278, 0.527], zoom: 9 },
+                            'Essex': { center: [51.759, 0.457], zoom: 9 }
+                        };
+                        
+                        if (regions[coverageInfo.region]) {
+                            const { center, zoom } = regions[coverageInfo.region];
+                            serviceMap.setView(center, zoom);
+                        }
+                    }
+                }
+                
+                checkButton.innerHTML = originalBtnText;
+                checkButton.disabled = false;
+            }, 800);
+        });
 
-    const whatsappButton = document.getElementById('whatsappButton');
-    const whatsappBubble = document.getElementById('whatsappBubble');
-    const whatsappNotification = document.getElementById('whatsappNotification');
-    const whatsappMessageInput = document.getElementById('whatsappMessage');
-    const statusText = document.getElementById('statusText');
+        document.addEventListener('DOMContentLoaded', function() {
+            initServiceMap();
+            
+            const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
+            let exampleIndex = 0;
+            
+            setInterval(() => {
+                postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
+                exampleIndex = (exampleIndex + 1) % examples.length;
+            }, 3000);
+        });
 
-    function toggleBubble() {
-        whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
-    }
+        // ===== WhatsApp Floating Button =====
+        const whatsappConfig = {
+            phoneNumber: "447827784204",
+            companyName: "Green Glo Cleaning Co",
+            defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
+        };
 
-    function openBubble() {
-        whatsappBubble.classList.add('active');
-        whatsappMessageInput.focus();
-        whatsappNotification.style.display = 'none';
-        localStorage.setItem('whatsappNotificationRead', 'true');
-    }
+        const whatsappButton = document.getElementById('whatsappButton');
+        const whatsappBubble = document.getElementById('whatsappBubble');
+        const whatsappNotification = document.getElementById('whatsappNotification');
+        const whatsappMessageInput = document.getElementById('whatsappMessage');
+        const statusText = document.getElementById('statusText');
 
-    function closeBubble() {
-        whatsappBubble.classList.remove('active');
-    }
+        function toggleBubble() {
+            whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
+        }
 
-    function sendWhatsAppMessage() {
-        let message = whatsappMessageInput.value.trim();
-        if (!message) message = whatsappConfig.defaultMessage;
-
-        const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-
-        window.open(whatsappUrl, '_blank');
-        closeBubble();
-        whatsappMessageInput.value = '';
-    }
-
-    function checkNotificationStatus() {
-        const notificationRead = localStorage.getItem('whatsappNotificationRead');
-        const lastVisit = localStorage.getItem('lastWhatsAppVisit');
-        const now = new Date().getTime();
-
-        if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
-            whatsappNotification.style.display = 'flex';
-        } else {
+        function openBubble() {
+            whatsappBubble.classList.add('active');
+            whatsappMessageInput.focus();
             whatsappNotification.style.display = 'none';
+            localStorage.setItem('whatsappNotificationRead', 'true');
         }
-        localStorage.setItem('lastWhatsAppVisit', now.toString());
-    }
 
-    function updateWorkingStatus() {
-        const now = new Date();
-        const day = now.getDay();
-        const hour = now.getHours();
-
-        const isWorkingHours = (
-            (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
-            (day === 6 && hour >= 9 && hour < 18)
-        );
-
-        if (statusText) {
-            statusText.textContent = isWorkingHours
-                ? "Typically replies instantly • Follow @greenglocleaningco"
-                : "Will reply during working hours • Follow @greenglocleaningco";
-            statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
+        function closeBubble() {
+            whatsappBubble.classList.remove('active');
         }
-    }
 
-    document.addEventListener('click', function (event) {
-        if (!whatsappButton.contains(event.target) &&
-            !whatsappBubble.contains(event.target) &&
-            whatsappBubble.classList.contains('active')) {
+        function sendWhatsAppMessage() {
+            let message = whatsappMessageInput.value.trim();
+            if (!message) message = whatsappConfig.defaultMessage;
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+
+            window.open(whatsappUrl, '_blank');
             closeBubble();
+            whatsappMessageInput.value = '';
         }
-    });
 
-    if (whatsappMessageInput) {
-        whatsappMessageInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendWhatsAppMessage();
+        function checkNotificationStatus() {
+            const notificationRead = localStorage.getItem('whatsappNotificationRead');
+            const lastVisit = localStorage.getItem('lastWhatsAppVisit');
+            const now = new Date().getTime();
+
+            if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
+                whatsappNotification.style.display = 'flex';
+            } else {
+                whatsappNotification.style.display = 'none';
+            }
+            localStorage.setItem('lastWhatsAppVisit', now.toString());
+        }
+
+        function updateWorkingStatus() {
+            const now = new Date();
+            const day = now.getDay();
+            const hour = now.getHours();
+
+            const isWorkingHours = (
+                (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
+                (day === 6 && hour >= 9 && hour < 18)
+            );
+
+            if (statusText) {
+                statusText.textContent = isWorkingHours
+                    ? "Typically replies instantly • Follow @greenglocleaningco"
+                    : "Will reply during working hours • Follow @greenglocleaningco";
+                statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
+            }
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!whatsappButton.contains(event.target) &&
+                !whatsappBubble.contains(event.target) &&
+                whatsappBubble.classList.contains('active')) {
+                closeBubble();
             }
         });
-    }
 
-    checkNotificationStatus();
-    updateWorkingStatus();
-    setInterval(updateWorkingStatus, 60000);
-
-    // ============================================
-    // EMAILJS POPUP SYSTEM
-    // ============================================
-    
-    // EmailJS Configuration
-    const EMAIL_CONFIG = {
-        publicKey: 'qS1v1ZEwi4XnBl1As',
-        serviceId: 'service_cj7heuj',
-        templateId: 'template_xe4rngx',
-        couponCode: 'NEWCUSTOMER10',
-        couponPercent: 10,
-        popupDelay: 3000
-    };
-
-    // DOM Elements for Email Popup
-    const emailPopup = document.getElementById('emailPopup');
-    const closeEmailPopup = document.getElementById('closeEmailPopup');
-    const discountForm = document.getElementById('discountForm');
-    const userEmailInput = document.getElementById('userEmail');
-    const emailError = document.getElementById('emailError');
-    const submitEmailBtn = document.getElementById('submitEmail');
-    const emailFormDiv = document.getElementById('emailForm');
-    const successMessage = document.getElementById('successMessage');
-    const sentEmail = document.getElementById('sentEmail');
-    const couponCodeDisplay = document.getElementById('couponCode');
-
-    // Initialize EmailJS
-    (function() {
-        try {
-            emailjs.init(EMAIL_CONFIG.publicKey);
-            console.log('✅ EmailJS initialized');
-        } catch (e) {
-            console.error('❌ EmailJS init error:', e);
+        if (whatsappMessageInput) {
+            whatsappMessageInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendWhatsAppMessage();
+                }
+            });
         }
-    })();
 
-    // Show popup after delay
-    function showEmailPopup() {
-        const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
-        if (hasSubmittedEmail) {
-            console.log('User already received discount - not showing popup');
-            return;
-        }
-        
-        const lastPopupTime = localStorage.getItem('greenglo_popup_last_shown');
-        const now = Date.now();
-        const oneDay = 24 * 60 * 60 * 1000;
-        
-        if (lastPopupTime && (now - parseInt(lastPopupTime)) < oneDay) {
-            console.log('Popup shown recently - not showing again');
-            return;
-        }
-        
-        setTimeout(() => {
-            emailPopup.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            localStorage.setItem('greenglo_popup_last_shown', now.toString());
-            console.log('📧 Email popup shown');
-        }, EMAIL_CONFIG.popupDelay);
-    }
+        checkNotificationStatus();
+        updateWorkingStatus();
+        setInterval(updateWorkingStatus, 60000);
 
-    // Close popup
-    function closeEmailPopupFunc() {
-        emailPopup.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // Validate email
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
-    }
-
-    // Send email using EmailJS
-    async function sendDiscountEmail(email) {
-        try {
-            console.log('📤 Sending email to:', email);
-            
-            // Template parameters - these must match your EmailJS template variables
-            const templateParams = {
-                email: email,                           // Recipient's email address
-                from_name: 'GreenGlo Cleaning Co',     // Company name
-                coupon_code: EMAIL_CONFIG.couponCode,  // Coupon code: NEWCUSTOMER10
-                discount_percent: EMAIL_CONFIG.couponPercent.toString(), // "10" as string
-                phone_number: '07827 784204',          // Phone number
-                book_now_link: 'https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20NEWCUSTOMER10',
-                services_page_link: 'https://greenglocleaningco.com/services.html'
-            };
-            
-            console.log('Template params:', templateParams);
-            
-            const response = await emailjs.send(
-                EMAIL_CONFIG.serviceId,
-                EMAIL_CONFIG.templateId,
-                templateParams
-            );
-            
-            console.log('✅ Email sent successfully:', response);
-            return { success: true, data: response };
-            
-        } catch (error) {
-            console.error('❌ Error sending email:', error);
-            console.error('Error text:', error.text);
-            throw error;
-        }
-    }
-
-    // Show success message
-    function showSuccessMessage(email) {
-        sentEmail.textContent = email;
-        couponCodeDisplay.textContent = EMAIL_CONFIG.couponCode;
-        emailFormDiv.style.display = 'none';
-        successMessage.classList.add('show');
+        // ============================================
+        // EMAILJS POPUP SYSTEM - FIXED
+        // ============================================
         
-        // Save to localStorage
-        localStorage.setItem('greenglo_discount_received', 'true');
-        localStorage.setItem('greenglo_user_email', email);
-        localStorage.setItem('greenglo_coupon_code', EMAIL_CONFIG.couponCode);
-        
-        // Auto-close after 10 seconds
-        setTimeout(() => {
-            if (emailPopup.classList.contains('active')) {
-                closeEmailPopupFunc();
+        // EmailJS Configuration
+        const EMAIL_CONFIG = {
+            publicKey: 'qS1v1ZEwi4XnBl1As',
+            serviceId: 'service_cj7heuj',
+            templateId: 'template_xe4rngx',
+            couponCode: 'NEWCUSTOMER10',
+            couponPercent: 10,
+            popupDelay: 3000
+        };
+
+        // DOM Elements for Email Popup - FIXED VARIABLE NAMES
+        const emailPopupElement = document.getElementById('emailPopup');
+        const closeEmailPopupBtn = document.getElementById('closeEmailPopup');
+        const discountFormElement = document.getElementById('discountForm');
+        const userEmailElement = document.getElementById('userEmail');
+        const emailErrorElement = document.getElementById('emailError');
+        const submitEmailElement = document.getElementById('submitEmail');
+        const emailFormElement = document.getElementById('emailForm');
+        const successMessageElement = document.getElementById('successMessage');
+        const sentEmailElement = document.getElementById('sentEmail');
+        const couponCodeElement = document.getElementById('couponCode');
+
+        // Initialize EmailJS
+        (function() {
+            try {
+                emailjs.init(EMAIL_CONFIG.publicKey);
+                console.log('✅ EmailJS initialized');
+            } catch (e) {
+                console.error('❌ EmailJS init error:', e);
             }
-        }, 10000);
-    }
+        })();
 
-    // Handle form submission
-    discountForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = userEmailInput.value.trim();
-        
-        if (!validateEmail(email)) {
-            userEmailInput.classList.add('error');
-            emailError.classList.add('show');
-            userEmailInput.focus();
-            return;
-        }
-        
-        userEmailInput.classList.remove('error');
-        emailError.classList.remove('show');
-        
-        // Update button to show loading
-        submitEmailBtn.disabled = true;
-        const originalBtnText = submitEmailBtn.innerHTML;
-        submitEmailBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        
-        try {
-            const result = await sendDiscountEmail(email);
-            
-            if (result.success) {
-                console.log('✅ Email processed successfully');
-                showSuccessMessage(email);
-            } else {
-                throw new Error('Failed to send email');
+        // Show popup after delay
+        function showEmailPopup() {
+            const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
+            if (hasSubmittedEmail) {
+                console.log('User already received discount - not showing popup');
+                return;
             }
             
-        } catch (error) {
-            console.error('❌ Error:', error);
+            const lastPopupTime = localStorage.getItem('greenglo_popup_last_shown');
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000;
             
-            // Show user-friendly error
-            alert('Sorry, there was an error sending the email. Please try again or contact us via WhatsApp.');
+            if (lastPopupTime && (now - parseInt(lastPopupTime)) < oneDay) {
+                console.log('Popup shown recently - not showing again');
+                return;
+            }
             
-            // Reset button
-            submitEmailBtn.disabled = false;
-            submitEmailBtn.innerHTML = originalBtnText;
+            setTimeout(() => {
+                emailPopupElement.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                localStorage.setItem('greenglo_popup_last_shown', now.toString());
+                console.log('📧 Email popup shown');
+            }, EMAIL_CONFIG.popupDelay);
         }
-    });
 
-    // Event Listeners for Email Popup
-    closeEmailPopup.addEventListener('click', closeEmailPopupFunc);
-
-    emailPopup.addEventListener('click', (e) => {
-        if (e.target === emailPopup) {
-            closeEmailPopupFunc();
+        // Close popup
+        function closeEmailPopupFunction() {
+            emailPopupElement.classList.remove('active');
+            document.body.style.overflow = '';
         }
-    });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && emailPopup.classList.contains('active')) {
-            closeEmailPopupFunc();
+        // Validate email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
         }
-    });
 
-    // Initialize Email Popup on page load
-    document.addEventListener('DOMContentLoaded', () => {
-        showEmailPopup();
-        
-        // Pre-fill email if previously saved
-        const savedEmail = localStorage.getItem('greenglo_user_email');
-        if (savedEmail) {
-            userEmailInput.value = savedEmail;
+        // Send email using EmailJS
+        async function sendDiscountEmail(email) {
+            try {
+                console.log('📤 Sending email to:', email);
+                
+                // Template parameters - these must match your EmailJS template variables
+                const templateParams = {
+                    email: email,                           // This matches {{email}} in template
+                    from_name: 'GreenGlo Cleaning Co',     // Company name
+                    coupon_code: EMAIL_CONFIG.couponCode,  // Coupon code: NEWCUSTOMER10
+                    discount_percent: EMAIL_CONFIG.couponPercent.toString(), // "10" as string
+                    phone_number: '07827 784204',          // Phone number
+                    book_now_link: 'https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20NEWCUSTOMER10',
+                    services_page_link: 'https://greenglocleaningco.com/services.html'
+                };
+                
+                console.log('Template params:', templateParams);
+                
+                const response = await emailjs.send(
+                    EMAIL_CONFIG.serviceId,
+                    EMAIL_CONFIG.templateId,
+                    templateParams
+                );
+                
+                console.log('✅ Email sent successfully:', response);
+                return { success: true, data: response };
+                
+            } catch (error) {
+                console.error('❌ Error sending email:', error);
+                console.error('Error text:', error.text);
+                throw error;
+            }
         }
-        
-        console.log('📧 Email popup system initialized');
-    });
-</script>
+
+        // Show success message
+        function showSuccessMessage(email) {
+            sentEmailElement.textContent = email;
+            couponCodeElement.textContent = EMAIL_CONFIG.couponCode;
+            emailFormElement.style.display = 'none';
+            successMessageElement.classList.add('show');
+            
+            // Save to localStorage
+            localStorage.setItem('greenglo_discount_received', 'true');
+            localStorage.setItem('greenglo_user_email', email);
+            localStorage.setItem('greenglo_coupon_code', EMAIL_CONFIG.couponCode);
+            
+            // Auto-close after 10 seconds
+            setTimeout(() => {
+                if (emailPopupElement.classList.contains('active')) {
+                    closeEmailPopupFunction();
+                }
+            }, 10000);
+        }
+
+        // Handle form submission
+        discountFormElement.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = userEmailElement.value.trim();
+            
+            if (!validateEmail(email)) {
+                userEmailElement.classList.add('error');
+                emailErrorElement.classList.add('show');
+                userEmailElement.focus();
+                return;
+            }
+            
+            userEmailElement.classList.remove('error');
+            emailErrorElement.classList.remove('show');
+            
+            // Update button to show loading
+            submitEmailElement.disabled = true;
+            const originalBtnText = submitEmailElement.innerHTML;
+            submitEmailElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            try {
+                const result = await sendDiscountEmail(email);
+                
+                if (result.success) {
+                    console.log('✅ Email processed successfully');
+                    showSuccessMessage(email);
+                } else {
+                    throw new Error('Failed to send email');
+                }
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                
+                // Show user-friendly error
+                alert('Sorry, there was an error sending the email. Please try again or contact us via WhatsApp.');
+                
+                // Reset button
+                submitEmailElement.disabled = false;
+                submitEmailElement.innerHTML = originalBtnText;
+            }
+        });
+
+        // Event Listeners for Email Popup
+        closeEmailPopupBtn.addEventListener('click', closeEmailPopupFunction);
+
+        emailPopupElement.addEventListener('click', (e) => {
+            if (e.target === emailPopupElement) {
+                closeEmailPopupFunction();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && emailPopupElement.classList.contains('active')) {
+                closeEmailPopupFunction();
+            }
+        });
+
+        // Initialize Email Popup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Show email popup after delay
+            setTimeout(() => {
+                showEmailPopup();
+            }, 1500);
+            
+            // Pre-fill email if previously saved
+            const savedEmail = localStorage.getItem('greenglo_user_email');
+            if (savedEmail) {
+                userEmailElement.value = savedEmail;
+            }
+            
+            console.log('📧 Email popup system initialized');
+        });
+    </script>
 </body>
 </html>
-
