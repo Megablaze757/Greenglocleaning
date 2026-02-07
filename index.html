@@ -158,6 +158,227 @@
             min-height: 64px;
         }
 
+        /* ===== Email Popup Modal ===== */
+        .email-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .email-popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .email-popup-modal {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .email-popup-overlay.active .email-popup-modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .email-popup-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .email-popup-header h3 {
+            color: var(--white);
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .email-popup-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .email-popup-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-size: 1.25rem;
+        }
+
+        .email-popup-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .email-popup-content {
+            padding: 2.5rem 2rem;
+        }
+
+        .email-popup-content p {
+            text-align: center;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .email-popup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .email-popup-input-group {
+            position: relative;
+        }
+
+        .email-popup-input {
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .email-popup-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .email-popup-input.error {
+            border-color: #EF4444;
+        }
+
+        .email-popup-error {
+            color: #EF4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .email-popup-error.show {
+            display: block;
+        }
+
+        .email-popup-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .email-popup-checkbox input {
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .email-popup-checkbox label {
+            font-size: 0.875rem;
+            color: var(--dark-gray);
+            line-height: 1.5;
+        }
+
+        .email-popup-checkbox a {
+            color: var(--primary-green);
+            text-decoration: underline;
+        }
+
+        .email-popup-submit {
+            width: 100%;
+            padding: 1.25rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .email-popup-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .email-popup-success {
+            text-align: center;
+            padding: 2rem;
+            display: none;
+        }
+
+        .email-popup-success.show {
+            display: block;
+        }
+
+        .email-popup-success i {
+            font-size: 3.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .email-popup-success h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-green);
+        }
+
+        .email-popup-success p {
+            color: var(--medium-gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .coupon-code {
+            display: inline-block;
+            background: var(--light-green);
+            color: var(--dark-green);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin: 1.5rem 0;
+            border: 2px dashed var(--primary-green);
+        }
+
+        .email-popup-footer {
+            text-align: center;
+            padding: 1rem 2rem 2rem;
+            border-top: 1px solid var(--light-gray);
+            color: var(--medium-gray);
+            font-size: 0.875rem;
+        }
+
         /* ===== Premium Navigation Bar ===== */
         .navbar {
             position: fixed;
@@ -1267,264 +1488,6 @@
             font-size: 0.9rem;
         }
 
-        /* ===== Email Popup Modal ===== */
-        .email-popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .email-popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .email-popup-modal {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            transform: translateY(20px) scale(0.95);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .email-popup-overlay.active .email-popup-modal {
-            transform: translateY(0) scale(1);
-        }
-
-        .email-popup-header {
-            background: var(--gradient-primary);
-            color: var(--white);
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .email-popup-header h3 {
-            color: var(--white);
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .email-popup-header p {
-            opacity: 0.9;
-            font-size: 1rem;
-        }
-
-        .email-popup-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            color: var(--white);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .email-popup-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-
-        .email-popup-content {
-            padding: 2.5rem 2rem;
-        }
-
-        .email-popup-content p {
-            text-align: center;
-            color: var(--dark-gray);
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-        }
-
-        .email-popup-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .email-popup-input-group {
-            position: relative;
-        }
-
-        .email-popup-input {
-            width: 100%;
-            padding: 1.25rem 1.5rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            transition: var(--transition);
-            background: var(--white);
-        }
-
-        .email-popup-input:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-        }
-
-        .email-popup-input.error {
-            border-color: #EF4444;
-        }
-
-        .email-popup-error {
-            color: #EF4444;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
-
-        .email-popup-error.show {
-            display: block;
-        }
-
-        .email-popup-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .email-popup-checkbox input {
-            margin-top: 0.25rem;
-            flex-shrink: 0;
-        }
-
-        .email-popup-checkbox label {
-            font-size: 0.875rem;
-            color: var(--dark-gray);
-            line-height: 1.5;
-        }
-
-        .email-popup-checkbox a {
-            color: var(--primary-green);
-            text-decoration: underline;
-        }
-
-        .email-popup-submit {
-            width: 100%;
-            padding: 1.25rem;
-            font-size: 1.125rem;
-        }
-
-        .email-popup-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .email-popup-success {
-            text-align: center;
-            padding: 2rem;
-            display: none;
-        }
-
-        .email-popup-success.show {
-            display: block;
-        }
-
-        .email-popup-success i {
-            font-size: 3rem;
-            color: var(--primary-green);
-            margin-bottom: 1.5rem;
-        }
-
-        .email-popup-success h4 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark-green);
-        }
-
-        .email-popup-success p {
-            color: var(--medium-gray);
-            margin-bottom: 1.5rem;
-        }
-
-        .coupon-code {
-            display: inline-block;
-            background: var(--light-green);
-            color: var(--dark-green);
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin: 1.5rem 0;
-            border: 2px dashed var(--primary-green);
-        }
-
-        .email-popup-footer {
-            text-align: center;
-            padding: 1rem 2rem 2rem;
-            border-top: 1px solid var(--light-gray);
-            color: var(--medium-gray);
-            font-size: 0.875rem;
-        }
-
-        /* ===== Floating Email Button ===== */
-        .floating-email-button {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            z-index: 9998;
-            width: 60px;
-            height: 60px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            transition: var(--transition);
-            border: none;
-        }
-
-        .floating-email-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
-        }
-
-        .floating-email-button .notification {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #EF4444;
-            color: var(--white);
-            font-size: 0.75rem;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         /* ===== Premium Footer ===== */
         .footer {
             background: var(--dark-green);
@@ -1798,13 +1761,20 @@
 
             .email-popup-modal {
                 max-width: 95%;
+                margin: 1rem;
             }
             
-            .floating-email-button {
-                bottom: 90px;
-                right: 20px;
-                width: 56px;
-                height: 56px;
+            .email-popup-header {
+                padding: 1.75rem 1.5rem;
+            }
+            
+            .email-popup-content {
+                padding: 1.75rem 1.5rem;
+            }
+            
+            .coupon-code {
+                font-size: 1.25rem;
+                padding: 0.875rem 1.5rem;
             }
         }
 
@@ -1860,13 +1830,83 @@
 
             .coupon-code {
                 padding: 0.75rem 1rem;
-                font-size: 1rem;
+                font-size: 1.125rem;
+                letter-spacing: 1px;
+            }
+            
+            .email-popup-close {
+                top: 1rem;
+                right: 1rem;
+                width: 36px;
+                height: 36px;
+                font-size: 1.125rem;
             }
         }
     </style>
 </head>
 
 <body>
+    <!-- Email Popup Modal -->
+    <div class="email-popup-overlay" id="emailPopup">
+        <div class="email-popup-modal">
+            <div class="email-popup-header">
+                <h3>Get 10% Off Your First Clean!</h3>
+                <p>Subscribe to receive your exclusive discount code</p>
+                <button class="email-popup-close" id="closeEmailPopup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="email-popup-content">
+                <div id="emailForm">
+                    <p>Enter your email below to receive your 10% discount code valid for first-time customers.</p>
+                    
+                    <form class="email-popup-form" id="discountForm">
+                        <div class="email-popup-input-group">
+                            <input type="email" 
+                                   class="email-popup-input" 
+                                   id="userEmail" 
+                                   placeholder="Your email address" 
+                                   required>
+                            <div class="email-popup-error" id="emailError">
+                                Please enter a valid email address
+                            </div>
+                        </div>
+                        
+                        <div class="email-popup-checkbox">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <label for="agreeTerms">
+                                I agree to receive marketing emails from GreenGlo Cleaners. 
+                                You can unsubscribe at any time. 
+                                <a href="#" target="_blank">Privacy Policy</a>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn email-popup-submit" id="submitEmail">
+                            <i class="fas fa-gift"></i> Get My 10% Discount Code
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="email-popup-success" id="successMessage">
+                    <i class="fas fa-check-circle"></i>
+                    <h4>Success! Check Your Email</h4>
+                    <p>Your 10% discount code has been sent to:</p>
+                    <p style="font-weight: 600;" id="sentEmail"></p>
+                    <div class="coupon-code" id="couponCode">NEWCUSTOMER10</div>
+                    <p style="font-size: 0.9rem;">This code is valid for first-time customers only.</p>
+                    <button class="btn" onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code'">
+                        <i class="fas fa-whatsapp"></i> Book Now with Discount
+                    </button>
+                </div>
+            </div>
+            
+            <div class="email-popup-footer">
+                <p>Limited time offer. One use per customer.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Mobile Menu Overlay -->
     <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
 
@@ -2499,73 +2539,6 @@
         </div>
     </section>
 
-    <!-- Email Popup Modal -->
-    <div class="email-popup-overlay" id="emailPopup">
-        <div class="email-popup-modal">
-            <div class="email-popup-header">
-                <h3>Get 10% Off Your First Clean!</h3>
-                <p>Subscribe to receive your exclusive discount code</p>
-                <button class="email-popup-close" id="closeEmailPopup">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="email-popup-content">
-                <div id="emailForm">
-                    <p>Enter your email below to receive your 10% discount code valid for first-time customers.</p>
-                    
-                    <form class="email-popup-form" id="discountForm">
-                        <div class="email-popup-input-group">
-                            <input type="email" 
-                                   class="email-popup-input" 
-                                   id="userEmail" 
-                                   placeholder="Your email address" 
-                                   required>
-                            <div class="email-popup-error" id="emailError">
-                                Please enter a valid email address
-                            </div>
-                        </div>
-                        
-                        <div class="email-popup-checkbox">
-                            <input type="checkbox" id="agreeTerms" required>
-                            <label for="agreeTerms">
-                                I agree to receive marketing emails from GreenGlo Cleaners. 
-                                You can unsubscribe at any time. 
-                                <a href="#" target="_blank">Privacy Policy</a>
-                            </label>
-                        </div>
-                        
-                        <button type="submit" class="btn email-popup-submit" id="submitEmail">
-                            <i class="fas fa-gift"></i> Get My 10% Discount Code
-                        </button>
-                    </form>
-                </div>
-                
-                <div class="email-popup-success" id="successMessage">
-                    <i class="fas fa-check-circle"></i>
-                    <h4>Success! Check Your Email</h4>
-                    <p>Your 10% discount code has been sent to:</p>
-                    <p style="font-weight: 600;" id="sentEmail"></p>
-                    <div class="coupon-code" id="couponCode">NEWCUSTOMER10</div>
-                    <p style="font-size: 0.9rem;">This code is valid for first-time customers only.</p>
-                    <button class="btn" onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code'">
-                        <i class="fas fa-whatsapp"></i> Book Now with Discount
-                    </button>
-                </div>
-            </div>
-            
-            <div class="email-popup-footer">
-                <p>Limited time offer. One use per customer.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Floating Email Button -->
-    <button class="floating-email-button" id="floatingEmailBtn" title="Get 10% Off">
-        <i class="fas fa-envelope"></i>
-        <span class="notification" id="emailNotification">10%</span>
-    </button>
-
     <!-- Floating WhatsApp Button for Green Glo Cleaning Co -->
     <style>
         /* WhatsApp Button Core Styles */
@@ -2573,7 +2546,7 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            z-index: 9999;
+            z-index: 9998;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
 
@@ -2944,6 +2917,276 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
+        // ===== Email Popup System with Supabase & Mailjet =====
+        const EMAIL_CONFIG = {
+            // Your Supabase credentials
+            supabaseUrl: 'https://faxjeniohetefqwcsefi.supabase.co',
+            supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGplbmlvaGV0ZXF3Y3NlZmkiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNzE5MzIyNTM5LCJleHAiOjIwMzQ4OTg1Mzl9.a31689c908b6e163c2135ef0c9093bc8',
+            
+            // Your Mailjet API credentials
+            mailjetPublicKey: 'a31689c908b6e163c2135ef0c9093bc8',
+            mailjetPrivateKey: '1598d2ec1d0606b66744d8b21455681a',
+            senderEmail: 'info@greenglocleaningco.com',
+            senderName: 'GreenGlo Cleaning Co',
+            
+            // Stripe coupon details
+            couponCode: 'NEWCUSTOMER10',
+            couponPercent: 10,
+            
+            // Popup settings
+            popupDelay: 3000, // 3 seconds delay
+            localStorageKey: 'greenglo_email_popup_shown'
+        };
+
+        // Initialize Supabase client
+        const supabaseClient = supabase.createClient(
+            EMAIL_CONFIG.supabaseUrl,
+            EMAIL_CONFIG.supabaseKey
+        );
+
+        // DOM Elements for Email Popup
+        const emailPopup = document.getElementById('emailPopup');
+        const closeEmailPopup = document.getElementById('closeEmailPopup');
+        const discountForm = document.getElementById('discountForm');
+        const userEmailInput = document.getElementById('userEmail');
+        const emailError = document.getElementById('emailError');
+        const submitEmailBtn = document.getElementById('submitEmail');
+        const emailForm = document.getElementById('emailForm');
+        const successMessage = document.getElementById('successMessage');
+        const sentEmail = document.getElementById('sentEmail');
+        const couponCode = document.getElementById('couponCode');
+
+        // Show popup after delay
+        function showEmailPopup() {
+            const hasSeenPopup = localStorage.getItem(EMAIL_CONFIG.localStorageKey);
+            
+            if (!hasSeenPopup) {
+                setTimeout(() => {
+                    emailPopup.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }, EMAIL_CONFIG.popupDelay);
+            }
+        }
+
+        // Close popup
+        function closePopup() {
+            emailPopup.classList.remove('active');
+            document.body.style.overflow = '';
+            localStorage.setItem(EMAIL_CONFIG.localStorageKey, 'true');
+        }
+
+        // Validate email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Save email to Supabase
+        async function saveEmailToSupabase(email) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('email_subscribers')
+                    .insert([
+                        {
+                            email: email,
+                            coupon_code: EMAIL_CONFIG.couponCode,
+                            coupon_used: false,
+                            source: 'website_popup',
+                            subscribed_at: new Date().toISOString()
+                        }
+                    ]);
+
+                if (error) {
+                    console.error('Supabase Error:', error);
+                    throw error;
+                }
+                return { success: true, data };
+            } catch (error) {
+                console.error('Error saving to Supabase:', error);
+                return { success: false, error };
+            }
+        }
+
+        // Send email via Mailjet
+        async function sendDiscountEmail(email) {
+            try {
+                // Mailjet API endpoint
+                const response = await fetch('https://api.mailjet.com/v3.1/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa(`${EMAIL_CONFIG.mailjetPublicKey}:${EMAIL_CONFIG.mailjetPrivateKey}`)
+                    },
+                    body: JSON.stringify({
+                        Messages: [
+                            {
+                                From: {
+                                    Email: EMAIL_CONFIG.senderEmail,
+                                    Name: EMAIL_CONFIG.senderName
+                                },
+                                To: [
+                                    {
+                                        Email: email,
+                                        Name: email.split('@')[0]
+                                    }
+                                ],
+                                Subject: `🎉 Your 10% Discount Code from GreenGlo Cleaning Co!`,
+                                HTMLPart: `
+                                    <!DOCTYPE html>
+                                    <html>
+                                    <head>
+                                        <style>
+                                            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                                            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                                            .header { background: linear-gradient(135deg, #10B981, #0D9488); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+                                            .content { background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                                            .coupon-box { background: #D1FAE5; border: 2px dashed #10B981; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0; }
+                                            .coupon-code { font-family: 'Courier New', monospace; font-size: 24px; font-weight: bold; color: #065F46; }
+                                            .cta-button { display: inline-block; background: #10B981; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; }
+                                            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }
+                                        </style>
+                                    </head>
+                                    <body>
+                                        <div class="container">
+                                            <div class="header">
+                                                <h1>Welcome to GreenGlo Cleaning Co!</h1>
+                                                <p>Your premium eco-friendly cleaning service</p>
+                                            </div>
+                                            <div class="content">
+                                                <h2>🎉 Your Exclusive 10% Discount!</h2>
+                                                <p>Thank you for subscribing! Here's your special discount code for your first clean with us:</p>
+                                                
+                                                <div class="coupon-box">
+                                                    <h3>Use this code at checkout:</h3>
+                                                    <div class="coupon-code">${EMAIL_CONFIG.couponCode}</div>
+                                                    <p><strong>${EMAIL_CONFIG.couponPercent}% off your first cleaning service</strong></p>
+                                                </div>
+                                                
+                                                <p>How to use your discount:</p>
+                                                <ol>
+                                                    <li>Contact us via WhatsApp or book online</li>
+                                                    <li>Mention the code <strong>${EMAIL_CONFIG.couponCode}</strong></li>
+                                                    <li>Get ${EMAIL_CONFIG.couponPercent}% off your first clean!</li>
+                                                </ol>
+                                                
+                                                <p><strong>Important:</strong> This code is valid for first-time customers only and can be used once.</p>
+                                                
+                                                <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20${EMAIL_CONFIG.couponCode}" class="cta-button">
+                                                    📱 Book Now on WhatsApp
+                                                </a>
+                                                
+                                                <div class="footer">
+                                                    <p>GreenGlo Cleaning Co<br>
+                                                    London, UK<br>
+                                                    Phone: 07827 784204<br>
+                                                    Email: info@greenglocleaningco.com</p>
+                                                    <p>You're receiving this email because you subscribed for our discount offer.<br>
+                                                    <a href="#" style="color: #10B981;">Unsubscribe</a> | <a href="#" style="color: #10B981;">Privacy Policy</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </body>
+                                    </html>
+                                `,
+                                TextPart: `Welcome to GreenGlo Cleaning Co!\n\nYour exclusive discount code: ${EMAIL_CONFIG.couponCode}\n\nGet ${EMAIL_CONFIG.couponPercent}% off your first cleaning service with us. This code is valid for first-time customers only.\n\nBook now via WhatsApp: https://api.whatsapp.com/send?phone=447827784204\n\nGreenGlo Cleaning Co\nLondon, UK\n07827 784204\ninfo@greenglocleaningco.com`
+                            }
+                        ]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Mailjet API error');
+                }
+
+                return { success: true };
+            } catch (error) {
+                console.error('Error sending email via Mailjet:', error);
+                return { success: false, error };
+            }
+        }
+
+        // Handle form submission
+        discountForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = userEmailInput.value.trim();
+            
+            // Validate email
+            if (!validateEmail(email)) {
+                userEmailInput.classList.add('error');
+                emailError.classList.add('show');
+                return;
+            }
+            
+            // Clear errors
+            userEmailInput.classList.remove('error');
+            emailError.classList.remove('show');
+            
+            // Disable submit button
+            submitEmailBtn.disabled = true;
+            submitEmailBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
+            try {
+                // Save to Supabase
+                const supabaseResult = await saveEmailToSupabase(email);
+                
+                if (!supabaseResult.success) {
+                    throw new Error('Failed to save email');
+                }
+                
+                // Send email via Mailjet
+                const mailjetResult = await sendDiscountEmail(email);
+                
+                if (!mailjetResult.success) {
+                    // Still show success even if email fails (email might be saved)
+                    console.warn('Email saved but Mailjet failed');
+                }
+                
+                // Show success message
+                sentEmail.textContent = email;
+                couponCode.textContent = EMAIL_CONFIG.couponCode;
+                emailForm.style.display = 'none';
+                successMessage.classList.add('show');
+                
+                // Track conversion in analytics
+                if (window.GreenGloAnalytics) {
+                    window.GreenGloAnalytics.trackConversion('email_subscription', null, email, 'discount_code');
+                }
+                
+                // Save email to localStorage
+                localStorage.setItem('greenglo_user_email', email);
+                
+            } catch (error) {
+                console.error('Error processing request:', error);
+                alert('Sorry, there was an error. Please try again or contact us directly.');
+            } finally {
+                // Re-enable button
+                submitEmailBtn.disabled = false;
+                submitEmailBtn.innerHTML = '<i class="fas fa-gift"></i> Get My 10% Discount Code';
+            }
+        });
+
+        // Event Listeners for Email Popup
+        closeEmailPopup.addEventListener('click', closePopup);
+        emailPopup.addEventListener('click', (e) => {
+            if (e.target === emailPopup) {
+                closePopup();
+            }
+        });
+
+        // Close with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && emailPopup.classList.contains('active')) {
+                closePopup();
+            }
+        });
+
+        // Initialize email popup when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Show popup after delay
+            showEmailPopup();
+        });
+
         // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileCloseBtn = document.getElementById('mobileCloseBtn');
@@ -3417,7 +3660,7 @@
             whatsappBubble.classList.remove('active');
         }
 
-        // Send WhatsApp message using your specific link format - WITH ANALYTICS TRACKING
+        // Send WhatsApp message
         function sendWhatsAppMessage() {
             let message = whatsappMessageInput.value.trim();
             if (!message) message = whatsappConfig.defaultMessage;
@@ -3428,7 +3671,7 @@
                 window.GreenGloAnalytics.trackConversion('whatsapp_message', null, null, 'general_inquiry');
             }
 
-            // Construct the URL using your exact WhatsApp API link format
+            // Construct the URL
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
 
@@ -3438,9 +3681,6 @@
             // Close bubble and reset
             closeBubble();
             whatsappMessageInput.value = '';
-
-            // Optional: Track the event (for analytics)
-            console.log('WhatsApp message initiated for:', whatsappConfig.companyName);
         }
 
         // Manage notifications
@@ -3502,907 +3742,6 @@
 
         // Update status every minute
         setInterval(updateWorkingStatus, 60000);
-
-        // ===== Email Popup System with Supabase & Mailjet =====
-        const EMAIL_CONFIG = {
-            // Your Supabase credentials
-            supabaseUrl: 'https://faxjeniohetefqwcsefi.supabase.co',
-            supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZheGplbmlvaGV0ZXF3Y3NlZmkiLCJyb2xlIjoic2VydmljZV9yb2xlIiwiaWF0IjoxNzE5MzIyNTM5LCJleHAiOjIwMzQ4OTg1Mzl9.a31689c908b6e163c2135ef0c9093bc8',
-            supabaseServiceKey: '1598d2ec1d0606b66744d8b21455681a',
-            
-            // Your Mailjet API credentials
-            mailjetPublicKey: 'a31689c908b6e163c2135ef0c9093bc8',
-            mailjetPrivateKey: '1598d2ec1d0606b66744d8b21455681a',
-            senderEmail: 'info@greenglocleaningco.com',
-            senderName: 'GreenGlo Cleaning Co',
-            
-            // Stripe coupon details
-            couponCode: 'NEWCUSTOMER10',
-            couponPercent: 10,
-            
-            // Popup settings
-            popupDelay: 3000, // 3 seconds delay
-            showFloatingButton: true,
-            localStorageKey: 'greenglo_email_popup_shown'
-        };
-
-        // Initialize Supabase client
-        const supabaseClient = supabase.createClient(
-            EMAIL_CONFIG.supabaseUrl,
-            EMAIL_CONFIG.supabaseKey
-        );
-
-        // DOM Elements for Email Popup
-        const emailPopup = document.getElementById('emailPopup');
-        const closeEmailPopup = document.getElementById('closeEmailPopup');
-        const floatingEmailBtn = document.getElementById('floatingEmailBtn');
-        const discountForm = document.getElementById('discountForm');
-        const userEmailInput = document.getElementById('userEmail');
-        const emailError = document.getElementById('emailError');
-        const submitEmailBtn = document.getElementById('submitEmail');
-        const emailForm = document.getElementById('emailForm');
-        const successMessage = document.getElementById('successMessage');
-        const sentEmail = document.getElementById('sentEmail');
-        const couponCode = document.getElementById('couponCode');
-
-        // Show popup after delay
-        function showEmailPopup() {
-            const hasSeenPopup = localStorage.getItem(EMAIL_CONFIG.localStorageKey);
-            
-            if (!hasSeenPopup) {
-                setTimeout(() => {
-                    emailPopup.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                }, EMAIL_CONFIG.popupDelay);
-            }
-        }
-
-        // Close popup
-        function closePopup() {
-            emailPopup.classList.remove('active');
-            document.body.style.overflow = '';
-            localStorage.setItem(EMAIL_CONFIG.localStorageKey, 'true');
-        }
-
-        // Validate email
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        // Save email to Supabase
-        async function saveEmailToSupabase(email) {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('email_subscribers')
-                    .insert([
-                        {
-                            email: email,
-                            coupon_code: EMAIL_CONFIG.couponCode,
-                            coupon_used: false,
-                            source: 'website_popup',
-                            subscribed_at: new Date().toISOString()
-                        }
-                    ]);
-
-                if (error) throw error;
-                return { success: true, data };
-            } catch (error) {
-                console.error('Error saving to Supabase:', error);
-                return { success: false, error };
-            }
-        }
-
-        // Send email via Mailjet
-        async function sendDiscountEmail(email) {
-            try {
-                // Mailjet API endpoint
-                const response = await fetch('https://api.mailjet.com/v3.1/send', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + btoa(`${EMAIL_CONFIG.mailjetPublicKey}:${EMAIL_CONFIG.mailjetPrivateKey}`)
-                    },
-                    body: JSON.stringify({
-                        Messages: [
-                            {
-                                From: {
-                                    Email: EMAIL_CONFIG.senderEmail,
-                                    Name: EMAIL_CONFIG.senderName
-                                },
-                                To: [
-                                    {
-                                        Email: email,
-                                        Name: email.split('@')[0]
-                                    }
-                                ],
-                                Subject: `🎉 Your 10% Discount Code from GreenGlo Cleaning Co!`,
-                                HTMLPart: `
-                                    <!DOCTYPE html>
-                                    <html>
-                                    <head>
-                                        <style>
-                                            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                                            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                                            .header { background: linear-gradient(135deg, #10B981, #0D9488); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-                                            .content { background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-                                            .coupon-box { background: #D1FAE5; border: 2px dashed #10B981; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0; }
-                                            .coupon-code { font-family: 'Courier New', monospace; font-size: 24px; font-weight: bold; color: #065F46; }
-                                            .cta-button { display: inline-block; background: #10B981; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; }
-                                            .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; }
-                                        </style>
-                                    </head>
-                                    <body>
-                                        <div class="container">
-                                            <div class="header">
-                                                <h1>Welcome to GreenGlo Cleaning Co!</h1>
-                                                <p>Your premium eco-friendly cleaning service</p>
-                                            </div>
-                                            <div class="content">
-                                                <h2>🎉 Your Exclusive 10% Discount!</h2>
-                                                <p>Thank you for subscribing! Here's your special discount code for your first clean with us:</p>
-                                                
-                                                <div class="coupon-box">
-                                                    <h3>Use this code at checkout:</h3>
-                                                    <div class="coupon-code">${EMAIL_CONFIG.couponCode}</div>
-                                                    <p><strong>${EMAIL_CONFIG.couponPercent}% off your first cleaning service</strong></p>
-                                                </div>
-                                                
-                                                <p>How to use your discount:</p>
-                                                <ol>
-                                                    <li>Contact us via WhatsApp or book online</li>
-                                                    <li>Mention the code <strong>${EMAIL_CONFIG.couponCode}</strong></li>
-                                                    <li>Get ${EMAIL_CONFIG.couponPercent}% off your first clean!</li>
-                                                </ol>
-                                                
-                                                <p><strong>Important:</strong> This code is valid for first-time customers only and can be used once.</p>
-                                                
-                                                <a href="https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20${EMAIL_CONFIG.couponCode}" class="cta-button">
-                                                    📱 Book Now on WhatsApp
-                                                </a>
-                                                
-                                                <div class="footer">
-                                                    <p>GreenGlo Cleaning Co<br>
-                                                    London, UK<br>
-                                                    Phone: 07827 784204<br>
-                                                    Email: info@greenglocleaningco.com</p>
-                                                    <p>You're receiving this email because you subscribed for our discount offer.<br>
-                                                    <a href="#" style="color: #10B981;">Unsubscribe</a> | <a href="#" style="color: #10B981;">Privacy Policy</a></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </body>
-                                    </html>
-                                `,
-                                TextPart: `Welcome to GreenGlo Cleaning Co!\n\nYour exclusive discount code: ${EMAIL_CONFIG.couponCode}\n\nGet ${EMAIL_CONFIG.couponPercent}% off your first cleaning service with us. This code is valid for first-time customers only.\n\nBook now via WhatsApp: https://api.whatsapp.com/send?phone=447827784204\n\nGreenGlo Cleaning Co\nLondon, UK\n07827 784204\ninfo@greenglocleaningco.com`
-                            }
-                        ]
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Mailjet API error');
-                }
-
-                return { success: true };
-            } catch (error) {
-                console.error('Error sending email via Mailjet:', error);
-                return { success: false, error };
-            }
-        }
-
-        // Handle form submission
-        discountForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = userEmailInput.value.trim();
-            
-            // Validate email
-            if (!validateEmail(email)) {
-                userEmailInput.classList.add('error');
-                emailError.classList.add('show');
-                return;
-            }
-            
-            // Clear errors
-            userEmailInput.classList.remove('error');
-            emailError.classList.remove('show');
-            
-            // Disable submit button
-            submitEmailBtn.disabled = true;
-            submitEmailBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            
-            try {
-                // Save to Supabase
-                const supabaseResult = await saveEmailToSupabase(email);
-                
-                if (!supabaseResult.success) {
-                    throw new Error('Failed to save email');
-                }
-                
-                // Send email via Mailjet
-                const mailjetResult = await sendDiscountEmail(email);
-                
-                if (!mailjetResult.success) {
-                    // Still show success even if email fails (email might be saved)
-                    console.warn('Email saved but Mailjet failed');
-                }
-                
-                // Show success message
-                sentEmail.textContent = email;
-                couponCode.textContent = EMAIL_CONFIG.couponCode;
-                emailForm.style.display = 'none';
-                successMessage.classList.add('show');
-                
-                // Track conversion in analytics
-                if (window.GreenGloAnalytics) {
-                    window.GreenGloAnalytics.trackConversion('email_subscription', null, email, 'discount_code');
-                }
-                
-                // Save email to localStorage
-                localStorage.setItem('greenglo_user_email', email);
-                
-            } catch (error) {
-                console.error('Error processing request:', error);
-                alert('Sorry, there was an error. Please try again or contact us directly.');
-            } finally {
-                // Re-enable button
-                submitEmailBtn.disabled = false;
-                submitEmailBtn.innerHTML = '<i class="fas fa-gift"></i> Get My 10% Discount Code';
-            }
-        });
-
-        // Event Listeners for Email Popup
-        closeEmailPopup.addEventListener('click', closePopup);
-        emailPopup.addEventListener('click', (e) => {
-            if (e.target === emailPopup) {
-                closePopup();
-            }
-        });
-
-        floatingEmailBtn.addEventListener('click', () => {
-            emailPopup.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        // Close with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && emailPopup.classList.contains('active')) {
-                closePopup();
-            }
-        });
-
-        // Initialize email popup when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            // Show popup after delay
-            showEmailPopup();
-            
-            // Show floating button
-            if (EMAIL_CONFIG.showFloatingButton) {
-                floatingEmailBtn.style.display = 'flex';
-            }
-            
-            // Check if user already subscribed (hide notification)
-            const userEmail = localStorage.getItem('greenglo_user_email');
-            if (userEmail) {
-                document.getElementById('emailNotification').style.display = 'none';
-            }
-        });
-
-        // =============================================
-        // FIXED ANALYTICS TRACKING SYSTEM
-        // =============================================
-        const ANALYTICS_CONFIG = {
-            supabaseUrl: 'https://faxjeniohetefqwcsefi.supabase.co',
-            supabaseKey: 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7',
-            trackingEnabled: true,
-            sessionTimeout: 30 * 60 * 1000, // 30 minutes
-            pageviewTimeout: 10 * 1000, // 10 seconds for time on page
-            debugMode: false
-        };
-
-        // Analytics state
-        let analytics = {
-            sessionId: null,
-            currentPage: null,
-            lastActivity: Date.now(),
-            pageStartTime: Date.now(),
-            scrollDepth: 0,
-            sessionStartTime: Date.now(),
-            supabaseClient: null,
-            deviceInfo: {},
-            utmParams: {}
-        };
-
-        // Initialize analytics
-        function initAnalytics() {
-            try {
-                console.log('[Analytics] Initializing...');
-                
-                // Generate session ID
-                analytics.sessionId = generateSessionId();
-                
-                // Get device and browser information
-                analytics.deviceInfo = getDeviceInfo();
-                
-                // Parse UTM parameters
-                analytics.utmParams = getUtmParams();
-                
-                // Initialize Supabase client
-                analytics.supabaseClient = supabase.createClient(
-                    ANALYTICS_CONFIG.supabaseUrl,
-                    ANALYTICS_CONFIG.supabaseKey
-                );
-                console.log('[Analytics] Supabase client initialized');
-                
-                // Start tracking
-                startSessionTracking();
-                setupEventListeners();
-                trackPageView();
-                
-                // Set up session timeout
-                setInterval(checkSessionTimeout, 60000); // Check every minute
-                
-                console.log('[Analytics] Tracking initialized successfully');
-                
-            } catch (error) {
-                console.error('[Analytics] Initialization error:', error);
-            }
-        }
-
-        // Generate unique session ID
-        function generateSessionId() {
-            const storedSessionId = localStorage.getItem('gg_session_id');
-            const lastSessionTime = localStorage.getItem('gg_session_time');
-            const now = Date.now();
-            
-            // If session exists and is less than 30 minutes old, keep it
-            if (storedSessionId && lastSessionTime && (now - parseInt(lastSessionTime)) < ANALYTICS_CONFIG.sessionTimeout) {
-                return storedSessionId;
-            }
-            
-            // Generate new session ID
-            const sessionId = 'gg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('gg_session_id', sessionId);
-            localStorage.setItem('gg_session_time', now.toString());
-            
-            return sessionId;
-        }
-
-        // Get device and browser information
-        function getDeviceInfo() {
-            const ua = navigator.userAgent;
-            let deviceType = 'desktop';
-            let browser = 'unknown';
-            let os = 'unknown';
-            
-            // Detect device type
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
-                deviceType = 'mobile';
-            } else if (/Tablet|iPad/i.test(ua)) {
-                deviceType = 'tablet';
-            }
-            
-            // Detect browser
-            if (ua.includes('Chrome') && !ua.includes('Edg')) {
-                browser = 'Chrome';
-            } else if (ua.includes('Firefox')) {
-                browser = 'Firefox';
-            } else if (ua.includes('Safari') && !ua.includes('Chrome')) {
-                browser = 'Safari';
-            } else if (ua.includes('Edg')) {
-                browser = 'Edge';
-            }
-            
-            // Detect OS
-            if (ua.includes('Windows')) {
-                os = 'Windows';
-            } else if (ua.includes('Mac OS')) {
-                os = 'macOS';
-            } else if (ua.includes('Linux')) {
-                os = 'Linux';
-            } else if (ua.includes('Android')) {
-                os = 'Android';
-            } else if (ua.includes('iOS') || ua.includes('iPhone') || ua.includes('iPad')) {
-                os = 'iOS';
-            }
-            
-            return {
-                deviceType,
-                browser,
-                os,
-                screenResolution: `${screen.width}x${screen.height}`,
-                language: navigator.language || navigator.userLanguage,
-                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                userAgent: ua
-            };
-        }
-
-        // Parse UTM parameters from URL
-        function getUtmParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                source: params.get('utm_source') || document.referrer ? getReferrerSource(document.referrer) : 'direct',
-                medium: params.get('utm_medium') || 'organic',
-                campaign: params.get('utm_campaign') || '',
-                term: params.get('utm_term') || '',
-                content: params.get('utm_content') || ''
-            };
-        }
-
-        // Determine referrer source
-        function getReferrerSource(referrer) {
-            if (!referrer) return 'direct';
-            
-            try {
-                const referrerUrl = new URL(referrer);
-                const hostname = referrerUrl.hostname;
-                
-                if (hostname.includes('google') || hostname.includes('bing') || hostname.includes('yahoo')) {
-                    return 'organic';
-                } else if (hostname.includes('facebook') || hostname.includes('instagram') || hostname.includes('tiktok')) {
-                    return 'social';
-                } else {
-                    return 'referral';
-                }
-            } catch {
-                return 'direct';
-            }
-        }
-
-        // Start session tracking
-        async function startSessionTracking() {
-            try {
-                const isFirstVisit = !localStorage.getItem('gg_first_visit');
-                if (isFirstVisit) {
-                    localStorage.setItem('gg_first_visit', 'true');
-                }
-                
-                const sessionData = {
-                    session_id: analytics.sessionId,
-                    user_id: getUserId(),
-                    device_type: analytics.deviceInfo.deviceType,
-                    browser: analytics.deviceInfo.browser,
-                    os: analytics.deviceInfo.os,
-                    screen_resolution: analytics.deviceInfo.screenResolution,
-                    language: analytics.deviceInfo.language,
-                    timezone: analytics.deviceInfo.timezone,
-                    is_first_visit: isFirstVisit,
-                    utm_source: analytics.utmParams.source,
-                    utm_medium: analytics.utmParams.medium,
-                    utm_campaign: analytics.utmParams.campaign,
-                    utm_term: analytics.utmParams.term,
-                    utm_content: analytics.utmParams.content,
-                    referrer: document.referrer || '',
-                    landing_page: window.location.pathname,
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString()
-                };
-                
-                // Store session data locally
-                sessionStorage.setItem('current_session', JSON.stringify(sessionData));
-                
-                // Send to Supabase
-                const { error } = await analytics.supabaseClient
-                    .from('analytics_sessions')
-                    .insert([sessionData]);
-                
-                if (error) {
-                    console.error('[Analytics] Error logging session:', error);
-                    storeFailedEvent('session', sessionData);
-                }
-                
-                // Update active users
-                updateActiveUsers();
-                
-            } catch (error) {
-                console.error('[Analytics] Error starting session:', error);
-            }
-        }
-
-        // Get user ID (from cookie or generate anonymous)
-        function getUserId() {
-            let userId = localStorage.getItem('gg_user_id');
-            if (!userId) {
-                userId = 'anon_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('gg_user_id', userId);
-            }
-            return userId;
-        }
-
-        // Track page view
-        async function trackPageView() {
-            try {
-                analytics.currentPage = window.location.href;
-                analytics.pageStartTime = Date.now();
-                analytics.scrollDepth = 0;
-                
-                const pageviewData = {
-                    session_id: analytics.sessionId,
-                    page_url: window.location.href,
-                    page_title: document.title,
-                    page_path: window.location.pathname,
-                    referrer: document.referrer || '',
-                    metadata: {
-                        scroll_depth: 0,
-                        time_on_page: 0
-                    },
-                    created_at: new Date().toISOString()
-                };
-                
-                // Store pageview data
-                const { error } = await analytics.supabaseClient
-                    .from('analytics_pageviews')
-                    .insert([pageviewData]);
-                
-                if (error) {
-                    console.error('[Analytics] Error logging pageview:', error);
-                    storeFailedEvent('pageview', pageviewData);
-                }
-                
-                // Update last activity
-                analytics.lastActivity = Date.now();
-                
-                // Track time on page when leaving
-                window.addEventListener('beforeunload', trackTimeOnPage);
-                
-                // Start scroll tracking
-                startScrollTracking();
-                
-            } catch (error) {
-                console.error('[Analytics] Error tracking pageview:', error);
-            }
-        }
-
-        // Track time on page
-        function trackTimeOnPage() {
-            const timeOnPage = Math.round((Date.now() - analytics.pageStartTime) / 1000);
-            
-            // Store time on page data
-            const timeData = {
-                session_id: analytics.sessionId,
-                page_url: analytics.currentPage,
-                time_on_page: timeOnPage,
-                scroll_depth: analytics.scrollDepth
-            };
-            
-            // Send via Beacon API for reliability
-            const blob = new Blob([JSON.stringify(timeData)], {type: 'application/json'});
-            navigator.sendBeacon(`${ANALYTICS_CONFIG.supabaseUrl}/rest/v1/analytics_pageviews?select=*`, blob);
-        }
-
-        // Start scroll tracking
-        function startScrollTracking() {
-            let scrollTracked25 = false;
-            let scrollTracked50 = false;
-            let scrollTracked75 = false;
-            let scrollTracked100 = false;
-            
-            window.addEventListener('scroll', function() {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercentage = (scrollTop / scrollHeight) * 100;
-                
-                analytics.scrollDepth = Math.max(analytics.scrollDepth, scrollPercentage);
-                
-                // Track scroll milestones
-                if (scrollPercentage >= 25 && !scrollTracked25) {
-                    scrollTracked25 = true;
-                    trackEvent('scroll', 'page_scroll', '25%', scrollPercentage);
-                }
-                if (scrollPercentage >= 50 && !scrollTracked50) {
-                    scrollTracked50 = true;
-                    trackEvent('scroll', 'page_scroll', '50%', scrollPercentage);
-                }
-                if (scrollPercentage >= 75 && !scrollTracked75) {
-                    scrollTracked75 = true;
-                    trackEvent('scroll', 'page_scroll', '75%', scrollPercentage);
-                }
-                if (scrollPercentage >= 95 && !scrollTracked100) {
-                    scrollTracked100 = true;
-                    trackEvent('scroll', 'page_scroll', '100%', scrollPercentage);
-                }
-            });
-        }
-
-        // Track user events
-        async function trackEvent(eventType, category, label, value = null, element = null) {
-            try {
-                const eventData = {
-                    session_id: analytics.sessionId,
-                    event_type: eventType,
-                    event_category: category,
-                    event_label: label,
-                    event_value: value,
-                    element_id: element?.id || null,
-                    element_class: element?.className || null,
-                    element_text: element?.textContent?.substring(0, 100) || null,
-                    page_url: window.location.href,
-                    metadata: {
-                        timestamp: Date.now(),
-                        scroll_position: window.pageYOffset
-                    },
-                    created_at: new Date().toISOString()
-                };
-                
-                // Update last activity
-                analytics.lastActivity = Date.now();
-                
-                // Send to Supabase
-                const { error } = await analytics.supabaseClient
-                    .from('analytics_events')
-                    .insert([eventData]);
-                
-                if (error) {
-                    console.error('[Analytics] Error logging event:', error);
-                    storeFailedEvent('event', eventData);
-                }
-                
-                // Log for debugging
-                if (ANALYTICS_CONFIG.debugMode) {
-                    console.log(`[Analytics] Event: ${category} - ${label}`, eventData);
-                }
-                
-            } catch (error) {
-                console.error('[Analytics] Error tracking event:', error);
-            }
-        }
-
-        // Track conversion
-        async function trackConversion(conversionType, bookingId = null, customerEmail = null, serviceType = null, estimatedValue = null) {
-            try {
-                const conversionData = {
-                    session_id: analytics.sessionId,
-                    conversion_type: conversionType,
-                    booking_id: bookingId,
-                    customer_email: customerEmail,
-                    service_type: serviceType,
-                    estimated_value: estimatedValue,
-                    pageviews_to_convert: getPageviewCount(),
-                    days_to_convert: Math.round((Date.now() - analytics.sessionStartTime) / (1000 * 60 * 60 * 24)),
-                    utm_source: analytics.utmParams.source,
-                    utm_medium: analytics.utmParams.medium,
-                    utm_campaign: analytics.utmParams.campaign,
-                    created_at: new Date().toISOString()
-                };
-                
-                // Send to Supabase
-                const { error } = await analytics.supabaseClient
-                    .from('analytics_conversions')
-                    .insert([conversionData]);
-                
-                if (error) {
-                    console.error('[Analytics] Error logging conversion:', error);
-                    storeFailedEvent('conversion', conversionData);
-                }
-                
-                // Update session as converted
-                await analytics.supabaseClient
-                    .from('analytics_sessions')
-                    .update({ 
-                        is_converted: true, 
-                        conversion_type: conversionType,
-                        updated_at: new Date().toISOString()
-                    })
-                    .eq('session_id', analytics.sessionId);
-                
-                console.log(`[Analytics] Conversion tracked: ${conversionType}`);
-                
-            } catch (error) {
-                console.error('[Analytics] Error tracking conversion:', error);
-            }
-        }
-
-        // Get pageview count for current session
-        function getPageviewCount() {
-            return parseInt(sessionStorage.getItem('pageview_count') || '1');
-        }
-
-        // Update active users
-        async function updateActiveUsers() {
-            try {
-                const activeUserData = {
-                    session_id: analytics.sessionId,
-                    user_id: getUserId(),
-                    page_url: window.location.href,
-                    last_activity: new Date().toISOString(),
-                    active_duration: Math.round((Date.now() - analytics.sessionStartTime) / 1000),
-                    is_mobile: analytics.deviceInfo.deviceType === 'mobile',
-                    created_at: new Date().toISOString()
-                };
-                
-                const { error } = await analytics.supabaseClient
-                    .from('analytics_active_users')
-                    .upsert([activeUserData], { onConflict: 'session_id' });
-                
-                if (error) {
-                    console.error('[Analytics] Error updating active users:', error);
-                }
-                
-            } catch (error) {
-                console.error('[Analytics] Error updating active users:', error);
-            }
-        }
-
-        // Check session timeout
-        function checkSessionTimeout() {
-            const inactiveTime = Date.now() - analytics.lastActivity;
-            if (inactiveTime > ANALYTICS_CONFIG.sessionTimeout) {
-                // Session expired, create new one
-                analytics.sessionId = generateSessionId();
-                startSessionTracking();
-            }
-        }
-
-        // Store failed events for retry
-        function storeFailedEvent(type, data) {
-            try {
-                const failedEvents = JSON.parse(localStorage.getItem('gg_failed_events') || '[]');
-                failedEvents.push({
-                    type: type,
-                    data: data,
-                    timestamp: Date.now()
-                });
-                
-                // Keep only last 50 failed events
-                if (failedEvents.length > 50) {
-                    failedEvents.shift();
-                }
-                
-                localStorage.setItem('gg_failed_events', JSON.stringify(failedEvents));
-            } catch (error) {
-                console.error('[Analytics] Error storing failed event:', error);
-            }
-        }
-
-        // Retry failed events
-        async function retryFailedEvents() {
-            try {
-                const failedEvents = JSON.parse(localStorage.getItem('gg_failed_events') || '[]');
-                if (failedEvents.length === 0) return;
-                
-                for (const event of failedEvents) {
-                    const { error } = await analytics.supabaseClient
-                        .from(`analytics_${event.type}s`)
-                        .insert([event.data]);
-                    
-                    if (!error) {
-                        // Remove successful event
-                        const index = failedEvents.indexOf(event);
-                        failedEvents.splice(index, 1);
-                    }
-                }
-                
-                localStorage.setItem('gg_failed_events', JSON.stringify(failedEvents));
-            } catch (error) {
-                console.error('[Analytics] Error retrying failed events:', error);
-            }
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Track button clicks
-            document.addEventListener('click', function(e) {
-                const target = e.target;
-                
-                // Check if it's a button or link
-                if (target.tagName === 'BUTTON' || target.tagName === 'A' || target.closest('button') || target.closest('a')) {
-                    const button = target.tagName === 'BUTTON' || target.closest('button') ? 
-                                  (target.tagName === 'BUTTON' ? target : target.closest('button')) :
-                                  (target.tagName === 'A' ? target : target.closest('a'));
-                    
-                    const text = button.textContent.trim().substring(0, 50) || button.getAttribute('aria-label') || 'Unknown';
-                    const id = button.id || 'no-id';
-                    
-                    trackEvent('click', 'button', text, null, button);
-                    
-                    // Special tracking for important buttons
-                    if (button.textContent.includes('Quote') || button.textContent.includes('Get Quote') || button.textContent.includes('Free Quote')) {
-                        trackEvent('click', 'conversion', 'quote_request_click', null, button);
-                    }
-                    if (button.textContent.includes('Book') || button.textContent.includes('Schedule') || button.textContent.includes('Appointment')) {
-                        trackEvent('click', 'conversion', 'booking_click', null, button);
-                    }
-                    if (button.textContent.includes('WhatsApp') || button.getAttribute('href')?.includes('whatsapp')) {
-                        trackEvent('click', 'messaging', 'whatsapp_click', null, button);
-                    }
-                }
-            });
-            
-            // Track form submissions
-            document.addEventListener('submit', function(e) {
-                const form = e.target;
-                trackEvent('submit', 'form', form.id || 'form_submission', null, form);
-            });
-            
-            // Track coverage checker submissions
-            document.addEventListener('click', function(e) {
-                if (e.target.id === 'checkButton' || e.target.closest('#checkButton')) {
-                    const postcodeInput = document.getElementById('postcodeInput');
-                    if (postcodeInput && postcodeInput.value) {
-                        trackEvent('submit', 'coverage_check', 'postcode_check', postcodeInput.value);
-                    }
-                }
-            });
-            
-            // Track outbound links
-            document.addEventListener('click', function(e) {
-                const link = e.target.closest('a');
-                if (link && link.href && link.hostname !== window.location.hostname) {
-                    trackEvent('click', 'outbound_link', link.href, null, link);
-                }
-            });
-            
-            // Track visibility change (tab switch)
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) {
-                    trackEvent('view', 'page_visibility', 'tab_hidden');
-                } else {
-                    trackEvent('view', 'page_visibility', 'tab_visible');
-                }
-            });
-            
-            // Track mobile menu toggle
-            document.addEventListener('click', function(e) {
-                if (e.target.id === 'mobileMenuBtn' || e.target.closest('#mobileMenuBtn')) {
-                    trackEvent('click', 'navigation', 'mobile_menu_toggle');
-                }
-            });
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize analytics
-            initAnalytics();
-            
-            // Retry failed events every 5 minutes
-            setInterval(retryFailedEvents, 5 * 60 * 1000);
-            
-            // Update active users every minute
-            setInterval(updateActiveUsers, 60 * 1000);
-            
-            // Track page load time
-            window.addEventListener('load', function() {
-                const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-                trackEvent('performance', 'page_load', 'complete', loadTime);
-            });
-            
-            // Track service area checker specifically
-            const postcodeForm = document.getElementById('postcodeForm');
-            if (postcodeForm) {
-                postcodeForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const postcode = document.getElementById('postcodeInput').value;
-                    if (postcode) {
-                        // Track search term
-                        trackEvent('search', 'postcode_check', postcode);
-                    }
-                });
-            }
-            
-            // Track WhatsApp conversions
-            const whatsappButtons = document.querySelectorAll('a[href*="whatsapp"], button[onclick*="whatsapp"]');
-            whatsappButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    trackEvent('click', 'messaging', 'whatsapp_conversion');
-                    trackConversion('whatsapp_contact');
-                });
-            });
-        });
-
-        // Make tracking functions available globally
-        window.GreenGloAnalytics = {
-            trackEvent: trackEvent,
-            trackConversion: trackConversion,
-            getSessionId: () => analytics.sessionId,
-            getDeviceInfo: () => analytics.deviceInfo
-        };
-
-        // Debug mode
-        if (ANALYTICS_CONFIG.debugMode) {
-            console.log('[Analytics] Debug mode enabled');
-            window.analyticsDebug = analytics;
-        }
     </script>
 </body>
 </html>
