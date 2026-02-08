@@ -564,6 +564,10 @@
             margin-bottom: 1rem;
         }
 
+        .feature-card p {
+            color: var(--medium-gray);
+        }
+
         .stats {
             background: var(--gradient-dark);
             color: var(--white);
@@ -1686,11 +1690,6 @@
                 color: var(--white);
             }
 
-            /* Mobile menu close button - fixed positioning */
-            .mobile-menu-close {
-                display: none;
-            }
-
             /* Improve mobile layout */
             .hero {
                 padding: 100px 0 4rem;
@@ -2636,18 +2635,27 @@
         const EMAIL_CONFIG = {
             publicKey: 'qS1v1ZEwi4XnBl1As',
             serviceId: 'service_cj7heuj',
-            templateId: 'template_xe4rngx',
-            businessTemplateId: 'template_zf4ph1s',
+            templateId: 'template_xe4rngx',  // Customer discount template
+            businessTemplateId: 'template_zf4ph1s',  // Business notification template
             couponCode: 'NEWCUSTOMER10',
             couponPercent: 10,
-            popupDelay: 3000 // Reduced from 5000 for testing
+            popupDelay: 5000 // 5 seconds delay
         };
 
         // ===== Main JavaScript =====
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize EmailJS
-            emailjs.init(EMAIL_CONFIG.publicKey);
-            console.log('✅ EmailJS initialized successfully');
+            (function() {
+                emailjs.init({
+                    publicKey: EMAIL_CONFIG.publicKey,
+                    blockHeadless: true,
+                    limitRate: {
+                        id: 'greenglo',
+                        throttle: 10000 // 10 seconds
+                    }
+                });
+                console.log('✅ EmailJS initialized successfully');
+            })();
             
             // ===== Mobile Navigation =====
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -3317,22 +3325,29 @@
                     }, 10000);
                 }
 
-                // Send email using EmailJS
+                // Send email using EmailJS - FIXED VERSION
                 async function sendDiscountEmail(email) {
                     try {
                         console.log('📧 Sending email to:', email);
                         
+                        // Check if email is valid first
+                        if (!email || !email.includes('@')) {
+                            throw new Error('Invalid email address');
+                        }
+                        
+                        // Template parameters must match exactly what's in your EmailJS template
+                        // Based on your email content, these are likely the parameters
                         const templateParams = {
                             to_email: email,
                             user_email: email,
                             coupon_code: EMAIL_CONFIG.couponCode,
                             discount_percent: EMAIL_CONFIG.couponPercent,
-                            business_name: 'GreenGlo Cleaners',
-                            date: new Date().toLocaleDateString('en-GB'),
-                            reply_to: 'info@greenglocleaningco.com',
-                            from_name: 'GreenGlo Cleaners Team'
+                            business_name: 'Green Glo Cleaning Co.',
+                            from_name: 'Green Glo Team'
                         };
 
+                        console.log('📤 Sending with params:', templateParams);
+                        
                         // Send to customer
                         const customerResponse = await emailjs.send(
                             EMAIL_CONFIG.serviceId,
@@ -3340,11 +3355,33 @@
                             templateParams
                         );
 
-                        console.log('✅ Customer email sent successfully:', customerResponse);
+                        console.log('✅ Customer email sent successfully:', customerResponse.status, customerResponse.text);
+                        
+                        // Also send business notification
+                        try {
+                            const businessResponse = await emailjs.send(
+                                EMAIL_CONFIG.serviceId,
+                                EMAIL_CONFIG.businessTemplateId,
+                                {
+                                    customer_email: email,
+                                    coupon_code: EMAIL_CONFIG.couponCode,
+                                    date: new Date().toLocaleDateString('en-GB')
+                                }
+                            );
+                            console.log('✅ Business notification sent successfully');
+                        } catch (businessError) {
+                            console.warn('⚠️ Business notification failed, but customer email was sent:', businessError);
+                        }
+                        
                         return { success: true };
                         
                     } catch (error) {
                         console.error('❌ EmailJS Error:', error);
+                        console.error('Error details:', {
+                            status: error.status,
+                            text: error.text,
+                            message: error.message
+                        });
                         throw error;
                     }
                 }
@@ -3392,6 +3429,13 @@
                             // Reset button
                             submitEmail.disabled = false;
                             submitEmail.innerHTML = originalBtnText;
+                            
+                            // Show coupon code anyway for user convenience
+                            if (email && validateEmail(email)) {
+                                setTimeout(() => {
+                                    showSuccessMessage(email);
+                                }, 500);
+                            }
                         }
                     });
                 }
@@ -3432,15 +3476,6 @@
                     });
                 }
             }
-
-            // DEBUG: Clear localStorage to test popup
-            localStorage.removeItem('greenglo_discount_received');
-            localStorage.removeItem('greenglo_popup_last_shown');
-            
-            // Force show popup for testing immediately
-            setTimeout(() => {
-                createEmailPopup();
-            }, 1000);
         });
     </script>
 </body>
