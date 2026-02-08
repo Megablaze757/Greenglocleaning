@@ -13,6 +13,8 @@
     <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- Add Supabase client library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --primary-green: #10B981;
@@ -2185,6 +2187,7 @@
                         <p class="testimonial-content">
                             "I was so impressed with the recent cleaning done by Green Glo !They were punctual,
                             friendly, and incredibly thorough. They paid attention to detail, even in areas I hadn't
+
                             noticed. My home now looks and smells amazing, and I feel so much more relaxed. I would
                             definitely recommend them to anyone in need of a professional clean!!"
                         </p>
@@ -2592,6 +2595,40 @@
     <!-- JavaScript -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
+        // ===== Supabase Configuration =====
+        const SUPABASE_CONFIG = {
+            url: 'https://faxjeniohetefqwcsefi.supabase.co',
+            anonKey: 'sb_publishable_7TZ_Y-HKZc_ibl59lqyAsQ_Qbv9A2o7'
+        };
+
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+
+        // Test Supabase connection
+        async function testSupabaseConnection() {
+            try {
+                console.log('🔗 Testing Supabase connection...');
+                const { data, error } = await supabase.from('email_subscribers').select('count').limit(1);
+                if (error) {
+                    console.error('❌ Supabase connection error:', error);
+                    return false;
+                }
+                console.log('✅ Supabase connected successfully');
+                return true;
+            } catch (error) {
+                console.error('❌ Error testing Supabase connection:', error);
+                return false;
+            }
+        }
+
+        // Initialize Supabase connection test on load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isConnected = await testSupabaseConnection();
+            if (!isConnected) {
+                console.warn('⚠️ Supabase connection issue - emails will not be saved to database');
+            }
+        });
+
         // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileCloseBtn = document.getElementById('mobileCloseBtn');
@@ -2992,7 +3029,7 @@
             }
         }
 
-        // ===== Email Popup System =====
+        // ===== Email Popup System - UPDATED with Supabase =====
         const EMAIL_CONFIG = {
             publicKey: 'qS1v1ZEwi4XnBl1As',
             serviceId: 'service_cj7heuj',
@@ -3009,6 +3046,66 @@
             console.log('✅ EmailJS initialized');
         } catch (e) {
             console.error('❌ EmailJS init error:', e);
+        }
+
+        // Function to save email to Supabase
+        async function saveEmailToSupabase(email, source = 'website_popup') {
+            try {
+                console.log('💾 Attempting to save email to Supabase:', email);
+                
+                const { data, error } = await supabase
+                    .from('email_subscribers')
+                    .insert([
+                        {
+                            email: email,
+                            coupon_code: EMAIL_CONFIG.couponCode,
+                            coupon_sent: true,
+                            coupon_used: false,
+                            source: source
+                        }
+                    ])
+                    .select();
+                
+                if (error) {
+                    // Check if it's a duplicate email error
+                    if (error.code === '23505') { // Unique constraint violation
+                        console.log('📧 Email already exists in database:', email);
+                        return { success: true, message: 'Email already subscribed' };
+                    }
+                    throw error;
+                }
+                
+                console.log('✅ Email saved to Supabase:', data);
+                return { success: true, data: data };
+                
+            } catch (error) {
+                console.error('❌ Error saving email to Supabase:', error);
+                return { 
+                    success: false, 
+                    error: error.message || 'Failed to save email to database'
+                };
+            }
+        }
+
+        // Function to check if email already exists in Supabase
+        async function checkEmailExists(email) {
+            try {
+                const { data, error } = await supabase
+                    .from('email_subscribers')
+                    .select('email')
+                    .eq('email', email)
+                    .maybeSingle();
+                
+                if (error) {
+                    console.error('❌ Error checking email:', error);
+                    return false;
+                }
+                
+                return !!data; // Returns true if email exists, false if not
+            } catch (error) {
+                console.error('❌ Error checking email existence:', error);
+                return false;
+            }
         }
 
         // Show popup after delay
@@ -3177,13 +3274,12 @@
                 }
             }
 
-            // Send business notification email - FIXED VERSION
+            // Send business notification email
             async function sendBusinessNotificationEmail(email) {
                 try {
                     console.log('📧 Sending business notification for new subscriber:', email);
                     
                     const businessTemplateParams = {
-                        // These variables should match your EmailJS template
                         user_email: email,
                         new_subscriber_email: email,
                         subscriber_email: email,
@@ -3245,7 +3341,7 @@
                 }, 10000);
             }
 
-            // Handle form submission - UPDATED VERSION
+            // Handle form submission - UPDATED with Supabase integration
             if (discountForm) {
                 discountForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
@@ -3268,15 +3364,25 @@
                     submitEmail.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                     
                     try {
-                        // Send discount email to user
+                        // Step 1: Check if email already exists
+                        const emailExists = await checkEmailExists(email);
+                        
+                        // Step 2: Save email to Supabase
+                        const saveResult = await saveEmailToSupabase(email);
+                        
+                        if (!saveResult.success && !emailExists) {
+                            throw new Error('Failed to save email to database');
+                        }
+                        
+                        // Step 3: Send discount email to user
                         const userEmailResult = await sendDiscountEmail(email);
                         
                         if (userEmailResult.success) {
-                            // Send business notification (fire and forget - don't wait for it)
+                            // Step 4: Send business notification (fire and forget)
                             sendBusinessNotificationEmail(email)
                                 .then(businessResult => {
                                     if (businessResult.success) {
-                                        console.log('✅ Both emails sent successfully');
+                                        console.log('✅ All processes completed successfully');
                                     } else {
                                         console.warn('⚠️ Business notification failed, but user got discount');
                                     }
@@ -3294,11 +3400,17 @@
                         console.error('❌ Error in submission process:', error);
                         
                         // Show user-friendly error
-                        alert('Sorry, there was an error sending your discount code. Please try again or contact us via WhatsApp for assistance.');
-                        
-                        // Reset button
-                        submitEmail.disabled = false;
-                        submitEmail.innerHTML = originalBtnText;
+                        if (error.message.includes('already exists') || error.message.includes('already subscribed')) {
+                            // If email already exists, still show success
+                            showSuccessMessage(email);
+                        } else {
+                            // For other errors, show alert
+                            alert('Sorry, there was an error sending your discount code. Please try again or contact us via WhatsApp for assistance.');
+                            
+                            // Reset button
+                            submitEmail.disabled = false;
+                            submitEmail.innerHTML = originalBtnText;
+                        }
                     }
                 });
             }
@@ -3330,7 +3442,7 @@
             }
         }
 
-        // Initialize everything when DOM is loaded
+        // ===== Initialize everything when DOM is loaded =====
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize map
             initServiceMap();
@@ -3369,4 +3481,3 @@
     </script>
 </body>
 </html>
-
