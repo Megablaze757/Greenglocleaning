@@ -2632,8 +2632,26 @@
     <!-- JavaScript -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
-        // ===== Mobile Navigation =====
+        // ===== EmailJS Configuration =====
+        const EMAIL_CONFIG = {
+            publicKey: 'qS1v1ZEwi4XnBl1As',
+            serviceId: 'service_cj7heuj',
+            templateId: 'template_xe4rngx',
+            businessTemplateId: 'template_zf4ph1s',
+            couponCode: 'NEWCUSTOMER10',
+            couponPercent: 10,
+            popupDelay: 5000
+        };
+
+        // Initialize EmailJS
+        (function() {
+            emailjs.init(EMAIL_CONFIG.publicKey);
+            console.log('EmailJS initialized successfully');
+        })();
+
+        // ===== Main JavaScript =====
         document.addEventListener('DOMContentLoaded', function() {
+            // ===== Mobile Navigation =====
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
             const navMenu = document.getElementById('navMenu');
@@ -3124,16 +3142,6 @@
             }
 
             // ===== Email Popup System =====
-            const EMAIL_CONFIG = {
-                publicKey: 'qS1v1ZEwi4XnBl1As',
-                serviceId: 'service_cj7heuj',
-                templateId: 'template_xe4rngx',
-                businessTemplateId: 'template_zf4ph1s',
-                couponCode: 'NEWCUSTOMER10',
-                couponPercent: 10,
-                popupDelay: 5000
-            };
-
             // Show popup after delay
             setTimeout(() => {
                 showEmailPopup();
@@ -3295,6 +3303,54 @@
                     }, 10000);
                 }
 
+                // Send email using EmailJS
+                async function sendDiscountEmail(email) {
+                    try {
+                        const templateParams = {
+                            to_email: email,
+                            user_email: email,
+                            coupon_code: EMAIL_CONFIG.couponCode,
+                            discount_percent: EMAIL_CONFIG.couponPercent,
+                            business_name: 'GreenGlo Cleaners',
+                            date: new Date().toLocaleDateString('en-GB'),
+                            reply_to: 'info@greenglocleaningco.com',
+                            from_name: 'GreenGlo Cleaners Team'
+                        };
+
+                        // Send to customer
+                        const customerResponse = await emailjs.send(
+                            EMAIL_CONFIG.serviceId,
+                            EMAIL_CONFIG.templateId,
+                            templateParams
+                        );
+
+                        console.log('✅ Customer email sent successfully:', customerResponse);
+
+                        // Send to business (optional notification)
+                        try {
+                            const businessResponse = await emailjs.send(
+                                EMAIL_CONFIG.serviceId,
+                                EMAIL_CONFIG.businessTemplateId,
+                                {
+                                    user_email: email,
+                                    coupon_code: EMAIL_CONFIG.couponCode,
+                                    date: new Date().toLocaleDateString('en-GB'),
+                                    timestamp: new Date().toISOString()
+                                }
+                            );
+                            console.log('✅ Business notification sent successfully:', businessResponse);
+                        } catch (businessError) {
+                            console.warn('⚠️ Business notification failed (optional):', businessError);
+                        }
+
+                        return { success: true };
+                        
+                    } catch (error) {
+                        console.error('❌ EmailJS Error:', error);
+                        throw error;
+                    }
+                }
+
                 // Handle form submission
                 if (discountForm) {
                     discountForm.addEventListener('submit', async (e) => {
@@ -3304,13 +3360,13 @@
                         
                         if (!validateEmail(email)) {
                             userEmail.classList.add('error');
-                            emailError.style.display = 'block';
+                            emailError.classList.add('show');
                             userEmail.focus();
                             return;
                         }
                         
                         userEmail.classList.remove('error');
-                        emailError.style.display = 'none';
+                        emailError.classList.remove('show');
                         
                         // Update button to show loading
                         submitEmail.disabled = true;
@@ -3318,15 +3374,20 @@
                         submitEmail.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                         
                         try {
-                            // For now, just show success message
-                            // In production, you would add your email sending logic here
-                            setTimeout(() => {
+                            // Send email via EmailJS
+                            const result = await sendDiscountEmail(email);
+                            
+                            if (result.success) {
                                 showSuccessMessage(email);
-                            }, 1000);
+                            }
                             
                         } catch (error) {
                             console.error('❌ Error in submission process:', error);
-                            alert('Sorry, there was an error sending your discount code. Please try again or contact us via WhatsApp for assistance.');
+                            
+                            // Show error message
+                            emailError.textContent = 'Sorry, there was an error sending your discount code. Please try again or contact us via WhatsApp for assistance.';
+                            emailError.classList.add('show');
+                            userEmail.classList.add('error');
                             
                             // Reset button
                             submitEmail.disabled = false;
@@ -3359,6 +3420,16 @@
                 const savedEmail = localStorage.getItem('greenglo_user_email');
                 if (userEmail && savedEmail) {
                     userEmail.value = savedEmail;
+                }
+
+                // Add real-time email validation
+                if (userEmail) {
+                    userEmail.addEventListener('input', () => {
+                        if (userEmail.value.trim()) {
+                            userEmail.classList.remove('error');
+                            emailError.classList.remove('show');
+                        }
+                    });
                 }
             }
         });
