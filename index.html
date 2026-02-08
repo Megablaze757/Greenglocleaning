@@ -10,7 +10,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <!-- Add Supabase client library -->
@@ -344,15 +343,8 @@
         }
 
         @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .bics-logo-container {
@@ -462,10 +454,6 @@
             align-items: center;
             margin-bottom: 3rem;
             justify-content: center;
-        }
-
-        .hero-image {
-            display: none;
         }
 
         .club-notice {
@@ -1103,10 +1091,6 @@
             border: 2px solid;
         }
 
-        .image-showcase {
-            margin-top: 4rem;
-        }
-
         .image-showcase-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1611,25 +1595,6 @@
             transform: translateY(-3px);
         }
 
-        .newsletter-form {
-            margin-top: 1.5rem;
-        }
-
-        .newsletter-input {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            color: var(--white);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-        }
-
-        .newsletter-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
         .footer-bottom {
             text-align: center;
             padding-top: 2rem;
@@ -1649,11 +1614,8 @@
             text-decoration: underline;
         }
 
+        /* Mobile-specific optimizations */
         @media (max-width: 1024px) {
-            .hero-image {
-                display: none;
-            }
-
             .coverage-container {
                 grid-template-columns: 1fr;
                 gap: 2rem;
@@ -1665,6 +1627,7 @@
         }
 
         @media (max-width: 768px) {
+            /* Fix mobile menu */
             .nav-menu {
                 position: fixed;
                 top: 0;
@@ -1691,9 +1654,11 @@
 
             .nav-link {
                 display: block;
-                padding: 1.25rem 1rem;
+                padding: 1rem;
                 border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-                font-size: 1.1rem;
+                font-size: 1rem;
+                min-height: 44px;
+                align-items: center;
             }
 
             .nav-cta {
@@ -1705,66 +1670,12 @@
                 width: 100%;
                 justify-content: center;
                 padding: 1rem 2rem;
+                min-height: 44px;
             }
 
             .mobile-menu-btn {
                 display: flex;
                 z-index: 1002;
-                position: relative;
-            }
-
-            .mobile-menu-btn.active {
-                background: var(--primary-green);
-                color: var(--white);
-            }
-
-            .hero-features {
-                grid-template-columns: 1fr;
-                max-width: 500px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .features-grid,
-            .services-grid,
-            .testimonials-grid,
-            .image-showcase-grid,
-            .services-showcase-grid,
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero {
-                padding: 100px 0 4rem;
-            }
-
-            .section {
-                padding: 4rem 0;
-            }
-
-            .coverage-card {
-                padding: 1.75rem;
-            }
-
-            .areas-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .input-with-button {
-                flex-direction: column;
-            }
-
-            #checkButton {
-                width: 100%;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-            }
-            
-            .hero-cta .btn {
-                width: 100%;
-                max-width: 300px;
             }
 
             .mobile-menu-close {
@@ -1790,7 +1701,75 @@
                 background: var(--mint);
                 transform: rotate(90deg);
             }
+
+            /* Improve mobile layout */
+            .hero {
+                padding: 100px 0 4rem;
+            }
+
+            .section {
+                padding: 4rem 0;
+            }
+
+            .hero-features {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto 2rem;
+            }
+
+            .features-grid,
+            .services-grid,
+            .image-showcase-grid,
+            .services-showcase-grid,
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .coverage-card {
+                padding: 1.5rem;
+            }
+
+            .areas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-with-button {
+                flex-direction: column;
+            }
+
+            #checkButton {
+                width: 100%;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                gap: 1rem;
+            }
             
+            .hero-cta .btn {
+                width: 100%;
+                max-width: 300px;
+                min-height: 56px;
+            }
+
+            /* Prevent iOS zoom on input focus */
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+
+            /* Mobile carousel improvements */
+            .carousel-btn {
+                width: 48px;
+                height: 48px;
+            }
+
+            .testimonial-card {
+                padding: 1.5rem;
+                min-height: 280px;
+            }
+
+            /* FAQ mobile improvements */
             .faq-question {
                 padding: 1.25rem 1.5rem;
                 font-size: 1rem;
@@ -1804,61 +1783,9 @@
                 padding: 0 1.5rem 1.5rem;
             }
 
+            /* Email popup mobile */
             .email-popup-modal {
                 max-width: 95%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-            }
-
-            .hero-cta .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-
-            .nav-menu {
-                width: 85%;
-            }
-
-            .testimonial-card {
-                padding: 2rem 1.5rem;
-            }
-            
-            .hero-badge {
-                flex-direction: column;
-                text-align: center;
-                padding: 1rem;
-            }
-            
-            .bics-logo-container {
-                justify-content: center;
-            }
-            
-            .club-notice {
-                padding: 1rem;
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .whatsapp-button {
-                width: 56px;
-                height: 56px;
-            }
-
-            .whatsapp-icon {
-                width: 28px;
-                height: 28px;
             }
 
             .email-popup-header {
@@ -1869,10 +1796,114 @@
                 padding: 1.5rem;
             }
 
+            /* Hero badge mobile */
+            .hero-badge {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            
+            .bics-logo-container {
+                justify-content: center;
+            }
+            
+            .club-notice {
+                padding: 1rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+            }
+
+            /* WhatsApp button mobile */
+            .whatsapp-button {
+                width: 56px;
+                height: 56px;
+            }
+
+            .whatsapp-icon {
+                width: 28px;
+                height: 28px;
+            }
+
+            .whatsapp-tooltip {
+                display: none; /* Hide on mobile */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .section-title h2 {
+                font-size: 1.75rem;
+            }
+
+            .nav-menu {
+                width: 85%;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-large {
+                padding: 1rem 2rem;
+                min-height: 56px;
+            }
+
             .coupon-code {
                 padding: 0.75rem 1rem;
                 font-size: 1rem;
             }
+
+            .result-card img {
+                height: 200px;
+            }
+
+            .service-showcase-image {
+                height: 150px;
+            }
+
+            /* Mobile map fixes */
+            #serviceAreaMap {
+                height: 300px;
+            }
+
+            .map-legend {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Prevent horizontal scrolling */
+        html, body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Better touch targets for mobile */
+        button, 
+        .btn, 
+        .nav-link,
+        .carousel-btn,
+        .carousel-indicator,
+        .faq-question {
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
         }
     </style>
 </head>
@@ -1910,7 +1941,6 @@
                 <li class="nav-item">
                     <a href="services.html" class="nav-link">Services</a>
                 </li>
-
                 <li class="nav-item">
                     <a href="gallery.html" class="nav-link">Gallery</a>
                 </li>
@@ -2285,7 +2315,6 @@
                         Learn about the club
                     </a>
                 </div>
-
             </div>
         </div>
     </section>
@@ -2320,7 +2349,7 @@
         </div>
     </section>
 
-    <!-- FAQ Section - FIXED -->
+    <!-- FAQ Section -->
     <section class="section section-gray" id="faq">
         <div class="container">
             <div class="section-title">
@@ -2397,7 +2426,7 @@
         </div>
     </section>
 
-    <!-- NEW: Service Coverage Checker & Map Section -->
+    <!-- Service Coverage Checker & Map Section -->
     <section class="section section-light" id="coverage-checker">
         <div class="container">
             <div class="section-title">
@@ -2765,11 +2794,24 @@
         const checkButton = document.getElementById('checkButton');
 
         let serviceMap = null;
-        let coverageLayer = null;
 
         function initServiceMap() {
+            // Check if map container exists
+            const mapContainer = document.getElementById('serviceAreaMap');
+            if (!mapContainer) {
+                console.error('Map container not found');
+                return;
+            }
+
+            // Clear any existing map
+            if (serviceMap) {
+                serviceMap.remove();
+            }
+
+            // Initialize map
             serviceMap = L.map('serviceAreaMap').setView([51.507, 0.127], 9);
             
+            // Add tile layer
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 maxZoom: 13,
@@ -2846,6 +2888,11 @@
                 }).addTo(serviceMap)
                   .bindPopup(`<b>${loc.title}</b>`);
             });
+
+            // Handle map resize on mobile
+            setTimeout(() => {
+                serviceMap.invalidateSize();
+            }, 100);
         }
 
         function validateAndParsePostcode(postcode) {
@@ -3029,7 +3076,7 @@
             }
         }
 
-        // ===== Email Popup System - UPDATED with Supabase =====
+        // ===== Email Popup System =====
         const EMAIL_CONFIG = {
             publicKey: 'qS1v1ZEwi4XnBl1As',
             serviceId: 'service_cj7heuj',
@@ -3131,6 +3178,11 @@
         }
 
         function createEmailPopup() {
+            // Check if popup already exists
+            if (document.getElementById('emailPopup')) {
+                return;
+            }
+            
             const popupHTML = `
                 <div class="email-popup-overlay" id="emailPopup">
                     <div class="email-popup-modal">
@@ -3196,7 +3248,7 @@
             // Add popup to body
             const popupContainer = document.createElement('div');
             popupContainer.innerHTML = popupHTML;
-            document.body.appendChild(popupContainer);
+            document.body.appendChild(popupContainer.firstElementChild);
             
             // Show popup with animation
             setTimeout(() => {
@@ -3221,7 +3273,6 @@
             const emailForm = document.getElementById('emailForm');
             const successMessage = document.getElementById('successMessage');
             const sentEmail = document.getElementById('sentEmail');
-            const couponCode = document.getElementById('couponCode');
 
             // Close popup
             function closeEmailPopup() {
@@ -3229,7 +3280,7 @@
                     emailPopup.classList.remove('active');
                     document.body.style.overflow = '';
                     setTimeout(() => {
-                        if (emailPopup.parentNode) {
+                        if (emailPopup && emailPopup.parentNode) {
                             emailPopup.parentNode.removeChild(emailPopup);
                         }
                     }, 300);
@@ -3321,7 +3372,6 @@
             // Show success message
             function showSuccessMessage(email) {
                 if (sentEmail) sentEmail.textContent = email;
-                if (couponCode) couponCode.textContent = EMAIL_CONFIG.couponCode;
                 if (emailForm) emailForm.style.display = 'none';
                 if (successMessage) {
                     successMessage.style.display = 'block';
@@ -3341,7 +3391,7 @@
                 }, 10000);
             }
 
-            // Handle form submission - UPDATED with Supabase integration
+            // Handle form submission
             if (discountForm) {
                 discountForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
@@ -3451,12 +3501,12 @@
             const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
             let exampleIndex = 0;
             
-            setInterval(() => {
-                if (postcodeInput) {
+            if (postcodeInput) {
+                setInterval(() => {
                     postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
                     exampleIndex = (exampleIndex + 1) % examples.length;
-                }
-            }, 3000);
+                }, 3000);
+            }
             
             // Check WhatsApp notification status
             const notificationRead = localStorage.getItem('whatsappNotificationRead');
@@ -3477,6 +3527,15 @@
             setTimeout(() => {
                 showEmailPopup();
             }, EMAIL_CONFIG.popupDelay);
+        });
+
+        // Handle window resize for map
+        window.addEventListener('resize', function() {
+            if (serviceMap) {
+                setTimeout(() => {
+                    serviceMap.invalidateSize();
+                }, 100);
+            }
         });
     </script>
 </body>
