@@ -2640,17 +2640,15 @@
             businessTemplateId: 'template_zf4ph1s',
             couponCode: 'NEWCUSTOMER10',
             couponPercent: 10,
-            popupDelay: 5000
+            popupDelay: 3000 // Reduced from 5000 for testing
         };
-
-        // Initialize EmailJS
-        (function() {
-            emailjs.init(EMAIL_CONFIG.publicKey);
-            console.log('EmailJS initialized successfully');
-        })();
 
         // ===== Main JavaScript =====
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize EmailJS
+            emailjs.init(EMAIL_CONFIG.publicKey);
+            console.log('✅ EmailJS initialized successfully');
+            
             // ===== Mobile Navigation =====
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -3150,6 +3148,7 @@
             function showEmailPopup() {
                 const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
                 if (hasSubmittedEmail) {
+                    console.log('🚫 Popup not shown - user already submitted email');
                     return;
                 }
                 
@@ -3158,9 +3157,11 @@
                 const oneDay = 24 * 60 * 60 * 1000;
                 
                 if (lastPopupTime && (now - parseInt(lastPopupTime)) < oneDay) {
+                    console.log('🚫 Popup not shown - shown within last 24 hours');
                     return;
                 }
                 
+                console.log('✅ Showing email popup');
                 createEmailPopup();
                 localStorage.setItem('greenglo_popup_last_shown', now.toString());
             }
@@ -3168,8 +3169,11 @@
             function createEmailPopup() {
                 // Check if popup already exists
                 if (document.getElementById('emailPopup')) {
+                    console.log('🚫 Popup already exists');
                     return;
                 }
+                
+                console.log('✅ Creating email popup');
                 
                 const popupHTML = `
                     <div class="email-popup-overlay" id="emailPopup">
@@ -3244,9 +3248,12 @@
                     if (popup) {
                         popup.classList.add('active');
                         document.body.style.overflow = 'hidden';
+                        console.log('✅ Popup shown successfully');
                         
                         // Initialize popup functionality
                         initEmailPopup();
+                    } else {
+                        console.error('❌ Popup element not found after creation');
                     }
                 }, 100);
             }
@@ -3261,6 +3268,13 @@
                 const emailForm = document.getElementById('emailForm');
                 const successMessage = document.getElementById('successMessage');
                 const sentEmail = document.getElementById('sentEmail');
+
+                if (!emailPopup) {
+                    console.error('❌ Email popup elements not found');
+                    return;
+                }
+
+                console.log('✅ Initializing email popup functionality');
 
                 // Close popup
                 function closeEmailPopup() {
@@ -3306,6 +3320,8 @@
                 // Send email using EmailJS
                 async function sendDiscountEmail(email) {
                     try {
+                        console.log('📧 Sending email to:', email);
+                        
                         const templateParams = {
                             to_email: email,
                             user_email: email,
@@ -3325,24 +3341,6 @@
                         );
 
                         console.log('✅ Customer email sent successfully:', customerResponse);
-
-                        // Send to business (optional notification)
-                        try {
-                            const businessResponse = await emailjs.send(
-                                EMAIL_CONFIG.serviceId,
-                                EMAIL_CONFIG.businessTemplateId,
-                                {
-                                    user_email: email,
-                                    coupon_code: EMAIL_CONFIG.couponCode,
-                                    date: new Date().toLocaleDateString('en-GB'),
-                                    timestamp: new Date().toISOString()
-                                }
-                            );
-                            console.log('✅ Business notification sent successfully:', businessResponse);
-                        } catch (businessError) {
-                            console.warn('⚠️ Business notification failed (optional):', businessError);
-                        }
-
                         return { success: true };
                         
                     } catch (error) {
@@ -3357,6 +3355,7 @@
                         e.preventDefault();
                         
                         const email = userEmail.value.trim();
+                        console.log('📝 Form submitted with email:', email);
                         
                         if (!validateEmail(email)) {
                             userEmail.classList.add('error');
@@ -3378,6 +3377,7 @@
                             const result = await sendDiscountEmail(email);
                             
                             if (result.success) {
+                                console.log('✅ Email sent successfully, showing success message');
                                 showSuccessMessage(email);
                             }
                             
@@ -3432,6 +3432,15 @@
                     });
                 }
             }
+
+            // DEBUG: Clear localStorage to test popup
+            localStorage.removeItem('greenglo_discount_received');
+            localStorage.removeItem('greenglo_popup_last_shown');
+            
+            // Force show popup for testing immediately
+            setTimeout(() => {
+                createEmailPopup();
+            }, 1000);
         });
     </script>
 </body>
