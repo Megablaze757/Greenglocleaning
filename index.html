@@ -3151,14 +3151,16 @@
                     console.log('📤 Sending discount email to:', email);
                     
                     const templateParams = {
+                        to_email: email,
                         email: email,
                         from_name: 'GreenGlo Cleaning Co',
                         coupon_code: EMAIL_CONFIG.couponCode,
                         discount_percent: EMAIL_CONFIG.couponPercent.toString(),
-                        phone_number: '07827 784204'
+                        phone_number: '07827 784204',
+                        date: new Date().toLocaleDateString('en-GB')
                     };
                     
-                    console.log('Template params:', templateParams);
+                    console.log('User email template params:', templateParams);
                     
                     const response = await emailjs.send(
                         EMAIL_CONFIG.serviceId,
@@ -3175,13 +3177,17 @@
                 }
             }
 
-            // Send business notification email
+            // Send business notification email - FIXED VERSION
             async function sendBusinessNotificationEmail(email) {
                 try {
-                    console.log('📧 Sending business notification email for:', email);
+                    console.log('📧 Sending business notification for new subscriber:', email);
                     
                     const businessTemplateParams = {
+                        // These variables should match your EmailJS template
                         user_email: email,
+                        new_subscriber_email: email,
+                        subscriber_email: email,
+                        customer_email: email,
                         coupon_code: EMAIL_CONFIG.couponCode,
                         timestamp: new Date().toLocaleString('en-GB', {
                             weekday: 'long',
@@ -3191,10 +3197,13 @@
                             hour: '2-digit',
                             minute: '2-digit'
                         }),
-                        source: 'Website Popup'
+                        date: new Date().toLocaleDateString('en-GB'),
+                        time: new Date().toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}),
+                        source: 'Website Popup',
+                        website: window.location.hostname
                     };
                     
-                    console.log('Business template params:', businessTemplateParams);
+                    console.log('Business notification params:', businessTemplateParams);
                     
                     const response = await emailjs.send(
                         EMAIL_CONFIG.serviceId,
@@ -3207,7 +3216,9 @@
                     
                 } catch (error) {
                     console.error('❌ Error sending business notification email:', error);
-                    throw error;
+                    // Don't throw error - just log it so user still gets their discount
+                    console.warn('⚠️ Business notification failed, but user discount was sent');
+                    return { success: false, error: error };
                 }
             }
 
@@ -3216,7 +3227,10 @@
                 if (sentEmail) sentEmail.textContent = email;
                 if (couponCode) couponCode.textContent = EMAIL_CONFIG.couponCode;
                 if (emailForm) emailForm.style.display = 'none';
-                if (successMessage) successMessage.style.display = 'block';
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                    successMessage.classList.add('show');
+                }
                 
                 // Save to localStorage
                 localStorage.setItem('greenglo_discount_received', 'true');
@@ -3231,7 +3245,7 @@
                 }, 10000);
             }
 
-            // Handle form submission
+            // Handle form submission - UPDATED VERSION
             if (discountForm) {
                 discountForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
@@ -3255,22 +3269,32 @@
                     
                     try {
                         // Send discount email to user
-                        await sendDiscountEmail(email);
+                        const userEmailResult = await sendDiscountEmail(email);
                         
-                        // Send business notification email
-                        try {
-                            await sendBusinessNotificationEmail(email);
-                        } catch (businessError) {
-                            console.warn('⚠️ Business notification failed, but continuing:', businessError);
+                        if (userEmailResult.success) {
+                            // Send business notification (fire and forget - don't wait for it)
+                            sendBusinessNotificationEmail(email)
+                                .then(businessResult => {
+                                    if (businessResult.success) {
+                                        console.log('✅ Both emails sent successfully');
+                                    } else {
+                                        console.warn('⚠️ Business notification failed, but user got discount');
+                                    }
+                                })
+                                .catch(businessError => {
+                                    console.warn('⚠️ Business notification error:', businessError);
+                                });
+                            
+                            showSuccessMessage(email);
+                        } else {
+                            throw new Error('Failed to send user email');
                         }
-                        
-                        showSuccessMessage(email);
                         
                     } catch (error) {
                         console.error('❌ Error in submission process:', error);
                         
                         // Show user-friendly error
-                        alert('Sorry, there was an error processing your request. Please try again or contact us via WhatsApp for assistance.');
+                        alert('Sorry, there was an error sending your discount code. Please try again or contact us via WhatsApp for assistance.');
                         
                         // Reset button
                         submitEmail.disabled = false;
@@ -3345,3 +3369,4 @@
     </script>
 </body>
 </html>
+
