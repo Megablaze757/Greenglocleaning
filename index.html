@@ -3317,7 +3317,7 @@
                     }, 10000);
                 }
 
-                // Send email using EmailJS - FIXED VERSION
+                // Send email using EmailJS - FIXED WITH CORRECT VARIABLE {{email}}
                 async function sendDiscountEmail(email) {
                     try {
                         console.log('📧 Sending email to:', email);
@@ -3327,15 +3327,14 @@
                             throw new Error('Invalid email address');
                         }
                         
-                        // Template parameters must match exactly what's in your EmailJS template
-                        // Based on the email content you provided, these should match
+                        // Template parameters - CORRECTED: using 'email' variable to match {{email}} in template
                         const templateParams = {
-                            to_email: email,
-                            user_email: email,
+                            email: email,  // This matches {{email}} in your EmailJS template
                             coupon_code: EMAIL_CONFIG.couponCode,
                             discount_percent: EMAIL_CONFIG.couponPercent,
                             business_name: 'Green Glo Cleaning Co.',
-                            from_name: 'Green Glo Team'
+                            from_name: 'Green Glo Team',
+                            date: new Date().toLocaleDateString('en-GB')
                         };
 
                         console.log('📤 Sending with params:', templateParams);
@@ -3421,6 +3420,10 @@
                             setTimeout(() => {
                                 showSuccessMessage(email);
                             }, 500);
+                            
+                            // Reset button
+                            submitEmail.disabled = false;
+                            submitEmail.innerHTML = originalBtnText;
                         }
                     });
                 }
