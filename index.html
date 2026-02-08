@@ -2629,854 +2629,846 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-    <script>
-        // ===== EmailJS Configuration =====
-        const EMAIL_CONFIG = {
-            publicKey: 'qS1v1ZEwi4XnBl1As',
-            serviceId: 'service_cj7heuj',
-            templateId: 'template_xe4rngx',  // Customer discount template
-            businessTemplateId: 'template_zf4ph1s',  // Business notification template
-            couponCode: 'NEWCUSTOMER10',
-            couponPercent: 10,
-            popupDelay: 5000 // 5 seconds delay
+<script>
+    // ===== EmailJS Configuration =====
+    const EMAIL_CONFIG = {
+        publicKey: 'qS1v1ZEwi4XnBl1As',
+        serviceId: 'service_cj7heuj',
+        templateId: 'template_xe4rngx',  // Customer discount template
+        businessTemplateId: 'template_zf4ph1s',  // Business notification template
+        couponCode: 'NEWCUSTOMER10',
+        couponPercent: 10,
+        popupDelay: 5000 // 5 seconds delay
+    };
+
+    // ===== Main JavaScript =====
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize EmailJS
+        (function() {
+            emailjs.init({
+                publicKey: EMAIL_CONFIG.publicKey,
+                blockHeadless: true,
+                limitRate: {
+                    id: 'greenglo',
+                    throttle: 10000 // 10 seconds
+                }
+            });
+            console.log('✅ EmailJS initialized successfully');
+        })();
+        
+        // ===== Mobile Navigation =====
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const navMenu = document.getElementById('navMenu');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        // Mobile menu toggle function
+        function toggleMobileMenu() {
+            const isActive = navMenu.classList.contains('active');
+            
+            if (isActive) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+
+        function openMobileMenu() {
+            navMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            mobileMenuBtn.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            mobileMenuBtn.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        }
+
+        // Mobile menu button click
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when clicking overlay
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        // Close menu when clicking nav links
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Close menu with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ===== Testimonial Carousel =====
+        const carouselContainer = document.getElementById('carouselContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicators = document.querySelectorAll('.carousel-indicator');
+        const totalSlides = document.querySelectorAll('.testimonial-card').length;
+        let currentSlide = 0;
+        let carouselInterval;
+
+        function updateCarousel() {
+            if (carouselContainer) {
+                carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+                indicators.forEach((indicator, index) => {
+                    if (index === currentSlide) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        // Initialize carousel
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    currentSlide = index;
+                    updateCarousel();
+                });
+            });
+
+            // Auto-rotate carousel
+            carouselInterval = setInterval(nextSlide, 5000);
+            
+            // Pause on hover
+            const carousel = document.querySelector('.testimonials-carousel');
+            if (carousel) {
+                carousel.addEventListener('mouseenter', () => {
+                    clearInterval(carouselInterval);
+                });
+
+                carousel.addEventListener('mouseleave', () => {
+                    carouselInterval = setInterval(nextSlide, 5000);
+                });
+
+                // Pause on touch for mobile
+                carousel.addEventListener('touchstart', () => {
+                    clearInterval(carouselInterval);
+                });
+
+                carousel.addEventListener('touchend', () => {
+                    carouselInterval = setInterval(nextSlide, 5000);
+                });
+            }
+        }
+
+        // ===== FAQ Accordion =====
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item && otherItem.classList.contains('active')) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                item.classList.toggle('active');
+            });
+        });
+
+        // ===== WhatsApp Button =====
+        const whatsappButton = document.getElementById('whatsappButton');
+        const whatsappNotification = document.getElementById('whatsappNotification');
+
+        function openWhatsApp() {
+            const message = "Hello GreenGlo, I'm interested in your professional cleaning services. Could you provide more information?";
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            
+            // Hide notification after click
+            if (whatsappNotification) {
+                whatsappNotification.style.display = 'none';
+                localStorage.setItem('whatsappNotificationRead', 'true');
+            }
+        }
+
+        // Add click event to WhatsApp button
+        if (whatsappButton) {
+            whatsappButton.addEventListener('click', openWhatsApp);
+            
+            // Check notification status
+            const notificationRead = localStorage.getItem('whatsappNotificationRead');
+            const lastVisit = localStorage.getItem('lastWhatsAppVisit');
+            const now = new Date().getTime();
+            
+            if (whatsappNotification) {
+                if (!notificationRead || !lastVisit || (now - parseInt(lastVisit)) > 24 * 60 * 60 * 1000) {
+                    whatsappNotification.style.display = 'flex';
+                } else {
+                    whatsappNotification.style.display = 'none';
+                }
+                localStorage.setItem('lastWhatsAppVisit', now.toString());
+            }
+        }
+
+        // ===== Coverage Checker & Map =====
+        const serviceConfig = {
+            coveredAreas: [
+                'E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC',
+                'ME', 'TN', 'CT', 'DA',
+                'IG', 'RM', 'CM', 'SS', 'CO'
+            ],
+            companyName: 'GreenGlo Cleaners',
+            phoneNumber: '447827784204'
         };
 
-        // ===== Main JavaScript =====
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize EmailJS
-            (function() {
-                emailjs.init({
-                    publicKey: EMAIL_CONFIG.publicKey,
-                    blockHeadless: true,
-                    limitRate: {
-                        id: 'greenglo',
-                        throttle: 10000 // 10 seconds
-                    }
-                });
-                console.log('✅ EmailJS initialized successfully');
-            })();
+        const postcodeForm = document.getElementById('postcodeForm');
+        const postcodeInput = document.getElementById('postcodeInput');
+        const coverageResult = document.getElementById('coverageResult');
+        const checkButton = document.getElementById('checkButton');
+
+        let serviceMap = null;
+
+        function initServiceMap() {
+            // Check if map container exists
+            const mapContainer = document.getElementById('serviceAreaMap');
+            if (!mapContainer) {
+                console.error('Map container not found');
+                return;
+            }
+
+            // Clear any existing map
+            if (serviceMap) {
+                serviceMap.remove();
+            }
+
+            // Initialize map
+            serviceMap = L.map('serviceAreaMap').setView([51.507, 0.127], 9);
             
-            // ===== Mobile Navigation =====
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-            const navMenu = document.getElementById('navMenu');
-            const navbar = document.getElementById('navbar');
-            const navLinks = document.querySelectorAll('.nav-link');
-
-            // Mobile menu toggle function
-            function toggleMobileMenu() {
-                const isActive = navMenu.classList.contains('active');
-                
-                if (isActive) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
-            }
-
-            function openMobileMenu() {
-                navMenu.classList.add('active');
-                mobileMenuOverlay.classList.add('active');
-                mobileMenuBtn.classList.add('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeMobileMenu() {
-                navMenu.classList.remove('active');
-                mobileMenuOverlay.classList.remove('active');
-                mobileMenuBtn.classList.remove('active');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                document.body.style.overflow = '';
-            }
-
-            // Mobile menu button click
-            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-
-            // Close menu when clicking overlay
-            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-
-            // Close menu when clicking nav links
-            navLinks.forEach(link => {
-                link.addEventListener('click', closeMobileMenu);
-            });
-
-            // Close menu with Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && navMenu.classList.contains('active')) {
-                    closeMobileMenu();
-                }
-            });
-
-            // Navbar scroll effect
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-
-            // ===== Testimonial Carousel =====
-            const carouselContainer = document.getElementById('carouselContainer');
-            const prevBtn = document.getElementById('prevBtn');
-            const nextBtn = document.getElementById('nextBtn');
-            const indicators = document.querySelectorAll('.carousel-indicator');
-            const totalSlides = document.querySelectorAll('.testimonial-card').length;
-            let currentSlide = 0;
-            let carouselInterval;
-
-            function updateCarousel() {
-                if (carouselContainer) {
-                    carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-                    indicators.forEach((indicator, index) => {
-                        if (index === currentSlide) {
-                            indicator.classList.add('active');
-                        } else {
-                            indicator.classList.remove('active');
-                        }
-                    });
-                }
-            }
-
-            function nextSlide() {
-                currentSlide = (currentSlide + 1) % totalSlides;
-                updateCarousel();
-            }
-
-            function prevSlide() {
-                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-                updateCarousel();
-            }
-
-            // Initialize carousel
-            if (prevBtn && nextBtn) {
-                prevBtn.addEventListener('click', prevSlide);
-                nextBtn.addEventListener('click', nextSlide);
-
-                indicators.forEach((indicator, index) => {
-                    indicator.addEventListener('click', () => {
-                        currentSlide = index;
-                        updateCarousel();
-                    });
-                });
-
-                // Auto-rotate carousel
-                carouselInterval = setInterval(nextSlide, 5000);
-                
-                // Pause on hover
-                const carousel = document.querySelector('.testimonials-carousel');
-                if (carousel) {
-                    carousel.addEventListener('mouseenter', () => {
-                        clearInterval(carouselInterval);
-                    });
-
-                    carousel.addEventListener('mouseleave', () => {
-                        carouselInterval = setInterval(nextSlide, 5000);
-                    });
-
-                    // Pause on touch for mobile
-                    carousel.addEventListener('touchstart', () => {
-                        clearInterval(carouselInterval);
-                    });
-
-                    carousel.addEventListener('touchend', () => {
-                        carouselInterval = setInterval(nextSlide, 5000);
-                    });
-                }
-            }
-
-            // ===== FAQ Accordion =====
-            const faqItems = document.querySelectorAll('.faq-item');
-
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                
-                question.addEventListener('click', () => {
-                    faqItems.forEach(otherItem => {
-                        if (otherItem !== item && otherItem.classList.contains('active')) {
-                            otherItem.classList.remove('active');
-                        }
-                    });
-                    item.classList.toggle('active');
-                });
-            });
-
-            // ===== WhatsApp Button =====
-            const whatsappButton = document.getElementById('whatsappButton');
-            const whatsappNotification = document.getElementById('whatsappNotification');
-
-            function openWhatsApp() {
-                const message = "Hello GreenGlo, I'm interested in your professional cleaning services. Could you provide more information?";
-                const encodedMessage = encodeURIComponent(message);
-                const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-                
-                window.open(whatsappUrl, '_blank');
-                
-                // Hide notification after click
-                if (whatsappNotification) {
-                    whatsappNotification.style.display = 'none';
-                    localStorage.setItem('whatsappNotificationRead', 'true');
-                }
-            }
-
-            // Add click event to WhatsApp button
-            if (whatsappButton) {
-                whatsappButton.addEventListener('click', openWhatsApp);
-                
-                // Check notification status
-                const notificationRead = localStorage.getItem('whatsappNotificationRead');
-                const lastVisit = localStorage.getItem('lastWhatsAppVisit');
-                const now = new Date().getTime();
-                
-                if (whatsappNotification) {
-                    if (!notificationRead || !lastVisit || (now - parseInt(lastVisit)) > 24 * 60 * 60 * 1000) {
-                        whatsappNotification.style.display = 'flex';
-                    } else {
-                        whatsappNotification.style.display = 'none';
-                    }
-                    localStorage.setItem('lastWhatsAppVisit', now.toString());
-                }
-            }
-
-            // ===== Coverage Checker & Map =====
-            const serviceConfig = {
-                coveredAreas: [
-                    'E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC',
-                    'ME', 'TN', 'CT', 'DA',
-                    'IG', 'RM', 'CM', 'SS', 'CO'
-                ],
-                companyName: 'GreenGlo Cleaners',
-                phoneNumber: '447827784204'
-            };
-
-            const postcodeForm = document.getElementById('postcodeForm');
-            const postcodeInput = document.getElementById('postcodeInput');
-            const coverageResult = document.getElementById('coverageResult');
-            const checkButton = document.getElementById('checkButton');
-
-            let serviceMap = null;
-
-            function initServiceMap() {
-                // Check if map container exists
-                const mapContainer = document.getElementById('serviceAreaMap');
-                if (!mapContainer) {
-                    console.error('Map container not found');
-                    return;
-                }
-
-                // Clear any existing map
-                if (serviceMap) {
-                    serviceMap.remove();
-                }
-
-                // Initialize map
-                serviceMap = L.map('serviceAreaMap').setView([51.507, 0.127], 9);
-                
-                // Add tile layer
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-                    maxZoom: 13,
-                    minZoom: 7
-                }).addTo(serviceMap);
-                
-                // Define service area with multiple polygons for London, Kent, and Essex
-                const londonArea = [
-                    [51.686, -0.510],
-                    [51.686, 0.800],
-                    [51.200, 0.800],
-                    [51.200, -0.510]
-                ];
-                
-                const kentArea = [
-                    [51.447, 0.374],
-                    [51.447, 1.450],
-                    [50.940, 1.450],
-                    [50.940, 0.374]
-                ];
-                
-                const essexArea = [
-                    [51.980, -0.208],
-                    [51.980, 1.300],
-                    [51.447, 1.300],
-                    [51.447, -0.208]
-                ];
-                
-                // Add London polygon
-                L.polygon(londonArea, {
-                    color: 'var(--primary-green)',
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 13,
+                minZoom: 7
+            }).addTo(serviceMap);
+            
+            // Define service area with multiple polygons for London, Kent, and Essex
+            const londonArea = [
+                [51.686, -0.510],
+                [51.686, 0.800],
+                [51.200, 0.800],
+                [51.200, -0.510]
+            ];
+            
+            const kentArea = [
+                [51.447, 0.374],
+                [51.447, 1.450],
+                [50.940, 1.450],
+                [50.940, 0.374]
+            ];
+            
+            const essexArea = [
+                [51.980, -0.208],
+                [51.980, 1.300],
+                [51.447, 1.300],
+                [51.447, -0.208]
+            ];
+            
+            // Add London polygon
+            L.polygon(londonArea, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(16, 185, 129, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap)
+              .bindPopup('<b>London Coverage</b><br>Full service available');
+            
+            // Add Kent polygon
+            L.polygon(kentArea, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(52, 211, 153, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap)
+              .bindPopup('<b>Kent Coverage</b><br>Full service available');
+            
+            // Add Essex polygon
+            L.polygon(essexArea, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(13, 148, 136, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap)
+              .bindPopup('<b>Essex Coverage</b><br>Full service available');
+            
+            // Add markers for key locations
+            const locations = [
+                { coords: [51.507, -0.127], title: 'London Headquarters', iconColor: '#10B981' },
+                { coords: [51.278, 0.527], title: 'Kent Service Center', iconColor: '#34D399' },
+                { coords: [51.759, 0.457], title: 'Essex Service Center', iconColor: '#0D9488' }
+            ];
+            
+            locations.forEach(loc => {
+                L.circleMarker(loc.coords, {
+                    radius: 8,
+                    fillColor: loc.iconColor,
+                    color: '#fff',
                     weight: 2,
-                    fillColor: 'rgba(16, 185, 129, 0.3)',
-                    fillOpacity: 0.4,
-                    className: 'service-coverage-layer'
+                    opacity: 1,
+                    fillOpacity: 0.8
                 }).addTo(serviceMap)
-                  .bindPopup('<b>London Coverage</b><br>Full service available');
-                
-                // Add Kent polygon
-                L.polygon(kentArea, {
-                    color: 'var(--primary-green)',
-                    weight: 2,
-                    fillColor: 'rgba(52, 211, 153, 0.3)',
-                    fillOpacity: 0.4,
-                    className: 'service-coverage-layer'
-                }).addTo(serviceMap)
-                  .bindPopup('<b>Kent Coverage</b><br>Full service available');
-                
-                // Add Essex polygon
-                L.polygon(essexArea, {
-                    color: 'var(--primary-green)',
-                    weight: 2,
-                    fillColor: 'rgba(13, 148, 136, 0.3)',
-                    fillOpacity: 0.4,
-                    className: 'service-coverage-layer'
-                }).addTo(serviceMap)
-                  .bindPopup('<b>Essex Coverage</b><br>Full service available');
-                
-                // Add markers for key locations
-                const locations = [
-                    { coords: [51.507, -0.127], title: 'London Headquarters', iconColor: '#10B981' },
-                    { coords: [51.278, 0.527], title: 'Kent Service Center', iconColor: '#34D399' },
-                    { coords: [51.759, 0.457], title: 'Essex Service Center', iconColor: '#0D9488' }
-                ];
-                
-                locations.forEach(loc => {
-                    L.circleMarker(loc.coords, {
-                        radius: 8,
-                        fillColor: loc.iconColor,
-                        color: '#fff',
-                        weight: 2,
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    }).addTo(serviceMap)
-                      .bindPopup(`<b>${loc.title}</b>`);
-                });
+                  .bindPopup(`<b>${loc.title}</b>`);
+            });
 
-                // Handle map resize on mobile
+            // Handle map resize on mobile
+            setTimeout(() => {
+                serviceMap.invalidateSize();
+            }, 100);
+        }
+
+        // Initialize map
+        initServiceMap();
+
+        // Handle window resize for map
+        window.addEventListener('resize', function() {
+            if (serviceMap) {
                 setTimeout(() => {
                     serviceMap.invalidateSize();
                 }, 100);
             }
+        });
 
-            // Initialize map
-            initServiceMap();
-
-            // Handle window resize for map
-            window.addEventListener('resize', function() {
-                if (serviceMap) {
-                    setTimeout(() => {
-                        serviceMap.invalidateSize();
-                    }, 100);
-                }
-            });
-
-            // Postcode checker functionality
-            if (postcodeForm && postcodeInput && coverageResult && checkButton) {
-                function validateAndParsePostcode(postcode) {
-                    let cleanPostcode = postcode.toUpperCase().replace(/\s+/g, '').trim();
-                    
-                    const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\d[A-Z]{2}$/;
-                    
-                    if (!postcodeRegex.test(cleanPostcode)) {
-                        const outcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)/;
-                        const match = cleanPostcode.match(outcodeRegex);
-                        if (match) {
-                            return { valid: true, fullPostcode: null, outcode: match[1] };
-                        }
-                        return { valid: false, error: 'Please enter a valid UK postcode format (e.g., SW1A 1AA or ME14 2TT).' };
+        // Postcode checker functionality
+        if (postcodeForm && postcodeInput && coverageResult && checkButton) {
+            function validateAndParsePostcode(postcode) {
+                let cleanPostcode = postcode.toUpperCase().replace(/\s+/g, '').trim();
+                
+                const postcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)\d[A-Z]{2}$/;
+                
+                if (!postcodeRegex.test(cleanPostcode)) {
+                    const outcodeRegex = /^([A-Z]{1,2}\d{1,2}[A-Z]?)/;
+                    const match = cleanPostcode.match(outcodeRegex);
+                    if (match) {
+                        return { valid: true, fullPostcode: null, outcode: match[1] };
                     }
-                    
-                    const outcodeMatch = cleanPostcode.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
-                    const outcode = outcodeMatch ? outcodeMatch[0] : null;
-                    
-                    return {
-                        valid: true,
-                        fullPostcode: cleanPostcode.replace(/(.{3})$/, ' $1'),
-                        outcode: outcode
-                    };
+                    return { valid: false, error: 'Please enter a valid UK postcode format (e.g., SW1A 1AA or ME14 2TT).' };
                 }
+                
+                const outcodeMatch = cleanPostcode.match(/^[A-Z]{1,2}\d{1,2}[A-Z]?/);
+                const outcode = outcodeMatch ? outcodeMatch[0] : null;
+                
+                return {
+                    valid: true,
+                    fullPostcode: cleanPostcode.replace(/(.{3})$/, ' $1'),
+                    outcode: outcode
+                };
+            }
 
-                function checkServiceCoverage(postcodeData) {
-                    const outcode = postcodeData.outcode;
-                    if (!outcode) return false;
-                    
-                    for (const area of serviceConfig.coveredAreas) {
-                        if (outcode.startsWith(area)) {
-                            return {
-                                covered: true,
-                                area: area,
-                                region: getRegionName(area)
-                            };
-                        }
+            function checkServiceCoverage(postcodeData) {
+                const outcode = postcodeData.outcode;
+                if (!outcode) return false;
+                
+                for (const area of serviceConfig.coveredAreas) {
+                    if (outcode.startsWith(area)) {
+                        return {
+                            covered: true,
+                            area: area,
+                            region: getRegionName(area)
+                        };
                     }
-                    return { covered: false };
                 }
+                return { covered: false };
+            }
 
-                function getRegionName(area) {
-                    const londonAreas = ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC'];
-                    const kentAreas = ['ME', 'TN', 'CT', 'DA'];
-                    const essexAreas = ['IG', 'RM', 'CM', 'SS', 'CO'];
-                    
-                    if (londonAreas.includes(area)) return 'London';
-                    if (kentAreas.includes(area)) return 'Kent';
-                    if (essexAreas.includes(area)) return 'Essex';
-                    return area;
-                }
+            function getRegionName(area) {
+                const londonAreas = ['E', 'EC', 'N', 'NW', 'SE', 'SW', 'W', 'WC'];
+                const kentAreas = ['ME', 'TN', 'CT', 'DA'];
+                const essexAreas = ['IG', 'RM', 'CM', 'SS', 'CO'];
+                
+                if (londonAreas.includes(area)) return 'London';
+                if (kentAreas.includes(area)) return 'Kent';
+                if (essexAreas.includes(area)) return 'Essex';
+                return area;
+            }
 
-                function displayCoverageResult(postcodeData, coverageInfo) {
-                    if (coverageInfo.covered) {
-                        coverageResult.innerHTML = `
-                            <div class="result-success">
-                                <i class="fas fa-check-circle"></i>
-                                <h4>Great News! We Cover Your Area</h4>
-                                <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
-                                <p>Your postcode is in our <strong>${coverageInfo.region}</strong> service area.</p>
-                                <p style="font-size: 0.95rem; color: var(--medium-gray);">
-                                    <i class="fas fa-clock"></i> Next available slots in ${coverageInfo.region}
-                                </p>
-                                <div class="result-cta">
-                                    <a href="https://api.whatsapp.com/send?phone=${serviceConfig.phoneNumber}&text=Hello%20GreenGlo,%20I'm%20in%20${encodeURIComponent(postcodeData.outcode)}%20and%20would%20like%20a%20quote" 
-                                       class="btn" 
-                                       target="_blank" 
-                                       style="margin-top: 1rem;">
-                                        <i class="fas fa-whatsapp"></i> Get a Quote for ${postcodeData.outcode}
-                                    </a>
-                                </div>
+            function displayCoverageResult(postcodeData, coverageInfo) {
+                if (coverageInfo.covered) {
+                    coverageResult.innerHTML = `
+                        <div class="result-success">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Great News! We Cover Your Area</h4>
+                            <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                            <p>Your postcode is in our <strong>${coverageInfo.region}</strong> service area.</p>
+                            <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                                <i class="fas fa-clock"></i> Next available slots in ${coverageInfo.region}
+                            </p>
+                            <div class="result-cta">
+                                <a href="https://api.whatsapp.com/send?phone=${serviceConfig.phoneNumber}&text=Hello%20GreenGlo,%20I'm%20in%20${encodeURIComponent(postcodeData.outcode)}%20and%20would%20like%20a%20quote" 
+                                   class="btn" 
+                                   target="_blank" 
+                                   style="margin-top: 1rem;">
+                                    <i class="fas fa-whatsapp"></i> Get a Quote for ${postcodeData.outcode}
+                                </a>
                             </div>
-                        `;
-                        coverageResult.style.borderColor = 'var(--primary-green)';
-                        coverageResult.style.background = 'rgba(16, 185, 129, 0.05)';
-                    } else {
+                        </div>
+                    `;
+                    coverageResult.style.borderColor = 'var(--primary-green)';
+                    coverageResult.style.background = 'rgba(16, 185, 129, 0.05)';
+                } else {
+                    coverageResult.innerHTML = `
+                        <div class="result-error">
+                            <i class="fas fa-times-circle"></i>
+                            <h4>Currently Not in Your Area</h4>
+                            <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
+                            <p>We don't currently serve <strong>${postcodeData.outcode}</strong>. Our primary areas are London, Kent & Essex.</p>
+                            <p style="font-size: 0.95rem; color: var(--medium-gray);">
+                                <i class="fas fa-info-circle"></i> Service areas expanding soon!
+                            </p>
+                            <div class="result-cta">
+                                <button class="btn btn-outline" onclick="document.getElementById('postcodeInput').focus()" style="margin-top: 1rem;">
+                                    <i class="fas fa-redo"></i> Check Another Postcode
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    coverageResult.style.borderColor = '#EF4444';
+                    coverageResult.style.background = 'rgba(239, 68, 68, 0.05)';
+                }
+            }
+
+            postcodeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const postcode = postcodeInput.value.trim();
+                if (!postcode) {
+                    postcodeInput.focus();
+                    return;
+                }
+                
+                const originalBtnText = checkButton.innerHTML;
+                checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+                checkButton.disabled = true;
+                
+                setTimeout(() => {
+                    const postcodeData = validateAndParsePostcode(postcode);
+                    
+                    if (!postcodeData.valid) {
                         coverageResult.innerHTML = `
                             <div class="result-error">
-                                <i class="fas fa-times-circle"></i>
-                                <h4>Currently Not in Your Area</h4>
-                                <div class="postcode-display">${postcodeData.fullPostcode || postcodeData.outcode}</div>
-                                <p>We don't currently serve <strong>${postcodeData.outcode}</strong>. Our primary areas are London, Kent & Essex.</p>
-                                <p style="font-size: 0.95rem; color: var(--medium-gray);">
-                                    <i class="fas fa-info-circle"></i> Service areas expanding soon!
-                                </p>
-                                <div class="result-cta">
-                                    <button class="btn btn-outline" onclick="document.getElementById('postcodeInput').focus()" style="margin-top: 1rem;">
-                                        <i class="fas fa-redo"></i> Check Another Postcode
-                                    </button>
-                                </div>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h4>Invalid Postcode</h4>
+                                <p>${postcodeData.error}</p>
+                                <p style="font-size: 0.9rem;">Examples: SW1A 1AA (London), ME14 2TT (Kent), CM1 1AA (Essex)</p>
                             </div>
                         `;
-                        coverageResult.style.borderColor = '#EF4444';
-                        coverageResult.style.background = 'rgba(239, 68, 68, 0.05)';
+                        coverageResult.style.borderColor = '#F59E0B';
+                        coverageResult.style.background = 'rgba(245, 158, 11, 0.05)';
+                    } else {
+                        const coverageInfo = checkServiceCoverage(postcodeData);
+                        displayCoverageResult(postcodeData, coverageInfo);
+                        
+                        if (coverageInfo.covered && serviceMap) {
+                            const regions = {
+                                'London': { center: [51.507, -0.127], zoom: 10 },
+                                'Kent': { center: [51.278, 0.527], zoom: 9 },
+                                'Essex': { center: [51.759, 0.457], zoom: 9 }
+                            };
+                            
+                            if (regions[coverageInfo.region]) {
+                                const { center, zoom } = regions[coverageInfo.region];
+                                serviceMap.setView(center, zoom);
+                                
+                                // Add a temporary marker for the searched postcode
+                                const marker = L.circleMarker(center, {
+                                    radius: 10,
+                                    fillColor: '#10B981',
+                                    color: '#fff',
+                                    weight: 3,
+                                    opacity: 1,
+                                    fillOpacity: 0.8
+                                }).addTo(serviceMap)
+                                  .bindPopup(`<b>Searched Area: ${postcodeData.outcode}</b><br>Covered in ${coverageInfo.region}`)
+                                  .openPopup();
+                                
+                                // Remove marker after 10 seconds
+                                setTimeout(() => {
+                                    if (marker && serviceMap) {
+                                        serviceMap.removeLayer(marker);
+                                    }
+                                }, 10000);
+                            }
+                        }
                     }
-                }
+                    
+                    checkButton.innerHTML = originalBtnText;
+                    checkButton.disabled = false;
+                }, 800);
+            });
 
-                postcodeForm.addEventListener('submit', function(e) {
+            // Set up postcode placeholder rotation
+            const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
+            let exampleIndex = 0;
+            
+            setInterval(() => {
+                postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
+                exampleIndex = (exampleIndex + 1) % examples.length;
+            }, 3000);
+        }
+
+        // ===== Email Popup System =====
+        // Show popup after delay - NOW SHOWS EVERY TIME (unless user already submitted)
+        setTimeout(() => {
+            showEmailPopup();
+        }, EMAIL_CONFIG.popupDelay);
+
+        function showEmailPopup() {
+            const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
+            if (hasSubmittedEmail) {
+                console.log('🚫 Popup not shown - user already submitted email');
+                return;
+            }
+            
+            // REMOVED: 24-hour check - now shows every time unless user already submitted
+            
+            console.log('✅ Showing email popup - showing every time site is opened');
+            createEmailPopup();
+        }
+
+        function createEmailPopup() {
+            // Check if popup already exists
+            if (document.getElementById('emailPopup')) {
+                console.log('🚫 Popup already exists');
+                return;
+            }
+            
+            console.log('✅ Creating email popup');
+            
+            const popupHTML = `
+                <div class="email-popup-overlay" id="emailPopup">
+                    <div class="email-popup-modal">
+                        <div class="email-popup-header">
+                            <h3>Get 10% Off Your First Clean!</h3>
+                            <p>Subscribe to receive your exclusive discount code</p>
+                            <button class="email-popup-close" id="closeEmailPopup">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="email-popup-content">
+                            <div id="emailForm">
+                                <p>Enter your email below to receive your 10% discount code valid for first-time customers.</p>
+                                
+                                <form class="email-popup-form" id="discountForm">
+                                    <div class="email-popup-input-group">
+                                        <input type="email" 
+                                               class="email-popup-input" 
+                                               id="userEmail" 
+                                               placeholder="Your email address" 
+                                               required>
+                                        <div class="email-popup-error" id="emailError">
+                                            Please enter a valid email address
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="email-popup-checkbox">
+                                        <input type="checkbox" id="agreeTerms" required>
+                                        <label for="agreeTerms">
+                                            I agree to receive marketing emails from GreenGlo Cleaners. 
+                                            You can unsubscribe at any time. 
+                                            <a href="#" target="_blank">Privacy Policy</a>
+                                        </label>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn email-popup-submit" id="submitEmail">
+                                        <i class="fas fa-gift"></i> Get My 10% Discount Code
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <div class="email-popup-success" id="successMessage">
+                                <i class="fas fa-check-circle"></i>
+                                <h4>Success! Check Your Email</h4>
+                                <p>Your 10% discount code has been sent to:</p>
+                                <p style="font-weight: 600;" id="sentEmail"></p>
+                                <div class="coupon-code" id="couponCode">${EMAIL_CONFIG.couponCode}</div>
+                                <p style="font-size: 0.9rem;">This code is valid for first-time customers only.</p>
+                                <button class="btn" onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20${EMAIL_CONFIG.couponCode}'">
+                                    Book Now with Discount
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="email-popup-footer">
+                            <p>Limited time offer. One use per customer.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add popup to body
+            const popupContainer = document.createElement('div');
+            popupContainer.innerHTML = popupHTML;
+            document.body.appendChild(popupContainer.firstElementChild);
+            
+            // Show popup with animation
+            setTimeout(() => {
+                const popup = document.getElementById('emailPopup');
+                if (popup) {
+                    popup.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    console.log('✅ Popup shown successfully');
+                    
+                    // Initialize popup functionality
+                    initEmailPopup();
+                } else {
+                    console.error('❌ Popup element not found after creation');
+                }
+            }, 100);
+        }
+
+        function initEmailPopup() {
+            const emailPopup = document.getElementById('emailPopup');
+            const closeEmailPopupBtn = document.getElementById('closeEmailPopup');
+            const discountForm = document.getElementById('discountForm');
+            const userEmail = document.getElementById('userEmail');
+            const emailError = document.getElementById('emailError');
+            const submitEmail = document.getElementById('submitEmail');
+            const emailForm = document.getElementById('emailForm');
+            const successMessage = document.getElementById('successMessage');
+            const sentEmail = document.getElementById('sentEmail');
+
+            if (!emailPopup) {
+                console.error('❌ Email popup elements not found');
+                return;
+            }
+
+            console.log('✅ Initializing email popup functionality');
+
+            // Close popup
+            function closeEmailPopup() {
+                if (emailPopup) {
+                    emailPopup.classList.remove('active');
+                    document.body.style.overflow = '';
+                    setTimeout(() => {
+                        if (emailPopup && emailPopup.parentNode) {
+                            emailPopup.parentNode.removeChild(emailPopup);
+                        }
+                    }, 300);
+                }
+            }
+
+            // Validate email
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // Show success message
+            function showSuccessMessage(email) {
+                if (sentEmail) sentEmail.textContent = email;
+                if (emailForm) emailForm.style.display = 'none';
+                if (successMessage) {
+                    successMessage.style.display = 'block';
+                    successMessage.classList.add('show');
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('greenglo_discount_received', 'true');
+                localStorage.setItem('greenglo_user_email', email);
+                localStorage.setItem('greenglo_coupon_code', EMAIL_CONFIG.couponCode);
+                
+                // Auto-close after 10 seconds
+                setTimeout(() => {
+                    if (emailPopup && emailPopup.classList.contains('active')) {
+                        closeEmailPopup();
+                    }
+                }, 10000);
+            }
+
+            // Send email using EmailJS - FIXED VERSION
+            async function sendDiscountEmail(email) {
+                try {
+                    console.log('📧 Sending email to:', email);
+                    
+                    // Check if email is valid first
+                    if (!email || !email.includes('@')) {
+                        throw new Error('Invalid email address');
+                    }
+                    
+                    // Template parameters must match exactly what's in your EmailJS template
+                    // Based on your email content, these are likely the parameters
+                    const templateParams = {
+                        to_email: email,
+                        user_email: email,
+                        coupon_code: EMAIL_CONFIG.couponCode,
+                        discount_percent: EMAIL_CONFIG.couponPercent,
+                        business_name: 'Green Glo Cleaning Co.',
+                        from_name: 'Green Glo Team'
+                    };
+
+                    console.log('📤 Sending with params:', templateParams);
+                    
+                    // Send to customer
+                    const customerResponse = await emailjs.send(
+                        EMAIL_CONFIG.serviceId,
+                        EMAIL_CONFIG.templateId,
+                        templateParams
+                    );
+
+                    console.log('✅ Customer email sent successfully:', customerResponse.status, customerResponse.text);
+                    
+                    // Also send business notification
+                    try {
+                        const businessResponse = await emailjs.send(
+                            EMAIL_CONFIG.serviceId,
+                            EMAIL_CONFIG.businessTemplateId,
+                            {
+                                customer_email: email,
+                                coupon_code: EMAIL_CONFIG.couponCode,
+                                date: new Date().toLocaleDateString('en-GB')
+                            }
+                        );
+                        console.log('✅ Business notification sent successfully');
+                    } catch (businessError) {
+                        console.warn('⚠️ Business notification failed, but customer email was sent:', businessError);
+                    }
+                    
+                    return { success: true };
+                    
+                } catch (error) {
+                    console.error('❌ EmailJS Error:', error);
+                    console.error('Error details:', {
+                        status: error.status,
+                        text: error.text,
+                        message: error.message
+                    });
+                    throw error;
+                }
+            }
+
+            // Handle form submission
+            if (discountForm) {
+                discountForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     
-                    const postcode = postcodeInput.value.trim();
-                    if (!postcode) {
-                        postcodeInput.focus();
+                    const email = userEmail.value.trim();
+                    console.log('📝 Form submitted with email:', email);
+                    
+                    if (!validateEmail(email)) {
+                        userEmail.classList.add('error');
+                        emailError.classList.add('show');
+                        userEmail.focus();
                         return;
                     }
                     
-                    const originalBtnText = checkButton.innerHTML;
-                    checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
-                    checkButton.disabled = true;
+                    userEmail.classList.remove('error');
+                    emailError.classList.remove('show');
                     
-                    setTimeout(() => {
-                        const postcodeData = validateAndParsePostcode(postcode);
-                        
-                        if (!postcodeData.valid) {
-                            coverageResult.innerHTML = `
-                                <div class="result-error">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <h4>Invalid Postcode</h4>
-                                    <p>${postcodeData.error}</p>
-                                    <p style="font-size: 0.9rem;">Examples: SW1A 1AA (London), ME14 2TT (Kent), CM1 1AA (Essex)</p>
-                                </div>
-                            `;
-                            coverageResult.style.borderColor = '#F59E0B';
-                            coverageResult.style.background = 'rgba(245, 158, 11, 0.05)';
-                        } else {
-                            const coverageInfo = checkServiceCoverage(postcodeData);
-                            displayCoverageResult(postcodeData, coverageInfo);
-                            
-                            if (coverageInfo.covered && serviceMap) {
-                                const regions = {
-                                    'London': { center: [51.507, -0.127], zoom: 10 },
-                                    'Kent': { center: [51.278, 0.527], zoom: 9 },
-                                    'Essex': { center: [51.759, 0.457], zoom: 9 }
-                                };
-                                
-                                if (regions[coverageInfo.region]) {
-                                    const { center, zoom } = regions[coverageInfo.region];
-                                    serviceMap.setView(center, zoom);
-                                    
-                                    // Add a temporary marker for the searched postcode
-                                    const marker = L.circleMarker(center, {
-                                        radius: 10,
-                                        fillColor: '#10B981',
-                                        color: '#fff',
-                                        weight: 3,
-                                        opacity: 1,
-                                        fillOpacity: 0.8
-                                    }).addTo(serviceMap)
-                                      .bindPopup(`<b>Searched Area: ${postcodeData.outcode}</b><br>Covered in ${coverageInfo.region}`)
-                                      .openPopup();
-                                    
-                                    // Remove marker after 10 seconds
-                                    setTimeout(() => {
-                                        if (marker && serviceMap) {
-                                            serviceMap.removeLayer(marker);
-                                        }
-                                    }, 10000);
-                                }
-                            }
-                        }
-                        
-                        checkButton.innerHTML = originalBtnText;
-                        checkButton.disabled = false;
-                    }, 800);
-                });
-
-                // Set up postcode placeholder rotation
-                const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
-                let exampleIndex = 0;
-                
-                setInterval(() => {
-                    postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
-                    exampleIndex = (exampleIndex + 1) % examples.length;
-                }, 3000);
-            }
-
-            // ===== Email Popup System =====
-            // Show popup after delay
-            setTimeout(() => {
-                showEmailPopup();
-            }, EMAIL_CONFIG.popupDelay);
-
-            function showEmailPopup() {
-                const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
-                if (hasSubmittedEmail) {
-                    console.log('🚫 Popup not shown - user already submitted email');
-                    return;
-                }
-                
-                const lastPopupTime = localStorage.getItem('greenglo_popup_last_shown');
-                const now = Date.now();
-                const oneDay = 24 * 60 * 60 * 1000;
-                
-                if (lastPopupTime && (now - parseInt(lastPopupTime)) < oneDay) {
-                    console.log('🚫 Popup not shown - shown within last 24 hours');
-                    return;
-                }
-                
-                console.log('✅ Showing email popup');
-                createEmailPopup();
-                localStorage.setItem('greenglo_popup_last_shown', now.toString());
-            }
-
-            function createEmailPopup() {
-                // Check if popup already exists
-                if (document.getElementById('emailPopup')) {
-                    console.log('🚫 Popup already exists');
-                    return;
-                }
-                
-                console.log('✅ Creating email popup');
-                
-                const popupHTML = `
-                    <div class="email-popup-overlay" id="emailPopup">
-                        <div class="email-popup-modal">
-                            <div class="email-popup-header">
-                                <h3>Get 10% Off Your First Clean!</h3>
-                                <p>Subscribe to receive your exclusive discount code</p>
-                                <button class="email-popup-close" id="closeEmailPopup">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            
-                            <div class="email-popup-content">
-                                <div id="emailForm">
-                                    <p>Enter your email below to receive your 10% discount code valid for first-time customers.</p>
-                                    
-                                    <form class="email-popup-form" id="discountForm">
-                                        <div class="email-popup-input-group">
-                                            <input type="email" 
-                                                   class="email-popup-input" 
-                                                   id="userEmail" 
-                                                   placeholder="Your email address" 
-                                                   required>
-                                            <div class="email-popup-error" id="emailError">
-                                                Please enter a valid email address
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="email-popup-checkbox">
-                                            <input type="checkbox" id="agreeTerms" required>
-                                            <label for="agreeTerms">
-                                                I agree to receive marketing emails from GreenGlo Cleaners. 
-                                                You can unsubscribe at any time. 
-                                                <a href="#" target="_blank">Privacy Policy</a>
-                                            </label>
-                                        </div>
-                                        
-                                        <button type="submit" class="btn email-popup-submit" id="submitEmail">
-                                            <i class="fas fa-gift"></i> Get My 10% Discount Code
-                                        </button>
-                                    </form>
-                                </div>
-                                
-                                <div class="email-popup-success" id="successMessage">
-                                    <i class="fas fa-check-circle"></i>
-                                    <h4>Success! Check Your Email</h4>
-                                    <p>Your 10% discount code has been sent to:</p>
-                                    <p style="font-weight: 600;" id="sentEmail"></p>
-                                    <div class="coupon-code" id="couponCode">${EMAIL_CONFIG.couponCode}</div>
-                                    <p style="font-size: 0.9rem;">This code is valid for first-time customers only.</p>
-                                    <button class="btn" onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20${EMAIL_CONFIG.couponCode}'">
-                                        Book Now with Discount
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <div class="email-popup-footer">
-                                <p>Limited time offer. One use per customer.</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                // Add popup to body
-                const popupContainer = document.createElement('div');
-                popupContainer.innerHTML = popupHTML;
-                document.body.appendChild(popupContainer.firstElementChild);
-                
-                // Show popup with animation
-                setTimeout(() => {
-                    const popup = document.getElementById('emailPopup');
-                    if (popup) {
-                        popup.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                        console.log('✅ Popup shown successfully');
-                        
-                        // Initialize popup functionality
-                        initEmailPopup();
-                    } else {
-                        console.error('❌ Popup element not found after creation');
-                    }
-                }, 100);
-            }
-
-            function initEmailPopup() {
-                const emailPopup = document.getElementById('emailPopup');
-                const closeEmailPopupBtn = document.getElementById('closeEmailPopup');
-                const discountForm = document.getElementById('discountForm');
-                const userEmail = document.getElementById('userEmail');
-                const emailError = document.getElementById('emailError');
-                const submitEmail = document.getElementById('submitEmail');
-                const emailForm = document.getElementById('emailForm');
-                const successMessage = document.getElementById('successMessage');
-                const sentEmail = document.getElementById('sentEmail');
-
-                if (!emailPopup) {
-                    console.error('❌ Email popup elements not found');
-                    return;
-                }
-
-                console.log('✅ Initializing email popup functionality');
-
-                // Close popup
-                function closeEmailPopup() {
-                    if (emailPopup) {
-                        emailPopup.classList.remove('active');
-                        document.body.style.overflow = '';
-                        setTimeout(() => {
-                            if (emailPopup && emailPopup.parentNode) {
-                                emailPopup.parentNode.removeChild(emailPopup);
-                            }
-                        }, 300);
-                    }
-                }
-
-                // Validate email
-                function validateEmail(email) {
-                    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                    return re.test(email);
-                }
-
-                // Show success message
-                function showSuccessMessage(email) {
-                    if (sentEmail) sentEmail.textContent = email;
-                    if (emailForm) emailForm.style.display = 'none';
-                    if (successMessage) {
-                        successMessage.style.display = 'block';
-                        successMessage.classList.add('show');
-                    }
+                    // Update button to show loading
+                    submitEmail.disabled = true;
+                    const originalBtnText = submitEmail.innerHTML;
+                    submitEmail.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
                     
-                    // Save to localStorage
-                    localStorage.setItem('greenglo_discount_received', 'true');
-                    localStorage.setItem('greenglo_user_email', email);
-                    localStorage.setItem('greenglo_coupon_code', EMAIL_CONFIG.couponCode);
-                    
-                    // Auto-close after 10 seconds
-                    setTimeout(() => {
-                        if (emailPopup && emailPopup.classList.contains('active')) {
-                            closeEmailPopup();
-                        }
-                    }, 10000);
-                }
-
-                // Send email using EmailJS - FIXED VERSION
-                async function sendDiscountEmail(email) {
                     try {
-                        console.log('📧 Sending email to:', email);
+                        // Send email via EmailJS
+                        const result = await sendDiscountEmail(email);
                         
-                        // Check if email is valid first
-                        if (!email || !email.includes('@')) {
-                            throw new Error('Invalid email address');
+                        if (result.success) {
+                            console.log('✅ Email sent successfully, showing success message');
+                            showSuccessMessage(email);
                         }
-                        
-                        // Template parameters must match exactly what's in your EmailJS template
-                        // Based on your email content, these are likely the parameters
-                        const templateParams = {
-                            to_email: email,
-                            user_email: email,
-                            coupon_code: EMAIL_CONFIG.couponCode,
-                            discount_percent: EMAIL_CONFIG.couponPercent,
-                            business_name: 'Green Glo Cleaning Co.',
-                            from_name: 'Green Glo Team'
-                        };
-
-                        console.log('📤 Sending with params:', templateParams);
-                        
-                        // Send to customer
-                        const customerResponse = await emailjs.send(
-                            EMAIL_CONFIG.serviceId,
-                            EMAIL_CONFIG.templateId,
-                            templateParams
-                        );
-
-                        console.log('✅ Customer email sent successfully:', customerResponse.status, customerResponse.text);
-                        
-                        // Also send business notification
-                        try {
-                            const businessResponse = await emailjs.send(
-                                EMAIL_CONFIG.serviceId,
-                                EMAIL_CONFIG.businessTemplateId,
-                                {
-                                    customer_email: email,
-                                    coupon_code: EMAIL_CONFIG.couponCode,
-                                    date: new Date().toLocaleDateString('en-GB')
-                                }
-                            );
-                            console.log('✅ Business notification sent successfully');
-                        } catch (businessError) {
-                            console.warn('⚠️ Business notification failed, but customer email was sent:', businessError);
-                        }
-                        
-                        return { success: true };
                         
                     } catch (error) {
-                        console.error('❌ EmailJS Error:', error);
-                        console.error('Error details:', {
-                            status: error.status,
-                            text: error.text,
-                            message: error.message
-                        });
-                        throw error;
-                    }
-                }
-
-                // Handle form submission
-                if (discountForm) {
-                    discountForm.addEventListener('submit', async (e) => {
-                        e.preventDefault();
+                        console.error('❌ Error in submission process:', error);
                         
-                        const email = userEmail.value.trim();
-                        console.log('📝 Form submitted with email:', email);
+                        // Show error message
+                        emailError.textContent = 'Sorry, there was an error sending your discount code. Please try again or contact us via WhatsApp for assistance.';
+                        emailError.classList.add('show');
+                        userEmail.classList.add('error');
                         
-                        if (!validateEmail(email)) {
-                            userEmail.classList.add('error');
-                            emailError.classList.add('show');
-                            userEmail.focus();
-                            return;
-                        }
+                        // Reset button
+                        submitEmail.disabled = false;
+                        submitEmail.innerHTML = originalBtnText;
                         
-                        userEmail.classList.remove('error');
-                        emailError.classList.remove('show');
-                        
-                        // Update button to show loading
-                        submitEmail.disabled = true;
-                        const originalBtnText = submitEmail.innerHTML;
-                        submitEmail.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-                        
-                        try {
-                            // Send email via EmailJS
-                            const result = await sendDiscountEmail(email);
-                            
-                            if (result.success) {
-                                console.log('✅ Email sent successfully, showing success message');
+                        // Show coupon code anyway for user convenience
+                        if (email && validateEmail(email)) {
+                            setTimeout(() => {
                                 showSuccessMessage(email);
-                            }
-                            
-                        } catch (error) {
-                            console.error('❌ Error in submission process:', error);
-                            
-                            // Show error message
-                            emailError.textContent = 'Sorry, there was an error sending your discount code. Please try again or contact us via WhatsApp for assistance.';
-                            emailError.classList.add('show');
-                            userEmail.classList.add('error');
-                            
-                            // Reset button
-                            submitEmail.disabled = false;
-                            submitEmail.innerHTML = originalBtnText;
-                            
-                            // Show coupon code anyway for user convenience
-                            if (email && validateEmail(email)) {
-                                setTimeout(() => {
-                                    showSuccessMessage(email);
-                                }, 500);
-                            }
+                            }, 500);
                         }
-                    });
-                }
+                    }
+                });
+            }
 
-                // Event Listeners
-                if (closeEmailPopupBtn) {
-                    closeEmailPopupBtn.addEventListener('click', closeEmailPopup);
-                }
+            // Event Listeners
+            if (closeEmailPopupBtn) {
+                closeEmailPopupBtn.addEventListener('click', closeEmailPopup);
+            }
 
-                if (emailPopup) {
-                    emailPopup.addEventListener('click', (e) => {
-                        if (e.target === emailPopup) {
-                            closeEmailPopup();
-                        }
-                    });
-                }
-
-                document.addEventListener('keydown', (e) => {
-                    const emailPopup = document.getElementById('emailPopup');
-                    if (e.key === 'Escape' && emailPopup && emailPopup.classList.contains('active')) {
+            if (emailPopup) {
+                emailPopup.addEventListener('click', (e) => {
+                    if (e.target === emailPopup) {
                         closeEmailPopup();
                     }
                 });
-
-                // Pre-fill email if previously saved
-                const savedEmail = localStorage.getItem('greenglo_user_email');
-                if (userEmail && savedEmail) {
-                    userEmail.value = savedEmail;
-                }
-
-                // Add real-time email validation
-                if (userEmail) {
-                    userEmail.addEventListener('input', () => {
-                        if (userEmail.value.trim()) {
-                            userEmail.classList.remove('error');
-                            emailError.classList.remove('show');
-                        }
-                    });
-                }
             }
-        });
-    </script>
+
+            document.addEventListener('keydown', (e) => {
+                const emailPopup = document.getElementById('emailPopup');
+                if (e.key === 'Escape' && emailPopup && emailPopup.classList.contains('active')) {
+                    closeEmailPopup();
+                }
+            });
+
+            // Pre-fill email if previously saved
+            const savedEmail = localStorage.getItem('greenglo_user_email');
+            if (userEmail && savedEmail) {
+                userEmail.value = savedEmail;
+            }
+
+            // Add real-time email validation
+            if (userEmail) {
+                userEmail.addEventListener('input', () => {
+                    if (userEmail.value.trim()) {
+                        userEmail.classList.remove('error');
+                        emailError.classList.remove('show');
+                    }
+                });
+            }
+        }
+    });
+</script>
 </body>
 </html>
+
