@@ -2638,7 +2638,7 @@
         businessTemplateId: 'template_zf4ph1s',  // Business notification template
         couponCode: 'NEWCUSTOMER10',
         couponPercent: 10,
-        popupDelay: 5000 // 5 seconds delay
+        popupDelay: 3000 // Reduced to 3 seconds for better UX
     };
 
     // ===== Main JavaScript =====
@@ -3159,7 +3159,8 @@
                 return;
             }
             
-            // REMOVED: 24-hour check - now shows every time unless user already submitted
+            // Remove the old 24-hour tracking data if it exists
+            localStorage.removeItem('greenglo_popup_last_shown');
             
             console.log('✅ Showing email popup - showing every time site is opened');
             createEmailPopup();
@@ -3467,8 +3468,12 @@
                 });
             }
         }
+        
+        // Clear any old popup tracking data on page load
+        localStorage.removeItem('greenglo_popup_last_shown');
     });
 </script>
 </body>
 </html>
+
 
