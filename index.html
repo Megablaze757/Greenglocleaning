@@ -1240,220 +1240,81 @@
             font-size: 0.9rem;
         }
 
-        .email-popup-overlay {
+        .whatsapp-float {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
         }
 
-        .email-popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .email-popup-modal {
-            background: var(--white);
-            border-radius: var(--border-radius-lg);
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            transform: translateY(20px) scale(0.95);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .email-popup-overlay.active .email-popup-modal {
-            transform: translateY(0) scale(1);
-        }
-
-        .email-popup-header {
-            background: var(--gradient-primary);
-            color: var(--white);
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .email-popup-header h3 {
-            color: var(--white);
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .email-popup-header p {
-            opacity: 0.9;
-            font-size: 1rem;
-        }
-
-        .email-popup-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            width: 36px;
-            height: 36px;
+        .whatsapp-button {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
             border-radius: 50%;
-            color: var(--white);
+            border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
-        }
-
-        .email-popup-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-
-        .email-popup-content {
-            padding: 2.5rem 2rem;
-        }
-
-        .email-popup-content p {
-            text-align: center;
-            color: var(--dark-gray);
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-        }
-
-        .email-popup-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .email-popup-input-group {
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
             position: relative;
         }
 
-        .email-popup-input {
-            width: 100%;
-            padding: 1.25rem 1.5rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            transition: var(--transition);
-            background: var(--white);
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
         }
 
-        .email-popup-input:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        .whatsapp-icon {
+            width: 32px;
+            height: 32px;
         }
 
-        .email-popup-input.error {
-            border-color: #EF4444;
-        }
-
-        .email-popup-error {
-            color: #EF4444;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
-
-        .email-popup-error.show {
-            display: block;
-        }
-
-        .email-popup-checkbox {
+        .whatsapp-notification {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FF3B30;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
             display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
         }
 
-        .email-popup-checkbox input {
-            margin-top: 0.25rem;
-            flex-shrink: 0;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
-        .email-popup-checkbox label {
-            font-size: 0.875rem;
+        .whatsapp-tooltip {
+            position: absolute;
+            right: 75px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--white);
             color: var(--dark-gray);
-            line-height: 1.5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
 
-        .email-popup-checkbox a {
-            color: var(--primary-green);
-            text-decoration: underline;
-        }
-
-        .email-popup-submit {
-            width: 100%;
-            padding: 1.25rem;
-            font-size: 1.125rem;
-        }
-
-        .email-popup-submit:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .email-popup-success {
-            text-align: center;
-            padding: 2rem;
-            display: none;
-        }
-
-        .email-popup-success.show {
-            display: block;
-        }
-
-        .email-popup-success i {
-            font-size: 3rem;
-            color: var(--primary-green);
-            margin-bottom: 1.5rem;
-        }
-
-        .email-popup-success h4 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark-green);
-        }
-
-        .email-popup-success p {
-            color: var(--medium-gray);
-            margin-bottom: 1.5rem;
-        }
-
-        .coupon-code {
-            display: inline-block;
-            background: var(--light-green);
-            color: var(--dark-green);
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin: 1.5rem 0;
-            border: 2px dashed var(--primary-green);
-        }
-
-        .email-popup-footer {
-            text-align: center;
-            padding: 1rem 2rem 2rem;
-            border-top: 1px solid var(--light-gray);
-            color: var(--medium-gray);
-            font-size: 0.875rem;
+        .whatsapp-button:hover + .whatsapp-tooltip {
+            opacity: 1;
         }
 
         .footer {
@@ -1723,10 +1584,6 @@
             .faq-item.active .faq-answer {
                 padding: 0 1.5rem 1.5rem;
             }
-
-            .email-popup-modal {
-                max-width: 95%;
-            }
         }
 
         @media (max-width: 480px) {
@@ -1771,17 +1628,14 @@
                 text-align: center;
             }
 
-            .email-popup-header {
-                padding: 1.5rem;
+            .whatsapp-button {
+                width: 56px;
+                height: 56px;
             }
 
-            .email-popup-content {
-                padding: 1.5rem;
-            }
-
-            .coupon-code {
-                padding: 0.75rem 1rem;
-                font-size: 1rem;
+            .whatsapp-icon {
+                width: 28px;
+                height: 28px;
             }
         }
     </style>
@@ -2420,101 +2274,16 @@
         </div>
     </section>
 
-    <!-- Email Popup Modal -->
-    <div class="email-popup-overlay" id="emailPopup">
-        <div class="email-popup-modal">
-            <div class="email-popup-header">
-                <h3>Get 10% Off Your First Clean!</h3>
-                <p>Subscribe to receive your exclusive discount code</p>
-                <button class="email-popup-close" id="closeEmailPopup">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="email-popup-content">
-                <div id="emailForm">
-                    <p>Enter your email below to receive your 10% discount code valid for first-time customers.</p>
-                    
-                    <form class="email-popup-form" id="discountForm">
-                        <div class="email-popup-input-group">
-                            <input type="email" 
-                                   class="email-popup-input" 
-                                   id="userEmail" 
-                                   placeholder="Your email address" 
-                                   required>
-                            <div class="email-popup-error" id="emailError">
-                                Please enter a valid email address
-                            </div>
-                        </div>
-                        
-                        <div class="email-popup-checkbox">
-                            <input type="checkbox" id="agreeTerms" required>
-                            <label for="agreeTerms">
-                                I agree to receive marketing emails from GreenGlo Cleaners. 
-                                You can unsubscribe at any time. 
-                                <a href="#" target="_blank">Privacy Policy</a>
-                            </label>
-                        </div>
-                        
-                        <button type="submit" class="btn email-popup-submit" id="submitEmail">
-                            <i class="fas fa-gift"></i> Get My 10% Discount Code
-                        </button>
-                    </form>
-                </div>
-                
-                <div class="email-popup-success" id="successMessage">
-                    <i class="fas fa-check-circle"></i>
-                    <h4>Success! Check Your Email</h4>
-                    <p>Your 10% discount code has been sent to:</p>
-                    <p style="font-weight: 600;" id="sentEmail"></p>
-                    <div class="coupon-code" id="couponCode">NEWCUSTOMER10</div>
-                    <p style="font-size: 0.9rem;">This code is valid for first-time customers only.</p>
-                    <button class="btn" onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20NEWCUSTOMER10'">
-                        Book Now with Discount
-                    </button>
-                </div>
-            </div>
-            
-            <div class="email-popup-footer">
-                <p>Limited time offer. One use per customer.</p>
-            </div>
-        </div>
-    </div>
-
     <!-- Floating WhatsApp Button -->
     <div class="whatsapp-float">
-        <div class="whatsapp-message-bubble" id="whatsappBubble">
-            <button class="close-bubble" onclick="closeBubble()">×</button>
-            <div class="message-header">
-                <div class="message-avatar">GG</div>
-                <div class="message-info">
-                    <h4>Green Glo Cleaning Co</h4>
-                    <p id="statusText">Typically replies in 24 hours</p>
-                </div>
-            </div>
-            <div class="message-content">
-                Hello! 👋 Need a professional clean? Message us for a free quote or to book a service. We're here to
-                help!
-            </div>
-            <input type="text" class="message-input" id="whatsappMessage" placeholder="Type your message here..."
-                maxlength="200">
-            <button class="send-button" onclick="sendWhatsAppMessage()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                    <path d="M1.101 21.757L23.8 12.028 1.101 2.3l.011 7.912 13.623 1.816-13.623 1.817-.011 7.912z" />
-                </svg>
-                Send to WhatsApp
-            </button>
-        </div>
-
-        <button class="whatsapp-button" id="whatsappButton" onclick="toggleBubble()">
+        <div class="whatsapp-button" id="whatsappButton" onclick="openWhatsApp()">
             <div class="whatsapp-notification" id="whatsappNotification">1</div>
             <div class="whatsapp-icon-container">
                 <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="white">
-                    <path
-                        d="M12 0a12 12 0 1 0 12 12A12 12 0 0 0 12 0Zm6.49 15.387l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0-8.858-.416l-1.21 1.21a6.9 6.9 0 0 0-.416 8.858l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0 .416-8.858l1.21-1.21a6.9 6.9 0 0 0 8.858-.416l1.745-1.745a.374.374 0 0 1 .531 0l1.93 1.93a.374.374 0 0 1 0 .53l-1.745 1.745a6.9 6.9 0 0 0 .416 8.858Z" />
+                    <path d="M12 0a12 12 0 1 0 12 12A12 12 0 0 0 12 0Zm6.49 15.387l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0-8.858-.416l-1.21 1.21a6.9 6.9 0 0 0-.416 8.858l-1.745 1.745a.374.374 0 0 1-.531 0l-1.93-1.93a.374.374 0 0 1 0-.53l1.745-1.745a6.9 6.9 0 0 0 .416-8.858l1.21-1.21a6.9 6.9 0 0 0 8.858-.416l1.745-1.745a.374.374 0 0 1 .531 0l1.93 1.93a.374.374 0 0 1 0 .53l-1.745 1.745a6.9 6.9 0 0 0 .416 8.858Z" />
                 </svg>
             </div>
-        </button>
+        </div>
         <span class="whatsapp-tooltip">Chat with Green Glo Cleaning</span>
     </div>
 
@@ -2587,6 +2356,7 @@
     </footer>
 
     <!-- JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
         // ===== Mobile Navigation =====
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -2735,27 +2505,76 @@
                 minZoom: 7
             }).addTo(serviceMap);
             
-            const serviceAreaCoords = [
-                [51.686, 0.010],
+            // Define service area with multiple polygons for London, Kent, and Essex
+            const londonArea = [
+                [51.686, -0.510],
                 [51.686, 0.800],
                 [51.200, 0.800],
-                [51.200, -0.510],
-                [51.686, -0.510],
-                [51.686, 0.010]
+                [51.200, -0.510]
             ];
             
-            coverageLayer = L.polygon(serviceAreaCoords, {
+            const kentArea = [
+                [51.447, 0.374],
+                [51.447, 1.450],
+                [50.940, 1.450],
+                [50.940, 0.374]
+            ];
+            
+            const essexArea = [
+                [51.980, -0.208],
+                [51.980, 1.300],
+                [51.447, 1.300],
+                [51.447, -0.208]
+            ];
+            
+            // Add London polygon
+            L.polygon(londonArea, {
                 color: 'var(--primary-green)',
                 weight: 2,
                 fillColor: 'rgba(16, 185, 129, 0.3)',
                 fillOpacity: 0.4,
                 className: 'service-coverage-layer'
-            }).addTo(serviceMap);
+            }).addTo(serviceMap)
+              .bindPopup('<b>London Coverage</b><br>Full service available');
             
-            L.marker([51.507, -0.127])
-                .addTo(serviceMap)
-                .bindPopup('<b>GreenGlo Cleaners</b><br>London Headquarters')
-                .openPopup();
+            // Add Kent polygon
+            L.polygon(kentArea, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(52, 211, 153, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap)
+              .bindPopup('<b>Kent Coverage</b><br>Full service available');
+            
+            // Add Essex polygon
+            L.polygon(essexArea, {
+                color: 'var(--primary-green)',
+                weight: 2,
+                fillColor: 'rgba(13, 148, 136, 0.3)',
+                fillOpacity: 0.4,
+                className: 'service-coverage-layer'
+            }).addTo(serviceMap)
+              .bindPopup('<b>Essex Coverage</b><br>Full service available');
+            
+            // Add markers for key locations
+            const locations = [
+                { coords: [51.507, -0.127], title: 'London Headquarters', iconColor: '#10B981' },
+                { coords: [51.278, 0.527], title: 'Kent Service Center', iconColor: '#34D399' },
+                { coords: [51.759, 0.457], title: 'Essex Service Center', iconColor: '#0D9488' }
+            ];
+            
+            locations.forEach(loc => {
+                L.circleMarker(loc.coords, {
+                    radius: 8,
+                    fillColor: loc.iconColor,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(serviceMap)
+                  .bindPopup(`<b>${loc.title}</b>`);
+            });
         }
 
         function validateAndParsePostcode(postcode) {
@@ -2895,6 +2714,25 @@
                         if (regions[coverageInfo.region]) {
                             const { center, zoom } = regions[coverageInfo.region];
                             serviceMap.setView(center, zoom);
+                            
+                            // Add a temporary marker for the searched postcode
+                            const marker = L.circleMarker(center, {
+                                radius: 10,
+                                fillColor: '#10B981',
+                                color: '#fff',
+                                weight: 3,
+                                opacity: 1,
+                                fillOpacity: 0.8
+                            }).addTo(serviceMap)
+                              .bindPopup(`<b>Searched Area: ${postcodeData.outcode}</b><br>Covered in ${coverageInfo.region}`)
+                              .openPopup();
+                            
+                            // Remove marker after 10 seconds
+                            setTimeout(() => {
+                                if (marker && serviceMap) {
+                                    serviceMap.removeLayer(marker);
+                                }
+                            }, 10000);
                         }
                     }
                 }
@@ -2904,9 +2742,28 @@
             }, 800);
         });
 
+        // ===== WhatsApp Function =====
+        function openWhatsApp() {
+            const message = "Hello GreenGlo, I'm interested in your professional cleaning services. Could you provide more information?";
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            
+            // Hide notification after click
+            const notification = document.getElementById('whatsappNotification');
+            if (notification) {
+                notification.style.display = 'none';
+                localStorage.setItem('whatsappNotificationRead', 'true');
+            }
+        }
+
+        // Check notification status on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map
             initServiceMap();
             
+            // Set up postcode placeholder rotation
             const examples = ['SW1A 1AA', 'ME14 2TT', 'IG1 1AA'];
             let exampleIndex = 0;
             
@@ -2914,299 +2771,325 @@
                 postcodeInput.placeholder = `e.g., ${examples[exampleIndex]}`;
                 exampleIndex = (exampleIndex + 1) % examples.length;
             }, 3000);
-        });
-
-        // ===== WhatsApp Floating Button =====
-        const whatsappConfig = {
-            phoneNumber: "447827784204",
-            companyName: "Green Glo Cleaning Co",
-            defaultMessage: "Hello, I'm interested in your professional cleaning services. Could you provide more information?"
-        };
-
-        const whatsappButton = document.getElementById('whatsappButton');
-        const whatsappBubble = document.getElementById('whatsappBubble');
-        const whatsappNotification = document.getElementById('whatsappNotification');
-        const whatsappMessageInput = document.getElementById('whatsappMessage');
-        const statusText = document.getElementById('statusText');
-
-        function toggleBubble() {
-            whatsappBubble.classList.contains('active') ? closeBubble() : openBubble();
-        }
-
-        function openBubble() {
-            whatsappBubble.classList.add('active');
-            whatsappMessageInput.focus();
-            whatsappNotification.style.display = 'none';
-            localStorage.setItem('whatsappNotificationRead', 'true');
-        }
-
-        function closeBubble() {
-            whatsappBubble.classList.remove('active');
-        }
-
-        function sendWhatsAppMessage() {
-            let message = whatsappMessageInput.value.trim();
-            if (!message) message = whatsappConfig.defaultMessage;
-
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=447827784204&text=${encodedMessage}`;
-
-            window.open(whatsappUrl, '_blank');
-            closeBubble();
-            whatsappMessageInput.value = '';
-        }
-
-        function checkNotificationStatus() {
+            
+            // Check WhatsApp notification status
             const notificationRead = localStorage.getItem('whatsappNotificationRead');
             const lastVisit = localStorage.getItem('lastWhatsAppVisit');
             const now = new Date().getTime();
-
-            if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
-                whatsappNotification.style.display = 'flex';
-            } else {
-                whatsappNotification.style.display = 'none';
-            }
-            localStorage.setItem('lastWhatsAppVisit', now.toString());
-        }
-
-        function updateWorkingStatus() {
-            const now = new Date();
-            const day = now.getDay();
-            const hour = now.getHours();
-
-            const isWorkingHours = (
-                (day >= 1 && day <= 5 && hour >= 8 && hour < 20) ||
-                (day === 6 && hour >= 9 && hour < 18)
-            );
-
-            if (statusText) {
-                statusText.textContent = isWorkingHours
-                    ? "Typically replies instantly • Follow @greenglocleaningco"
-                    : "Will reply during working hours • Follow @greenglocleaningco";
-                statusText.style.color = isWorkingHours ? "#25D366" : "#FF9800";
-            }
-        }
-
-        document.addEventListener('click', function (event) {
-            if (!whatsappButton.contains(event.target) &&
-                !whatsappBubble.contains(event.target) &&
-                whatsappBubble.classList.contains('active')) {
-                closeBubble();
+            
+            const notification = document.getElementById('whatsappNotification');
+            if (notification) {
+                if (!notificationRead || !lastVisit || (now - parseInt(lastVisit) > 24 * 60 * 60 * 1000)) {
+                    notification.style.display = 'flex';
+                } else {
+                    notification.style.display = 'none';
+                }
+                localStorage.setItem('lastWhatsAppVisit', now.toString());
             }
         });
 
-        if (whatsappMessageInput) {
-            whatsappMessageInput.addEventListener('keypress', function (e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendWhatsAppMessage();
-                }
-            });
-        }
+        // ===== Email Subscription System =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // EmailJS Configuration
+            const EMAIL_CONFIG = {
+                publicKey: 'qS1v1ZEwi4XnBl1As',
+                serviceId: 'service_cj7heuj',
+                templateId: 'template_xe4rngx',
+                businessTemplateId: 'template_zf4ph1s', // Your business notification template
+                couponCode: 'NEWCUSTOMER10',
+                couponPercent: 10,
+                popupDelay: 5000 // 5 seconds delay
+            };
 
-        checkNotificationStatus();
-        updateWorkingStatus();
-        setInterval(updateWorkingStatus, 60000);
-
-        // ============================================
-        // EMAILJS POPUP SYSTEM - FIXED
-        // ============================================
-        
-        // EmailJS Configuration
-        const EMAIL_CONFIG = {
-            publicKey: 'qS1v1ZEwi4XnBl1As',
-            serviceId: 'service_cj7heuj',
-            templateId: 'template_xe4rngx',
-            couponCode: 'NEWCUSTOMER10',
-            couponPercent: 10,
-            popupDelay: 3000
-        };
-
-        // DOM Elements for Email Popup - FIXED VARIABLE NAMES
-        const emailPopupElement = document.getElementById('emailPopup');
-        const closeEmailPopupBtn = document.getElementById('closeEmailPopup');
-        const discountFormElement = document.getElementById('discountForm');
-        const userEmailElement = document.getElementById('userEmail');
-        const emailErrorElement = document.getElementById('emailError');
-        const submitEmailElement = document.getElementById('submitEmail');
-        const emailFormElement = document.getElementById('emailForm');
-        const successMessageElement = document.getElementById('successMessage');
-        const sentEmailElement = document.getElementById('sentEmail');
-        const couponCodeElement = document.getElementById('couponCode');
-
-        // Initialize EmailJS
-        (function() {
+            // Initialize EmailJS
             try {
                 emailjs.init(EMAIL_CONFIG.publicKey);
                 console.log('✅ EmailJS initialized');
             } catch (e) {
                 console.error('❌ EmailJS init error:', e);
             }
-        })();
 
-        // Show popup after delay
-        function showEmailPopup() {
-            const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
-            if (hasSubmittedEmail) {
-                console.log('User already received discount - not showing popup');
-                return;
-            }
-            
-            const lastPopupTime = localStorage.getItem('greenglo_popup_last_shown');
-            const now = Date.now();
-            const oneDay = 24 * 60 * 60 * 1000;
-            
-            if (lastPopupTime && (now - parseInt(lastPopupTime)) < oneDay) {
-                console.log('Popup shown recently - not showing again');
-                return;
-            }
-            
-            setTimeout(() => {
-                emailPopupElement.classList.add('active');
-                document.body.style.overflow = 'hidden';
-                localStorage.setItem('greenglo_popup_last_shown', now.toString());
-                console.log('📧 Email popup shown');
-            }, EMAIL_CONFIG.popupDelay);
-        }
-
-        // Close popup
-        function closeEmailPopupFunction() {
-            emailPopupElement.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Validate email
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        // Send email using EmailJS
-        async function sendDiscountEmail(email) {
-            try {
-                console.log('📤 Sending email to:', email);
-                
-                // Template parameters - these must match your EmailJS template variables
-                const templateParams = {
-                    email: email,                           // This matches {{email}} in template
-                    from_name: 'GreenGlo Cleaning Co',     // Company name
-                    coupon_code: EMAIL_CONFIG.couponCode,  // Coupon code: NEWCUSTOMER10
-                    discount_percent: EMAIL_CONFIG.couponPercent.toString(), // "10" as string
-                    phone_number: '07827 784204',          // Phone number
-                    book_now_link: 'https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20NEWCUSTOMER10',
-                    services_page_link: 'https://greenglocleaningco.com/services.html'
-                };
-                
-                console.log('Template params:', templateParams);
-                
-                const response = await emailjs.send(
-                    EMAIL_CONFIG.serviceId,
-                    EMAIL_CONFIG.templateId,
-                    templateParams
-                );
-                
-                console.log('✅ Email sent successfully:', response);
-                return { success: true, data: response };
-                
-            } catch (error) {
-                console.error('❌ Error sending email:', error);
-                console.error('Error text:', error.text);
-                throw error;
-            }
-        }
-
-        // Show success message
-        function showSuccessMessage(email) {
-            sentEmailElement.textContent = email;
-            couponCodeElement.textContent = EMAIL_CONFIG.couponCode;
-            emailFormElement.style.display = 'none';
-            successMessageElement.classList.add('show');
-            
-            // Save to localStorage
-            localStorage.setItem('greenglo_discount_received', 'true');
-            localStorage.setItem('greenglo_user_email', email);
-            localStorage.setItem('greenglo_coupon_code', EMAIL_CONFIG.couponCode);
-            
-            // Auto-close after 10 seconds
-            setTimeout(() => {
-                if (emailPopupElement.classList.contains('active')) {
-                    closeEmailPopupFunction();
-                }
-            }, 10000);
-        }
-
-        // Handle form submission
-        discountFormElement.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = userEmailElement.value.trim();
-            
-            if (!validateEmail(email)) {
-                userEmailElement.classList.add('error');
-                emailErrorElement.classList.add('show');
-                userEmailElement.focus();
-                return;
-            }
-            
-            userEmailElement.classList.remove('error');
-            emailErrorElement.classList.remove('show');
-            
-            // Update button to show loading
-            submitEmailElement.disabled = true;
-            const originalBtnText = submitEmailElement.innerHTML;
-            submitEmailElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-            
-            try {
-                const result = await sendDiscountEmail(email);
-                
-                if (result.success) {
-                    console.log('✅ Email processed successfully');
-                    showSuccessMessage(email);
-                } else {
-                    throw new Error('Failed to send email');
+            // Show popup after delay
+            function showEmailPopup() {
+                const hasSubmittedEmail = localStorage.getItem('greenglo_discount_received');
+                if (hasSubmittedEmail) {
+                    console.log('User already received discount - not showing popup');
+                    return;
                 }
                 
-            } catch (error) {
-                console.error('❌ Error:', error);
+                const lastPopupTime = localStorage.getItem('greenglo_popup_last_shown');
+                const now = Date.now();
+                const oneDay = 24 * 60 * 60 * 1000;
                 
-                // Show user-friendly error
-                alert('Sorry, there was an error sending the email. Please try again or contact us via WhatsApp.');
+                if (lastPopupTime && (now - parseInt(lastPopupTime)) < oneDay) {
+                    console.log('Popup shown recently - not showing again');
+                    return;
+                }
                 
-                // Reset button
-                submitEmailElement.disabled = false;
-                submitEmailElement.innerHTML = originalBtnText;
+                setTimeout(() => {
+                    // Create popup HTML
+                    const popupHTML = `
+                        <div class="email-popup-overlay active" id="emailPopup">
+                            <div class="email-popup-modal">
+                                <div class="email-popup-header">
+                                    <h3>Get 10% Off Your First Clean!</h3>
+                                    <p>Subscribe to receive your exclusive discount code</p>
+                                    <button class="email-popup-close" id="closeEmailPopup">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="email-popup-content">
+                                    <div id="emailForm">
+                                        <p>Enter your email below to receive your 10% discount code valid for first-time customers.</p>
+                                        
+                                        <form class="email-popup-form" id="discountForm">
+                                            <div class="email-popup-input-group">
+                                                <input type="email" 
+                                                       class="email-popup-input" 
+                                                       id="userEmail" 
+                                                       placeholder="Your email address" 
+                                                       required>
+                                                <div class="email-popup-error" id="emailError">
+                                                    Please enter a valid email address
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="email-popup-checkbox">
+                                                <input type="checkbox" id="agreeTerms" required>
+                                                <label for="agreeTerms">
+                                                    I agree to receive marketing emails from GreenGlo Cleaners. 
+                                                    You can unsubscribe at any time. 
+                                                    <a href="#" target="_blank">Privacy Policy</a>
+                                                </label>
+                                            </div>
+                                            
+                                            <button type="submit" class="btn email-popup-submit" id="submitEmail">
+                                                <i class="fas fa-gift"></i> Get My 10% Discount Code
+                                            </button>
+                                        </form>
+                                    </div>
+                                    
+                                    <div class="email-popup-success" id="successMessage" style="display: none;">
+                                        <i class="fas fa-check-circle"></i>
+                                        <h4>Success! Check Your Email</h4>
+                                        <p>Your 10% discount code has been sent to:</p>
+                                        <p style="font-weight: 600;" id="sentEmail"></p>
+                                        <div class="coupon-code" id="couponCode">${EMAIL_CONFIG.couponCode}</div>
+                                        <p style="font-size: 0.9rem;">This code is valid for first-time customers only.</p>
+                                        <button class="btn" onclick="window.location.href='https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%2C%20I%27d%20like%20to%20use%20my%2010%25%20discount%20code%20${EMAIL_CONFIG.couponCode}'">
+                                            Book Now with Discount
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="email-popup-footer">
+                                    <p>Limited time offer. One use per customer.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add popup to body
+                    const popupContainer = document.createElement('div');
+                    popupContainer.innerHTML = popupHTML;
+                    document.body.appendChild(popupContainer.firstElementChild);
+                    
+                    // Initialize popup functionality
+                    initEmailPopup();
+                    localStorage.setItem('greenglo_popup_last_shown', now.toString());
+                    console.log('📧 Email popup shown');
+                    
+                }, EMAIL_CONFIG.popupDelay);
             }
-        });
 
-        // Event Listeners for Email Popup
-        closeEmailPopupBtn.addEventListener('click', closeEmailPopupFunction);
+            function initEmailPopup() {
+                const emailPopup = document.getElementById('emailPopup');
+                const closeEmailPopupBtn = document.getElementById('closeEmailPopup');
+                const discountForm = document.getElementById('discountForm');
+                const userEmail = document.getElementById('userEmail');
+                const emailError = document.getElementById('emailError');
+                const submitEmail = document.getElementById('submitEmail');
+                const emailForm = document.getElementById('emailForm');
+                const successMessage = document.getElementById('successMessage');
+                const sentEmail = document.getElementById('sentEmail');
+                const couponCode = document.getElementById('couponCode');
 
-        emailPopupElement.addEventListener('click', (e) => {
-            if (e.target === emailPopupElement) {
-                closeEmailPopupFunction();
+                // Close popup
+                function closeEmailPopup() {
+                    emailPopup.classList.remove('active');
+                    document.body.style.overflow = '';
+                    setTimeout(() => {
+                        if (emailPopup.parentNode) {
+                            emailPopup.parentNode.removeChild(emailPopup);
+                        }
+                    }, 300);
+                }
+
+                // Validate email
+                function validateEmail(email) {
+                    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return re.test(email);
+                }
+
+                // Send discount email to user
+                async function sendDiscountEmail(email) {
+                    try {
+                        console.log('📤 Sending discount email to:', email);
+                        
+                        const templateParams = {
+                            email: email,
+                            from_name: 'GreenGlo Cleaning Co',
+                            coupon_code: EMAIL_CONFIG.couponCode,
+                            discount_percent: EMAIL_CONFIG.couponPercent.toString(),
+                            phone_number: '07827 784204'
+                        };
+                        
+                        console.log('Template params:', templateParams);
+                        
+                        const response = await emailjs.send(
+                            EMAIL_CONFIG.serviceId,
+                            EMAIL_CONFIG.templateId,
+                            templateParams
+                        );
+                        
+                        console.log('✅ User email sent successfully:', response);
+                        return { success: true, data: response };
+                        
+                    } catch (error) {
+                        console.error('❌ Error sending user email:', error);
+                        throw error;
+                    }
+                }
+
+                // Send business notification email
+                async function sendBusinessNotificationEmail(email) {
+                    try {
+                        console.log('📧 Sending business notification email for:', email);
+                        
+                        const businessTemplateParams = {
+                            user_email: email,
+                            coupon_code: EMAIL_CONFIG.couponCode,
+                            timestamp: new Date().toLocaleString('en-GB', {
+                                weekday: 'long',
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            }),
+                            source: 'Website Popup'
+                        };
+                        
+                        console.log('Business template params:', businessTemplateParams);
+                        
+                        const response = await emailjs.send(
+                            EMAIL_CONFIG.serviceId,
+                            EMAIL_CONFIG.businessTemplateId,
+                            businessTemplateParams
+                        );
+                        
+                        console.log('✅ Business notification email sent successfully:', response);
+                        return { success: true, data: response };
+                        
+                    } catch (error) {
+                        console.error('❌ Error sending business notification email:', error);
+                        throw error;
+                    }
+                }
+
+                // Show success message
+                function showSuccessMessage(email) {
+                    sentEmail.textContent = email;
+                    couponCode.textContent = EMAIL_CONFIG.couponCode;
+                    emailForm.style.display = 'none';
+                    successMessage.style.display = 'block';
+                    
+                    // Save to localStorage
+                    localStorage.setItem('greenglo_discount_received', 'true');
+                    localStorage.setItem('greenglo_user_email', email);
+                    localStorage.setItem('greenglo_coupon_code', EMAIL_CONFIG.couponCode);
+                    
+                    // Auto-close after 10 seconds
+                    setTimeout(() => {
+                        if (emailPopup.classList.contains('active')) {
+                            closeEmailPopup();
+                        }
+                    }, 10000);
+                }
+
+                // Handle form submission
+                discountForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const email = userEmail.value.trim();
+                    
+                    if (!validateEmail(email)) {
+                        userEmail.classList.add('error');
+                        emailError.style.display = 'block';
+                        userEmail.focus();
+                        return;
+                    }
+                    
+                    userEmail.classList.remove('error');
+                    emailError.style.display = 'none';
+                    
+                    // Update button to show loading
+                    submitEmail.disabled = true;
+                    const originalBtnText = submitEmail.innerHTML;
+                    submitEmail.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    
+                    try {
+                        // Send discount email to user
+                        await sendDiscountEmail(email);
+                        
+                        // Send business notification email
+                        try {
+                            await sendBusinessNotificationEmail(email);
+                        } catch (businessError) {
+                            console.warn('⚠️ Business notification failed, but continuing:', businessError);
+                        }
+                        
+                        showSuccessMessage(email);
+                        
+                    } catch (error) {
+                        console.error('❌ Error in submission process:', error);
+                        
+                        // Show user-friendly error
+                        alert('Sorry, there was an error processing your request. Please try again or contact us via WhatsApp for assistance.');
+                        
+                        // Reset button
+                        submitEmail.disabled = false;
+                        submitEmail.innerHTML = originalBtnText;
+                    }
+                });
+
+                // Event Listeners
+                closeEmailPopupBtn.addEventListener('click', closeEmailPopup);
+
+                emailPopup.addEventListener('click', (e) => {
+                    if (e.target === emailPopup) {
+                        closeEmailPopup();
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && emailPopup.classList.contains('active')) {
+                        closeEmailPopup();
+                    }
+                });
+
+                // Pre-fill email if previously saved
+                const savedEmail = localStorage.getItem('greenglo_user_email');
+                if (savedEmail) {
+                    userEmail.value = savedEmail;
+                }
             }
-        });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && emailPopupElement.classList.contains('active')) {
-                closeEmailPopupFunction();
-            }
-        });
-
-        // Initialize Email Popup on page load
-        document.addEventListener('DOMContentLoaded', () => {
             // Show email popup after delay
             setTimeout(() => {
                 showEmailPopup();
             }, 1500);
-            
-            // Pre-fill email if previously saved
-            const savedEmail = localStorage.getItem('greenglo_user_email');
-            if (savedEmail) {
-                userEmailElement.value = savedEmail;
-            }
-            
-            console.log('📧 Email popup system initialized');
         });
     </script>
 </body>
