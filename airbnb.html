@@ -1564,11 +1564,11 @@
             </div>
 
             <div class="pricing-container">
-                <!-- Standard Cleaning Card -->
+                <!-- Standard Cleaning Card - UPDATED PRICES -->
                 <div class="pricing-card">
                     <div class="pricing-header">
                         <h3>Standard Cleaning</h3>
-                        <div class="price">From £45</div>
+                        <div class="price">From £60</div>
                         <div class="price-range">per clean</div>
                         <p class="price-note">Between guest stays</p>
                     </div>
@@ -1600,15 +1600,15 @@
                             <div style="background: var(--light-green); padding: 1.5rem; border-radius: var(--border-radius);">
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; text-align: left;">
                                     <div><strong>Studio / 1-Bed:</strong></div>
-                                    <div>£45 – £55</div>
+                                    <div>£60 – £70</div>
                                     <div><strong>2-Bed:</strong></div>
-                                    <div>£60 – £75</div>
+                                    <div>£75 – £90</div>
                                     <div><strong>3-Bed:</strong></div>
-                                    <div>£80 – £95</div>
+                                    <div>£95 – £115</div>
                                     <div><strong>4-Bed:</strong></div>
-                                    <div>£100 – £120</div>
+                                    <div>£120 – £140</div>
                                     <div><strong>5+ Bed:</strong></div>
-                                    <div>£130+</div>
+                                    <div>£150+</div>
                                 </div>
                             </div>
                         </div>
@@ -1622,12 +1622,12 @@
                     </div>
                 </div>
 
-                <!-- Deep Cleaning Card (Featured) -->
+                <!-- Deep Cleaning Card (Featured) - UPDATED PRICES -->
                 <div class="pricing-card featured">
                     <div class="pricing-badge">Most Popular</div>
                     <div class="pricing-header featured-header">
                         <h3>Deep Cleaning</h3>
-                        <div class="price">From £75</div>
+                        <div class="price">From £90</div>
                         <div class="price-range">per clean</div>
                         <p class="price-note">Periodic / Seasonal deep clean</p>
                     </div>
@@ -1663,15 +1663,15 @@
                             <div style="background: rgba(255, 90, 95, 0.1); padding: 1.5rem; border-radius: var(--border-radius);">
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; text-align: left;">
                                     <div><strong>Studio / 1-Bed:</strong></div>
-                                    <div>£75 – £90</div>
+                                    <div>£90 – £105</div>
                                     <div><strong>2-Bed:</strong></div>
-                                    <div>£95 – £115</div>
+                                    <div>£115 – £135</div>
                                     <div><strong>3-Bed:</strong></div>
-                                    <div>£120 – £145</div>
+                                    <div>£140 – £165</div>
                                     <div><strong>4-Bed:</strong></div>
-                                    <div>£150 – £180</div>
+                                    <div>£170 – £200</div>
                                     <div><strong>5+ Bed:</strong></div>
-                                    <div>£180+</div>
+                                    <div>£210+</div>
                                 </div>
                             </div>
                         </div>
@@ -1880,11 +1880,11 @@
                             <div class="select-wrapper">
                                 <select class="form-select" id="propertyType" required>
                                     <option value="">Select property size</option>
-                                    <option value="studio">Studio / 1-Bed (£45-£55)</option>
-                                    <option value="2bed">2-Bed (£60-£75)</option>
-                                    <option value="3bed">3-Bed (£80-£95)</option>
-                                    <option value="4bed">4-Bed (£100-£120)</option>
-                                    <option value="5plus">5+ Bed (£130+)</option>
+                                    <option value="studio">Studio / 1-Bed (£60-£70)</option>
+                                    <option value="2bed">2-Bed (£75-£90)</option>
+                                    <option value="3bed">3-Bed (£95-£115)</option>
+                                    <option value="4bed">4-Bed (£120-£140)</option>
+                                    <option value="5plus">5+ Bed (£150+)</option>
                                 </select>
                             </div>
                         </div>
@@ -2169,18 +2169,18 @@
         // ===== Quote Calculator =====
         const pricingData = {
             standard: {
-                studio: { min: 45, max: 55, base: 50 },
-                '2bed': { min: 60, max: 75, base: 68 },
-                '3bed': { min: 80, max: 95, base: 88 },
-                '4bed': { min: 100, max: 120, base: 110 },
-                '5plus': { min: 130, max: 150, base: 140 }
+                studio: { min: 60, max: 70, base: 65 },
+                '2bed': { min: 75, max: 90, base: 83 },
+                '3bed': { min: 95, max: 115, base: 105 },
+                '4bed': { min: 120, max: 140, base: 130 },
+                '5plus': { min: 150, max: 170, base: 160 }
             },
             deep: {
-                studio: { min: 75, max: 90, base: 83 },
-                '2bed': { min: 95, max: 115, base: 105 },
-                '3bed': { min: 120, max: 145, base: 133 },
-                '4bed': { min: 150, max: 180, base: 165 },
-                '5plus': { min: 180, max: 220, base: 200 }
+                studio: { min: 90, max: 105, base: 98 },
+                '2bed': { min: 115, max: 135, base: 125 },
+                '3bed': { min: 140, max: 165, base: 153 },
+                '4bed': { min: 170, max: 200, base: 185 },
+                '5plus': { min: 210, max: 250, base: 230 }
             },
             addons: {
                 linen: { price: 10, name: 'Linen Change & Laundry', unit: 'per bed' },
