@@ -1183,7 +1183,7 @@
                     
                     <div class="form-group" id="bedroomsGroup" style="display:none;">
                         <label>Number of Bedrooms</label>
-                        <select id="bedroomsSelect" class="form-control" onchange="updateBedrooms(this.value)">
+                        <select id="bedroomsSelect" class="form-control">
                             <option value="1">1 Bedroom</option>
                             <option value="2">2 Bedrooms</option>
                             <option value="3">3 Bedrooms</option>
@@ -1205,8 +1205,8 @@
                     <div id="paymentNote" class="payment-note"></div>
                     
                     <div class="booking-steps">
-                        <button class="btn btn-outline" onclick="closeBookingModal()">Cancel</button>
-                        <button id="nextStepBtn" class="btn" onclick="nextBookingStep()">
+                        <button class="btn btn-outline" id="cancelBookingBtn">Cancel</button>
+                        <button id="nextStepBtn" class="btn">
                             <i class="fas fa-arrow-right"></i> Next: Your Details
                         </button>
                     </div>
@@ -1241,10 +1241,10 @@
                     </div>
                     
                     <div class="booking-steps">
-                        <button class="btn btn-outline" onclick="prevBookingStep()">
+                        <button class="btn btn-outline" id="backToStep1Btn">
                             <i class="fas fa-arrow-left"></i> Back
                         </button>
-                        <button id="confirmBookingBtn" class="btn" onclick="confirmBooking()" style="flex: 2;">
+                        <button id="confirmBookingBtn" class="btn" style="flex: 2;">
                             <i class="fas fa-check-circle"></i> Complete Booking
                         </button>
                     </div>
@@ -1402,19 +1402,20 @@
             } catch(e) { console.warn('config.json not found, using defaults'); }
         }
 
-
         // ===== Build URL to checkout.html with all booking params ===== 
         function buildCheckoutUrl(bookingData) {
             const serviceData = bookingData.service.data;
             const fullPrice = bookingData.calculatedPrice || serviceData.basePrice;
             const depositPercent = (CONFIG.payment && CONFIG.payment.depositPercent) || 25;
             const depositAmount = (Math.round(fullPrice * depositPercent) / 100).toFixed(2);
+            const balanceAmount = (fullPrice - depositAmount).toFixed(2);
 
             const p = new URLSearchParams({
                 ref:     bookingData.bookingRef,
                 service: bookingData.service.title,
                 price:   fullPrice,
                 deposit: depositAmount,
+                balance: balanceAmount,
                 date:    bookingData.date,
                 time:    bookingData.timeSlot || '',
                 bedrooms: bookingData.bedrooms || '',
@@ -1464,7 +1465,7 @@
             return serviceData.basePrice;
         }
 
-        // ===== UPDATED PRICING: Client's exact prices (General Domestic Clean removed) =====
+        // ===== UPDATED PRICING: Client's exact prices =====
         const domesticServicesData = [
             {
                 id: 2,
@@ -1477,7 +1478,8 @@
                 basePrice: 18,
                 displayPrice: "£18/hour",
                 image: "office.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: true
             },
             {
                 id: 3,
@@ -1491,6 +1493,7 @@
                 displayPrice: "From £120",
                 image: "kitchen.png",
                 fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 4,
@@ -1504,6 +1507,7 @@
                 displayPrice: "From £60",
                 image: "ovenafter.png",
                 fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 5,
@@ -1516,7 +1520,8 @@
                 basePrice: 65,
                 displayPrice: "£65",
                 image: "bathroom.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 6,
@@ -1530,7 +1535,8 @@
                 perBedroomPrice: 30,
                 displayPrice: "From £220",
                 image: "tenancy.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 7,
@@ -1543,7 +1549,8 @@
                 basePrice: 15,
                 displayPrice: "From £15/room",
                 image: "carpet.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 8,
@@ -1556,7 +1563,8 @@
                 basePrice: 50,
                 displayPrice: "From £50",
                 image: "domestic.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 9,
@@ -1570,7 +1578,8 @@
                 perBedroomPrice: 35,
                 displayPrice: "From £200",
                 image: "deep.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 10,
@@ -1584,6 +1593,7 @@
                 displayPrice: "House from £60, Flat from £60",
                 image: "windows.png",
                 fallbackColor: "#0D9488",
+                isHourly: false
             },
             {
                 id: 11,
@@ -1597,7 +1607,8 @@
                 perBedroomPrice: 40,
                 displayPrice: "From £200",
                 image: "afterbuilders.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 12,
@@ -1610,7 +1621,8 @@
                 basePrice: 55,
                 displayPrice: "Sofa 3-seater: £55",
                 image: "furniture.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 13,
@@ -1623,7 +1635,8 @@
                 basePrice: 70,
                 displayPrice: "From £70",
                 image: "patio.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: false
             },
             {
                 id: 14,
@@ -1636,11 +1649,10 @@
                 basePrice: 25,
                 displayPrice: "£25/hour",
                 image: "commercial.png",
-                fallbackColor: "#10B981"
+                fallbackColor: "#10B981",
+                isHourly: true
             }
         ];
-
-        // All services now use custom checkout (no Stripe payment links needed)
 
         // ===== Booking & UI State =====
         let currentBooking = {
@@ -1705,14 +1717,27 @@
 
             let badgeHTML = '<span class="payment-badge" style="background:linear-gradient(135deg,#10B981,#0D9488);color:white;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;"><i class="fas fa-lock"></i> Secure Booking</span>';
             
-            let buttonHTML = `
-                <button class="btn book-service-btn" 
-                        data-service-id="${service.id}" 
-                        data-service-title="${service.title}"
-                        style="padding: 1rem 2rem; font-size: 1.125rem;">
-                    <i class="fas fa-calendar-check"></i> Book Now — Pay 25% Deposit
-                </button>
-            `;
+            // Check if service is hourly - show WhatsApp button instead
+            let buttonHTML = '';
+            if (service.isHourly) {
+                buttonHTML = `
+                    <a href="https://api.whatsapp.com/send?phone=${CONFIG.business.phone}&text=Hello%20GreenGlo%20Cleaners,%20I'm%20interested%20in%20${encodeURIComponent(service.title)}.%20Please%20provide%20more%20information." 
+                       class="btn btn-whatsapp" 
+                       target="_blank"
+                       style="padding: 1rem 2rem; font-size: 1.125rem;">
+                        <i class="fab fa-whatsapp"></i> Contact via WhatsApp
+                    </a>
+                `;
+            } else {
+                buttonHTML = `
+                    <button class="btn book-service-btn" 
+                            data-service-id="${service.id}" 
+                            data-service-title="${service.title}"
+                            style="padding: 1rem 2rem; font-size: 1.125rem;">
+                        <i class="fas fa-calendar-check"></i> Book Now — Pay 25% Deposit
+                    </button>
+                `;
+            }
 
             serviceCard.innerHTML = `
                 <div class="service-image" style="${service.image ? `background-image: url('${service.image}');` : `background: linear-gradient(135deg, ${service.fallbackColor || 'var(--primary-green)'}, var(--teal));`} background-color: var(--light-green);">
@@ -1789,6 +1814,8 @@
 
         function updateBookingSummary() {
             const summary = document.getElementById('bookingSummaryDetails');
+            if (!currentBooking.service) return;
+            
             const serviceData = currentBooking.service.data;
             const calcPrice = currentBooking.calculatedPrice || serviceData.basePrice;
             let priceDisplay = currentBooking.calculatedPrice ? '£' + calcPrice : serviceData.displayPrice;
@@ -1812,21 +1839,32 @@
 
         function updateFinalSummary() {
             const summary = document.getElementById('finalSummaryDetails');
+            if (!currentBooking.service) return;
+            
             const serviceData = currentBooking.service.data;
             const calcPrice = currentBooking.calculatedPrice || serviceData.basePrice;
             let priceDisplay = currentBooking.calculatedPrice ? '£' + calcPrice : serviceData.displayPrice;
             if (serviceData.isOneOffAvailable) priceDisplay = "From £50 (one-off £60)";
             const depositDisplay = (Math.round(calcPrice * 25) / 100).toFixed(2);
+            const balanceDisplay = (calcPrice - depositDisplay).toFixed(2);
             let bedroomInfo = serviceData.hasBedrooms ? `<div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Bedrooms:</span><span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms>1?'s':''}</span></div>` : '';
-            const [start,end] = currentBooking.timeSlot.split('-');
+            
+            let dateTimeInfo = '';
+            if (currentBooking.timeSlot) {
+                const [start,end] = currentBooking.timeSlot.split('-');
+                dateTimeInfo = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Date:</span><span>${formatDate(currentBooking.date)}</span></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Time:</span><span style="font-weight:600;color:var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span></div>
+                `;
+            }
+            
             summary.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Service:</span><span style="font-weight:600;color:var(--dark-green);">${currentBooking.service.title}</span></div>
                 ${bedroomInfo}
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Date:</span><span>${formatDate(currentBooking.date)}</span></div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Time:</span><span style="font-weight:600;color:var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span></div>
+                ${dateTimeInfo}
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Duration:</span><span>${serviceData.duration}</span></div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Total Price:</span><span style="font-weight:700;color:var(--primary-green);font-size:1.25rem;">${priceDisplay}</span></div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-weight:600;">Deposit Due Now (25%):</span><span style="color:var(--primary-green);font-weight:700;font-size:1.1rem;">£${finalDepositDisplay}</span></div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-weight:600;">Deposit Due Now (25%):</span><span style="color:var(--primary-green);font-weight:700;font-size:1.1rem;">£${depositDisplay}</span></div>
                 <div style="display: flex; justify-content: space-between; margin-top:8px; padding-top:8px; border-top:1px solid rgba(16,185,129,0.2);"><span>Balance on the day:</span><span style="color:var(--dark-gray);font-weight:600;">£${balanceDisplay}</span></div>
             `;
         }
@@ -1851,10 +1889,6 @@
                 }
             }
         }
-
-        document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
-        document.getElementById('bookingModal').addEventListener('click', function(e) { if (e.target === this) closeBookingModal(); });
-        document.getElementById('bookingDate').addEventListener('change', function() { currentBooking.date = this.value; loadTimeSlots(this.value); updateBookingSummary(); });
 
         async function loadTimeSlots(date) {
             const container = document.getElementById('timeSlotsContainer');
@@ -1925,11 +1959,15 @@
             if (!time) return '';
             const [h,m] = time.split(':'); 
             const hour = parseInt(h);
-            return `${hour > 12 ? hour-12 : hour}:${m} ${hour>=12?'PM':'AM'}`;
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${m} ${ampm}`;
         }
+        
         function formatDate(d) { 
             return new Date(d).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short', year:'numeric' }); 
         }
+        
         function nextBookingStep() {
             if (!currentBooking.date) { alert('⚠️ Please select a date'); return; }
             if (!currentBooking.timeSlot) { alert('⚠️ Please select a time slot'); return; }
@@ -1938,15 +1976,16 @@
             const depositPct = (CONFIG.payment && CONFIG.payment.depositPercent) || 25;
             const calcPrice = currentBooking.calculatedPrice || currentBooking.service.data.basePrice;
             const depositAmt = (Math.round(calcPrice * depositPct) / 100).toFixed(2);
-            confirmBtn.className = 'btn';
             confirmBtn.innerHTML = '<i class="fas fa-lock"></i> Pay £' + depositAmt + ' Deposit & Confirm';
             document.getElementById('bookingStep1').style.display = 'none';
             document.getElementById('bookingStep2').style.display = 'block';
         }
+        
         function prevBookingStep() {
             document.getElementById('bookingStep2').style.display = 'none';
             document.getElementById('bookingStep1').style.display = 'block';
         }
+        
         async function confirmBooking() {
             const name    = document.getElementById('customerName').value.trim();
             const phone   = document.getElementById('customerPhone').value.trim();
@@ -1954,6 +1993,20 @@
             const address = document.getElementById('customerAddress').value.trim();
             if (!name || !phone || !email || !address) {
                 alert('❌ Please fill in all required fields: Name, Phone, Email, Address');
+                return;
+            }
+
+            // Validate UK phone number format (simple check)
+            const phoneRegex = /^[0-9\s\+\-\(\)]{10,}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('⚠️ Please enter a valid UK phone number');
+                return;
+            }
+
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('⚠️ Please enter a valid email address');
                 return;
             }
 
@@ -1974,36 +2027,109 @@
                 console.warn('Supabase save failed (non-fatal):', e);
             }
 
-            // Build checkout URL and redirect (no server call needed)
+            // Build checkout URL and redirect
             const checkoutUrl = buildCheckoutUrl(currentBooking);
             closeBookingModal();
             window.location.href = checkoutUrl;
         }
 
-        // ===== Category Filtering =====
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                renderDomesticServices(this.getAttribute('data-category'));
-            });
-        });
-
-        // ===== Mobile Menu =====
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileCloseBtn = document.getElementById('mobileCloseBtn');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const navMenu = document.getElementById('navMenu');
-        function openMobileMenu() { navMenu.classList.add('active'); mobileMenuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeMobileMenu() { navMenu.classList.remove('active'); mobileMenuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
-        mobileMenuBtn.addEventListener('click', openMobileMenu);
-        mobileCloseBtn.addEventListener('click', closeMobileMenu);
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-
-        // ===== Initialize Page =====
+        // ===== Initialize all event listeners =====
         document.addEventListener('DOMContentLoaded', async function() {
             await loadConfig();
             renderDomesticServices();
+            
+            // Update WhatsApp links with correct phone number
+            document.querySelectorAll('.btn-whatsapp').forEach(btn => {
+                const href = btn.getAttribute('href');
+                if (href && href.includes('${CONFIG.business.phone}')) {
+                    btn.setAttribute('href', `https://api.whatsapp.com/send?phone=${CONFIG.business.phone}&text=`);
+                }
+            });
+
+            // Modal close buttons
+            const closeBtn = document.getElementById('closeBookingModal');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeBookingModal);
+            }
+            
+            const cancelBtn = document.getElementById('cancelBookingBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', closeBookingModal);
+            }
+            
+            const modalOverlay = document.getElementById('bookingModal');
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function(e) { 
+                    if (e.target === this) closeBookingModal(); 
+                });
+            }
+            
+            // Date change listener
+            const bookingDate = document.getElementById('bookingDate');
+            if (bookingDate) {
+                bookingDate.addEventListener('change', function() { 
+                    currentBooking.date = this.value; 
+                    loadTimeSlots(this.value); 
+                    updateBookingSummary(); 
+                });
+            }
+            
+            // Next step button
+            const nextStepBtn = document.getElementById('nextStepBtn');
+            if (nextStepBtn) {
+                nextStepBtn.addEventListener('click', nextBookingStep);
+            }
+            
+            // Back button
+            const backBtn = document.getElementById('backToStep1Btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', prevBookingStep);
+            }
+            
+            // Confirm booking button
+            const confirmBtn = document.getElementById('confirmBookingBtn');
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', confirmBooking);
+            }
+            
+            // Bedrooms select
+            const bedroomsSelect = document.getElementById('bedroomsSelect');
+            if (bedroomsSelect) {
+                bedroomsSelect.addEventListener('change', function() {
+                    updateBedrooms(this.value);
+                });
+            }
+
+            // Category filter buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    renderDomesticServices(this.getAttribute('data-category'));
+                });
+            });
+
+            // Mobile menu
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileCloseBtn = document.getElementById('mobileCloseBtn');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            const navMenu = document.getElementById('navMenu');
+            
+            function openMobileMenu() { 
+                navMenu.classList.add('active'); 
+                mobileMenuOverlay.classList.add('active'); 
+                document.body.style.overflow = 'hidden'; 
+            }
+            
+            function closeMobileMenu() { 
+                navMenu.classList.remove('active'); 
+                mobileMenuOverlay.classList.remove('active'); 
+                document.body.style.overflow = ''; 
+            }
+            
+            if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+            if (mobileCloseBtn) mobileCloseBtn.addEventListener('click', closeMobileMenu);
+            if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
         });
     </script>
 </body>
