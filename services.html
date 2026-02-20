@@ -846,6 +846,29 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
 
+        .time-slot-btn {
+            border: 2px solid var(--light-gray);
+            border-radius: 12px;
+            padding: 14px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--dark-gray);
+            width: 100%;
+        }
+        .time-slot-btn:hover { border-color: var(--primary-green); transform: translateY(-2px); }
+        .time-slot-btn.selected {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            color: var(--dark-green);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
         .booking-steps {
             display: flex;
             align-items: center;
@@ -1158,6 +1181,17 @@
                         <div id="bookingSummaryDetails"></div>
                     </div>
                     
+                    <div class="form-group" id="bedroomsGroup" style="display:none;">
+                        <label>Number of Bedrooms</label>
+                        <select id="bedroomsSelect" class="form-control" onchange="updateBedrooms(this.value)">
+                            <option value="1">1 Bedroom</option>
+                            <option value="2">2 Bedrooms</option>
+                            <option value="3">3 Bedrooms</option>
+                            <option value="4">4 Bedrooms</option>
+                            <option value="5">5+ Bedrooms</option>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label>Select Date</label>
                         <input type="date" id="bookingDate" class="form-control" min="" required>
@@ -1353,105 +1387,85 @@
         let supabaseAnalyticsClient = null;
         let supabaseClient = null;
 
-        // ===== Stripe Payment Links Data =====
-        const stripeLinksCSV = `id,Url,Name
-plink_1SlHX02Kluec3BRLXQqWe6TQ,https://buy.stripe.com/28EbIU1eSeL12GSfV98AE0G,Spring Cleaning 5 bed
-plink_1SlHVM2Kluec3BRLm5tujG7p,https://buy.stripe.com/aFa6oA4r4eL1ftEdN18AE0F,Spring cleaning 4 bed
-plink_1SlHPO2Kluec3BRLO77GRTXj,https://buy.stripe.com/7sY9AM5v846n81ceR58AE0E,Spring Cleaning 3 bed
-plink_1SlHOw2Kluec3BRLbRK1rTZt,https://buy.stripe.com/dRmeV6g9M32jdlw8sH8AE0D,Spring Cleaning 2 bed
-plink_1SlHOX2Kluec3BRLRK6UEAvp,https://buy.stripe.com/6oU7sE3n01Yfdlw4cr8AE0C,Spring Cleaning 1 bed
-plink_1SlHNZ2Kluec3BRLooTxeMLh,https://buy.stripe.com/7sY6oA9Lo0Ub5T4gZd8AE0B,Patio and Decking
-plink_1SlHM32Kluec3BRLLrGgoigg,https://buy.stripe.com/cNi3co1eS32j0yK8sH8AE0A,Move In/ Move Out Cleaning 5 bed
-plink_1SlHKO2Kluec3BRLlA6FB8VH,https://buy.stripe.com/5kQeV6e1E1Yf81cfV98AE0z,Move In/ Move Out Cleaning 4 bed
-plink_1SlHIw2Kluec3BRLIfjXLJ0v,https://buy.stripe.com/cNifZa4r4cCT2GSdN18AE0y,Move In/ Move Out Cleaning 3 bed
-plink_1SlHIO2Kluec3BRLnovlmjWO,https://buy.stripe.com/9B6cMY7DgfP56X85gv8AE0x,Move In/ Move Out Cleaning 2 bed
-plink_1SlHHO2Kluec3BRLiSxKMHqS,https://buy.stripe.com/cNi28k3n01Yfdlw7oD8AE0w,Move In/ Move Out Cleaning 1 bed
-plink_1SlHGQ2Kluec3BRLNRNsBLtD,https://buy.stripe.com/8x200ccXA7iz2GSdN18AE0v,BBQ cleaning
-plink_1SlHFv2Kluec3BRLx8UZKbbO,https://buy.stripe.com/6oUbIUf5IcCTgxIdN18AE0u,Antiviral Sanitisation 5+ bed
-plink_1SlHFL2Kluec3BRLZLmOITYJ,https://buy.stripe.com/4gM6oA8HkgT9dlwaAP8AE0t,Antiviral Sanitation 4 bed
-plink_1SlHA92Kluec3BRLfprjU3Fp,https://buy.stripe.com/4gM8wI6zc1YfftE4cr8AE0s,Antiviral Sanitation 3 bed
-plink_1SlH8i2Kluec3BRLAFheHP2E,https://buy.stripe.com/14AcMYcXAauL2GS7oD8AE0r,Antiviral Sanitation 2 bed
-plink_1SlH6E2Kluec3BRLuFSJgOMJ,https://buy.stripe.com/cNi00c9Lo32j1CO24j8AE0q,Antiviral Sanitation 1 bed
-plink_1SlH3Y2Kluec3BRLA4pvwUXH,https://buy.stripe.com/eVqdR24r46evftE24j8AE0p,Gutter Cleaning
-plink_1SlGxa2Kluec3BRLRkvflK9P,https://buy.stripe.com/28E3co2iWfP5chscIX8AE0o,After builders 5+ Bed
-plink_1SlGvi2Kluec3BRLhJ55DK0N,https://buy.stripe.com/7sY7sE2iW46n4P08sH8AE0n,After Builders 4 Bed
-plink_1SlGt22Kluec3BRLG8ZaGMeI,https://buy.stripe.com/14A8wI3n06ev6X810f8AE0m,After Builders 3 Bed
-plink_1SlGrT2Kluec3BRLunUT1cR5,https://buy.stripe.com/5kQ4gs3n032jbdofV98AE0l,After Builders 2 Bed
-plink_1SlGnV2Kluec3BRLQ0J4QyAk,https://buy.stripe.com/fZu6oAaPs7izbdo38n8AE0k,After Builders Cleaning 1 bed
-plink_1SlG3Z2Kluec3BRLMXHWL0N3,https://buy.stripe.com/bJe6oA8HkcCT2GS38n8AE0j,Upholstery Cleaning
-plink_1SlG1E2Kluec3BRLsP61MYVf,https://buy.stripe.com/eVq28k3n0byPepAcIX8AE0i,Window Cleaning House
-plink_1SlFv12Kluec3BRLJtrCjnMq,https://buy.stripe.com/fZu8wIg9M6ev2GS4cr8AE0h,Window Cleaning Flat
-plink_1SlFoi2Kluec3BRLE8FkcaEs,https://buy.stripe.com/7sY14g9LogT94P06kz8AE0g,One-Off Deep Clean 5+ Bed
-plink_1SlFmj2Kluec3BRLcpOTWvWY,https://buy.stripe.com/8x2cMY9Lo32jgxI4cr8AE0f,One-Off Deep Clean 4 Bed
-plink_1SlFj02Kluec3BRLmkrcDxnp,https://buy.stripe.com/dRm3cog9MeL181c6kz8AE0e,One-Off deep Clean 3 bed
-plink_1SlFeg2Kluec3BRLBLyysuyo,https://buy.stripe.com/28EcMY1eSgT96X8aAP8AE0d,One-Off Deep Clean 2 bed
-plink_1SlFcw2Kluec3BRLV7zMB0Fl,https://buy.stripe.com/9B6fZa0aO46n5T410f8AE0c,One-Off Deep Clean 1 Bed
-plink_1SlFZl2Kluec3BRLL2jbmwRh,https://buy.stripe.com/4gMeV67DgeL1gxIaAP8AE0b,End of Tenancy 5 bed
-plink_1SlFYk2Kluec3BRLAyAXTFCV,https://buy.stripe.com/fZu14gaPsgT9ftE24j8AE0a,End Of Tenancy 4 Bed
-plink_1SlFY62Kluec3BRLnvDrn77V,https://buy.stripe.com/28EdR2f5IbyPbdo5gv8AE09,End of Tenancy 3 Bed
-plink_1SlFVx2Kluec3BRLxXn4Gb99,https://buy.stripe.com/28E5kw8HkeL13KW24j8AE08,End of Tenancy Cleaning
-plink_1SlFU12Kluec3BRL09qDH9QR,https://buy.stripe.com/7sY00c1eS9qH0yKfV98AE07,End of Tenancy 1 bed
-plink_1SlFT82Kluec3BRLMxkh0gaR,https://buy.stripe.com/fZufZag9MeL1bdo5gv8AE06,Bathroom Deep Clean
-plink_1SlFSa2Kluec3BRLkXd1f1su,https://buy.stripe.com/aFa5kw7DgeL1epAbET8AE05,Oven Deep Clean
-plink_1SlFRc2Kluec3BRLTo2n7RWY,https://buy.stripe.com/aFaaEQ1eS46nftEgZd8AE04,Kitchen Deep Cleaning
-plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Living Room Deep Clean`;
+        // ===== Config (loaded from config.json) =====
+        let CONFIG = {
+            stripe: { publishableKey: '' },
+            supabase: { url: '', anonKey: '' },
+            business: { phone: '447827784204', siteUrl: '' },
+            payment: { depositPercent: 25, currency: 'gbp' }
+        };
 
-        function parseCSV(csvText) {
-            const lines = csvText.split('\n');
-            const headers = lines[0].split(',');
-            const result = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i].trim()) continue;
-                const obj = {};
-                const currentline = lines[i].split(',');
-                for (let j = 0; j < headers.length; j++) {
-                    obj[headers[j].trim()] = currentline[j] ? currentline[j].trim() : '';
-                }
-                result.push(obj);
-            }
-            return result;
+        async function loadConfig() {
+            try {
+                const res = await fetch('/config.json');
+                if (res.ok) CONFIG = await res.json();
+            } catch(e) { console.warn('config.json not found, using defaults'); }
         }
 
-        const stripeLinks = parseCSV(stripeLinksCSV);
 
-        function findStripeLink(serviceTitle) {
-            const serviceTitleLower = serviceTitle.toLowerCase();
-            for (const link of stripeLinks) {
-                if (link.Name.toLowerCase() === serviceTitleLower) return link.Url;
-            }
-            for (const link of stripeLinks) {
-                const linkNameLower = link.Name.toLowerCase();
-                if (serviceTitleLower.includes(linkNameLower) || linkNameLower.includes(serviceTitleLower)) return link.Url;
-            }
-            const manualMappings = {
-                'Living Room Deep Clean': 'https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03',
-                'Oven Deep Clean': 'https://buy.stripe.com/aFa5kw7DgeL1epAbET8AE05',
-                'Bathroom Deep Clean': 'https://buy.stripe.com/fZufZag9MeL1bdo5gv8AE06',
-                'Kitchen Deep Cleaning': 'https://buy.stripe.com/aFaaEQ1eS46nftEgZd8AE04',
-                'Window Cleaning House': 'https://buy.stripe.com/eVq28k3n0byPepAcIX8AE0i',
-                'Window Cleaning Flat': 'https://buy.stripe.com/fZu8wIg9M6ev2GS4cr8AE0h'
-            };
-            return manualMappings[serviceTitle] || null;
+        // ===== Build URL to checkout.html with all booking params ===== 
+        function buildCheckoutUrl(bookingData) {
+            const serviceData = bookingData.service.data;
+            const fullPrice = bookingData.calculatedPrice || serviceData.basePrice;
+            const depositPercent = (CONFIG.payment && CONFIG.payment.depositPercent) || 25;
+            const depositAmount = (Math.round(fullPrice * depositPercent) / 100).toFixed(2);
+
+            const p = new URLSearchParams({
+                ref:     bookingData.bookingRef,
+                service: bookingData.service.title,
+                price:   fullPrice,
+                deposit: depositAmount,
+                date:    bookingData.date,
+                time:    bookingData.timeSlot || '',
+                bedrooms: bookingData.bedrooms || '',
+                name:    bookingData.customer.name,
+                email:   bookingData.customer.email,
+                phone:   bookingData.customer.phone,
+                address: bookingData.customer.address,
+                notes:   bookingData.customer.notes || '',
+            });
+            return 'checkout.html?' + p.toString();
         }
 
-        // ===== UPDATED PRICING: Client's exact prices =====
+        // ===== Save booking to Supabase =====
+        async function saveBookingToSupabase(bookingData, bookingRef) {
+            if (!CONFIG.supabase || !CONFIG.supabase.url || CONFIG.supabase.url.includes('YOUR_')) return;
+            try {
+                const sb = window.supabase.createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
+                const serviceData = bookingData.service.data;
+                await sb.from('bookings').insert({
+                    customer_name: bookingData.customer.name,
+                    customer_email: bookingData.customer.email,
+                    customer_phone: bookingData.customer.phone,
+                    customer_address: bookingData.customer.address,
+                    booking_date: bookingData.date,
+                    time_slot: bookingData.timeSlot,
+                    service_type: bookingData.service.title,
+                    service_title: bookingData.service.title,
+                    service_id: parseInt(bookingData.service.id),
+                    duration: serviceData.duration,
+                    price: String(bookingData.calculatedPrice || serviceData.basePrice),
+                    special_instructions: bookingData.customer.notes || '',
+                    notes: 'Bedrooms: ' + (bookingData.bedrooms || 'N/A') + ' | Deposit: 25%',
+                    status: 'pending',
+                    booking_reference: bookingRef
+                });
+            } catch(e) {
+                console.warn('Supabase booking save failed:', e);
+            }
+        }
+
+        // ===== Calculate price based on bedrooms =====
+        function calculatePrice(serviceData, bedrooms) {
+            if (serviceData.hasBedrooms) {
+                const extra = (bedrooms - 1) * (serviceData.perBedroomPrice || 30);
+                return serviceData.basePrice + extra;
+            }
+            return serviceData.basePrice;
+        }
+
+        // ===== UPDATED PRICING: Client's exact prices (General Domestic Clean removed) =====
         const domesticServicesData = [
-            {
-                id: 1,
-                title: "General Domestic Clean",
-                category: "domestic",
-                description: "Regular home cleaning or one-off refresh. Our signature service with eco-friendly products.",
-                features: ["Dusting & vacuuming", "Kitchen & bathroom wipe-down", "Surface cleaning", "Floor mopping", "Available as weekly/fortnightly or one-off"],
-                duration: "2-4 hours",
-                hasBedrooms: false,
-                // Starting from £50, one-off starts from £60
-                basePrice: 50,
-                displayPrice: "From £50",
-                displayPriceOneOff: "£60 one-off",
-                image: "domestic.png",
-                fallbackColor: "#10B981",
-                isOneOffAvailable: true
-            },
             {
                 id: 2,
                 title: "Office Cleaning",
@@ -1477,7 +1491,6 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 displayPrice: "From £120",
                 image: "kitchen.png",
                 fallbackColor: "#10B981",
-                stripeLink: findStripeLink("Kitchen Deep Cleaning")
             },
             {
                 id: 4,
@@ -1491,7 +1504,6 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 displayPrice: "From £60",
                 image: "ovenafter.png",
                 fallbackColor: "#10B981",
-                stripeLink: findStripeLink("Oven Deep Clean")
             },
             {
                 id: 5,
@@ -1572,7 +1584,6 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 displayPrice: "House from £60, Flat from £60",
                 image: "windows.png",
                 fallbackColor: "#0D9488",
-                stripeLink: findStripeLink("Window Cleaning House")
             },
             {
                 id: 11,
@@ -1629,12 +1640,7 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             }
         ];
 
-        // Assign stripe links after creation
-        domesticServicesData.forEach(service => {
-            if (!service.stripeLink) {
-                service.stripeLink = findStripeLink(service.title);
-            }
-        });
+        // All services now use custom checkout (no Stripe payment links needed)
 
         // ===== Booking & UI State =====
         let currentBooking = {
@@ -1644,6 +1650,8 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             timeSlot: null,
             slotId: null,
             bedrooms: 1,
+            calculatedPrice: 0,
+            bookingRef: null,
             customer: {}
         };
 
@@ -1695,16 +1703,14 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 priceContent = `<div class="service-price-container" style="text-align: center;">${display}</div>`;
             }
 
-            let badgeHTML = service.stripeLink 
-                ? '<span class="payment-badge stripe-badge"><i class="fab fa-stripe"></i> Instant Payment</span>'
-                : '<span class="payment-badge whatsapp-badge"><i class="fab fa-whatsapp"></i> Book Now</span>';
+            let badgeHTML = '<span class="payment-badge" style="background:linear-gradient(135deg,#10B981,#0D9488);color:white;border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;"><i class="fas fa-lock"></i> Secure Booking</span>';
             
             let buttonHTML = `
-                <button class="btn book-service-btn ${service.stripeLink ? 'btn-stripe' : 'btn-whatsapp'}" 
+                <button class="btn book-service-btn" 
                         data-service-id="${service.id}" 
                         data-service-title="${service.title}"
                         style="padding: 1rem 2rem; font-size: 1.125rem;">
-                    ${service.stripeLink ? '<i class="fab fa-stripe"></i> Book & Pay Now' : '<i class="fab fa-whatsapp"></i> Book Now'}
+                    <i class="fas fa-calendar-check"></i> Book Now — Pay 25% Deposit
                 </button>
             `;
 
@@ -1743,8 +1749,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
         // ===== Modal Functions =====
         function openBookingModal(serviceTitle, serviceId, serviceData) {
             currentBooking.service = { title: serviceTitle, id: serviceId, data: serviceData };
-            currentBooking.stripeLink = serviceData.stripeLink;
+            currentBooking.stripeLink = null;
             currentBooking.bedrooms = 1;
+            currentBooking.calculatedPrice = serviceData.basePrice;
             document.getElementById('bookingServiceName').textContent = serviceTitle;
             updateBookingSummary();
             const today = new Date().toISOString().split('T')[0];
@@ -1753,17 +1760,22 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             currentBooking.date = today;
 
             const paymentNote = document.getElementById('paymentNote');
+            const depositPct = (CONFIG.payment && CONFIG.payment.depositPercent) || 25;
+            const depositAmt = Math.round(serviceData.basePrice * depositPct) / 100;
+            paymentNote.className = 'payment-note';
+            paymentNote.innerHTML = `<i class="fas fa-lock" style="color: var(--primary-green); font-size: 24px; margin-bottom: 10px;"></i><p style="color: var(--dark-gray); margin: 0;"><strong>Secure deposit payment — ${depositPct}% today.</strong><br>You'll pay a ${depositPct}% deposit (£${depositAmt.toFixed(2)}) now to confirm your booking. The remaining balance is due on the day of your clean.</p>`;
             const nextBtn = document.getElementById('nextStepBtn');
-            if (serviceData.stripeLink) {
-                paymentNote.className = 'payment-note stripe-note';
-                paymentNote.innerHTML = `<i class="fab fa-stripe" style="color: #635bff; font-size: 24px; margin-bottom: 10px;"></i><p style="color: var(--dark-gray); margin: 0;">You will be redirected to Stripe to complete your payment securely. Your booking will be confirmed upon successful payment.</p>`;
-                nextBtn.className = 'btn btn-stripe';
-            } else {
-                paymentNote.className = 'payment-note whatsapp-note';
-                paymentNote.innerHTML = `<i class="fab fa-whatsapp" style="color: #25D366; font-size: 24px; margin-bottom: 10px;"></i><p style="color: var(--dark-gray); margin: 0;">You will be redirected to WhatsApp to complete your booking and discuss payment options with our team.</p>`;
-                nextBtn.className = 'btn btn-whatsapp';
-            }
+            nextBtn.className = 'btn';
+            nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Continue';
 
+            // Show/hide bedrooms selector
+            const bedroomsGroup = document.getElementById('bedroomsGroup');
+            if (serviceData.hasBedrooms) {
+                bedroomsGroup.style.display = 'block';
+                document.getElementById('bedroomsSelect').value = '1';
+            } else {
+                bedroomsGroup.style.display = 'none';
+            }
             document.getElementById('bookingModal').style.display = 'flex';
             document.getElementById('bookingStep1').style.display = 'block';
             document.getElementById('bookingStep2').style.display = 'none';
@@ -1778,8 +1790,10 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
         function updateBookingSummary() {
             const summary = document.getElementById('bookingSummaryDetails');
             const serviceData = currentBooking.service.data;
-            let priceDisplay = serviceData.displayPrice;
+            const calcPrice = currentBooking.calculatedPrice || serviceData.basePrice;
+            let priceDisplay = currentBooking.calculatedPrice ? '£' + calcPrice : serviceData.displayPrice;
             if (serviceData.isOneOffAvailable) priceDisplay = "From £50 (one-off £60)";
+            const depositDisplay = (Math.round(calcPrice * 25) / 100).toFixed(2);
             let bedroomInfo = serviceData.hasBedrooms ? `<div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Bedrooms:</span><span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms>1?'s':''}</span></div>` : '';
             let dateTimeInfo = '';
             if (currentBooking.date && currentBooking.timeSlot) {
@@ -1792,15 +1806,17 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Duration:</span><span>${serviceData.duration}</span></div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Price:</span><span style="font-weight:600;color:var(--primary-green);">${priceDisplay}</span></div>
                 ${dateTimeInfo}
-                <div style="display: flex; justify-content: space-between; margin-top:12px; padding-top:12px; border-top:1px solid rgba(16,185,129,0.2);"><span style="font-weight:600;">Payment:</span>${serviceData.stripeLink?'<span style="color:#635bff;">Stripe</span>':'<span style="color:#25D366;">WhatsApp</span>'}</div>
+                <div style="display: flex; justify-content: space-between; margin-top:12px; padding-top:12px; border-top:1px solid rgba(16,185,129,0.2);"><span style="font-weight:600;">Deposit (25%):</span><span style="color:var(--primary-green);font-weight:700;">£${depositDisplay}</span></div>
             `;
         }
 
         function updateFinalSummary() {
             const summary = document.getElementById('finalSummaryDetails');
             const serviceData = currentBooking.service.data;
-            let priceDisplay = serviceData.displayPrice;
+            const calcPrice = currentBooking.calculatedPrice || serviceData.basePrice;
+            let priceDisplay = currentBooking.calculatedPrice ? '£' + calcPrice : serviceData.displayPrice;
             if (serviceData.isOneOffAvailable) priceDisplay = "From £50 (one-off £60)";
+            const depositDisplay = (Math.round(calcPrice * 25) / 100).toFixed(2);
             let bedroomInfo = serviceData.hasBedrooms ? `<div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Bedrooms:</span><span>${currentBooking.bedrooms} bedroom${currentBooking.bedrooms>1?'s':''}</span></div>` : '';
             const [start,end] = currentBooking.timeSlot.split('-');
             summary.innerHTML = `
@@ -1809,14 +1825,31 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Date:</span><span>${formatDate(currentBooking.date)}</span></div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Time:</span><span style="font-weight:600;color:var(--primary-green);">${formatTime(start)} - ${formatTime(end)}</span></div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Duration:</span><span>${serviceData.duration}</span></div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Price:</span><span style="font-weight:700;color:var(--primary-green);font-size:1.25rem;">${priceDisplay}</span></div>
-                <div style="display: flex; justify-content: space-between; margin-top:12px; padding-top:12px; border-top:1px solid rgba(16,185,129,0.2);"><span style="font-weight:600;">Payment:</span>${serviceData.stripeLink?'<span style="color:#635bff;">Stripe Secure Payment</span>':'<span style="color:#25D366;">WhatsApp Booking</span>'}</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span>Total Price:</span><span style="font-weight:700;color:var(--primary-green);font-size:1.25rem;">${priceDisplay}</span></div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="font-weight:600;">Deposit Due Now (25%):</span><span style="color:var(--primary-green);font-weight:700;font-size:1.1rem;">£${finalDepositDisplay}</span></div>
+                <div style="display: flex; justify-content: space-between; margin-top:8px; padding-top:8px; border-top:1px solid rgba(16,185,129,0.2);"><span>Balance on the day:</span><span style="color:var(--dark-gray);font-weight:600;">£${balanceDisplay}</span></div>
             `;
         }
 
         function closeBookingModal() {
             document.getElementById('bookingModal').style.display = 'none';
-            currentBooking = { service: null, stripeLink: null, date: null, timeSlot: null, slotId: null, bedrooms: 1, customer: {} };
+            currentBooking = { service: null, stripeLink: null, date: null, timeSlot: null, slotId: null, bedrooms: 1, calculatedPrice: 0, bookingRef: null, customer: {} };
+        }
+
+        function updateBedrooms(val) {
+            currentBooking.bedrooms = parseInt(val);
+            const sd = currentBooking.service && currentBooking.service.data;
+            if (sd) {
+                currentBooking.calculatedPrice = calculatePrice(sd, currentBooking.bedrooms);
+                updateBookingSummary();
+                // Update payment note deposit amount
+                const depositPct = (CONFIG.payment && CONFIG.payment.depositPercent) || 25;
+                const depositAmt = (Math.round(currentBooking.calculatedPrice * depositPct) / 100).toFixed(2);
+                const paymentNote = document.getElementById('paymentNote');
+                if (paymentNote && paymentNote.innerHTML) {
+                    paymentNote.querySelector('p').innerHTML = '<strong>Secure deposit payment — ' + depositPct + '% today.</strong><br>You\'ll pay a ' + depositPct + '% deposit (£' + depositAmt + ') now to confirm your booking. The remaining balance is due on the day of your clean.';
+                }
+            }
         }
 
         document.getElementById('closeBookingModal').addEventListener('click', closeBookingModal);
@@ -1826,21 +1859,66 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
         async function loadTimeSlots(date) {
             const container = document.getElementById('timeSlotsContainer');
             container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 40px; color: var(--medium-gray);"><i class="fas fa-spinner fa-spin fa-2x"></i><div style="margin-top: 10px;">Loading available time slots...</div></div>';
-            setTimeout(() => {
-                container.innerHTML = `
-                    <div style="grid-column: span 2; text-align: center; padding: 30px; color: var(--medium-gray);">
-                        <i class="fas fa-calendar-check fa-2x"></i>
-                        <div style="margin-top: 15px; font-size: 18px;">Standard availability</div>
-                        <div>9:00 AM - 5:00 PM</div>
-                        <div style="margin-top: 10px; font-size: 14px;">Please call or WhatsApp to confirm.</div>
-                    </div>
-                `;
-                // Provide a default mock slot so booking can proceed
-                const mockSlot = { id: '1', time_slot: '09:00-12:00' };
-                currentBooking.timeSlot = mockSlot.time_slot;
-                currentBooking.slotId = mockSlot.id;
-                updateBookingSummary();
-            }, 500);
+
+            // Default slots to show if Supabase not configured
+            const defaultSlots = [
+                { id: 'slot-1', start_time: '08:00', end_time: '10:00', label: 'Morning (8am - 10am)' },
+                { id: 'slot-2', start_time: '10:00', end_time: '13:00', label: 'Mid-Morning (10am - 1pm)' },
+                { id: 'slot-3', start_time: '13:00', end_time: '16:00', label: 'Afternoon (1pm - 4pm)' },
+                { id: 'slot-4', start_time: '16:00', end_time: '18:00', label: 'Evening (4pm - 6pm)' }
+            ];
+
+            let slots = defaultSlots;
+
+            // Try to load from Supabase if configured
+            if (CONFIG.supabase && CONFIG.supabase.url && !CONFIG.supabase.url.includes('YOUR_')) {
+                try {
+                    const sb = window.supabase.createClient(CONFIG.supabase.url, CONFIG.supabase.anonKey);
+                    const { data, error } = await sb
+                        .from('availability_slots')
+                        .select('*')
+                        .eq('slot_date', date)
+                        .eq('is_blocked', false)
+                        .lt('booked_count', 1);
+                    if (!error && data && data.length > 0) {
+                        slots = data.map(s => ({
+                            id: s.id,
+                            start_time: s.start_time,
+                            end_time: s.end_time,
+                            label: formatTime(s.start_time) + ' - ' + formatTime(s.end_time)
+                        }));
+                    }
+                } catch(e) { console.warn('Supabase slot fetch failed, using defaults:', e); }
+            }
+
+            if (slots.length === 0) {
+                container.innerHTML = '<div style="grid-column: span 2; text-align: center; padding: 30px; color: var(--medium-gray);"><i class="fas fa-calendar-times fa-2x"></i><div style="margin-top: 15px;">No slots available for this date.</div><div style="margin-top: 10px; font-size: 14px;">Please choose another date or call us.</div></div>';
+                currentBooking.timeSlot = null;
+                return;
+            }
+
+            container.innerHTML = '';
+            slots.forEach((slot, idx) => {
+                const label = slot.label || (formatTime(slot.start_time) + ' - ' + formatTime(slot.end_time));
+                const timeVal = slot.start_time.substring(0,5) + '-' + slot.end_time.substring(0,5);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'time-slot-btn' + (idx === 0 ? ' selected' : '');
+                btn.textContent = label;
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentBooking.timeSlot = timeVal;
+                    currentBooking.slotId = slot.id;
+                    updateBookingSummary();
+                });
+                container.appendChild(btn);
+            });
+
+            // Auto-select first slot
+            currentBooking.timeSlot = slots[0].start_time.substring(0,5) + '-' + slots[0].end_time.substring(0,5);
+            currentBooking.slotId = slots[0].id;
+            updateBookingSummary();
         }
 
         function formatTime(time) { 
@@ -1857,13 +1935,11 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             if (!currentBooking.timeSlot) { alert('⚠️ Please select a time slot'); return; }
             updateFinalSummary();
             const confirmBtn = document.getElementById('confirmBookingBtn');
-            if (currentBooking.service.data.stripeLink) {
-                confirmBtn.className = 'btn btn-stripe'; 
-                confirmBtn.innerHTML = '<i class="fab fa-stripe"></i> Complete Booking & Pay';
-            } else {
-                confirmBtn.className = 'btn btn-whatsapp'; 
-                confirmBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Complete Booking on WhatsApp';
-            }
+            const depositPct = (CONFIG.payment && CONFIG.payment.depositPercent) || 25;
+            const calcPrice = currentBooking.calculatedPrice || currentBooking.service.data.basePrice;
+            const depositAmt = (Math.round(calcPrice * depositPct) / 100).toFixed(2);
+            confirmBtn.className = 'btn';
+            confirmBtn.innerHTML = '<i class="fas fa-lock"></i> Pay £' + depositAmt + ' Deposit & Confirm';
             document.getElementById('bookingStep1').style.display = 'none';
             document.getElementById('bookingStep2').style.display = 'block';
         }
@@ -1872,27 +1948,36 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
             document.getElementById('bookingStep1').style.display = 'block';
         }
         async function confirmBooking() {
-            const name = document.getElementById('customerName').value.trim();
-            const phone = document.getElementById('customerPhone').value.trim();
-            const email = document.getElementById('customerEmail').value.trim();
+            const name    = document.getElementById('customerName').value.trim();
+            const phone   = document.getElementById('customerPhone').value.trim();
+            const email   = document.getElementById('customerEmail').value.trim();
             const address = document.getElementById('customerAddress').value.trim();
             if (!name || !phone || !email || !address) {
                 alert('❌ Please fill in all required fields: Name, Phone, Email, Address');
                 return;
             }
+
             const serviceData = currentBooking.service.data;
-            const bookingRef = 'GG' + Date.now().toString().slice(-8);
-            let msg = `✅ Booking confirmed!\n\nReference: ${bookingRef}\nService: ${currentBooking.service.title}\nDate: ${formatDate(currentBooking.date)}\nTime: ${currentBooking.timeSlot}\nCustomer: ${name}\n`;
-            if (serviceData.stripeLink) {
-                alert(msg + '\nRedirecting to Stripe...');
-                closeBookingModal();
-                setTimeout(() => window.open(serviceData.stripeLink, '_blank'), 300);
-            } else {
-                const whatsappMsg = encodeURIComponent(`📋 BOOKING - ${currentBooking.service.title}\nRef: ${bookingRef}\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\nDate: ${currentBooking.date}\nTime: ${currentBooking.timeSlot}\nPrice: ${serviceData.displayPrice}\nNotes: ${document.getElementById('bookingNotes').value}`);
-                alert(msg + '\nRedirecting to WhatsApp...');
-                closeBookingModal();
-                setTimeout(() => window.open(`https://api.whatsapp.com/send?phone=447827784204&text=${whatsappMsg}`, '_blank'), 300);
+            const bookingRef  = 'GG' + Date.now().toString().slice(-8);
+            currentBooking.bookingRef = bookingRef;
+            currentBooking.customer   = { name, phone, email, address, notes: document.getElementById('bookingNotes').value };
+
+            const confirmBtn    = document.getElementById('confirmBookingBtn');
+            const originalText  = confirmBtn.innerHTML;
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving booking…';
+
+            try {
+                // Save booking to Supabase (status: pending — payment pending)
+                await saveBookingToSupabase(currentBooking, bookingRef);
+            } catch(e) {
+                console.warn('Supabase save failed (non-fatal):', e);
             }
+
+            // Build checkout URL and redirect (no server call needed)
+            const checkoutUrl = buildCheckoutUrl(currentBooking);
+            closeBookingModal();
+            window.location.href = checkoutUrl;
         }
 
         // ===== Category Filtering =====
@@ -1916,10 +2001,9 @@ plink_1SlFQn2Kluec3BRLDuvYA1eq,https://buy.stripe.com/7sY28k0aO5ar2GSdN18AE03,Li
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
         // ===== Initialize Page =====
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadConfig();
             renderDomesticServices();
-            // supabase client placeholder
-            supabaseClient = { from: () => ({ select: () => ({ eq: () => ({ single: () => Promise.resolve({ data: null, error: new Error('demo') }) }) }) }) };
         });
     </script>
 </body>
