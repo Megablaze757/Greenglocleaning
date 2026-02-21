@@ -15,6 +15,6 @@
   "payment": {
     "depositPercent": 25,
     "currency": "gbp",
-    "workerUrl": "https://white-sky-ecf2.sacharaif.workers.dev/"
+    "workerUrl": "https://white-sky-ecf2.sacharaif.workers.dev"
   }
 }
