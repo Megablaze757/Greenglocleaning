@@ -492,6 +492,14 @@
             background-color: var(--light-green);
         }
 
+        .service-image:hover .service-overlay {
+            background: linear-gradient(to bottom, rgba(16, 185, 129, 0.15) 0%, rgba(6, 95, 70, 0.92) 100%);
+        }
+
+        .service-image:hover {
+            filter: brightness(1.05);
+        }
+
         .service-overlay {
             position: absolute;
             top: 0;
@@ -1739,10 +1747,20 @@
                 `;
             }
 
+            // Build the click action for the image
+            let imageClickAttr = '';
+            let imageCursorStyle = 'cursor: pointer;';
+            if (service.isHourly) {
+                imageClickAttr = `onclick="window.open('https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners,%20I%27m%20interested%20in%20${encodeURIComponent(service.title)}.%20Please%20provide%20more%20information.', '_blank')"`;
+            } else {
+                imageClickAttr = `onclick="handleImageClick(${service.id})"`;
+            }
+
             serviceCard.innerHTML = `
-                <div class="service-image" style="${service.image ? `background-image: url('${service.image}');` : `background: linear-gradient(135deg, ${service.fallbackColor || 'var(--primary-green)'}, var(--teal));`} background-color: var(--light-green);">
+                <div class="service-image" ${imageClickAttr} style="${service.image ? `background-image: url('${service.image}');` : `background: linear-gradient(135deg, ${service.fallbackColor || 'var(--primary-green)'}, var(--teal));`} background-color: var(--light-green); ${imageCursorStyle}">
                     <div class="service-overlay">
                         <h3>${service.title} ${badgeHTML}</h3>
+                        <div style="position:absolute;top:12px;left:12px;background:rgba(0,0,0,0.5);color:white;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;backdrop-filter:blur(4px);"><i class="fas fa-hand-pointer" style="margin-right:4px;"></i>${service.isHourly ? 'Get Quote' : 'Book Now'}</div>
                     </div>
                 </div>
                 <div class="service-content">
@@ -1758,6 +1776,13 @@
                 </div>
             `;
             container.appendChild(serviceCard);
+        }
+
+        function handleImageClick(serviceId) {
+            const serviceData = domesticServicesData.find(s => s.id == serviceId);
+            if (serviceData && !serviceData.isHourly) {
+                openBookingModal(serviceData.title, serviceData.id, serviceData);
+            }
         }
 
         function setupServiceCardListeners() {
@@ -2132,5 +2157,6 @@
             if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
         });
     </script>
+<script src="clickable-images.js"></script>
 </body>
 </html>
