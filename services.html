@@ -1768,7 +1768,7 @@
                     <div style="text-align: center; margin: 1rem 0;">
                         <span class="service-duration-badge"><i class="far fa-clock"></i> ${service.duration}</span>
                     </div>
-                    <p class="service-description">${service.description}</p>
+                    <p class="service-description" style="cursor:pointer;" onclick="${service.isHourly ? `window.open('https://api.whatsapp.com/send?phone=447827784204&text=Hello%20GreenGlo%20Cleaners,%20I%27m%20interested%20in%20${encodeURIComponent(service.title)}.%20Please%20provide%20more%20information.', '_blank')` : `handleImageClick(${service.id})`}">${service.description}</p>
                     <ul class="service-features">
                         ${service.features.map(f => `<li><i class="fas fa-check"></i>${f}</li>`).join('')}
                     </ul>
@@ -2155,6 +2155,16 @@
             if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
             if (mobileCloseBtn) mobileCloseBtn.addEventListener('click', closeMobileMenu);
             if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+            // Auto-open booking modal if ?book=ID is in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookId = urlParams.get('book');
+            if (bookId) {
+                const serviceData = domesticServicesData.find(s => s.id == bookId);
+                if (serviceData) {
+                    setTimeout(() => openBookingModal(serviceData.title, serviceData.id, serviceData), 400);
+                }
+            }
         });
     </script>
 <script src="clickable-images.js"></script>
